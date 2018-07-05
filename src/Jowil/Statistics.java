@@ -1,6 +1,9 @@
 package Jowil;
 
+import com.sun.org.apache.xerces.internal.xs.StringList;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class Statistics {
@@ -28,7 +31,7 @@ public class Statistics {
     private static ArrayList<Double> studentScores;
     private static ArrayList<Double> questionWeights;
     private static ArrayList<String> questionNames;
-    private static ArrayList<String> CorrectAnswers;
+    private static ArrayList<String> correctAnswers;
     private static ArrayList<ArrayList<String>> studentAnswers;
     private static ArrayList<ArrayList<String>>sortedStudentAnswers;
     private static ArrayList<ArrayList<Double>>answersStats; //Answers percentages vs Questions
@@ -53,7 +56,7 @@ public class Statistics {
     }
 
     public static void setCorrectAnswers(ArrayList<String> correctAnswers) {
-        CorrectAnswers = correctAnswers;
+        Statistics.correctAnswers = correctAnswers;
     }
 
     public static void setStudentAnswers(ArrayList<ArrayList<String>> studentAnswers) {
@@ -64,12 +67,32 @@ public class Statistics {
         Statistics.questionsMaxChoice = questionsMaxChoice;
     }
 
+    // print fuctions
+    public static void printStudentScores() {
+        System.out.print("Student Scores: ");
+        for(Double score : studentScores) {
+            System.out.print(score + ", ");
+        }
+        System.out.println();
+    }
 
-    
     ///////////////initializers
 
     private static void initScores(){
 
+        studentScores = new ArrayList<Double>() ;
+        for(int i = 0 ; i <studentAnswers.size() ; i ++) {
+            double studentScore = 0 ;
+            ArrayList<String> studentAnswer = studentAnswers.get(i) ;
+            for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
+                String questionAnswer = studentAnswer.get(j) ;
+                if(questionAnswer.equals(correctAnswers.get(j))) {
+                    studentScore+= questionWeights.get(j) ;
+                }
+            }
+            studentScores.add(studentScore) ;
+        }
+        printStudentScores();
     }
 
     private static void initSortedStudentAnswers(){
@@ -86,7 +109,63 @@ public class Statistics {
         initAnswersStats();
     }
 
-    public void simulateUI(){
+    public static void simulateUI(){
+
+        //fill student names
+        studentNames = new ArrayList<String>() ;
+        studentNames.add("Walid");
+        studentNames.add("youssef");
+
+        //fill student ids
+        studentIDs = new ArrayList<String>() ;
+        studentIDs.add("1234") ;
+        studentIDs.add("5678") ;
+
+        //fill questionNames
+        questionNames = new ArrayList<String>() ;
+        questionNames.add("Question1") ;
+        questionNames.add("Question2") ;
+        questionNames.add("Question3") ;
+        questionNames.add("Question4") ;
+        questionNames.add("Question5") ;
+
+        //fill question Weights
+        questionWeights = new ArrayList<Double>() ;
+        questionWeights.add(1.0);
+        questionWeights.add(1.0);
+        questionWeights.add(2.0);
+        questionWeights.add(2.0);
+        questionWeights.add(0.5);
+
+        //fill question max choice
+        questionsMaxChoice = new ArrayList<String>() ;
+        questionsMaxChoice.add("D") ;
+        questionsMaxChoice.add("D") ;
+        questionsMaxChoice.add("D") ;
+        questionsMaxChoice.add("D") ;
+        questionsMaxChoice.add("D") ;
+
+        //fill correctAnswers
+        correctAnswers = new ArrayList<String>() ;
+        correctAnswers.add("A") ;
+        correctAnswers.add("B") ;
+        correctAnswers.add("A") ;
+        correctAnswers.add("C") ;
+        correctAnswers.add("D") ;
+
+        //fill student answers
+        studentAnswers = new ArrayList<ArrayList<String>>() ;
+        ArrayList<String>answer1 = new ArrayList<String>() ;
+        answer1.add("A") ; answer1.add("B") ; answer1.add("C") ; answer1.add("C") ; answer1.add("A") ;
+
+        ArrayList<String>answer2= new ArrayList<String>() ;
+        answer2.add("A") ; answer2.add("B") ; answer2.add("C") ; answer2.add("C") ; answer2.add("D") ;
+
+        studentAnswers.add(answer1)  ;
+        studentAnswers.add(answer2) ;
+
+
+
 
     }
 
