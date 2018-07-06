@@ -26,11 +26,15 @@ public class Statistics {
 
 
     ////////////////////fields
+    public static final int IDMODE=0,NAMEMODE=1,AUTOMODE=2;
+    private static int identifierMode=AUTOMODE;
     private static ArrayList<String> studentNames;
     private static ArrayList<String> studentIDs;
     private static ArrayList<Double> studentScores;
     private static ArrayList<Double> questionWeights;
     private static ArrayList<String> questionNames;
+
+
     private static ArrayList<String> correctAnswers;
     private static ArrayList<ArrayList<String>> studentAnswers;
     private static ArrayList<ArrayList<String>>sortedStudentAnswers;
@@ -39,6 +43,9 @@ public class Statistics {
 
 
     ////////////////////setters
+    public static void setIdentifierMode(int identifierMode) {
+        Statistics.identifierMode = identifierMode;
+    }
     public static void setStudentNames(ArrayList<String> studentNames) {
         Statistics.studentNames = studentNames;
     }
@@ -66,6 +73,30 @@ public class Statistics {
     public static void setQuestionsMaxChoice(ArrayList<String> questionsMaxChoice) {
         Statistics.questionsMaxChoice = questionsMaxChoice;
     }
+
+    //getters
+    public static int getIdentifierMode() {
+        return identifierMode;
+    }
+    public static ArrayList<String> getStudentNames() {
+        return studentNames;
+    }
+
+    public static ArrayList<String> getStudentIDs() {
+        return studentIDs;
+    }
+    public static ArrayList<String> getQuestionNames() {
+        return questionNames;
+    }
+
+    public static ArrayList<String> getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public static ArrayList<ArrayList<String>> getStudentAnswers() {
+        return studentAnswers;
+    }
+
 
     // print fuctions
     public static void printStudentScores() {
@@ -96,6 +127,7 @@ public class Statistics {
     }
 
     private static void initSortedStudentAnswers(){
+
 
     }
 
