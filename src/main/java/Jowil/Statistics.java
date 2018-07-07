@@ -4,7 +4,9 @@ import com.sun.org.apache.xerces.internal.xs.StringList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+
 
 public class Statistics {
 
@@ -16,13 +18,7 @@ public class Statistics {
     CIAR: Condensed Item Analysis Report
      */
 
-    class SortByScore implements Comparator<ArrayList<String>>
-    {
-        public int compare(ArrayList<String> a, ArrayList<String> b)
-        {
-            return (int)Math.round(Double.parseDouble(b.get(b.size()-1))-Double.parseDouble(a.get(a.size()-1)));
-        }
-    }
+
 
 
     ////////////////////fields
@@ -33,13 +29,13 @@ public class Statistics {
     private static ArrayList<Double> studentScores;
     private static ArrayList<Double> questionWeights;
     private static ArrayList<String> questionNames;
-
-
     private static ArrayList<String> correctAnswers;
     private static ArrayList<ArrayList<String>> studentAnswers;
     private static ArrayList<ArrayList<String>>sortedStudentAnswers;
-    private static ArrayList<ArrayList<Double>>answersStats; //Answers percentages vs Questions
+    private static ArrayList<ArrayList<Double>>answersStats; //Questions vs each possible choice percentage ( every row can have different number of possible choices)
     private static ArrayList<String> questionsMaxChoice;
+    private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
+    private static ArrayList<Double> subScores; //subjective score
 
 
     ////////////////////setters
@@ -73,6 +69,13 @@ public class Statistics {
     public static void setQuestionsMaxChoice(ArrayList<String> questionsMaxChoice) {
         Statistics.questionsMaxChoice = questionsMaxChoice;
     }
+    public static void setQuestionsChoices(ArrayList<ArrayList<String>> questionsChoices) {
+        Statistics.questionsChoices = questionsChoices;
+    }
+    public static void setSubScores(ArrayList<Double> subScores) {
+        Statistics.subScores = subScores;
+    }
+
 
     //getters
     public static int getIdentifierMode() {
@@ -101,11 +104,37 @@ public class Statistics {
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");
-        for(Double score : studentScores) {
-            System.out.print(score + ", ");
-        }
-        System.out.println();
+        System.out.println(studentScores);
     }
+    public static void printSortedStudentAnswers(){
+        System.out.print("Sorted Student Answers: ");
+        System.out.println(sortedStudentAnswers);
+    }
+
+    public static void printAnswerStats(){
+        System.out.print("Answer Stats: ");
+        System.out.println(answersStats);
+    }
+    public static void printBasicInfo(){
+        System.out.println("-----------------------------------------------------");
+        System.out.println("Q names: " + Jowil.Statistics.getQuestionNames().toString());
+        System.out.println("Student Ids: " + Jowil.Statistics.getStudentIDs().toString());
+        System.out.println("Student names: " + Jowil.Statistics.getStudentNames().toString());
+        System.out.println("ID mode " + Jowil.Statistics.getIdentifierMode());
+        System.out.println("Correct ans: " + Jowil.Statistics.getCorrectAnswers().toString());
+        System.out.println("Student ans: " + Jowil.Statistics.getStudentAnswers().toString());
+        System.out.println("Questions choices: "+ Statistics.questionsChoices);
+    }
+    public static void printCalculations(){
+        System.out.println("-----------------------------------------------------");
+        printStudentScores();
+        printSortedStudentAnswers();
+        printAnswerStats();
+    }
+
+
+
+
 
     ///////////////initializers
 
@@ -127,19 +156,39 @@ public class Statistics {
     }
 
     private static void initSortedStudentAnswers(){
-
-
+        sortedStudentAnswers=(ArrayList<ArrayList<String>>)studentAnswers.clone();
+        for(int i=0;i<sortedStudentAnswers.size();i++)
+            sortedStudentAnswers.get(i).add(studentScores.get(i).toString());
+        SortByScore sorter =new SortByScore();
+        Collections.sort(sortedStudentAnswers,sorter);
     }
 
     private static void initAnswersStats(){
+        double count;
+        int studentsCount=studentAnswers.size();
+        answersStats=new ArrayList<ArrayList<Double>>();
+        for(int i=0;i<questionsChoices.size();i++){
+            answersStats.add(new ArrayList<Double>());
+            for(String choice: questionsChoices.get(i)){
+                count=0;
+                for(int j=0;j<studentAnswers.size();j++){
+                    if(studentAnswers.get(j).get(i).equals(choice))
+                        count++;
+                }
+                answersStats.get(i).add(count/studentsCount);
+            }
+        }
 
     }
+
 
     public static void init(){
         initScores();
         initSortedStudentAnswers();
         initAnswersStats();
     }
+
+
 
     public static void simulateUI(){
 
@@ -200,19 +249,11 @@ public class Statistics {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
+class SortByScore implements Comparator<ArrayList<String>>
+{
+    public int compare(ArrayList<String> a, ArrayList<String> b)
+    {
+        return (int)Math.round(Double.parseDouble(b.get(b.size()-1))-Double.parseDouble(a.get(a.size()-1)));
+    }
 }
