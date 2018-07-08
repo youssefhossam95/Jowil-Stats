@@ -19,7 +19,7 @@ public class Statistics {
     private static ArrayList<String> questionNames;
     private static ArrayList<ArrayList<String>> correctAnswers; //form vs correct answers
     private static ArrayList<ArrayList<String>> studentAnswers;
-    private static ArrayList<ArrayList<String>>sortedStudentAnswers;
+    private static ArrayList<ArrayList<ArrayList<String>>>sortedStudentAnswers; //for each form :student vs (answers+score)
     private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
     private static ArrayList<String> questionsMaxChoice;
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
@@ -149,11 +149,20 @@ public class Statistics {
     }
 
     private static void initSortedStudentAnswers(){
-        sortedStudentAnswers=(ArrayList<ArrayList<String>>)studentAnswers.clone();
-        for(int i=0;i<sortedStudentAnswers.size();i++)
-            sortedStudentAnswers.get(i).add(studentScores.get(i).toString());
+
+        for(int i=0;i<studentAnswers.size();i++)
+            studentAnswers.get(i).add(studentScores.get(i).toString());
+
+        sortedStudentAnswers=new ArrayList<ArrayList<ArrayList<String>>>();
+        for(int i=0;i<correctAnswers.size();i++)
+            sortedStudentAnswers.add(new ArrayList<ArrayList<String>>());
+
+        for(int i=0;i<studentAnswers.size();i++)
+            sortedStudentAnswers.get(studentForms.get(i)).add(studentAnswers.get(i));
+
         SortByScore sorter =new SortByScore();
-        Collections.sort(sortedStudentAnswers,sorter);
+        for(int i=0;i<sortedStudentAnswers.size();i++)
+            Collections.sort(sortedStudentAnswers.get(i),sorter);
     }
 
     private static void initAnswersStats(){

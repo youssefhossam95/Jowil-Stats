@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc91c48b-4aa1-4c3c-9e42-c03b74da5a99" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestCSVs/answerKeys1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Jowil/CSVHandlerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/Jowil/StatisticsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/Jowil/StatisticsTest.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -25,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Statistics.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Statistics.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            <state relative-caret-position="345">
+              <caret line="164" column="57" selection-start-line="164" selection-start-column="57" selection-end-line="164" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1988#1989#0" expanded="true" />
@@ -45,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StatisticsTest.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="StatisticsTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-493">
-              <caret line="13" column="22" lean-forward="true" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
+            <state relative-caret-position="-51">
+              <caret line="51" column="39" selection-start-line="51" selection-start-column="39" selection-end-line="51" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#364#383#0" expanded="true" />
@@ -203,9 +194,9 @@
         <option value="$PROJECT_DIR$/src/test/TestCSVs/testAll2.csv" />
         <option value="$PROJECT_DIR$/src/main/java/Jowil/Main.java" />
         <option value="$PROJECT_DIR$/src/test/TestCSVs/answerKeys1.csv" />
-        <option value="$PROJECT_DIR$/src/test/TestCSVs/testMulti1.csv" />
         <option value="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" />
         <option value="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" />
+        <option value="$PROJECT_DIR$/src/test/TestCSVs/testMulti1.csv" />
         <option value="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" />
       </list>
     </option>
@@ -545,12 +536,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="StatisticsTest - 2018.07.09 at 00h 39m 38s.xml">
-      <configuration name="StatisticsTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="StatisticsTest - 2018.07.09 at 00h 46m 32s.xml">
-      <configuration name="StatisticsTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="StatisticsTest - 2018.07.09 at 00h 46m 36s.xml">
       <configuration name="StatisticsTest" configurationId="JUnit" />
     </history-entry>
@@ -575,9 +560,16 @@
     <history-entry file="StatisticsTest - 2018.07.09 at 01h 31m 10s.xml">
       <configuration name="StatisticsTest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="StatisticsTest - 2018.07.09 at 01h 36m 18s.xml">
+      <configuration name="StatisticsTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="StatisticsTest - 2018.07.09 at 01h 37m 49s.xml">
+      <configuration name="StatisticsTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" />
@@ -586,7 +578,7 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="6" weight="0.32943013" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.50680274" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.39965987" />
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info id="Designer" order="3" />
@@ -622,7 +614,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java</url>
-          <line>164</line>
+          <line>173</line>
           <properties />
           <option name="timeStamp" value="10" />
         </line-breakpoint>
@@ -983,24 +975,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1988#1989#0" expanded="true" />
-            <element signature="e#2042#2043#0" expanded="true" />
-            <element signature="e#2699#2700#0" expanded="true" />
-            <element signature="e#2747#2748#0" expanded="true" />
-            <element signature="e#7603#7611#0" expanded="true" />
-            <element signature="e#7796#7804#0" expanded="true" />
-            <element signature="e#8449#8457#0" expanded="true" />
-            <element signature="e#8636#8644#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/TestCSVs/answerKeys1.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -1024,14 +998,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-493">
-          <caret line="13" column="22" lean-forward="true" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
+        <state relative-caret-position="-51">
+          <caret line="51" column="39" selection-start-line="51" selection-start-column="39" selection-end-line="51" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#364#383#0" expanded="true" />
             <element signature="e#924#932#0" expanded="true" />
             <element signature="e#2380#2389#0" expanded="true" />
             <element signature="e#2852#2871#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="164" column="57" selection-start-line="164" selection-start-column="57" selection-end-line="164" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1988#1989#0" expanded="true" />
+            <element signature="e#2042#2043#0" expanded="true" />
+            <element signature="e#2699#2700#0" expanded="true" />
+            <element signature="e#2747#2748#0" expanded="true" />
+            <element signature="e#7603#7611#0" expanded="true" />
+            <element signature="e#7796#7804#0" expanded="true" />
+            <element signature="e#8449#8457#0" expanded="true" />
+            <element signature="e#8636#8644#0" expanded="true" />
           </folding>
         </state>
       </provider>
