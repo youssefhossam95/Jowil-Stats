@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 
 public class Statistics {
@@ -27,12 +28,13 @@ public class Statistics {
     private static ArrayList<String> studentNames;
     private static ArrayList<String> studentIDs;
     private static ArrayList<Double> studentScores;
-    private static ArrayList<Double> questionWeights;
+    private static ArrayList<Integer> studentForms;
+    private static ArrayList<ArrayList<Double>> questionWeights; //form vs question weights
     private static ArrayList<String> questionNames;
-    private static ArrayList<String> correctAnswers;
+    private static ArrayList<ArrayList<String>> correctAnswers; //form vs correct answers
     private static ArrayList<ArrayList<String>> studentAnswers;
     private static ArrayList<ArrayList<String>>sortedStudentAnswers;
-    private static ArrayList<ArrayList<Double>>answersStats; //Questions vs each possible choice percentage ( every row can have different number of possible choices)
+    private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
     private static ArrayList<String> questionsMaxChoice;
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
     private static ArrayList<Double> subScores; //subjective score
@@ -50,7 +52,11 @@ public class Statistics {
         Statistics.studentIDs = studentIDs;
     }
 
-    public static void setQuestionWeights(ArrayList<Double> questionWeights) {
+    public static void setStudentForms(ArrayList<Integer> studentForms) {
+        Statistics.studentForms = studentForms;
+    }
+
+    public static void setQuestionWeights(ArrayList<ArrayList<Double>> questionWeights) {
         Statistics.questionWeights = questionWeights;
     }
 
@@ -58,7 +64,7 @@ public class Statistics {
         Statistics.questionNames = questionNames;
     }
 
-    public static void setCorrectAnswers(ArrayList<String> correctAnswers) {
+    public static void setCorrectAnswers(ArrayList<ArrayList<String>> correctAnswers) {
         Statistics.correctAnswers = correctAnswers;
     }
 
@@ -92,7 +98,7 @@ public class Statistics {
         return questionNames;
     }
 
-    public static ArrayList<String> getCorrectAnswers() {
+    public static ArrayList<ArrayList<String>> getCorrectAnswers() {
         return correctAnswers;
     }
 
@@ -164,22 +170,14 @@ public class Statistics {
     }
 
     private static void initAnswersStats(){
-        double count;
-        int studentsCount=studentAnswers.size();
-        answersStats=new ArrayList<ArrayList<Double>>();
-        for(int i=0;i<questionsChoices.size();i++){
-            answersStats.add(new ArrayList<Double>());
-            for(String choice: questionsChoices.get(i)){
-                count=0;
-                for(int j=0;j<studentAnswers.size();j++){
-                    if(studentAnswers.get(j).get(i).equals(choice))
-                        count++;
-                }
-                answersStats.get(i).add(count/studentsCount);
-            }
+        int i=0;
+        for(ArrayList<ArrayList<Double>> formAnswerStats : answersStats){
+            calcformAnswerStats(formAnswerStats,i);
+            i++;
         }
 
     }
+
 
 
     public static void init(){
@@ -248,6 +246,35 @@ public class Statistics {
 
 
 
+    }
+
+
+    //helper functions
+    private static void calcformAnswerStats(ArrayList<ArrayList<Double>> formAnswerStats , int formIndex){
+
+        double count;
+        int studentsCount=getFormStudentsCount(formIndex);
+        formAnswerStats=new ArrayList<ArrayList<Double>>();
+        for(int i=0;i<questionsChoices.size();i++){
+            formAnswerStats.add(new ArrayList<Double>());
+            for(String choice: questionsChoices.get(i)){
+                count=0;
+                for(int j=0;j<studentAnswers.size();j++){
+                    if(studentAnswers.get(j).get(i).equals(choice) && studentForms.get(j)==formIndex)
+                        count++;
+                }
+                formAnswerStats.get(i).add(count/studentsCount);
+            }
+        }
+
+    }
+    private static int getFormStudentsCount(int formIndex){
+        int count=0;
+        for(int form: studentForms){
+            if(form==formIndex)
+                count++;
+        }
+        return count;
     }
 }
 class SortByScore implements Comparator<ArrayList<String>>
