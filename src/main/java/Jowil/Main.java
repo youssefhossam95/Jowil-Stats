@@ -16,7 +16,7 @@ public class Main extends Application {
 
 
 
-    public final static Integer STUDENTID=0, STUDENTNAME=1;
+    public final static Integer STUDENTID=0, STUDENTNAME=1, STUDENTFORM=2, IGNORE=3;
 
     /**
      *
@@ -28,39 +28,48 @@ public class Main extends Application {
 
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line = null;
-        ArrayList<ArrayList<String>> studentsAnswers=new ArrayList<ArrayList<String>>();
-        ArrayList<String> studentNames=new ArrayList<String>();
-        ArrayList<String> studentIDs=new ArrayList<String>();
+        ArrayList<ArrayList<String>> studentsAnswers = new ArrayList<ArrayList<String>>();
+        ArrayList<String> studentNames = new ArrayList<String>();
+        ArrayList<String> studentIDs = new ArrayList<String>();
+        ArrayList<Integer> studentForms = new ArrayList<Integer>();
 
-        if(isHeadersExist&&( line = input.readLine()) != null)//headers
-            Statistics.setQuestionNames(cropArray(line.split(","),identifiers.size()));
-
-
-        if(isCorrectAnswersExist &&( line = input.readLine()) != null )  //correct answers
-            Statistics.setCorrectAnswers(cropArray(line.split(","),identifiers.size()));
+        if (isHeadersExist && (line = input.readLine()) != null)//headers
+            Statistics.setQuestionNames(cropArray(line.split(","), identifiers.size()));
 
 
-        while (( line = input.readLine()) != null) { //students answers
-            String [] row=line.split(",");
-            updateIdentifiers(studentIDs,studentNames,row,identifiers);
-            studentsAnswers.add(cropArray(line.split(","),identifiers.size()));
+        if (isCorrectAnswersExist && (line = input.readLine()) != null) { //correct answers
+            ArrayList<ArrayList<String>> correctAnswers = new ArrayList<ArrayList<String>>();
+            correctAnswers.add(cropArray(line.split(","), identifiers.size()));
+            Statistics.setCorrectAnswers(correctAnswers);
         }
+        while ((line = input.readLine()) != null) { //students answers
+            String[] row = line.split(",");
+            updateIdentifiers(studentIDs, studentNames, studentForms, row, identifiers);
+            studentsAnswers.add(cropArray(line.split(","), identifiers.size()));
+        }
+
+        //initialize internal fields with parsed data
         Statistics.setStudentAnswers(studentsAnswers);
-
-
         Statistics.setIdentifierMode(Statistics.AUTOMODE);
-        if(studentIDs.size()!=0){
+
+        if (studentIDs.size() != 0) {
             Statistics.setStudentIDs(studentIDs);
             Statistics.setIdentifierMode(Statistics.IDMODE);
         }
-        if(studentNames.size()!=0){
+
+        if (studentNames.size() != 0) {
             Statistics.setStudentNames(studentNames);
-            if(studentIDs.size()==0)
+            if (studentIDs.size() == 0)
                 Statistics.setIdentifierMode(Statistics.NAMEMODE);
         }
 
-    }
+        if (studentForms.size() == 0) {
+            for (int i = 0; i < studentsAnswers.size(); i++)
+                studentForms.add(0);
+        }
+        Statistics.setStudentForms(studentForms);
 
+    }
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -88,13 +97,14 @@ public class Main extends Application {
         return cropped;
     }
 
-    private static void updateIdentifiers(ArrayList<String> studentIDs, ArrayList<String> studentNames, String [] row,ArrayList<Integer> identifiers){
+    private static void updateIdentifiers(ArrayList<String> studentIDs, ArrayList<String> studentNames,ArrayList<Integer> studentForms, String [] row,ArrayList<Integer> identifiers){
         for(int i=0;i<identifiers.size();i++){
-            if(identifiers.get(i)==STUDENTID){
+            if(identifiers.get(i)==STUDENTID)
                 studentIDs.add(row[i]);
-            }
-            else
+            else if(identifiers.get(i)==STUDENTNAME)
                 studentNames.add(row[i]);
+            else if(identifiers.get(i)==STUDENTFORM)
+                studentForms.add(Integer.parseInt(row[i]));
         }
     }
 
