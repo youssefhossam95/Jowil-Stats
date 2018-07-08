@@ -175,7 +175,7 @@ public class CSVHandler {
         return true;
     }
     private static void classifyHeaders(String [] headers){
-        Pattern pattern = Pattern.compile("\\D+\\d+");
+        Pattern pattern = Pattern.compile("\\D*\\d+");
         int i;
         for(i=0;i<headers.length;i++){
             if(isQHeader(headers[i],pattern))
