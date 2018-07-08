@@ -1,24 +1,10 @@
 package Jowil;
-
-import com.sun.org.apache.xerces.internal.xs.StringList;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 
 public class Statistics {
-
-    /*
-    GDR: Grades Distribution Report
-    CTR: Condensed Test Report
-    TSR: Test Statistics Report
-    SGR: Students Grades Report
-    CIAR: Condensed Item Analysis Report
-     */
-
 
 
 
@@ -123,6 +109,7 @@ public class Statistics {
     }
     public static void printBasicInfo(){
         System.out.println("-----------------------------------------------------");
+        System.out.println("Info Headers: "+CSVHandler.getDetectedInfoHeaders());
         System.out.println("Q names: " + Jowil.Statistics.getQuestionNames().toString());
         System.out.println("Student Ids: " + Jowil.Statistics.getStudentIDs().toString());
         System.out.println("Student names: " + Jowil.Statistics.getStudentNames().toString());
@@ -175,7 +162,7 @@ public class Statistics {
         for(int i=0;i<correctAnswers.size();i++){
             answersStats.add(new ArrayList<ArrayList<Double>>());
             calcformAnswerStats(answersStats.get(i),i);
-            i++;
+
         }
 
     }
