@@ -152,8 +152,8 @@ public class Statistics {
             ArrayList<String> studentAnswer = studentAnswers.get(i) ;
             for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
                 String questionAnswer = studentAnswer.get(j) ;
-                if(questionAnswer.equals(correctAnswers.get(j))) {
-                    studentScore+= questionWeights.get(j) ;
+                if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)-1).get(j))) {
+                    studentScore+= questionWeights.get(studentForms.get(i)-1).get(j) ;
                 }
             }
             studentScores.add(studentScore) ;
@@ -184,8 +184,8 @@ public class Statistics {
 
     public static void init(){
         initScores();
-        initSortedStudentAnswers();
-        initAnswersStats();
+//        initSortedStudentAnswers();
+//        initAnswersStats();
     }
 
 
@@ -211,12 +211,15 @@ public class Statistics {
         questionNames.add("Question5") ;
 
         //fill question Weights
-        questionWeights = new ArrayList<Double>() ;
-        questionWeights.add(1.0);
-        questionWeights.add(1.0);
-        questionWeights.add(2.0);
-        questionWeights.add(2.0);
-        questionWeights.add(0.5);
+        questionWeights = new ArrayList<ArrayList<Double>>() ;
+        ArrayList<Double> form1Wieghts = new ArrayList<Double>() ;
+        form1Wieghts.add(1.0) ; form1Wieghts.add(1.0) ;form1Wieghts.add(2.0) ;form1Wieghts.add(2.0) ;form1Wieghts.add(0.5) ;
+
+        ArrayList<Double> form2Wieghts = new ArrayList<Double>() ;
+        form2Wieghts.add(1.0) ; form2Wieghts.add(1.0) ;form2Wieghts.add(2.0) ;form2Wieghts.add(1.0) ;form2Wieghts.add(2.0) ;
+
+        questionWeights.add(form1Wieghts);
+        questionWeights.add(form2Wieghts) ;
 
         //fill question max choice
         questionsMaxChoice = new ArrayList<String>() ;
@@ -227,12 +230,20 @@ public class Statistics {
         questionsMaxChoice.add("D") ;
 
         //fill correctAnswers
-        correctAnswers = new ArrayList<String>() ;
-        correctAnswers.add("A") ;
-        correctAnswers.add("B") ;
-        correctAnswers.add("A") ;
-        correctAnswers.add("C") ;
-        correctAnswers.add("D") ;
+        correctAnswers = new ArrayList<ArrayList<String>>();
+        ArrayList<String> form1Answers = new ArrayList<String>( );
+        form1Answers.add("A");form1Answers.add("B");form1Answers.add("A");form1Answers.add("C");form1Answers.add("A");
+
+        ArrayList<String> form2Answers = new ArrayList<String>( );
+        form2Answers.add("A");form2Answers.add("B");form2Answers.add("A");form2Answers.add("C");form2Answers.add("D");
+
+        correctAnswers.add(form1Answers);
+        correctAnswers.add(form2Answers) ;
+
+        //fill student forms
+        studentForms = new ArrayList<Integer>() ;
+        studentForms.add(1) ;
+        studentForms.add(2) ;
 
         //fill student answers
         studentAnswers = new ArrayList<ArrayList<String>>() ;
