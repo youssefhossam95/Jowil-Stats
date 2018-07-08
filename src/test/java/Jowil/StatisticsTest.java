@@ -43,7 +43,9 @@ public class StatisticsTest extends TestCase {
         studentData.add(Main.STUDENTNAME);
         Jowil.Main.loadCsv(".\\src\\test\\TestCSVs\\testAll2.csv",studentData, true, true);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
-        Jowil.Statistics.setQuestionWeights(generateQuestionsWeights(8));
+        ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
+        questionWeights.add(generateQuestionsWeights(8));
+        Jowil.Statistics.setQuestionWeights(questionWeights);
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();

@@ -171,7 +171,9 @@ public class Statistics {
 
     private static void initAnswersStats(){
         int i=0;
+        answersStats=new ArrayList<ArrayList<ArrayList<Double>>>(correctAnswers.size());
         for(ArrayList<ArrayList<Double>> formAnswerStats : answersStats){
+            formAnswerStats=new ArrayList<ArrayList<Double>>();
             calcformAnswerStats(formAnswerStats,i);
             i++;
         }
@@ -254,7 +256,6 @@ public class Statistics {
 
         double count;
         int studentsCount=getFormStudentsCount(formIndex);
-        formAnswerStats=new ArrayList<ArrayList<Double>>();
         for(int i=0;i<questionsChoices.size();i++){
             formAnswerStats.add(new ArrayList<Double>());
             for(String choice: questionsChoices.get(i)){
