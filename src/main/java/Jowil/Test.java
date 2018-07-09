@@ -8,5 +8,6 @@ public class Test {
 
         Statistics.simulateUI();
         Statistics.init();
+        Statistics.report3Stats();
     }
 }
