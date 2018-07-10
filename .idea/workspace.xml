@@ -2,18 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc91c48b-4aa1-4c3c-9e42-c03b74da5a99" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Jowil Stats.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Jowil Stats.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/TestCSVs/answerKeys1.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/TestCSVs/testMulti1.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/Jowil/CSVHandlerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler$EmptyAnswerKeyException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler$EmptyCSVException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler$InvalidFormNumberException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/Jowil/CSVHandlerTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/ReportsHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/SampleController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/Jowil/StatisticsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/Jowil/StatisticsTest.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -29,18 +33,10 @@
       <file leaf-file-name="Statistics.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="344" column="61" selection-start-line="344" selection-start-column="61" selection-end-line="344" selection-end-column="61" />
+            <state relative-caret-position="459">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#7561#7569#0" expanded="true" />
-                <element signature="e#7754#7762#0" expanded="true" />
-                <element signature="e#8407#8415#0" expanded="true" />
-                <element signature="e#8594#8602#0" expanded="true" />
-                <element signature="e#9094#9102#0" expanded="true" />
-                <element signature="e#9258#9266#0" expanded="true" />
-                <element signature="e#9238#9246#0" expanded="true" />
-                <element signature="e#10478#10494#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -67,8 +63,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="38" selection-start-line="38" selection-end-line="38" />
+            <state relative-caret-position="170">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
@@ -76,8 +72,8 @@
       <file leaf-file-name="StatisticsTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
+            <state relative-caret-position="1309">
+              <caret line="77" column="8" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -85,7 +81,7 @@
       <file leaf-file-name="MainTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/MainTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="833">
               <caret line="49" selection-start-column="2" selection-end-line="103" selection-end-column="3" />
             </state>
           </provider>
@@ -179,7 +175,6 @@
     </navigator>
     <panes>
       <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -238,6 +233,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -465,17 +461,17 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Messages" order="0" weight="0.32913387" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="6" weight="0.32943013" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.6394558" />
       <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.27086616" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
@@ -484,36 +480,17 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.39965987" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20608899" />
-      <window_info id="Image Layers" order="2" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Tool Output" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.6394558" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Designer" order="3" />
-      <window_info anchor="bottom" id="ANTLR Preview" order="12" />
-      <window_info id="UI Designer" order="4" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.12585033" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Tool Output" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="ANTLR Preview" order="12" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Find" order="2" />
       <window_info anchor="bottom" id="Messages" order="0" weight="0.32993197" />
-      <window_info anchor="right" id="Maven Projects" order="6" weight="0.32943013" />
-      <window_info id="Favorites" order="5" side_tool="true" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -529,13 +506,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java</url>
-          <line>147</line>
+          <line>142</line>
           <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java</url>
-          <line>166</line>
+          <line>161</line>
           <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
@@ -602,14 +579,6 @@
           <caret line="134" column="80" selection-start-line="134" selection-start-column="80" selection-end-line="134" selection-end-column="80" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7561#7569#0" expanded="true" />
-            <element signature="e#7754#7762#0" expanded="true" />
-            <element signature="e#8407#8415#0" expanded="true" />
-            <element signature="e#8594#8602#0" expanded="true" />
-            <element signature="e#9094#9102#0" expanded="true" />
-            <element signature="e#9258#9266#0" expanded="true" />
-            <element signature="e#9238#9246#0" expanded="true" />
-            <element signature="e#10478#10494#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -620,14 +589,6 @@
           <caret line="98" selection-start-line="98" selection-end-line="98" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7561#7569#0" expanded="true" />
-            <element signature="e#7754#7762#0" expanded="true" />
-            <element signature="e#8407#8415#0" expanded="true" />
-            <element signature="e#8594#8602#0" expanded="true" />
-            <element signature="e#9094#9102#0" expanded="true" />
-            <element signature="e#9258#9266#0" expanded="true" />
-            <element signature="e#9238#9246#0" expanded="true" />
-            <element signature="e#10478#10494#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -653,14 +614,6 @@
           <caret line="29" column="47" selection-start-line="29" selection-start-column="47" selection-end-line="29" selection-end-column="47" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7561#7569#0" expanded="true" />
-            <element signature="e#7754#7762#0" expanded="true" />
-            <element signature="e#8407#8415#0" expanded="true" />
-            <element signature="e#8594#8602#0" expanded="true" />
-            <element signature="e#9094#9102#0" expanded="true" />
-            <element signature="e#9258#9266#0" expanded="true" />
-            <element signature="e#9238#9246#0" expanded="true" />
-            <element signature="e#10478#10494#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -692,14 +645,6 @@
           <caret line="47" column="30" selection-start-line="47" selection-start-column="30" selection-end-line="47" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7561#7569#0" expanded="true" />
-            <element signature="e#7754#7762#0" expanded="true" />
-            <element signature="e#8407#8415#0" expanded="true" />
-            <element signature="e#8594#8602#0" expanded="true" />
-            <element signature="e#9094#9102#0" expanded="true" />
-            <element signature="e#9258#9266#0" expanded="true" />
-            <element signature="e#9238#9246#0" expanded="true" />
-            <element signature="e#10478#10494#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -710,14 +655,6 @@
           <caret line="20" column="9" lean-forward="true" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7561#7569#0" expanded="true" />
-            <element signature="e#7754#7762#0" expanded="true" />
-            <element signature="e#8407#8415#0" expanded="true" />
-            <element signature="e#8594#8602#0" expanded="true" />
-            <element signature="e#9094#9102#0" expanded="true" />
-            <element signature="e#9258#9266#0" expanded="true" />
-            <element signature="e#9238#9246#0" expanded="true" />
-            <element signature="e#10478#10494#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -819,22 +756,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/MainTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
+        <state relative-caret-position="833">
           <caret line="49" selection-start-column="2" selection-end-line="103" selection-end-column="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
+        <state relative-caret-position="1309">
+          <caret line="77" column="8" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        <state relative-caret-position="170">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
@@ -854,18 +791,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="344" column="61" selection-start-line="344" selection-start-column="61" selection-end-line="344" selection-end-column="61" />
+        <state relative-caret-position="459">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7561#7569#0" expanded="true" />
-            <element signature="e#7754#7762#0" expanded="true" />
-            <element signature="e#8407#8415#0" expanded="true" />
-            <element signature="e#8594#8602#0" expanded="true" />
-            <element signature="e#9094#9102#0" expanded="true" />
-            <element signature="e#9258#9266#0" expanded="true" />
-            <element signature="e#9238#9246#0" expanded="true" />
-            <element signature="e#10478#10494#0" expanded="true" />
           </folding>
         </state>
       </provider>

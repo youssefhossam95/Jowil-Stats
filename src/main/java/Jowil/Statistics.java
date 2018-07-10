@@ -5,20 +5,14 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static org.apache.commons.math3.stat.StatUtils.* ;
 
 
 public class Statistics {
-
-    /*
-    GDR: Grades Distribution Report
-    CTR: Condensed Test Report
-    TSR: Test Statistics Report
-    SGR: Students Grades Report
-    CIAR: Condensed Item Analysis Report
-     */
-
 
 
 
@@ -33,7 +27,7 @@ public class Statistics {
     private static ArrayList<String> questionNames;
     private static ArrayList<ArrayList<String>> correctAnswers; //form vs correct answers
     private static ArrayList<ArrayList<String>> studentAnswers;
-    private static ArrayList<ArrayList<String>>sortedStudentAnswers;
+    private static ArrayList<ArrayList<ArrayList<String>>>sortedStudentAnswers; //for each form :student vs (answers+score)
     private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
     private static ArrayList<Double> subScores; //subjective score
@@ -119,6 +113,7 @@ public class Statistics {
     }
     public static void printBasicInfo(){
         System.out.println("-----------------------------------------------------");
+        System.out.println("Info Headers: "+CSVHandler.getDetectedInfoHeaders());
         System.out.println("Q names: " + Jowil.Statistics.getQuestionNames().toString());
         System.out.println("Student Ids: " + Jowil.Statistics.getStudentIDs().toString());
         System.out.println("Student names: " + Jowil.Statistics.getStudentNames().toString());
@@ -164,11 +159,20 @@ public class Statistics {
     }
 
     private static void initSortedStudentAnswers(){
-        sortedStudentAnswers=(ArrayList<ArrayList<String>>)studentAnswers.clone();
-        for(int i=0;i<sortedStudentAnswers.size();i++)
-            sortedStudentAnswers.get(i).add(studentScores.get(i).toString());
+
+        for(int i=0;i<studentAnswers.size();i++)
+            studentAnswers.get(i).add(studentScores.get(i).toString());
+
+        sortedStudentAnswers=new ArrayList<ArrayList<ArrayList<String>>>();
+        for(int i=0;i<correctAnswers.size();i++)
+            sortedStudentAnswers.add(new ArrayList<ArrayList<String>>());
+
+        for(int i=0;i<studentAnswers.size();i++)
+            sortedStudentAnswers.get(studentForms.get(i)).add(studentAnswers.get(i));
+
         SortByScore sorter =new SortByScore();
-        Collections.sort(sortedStudentAnswers,sorter);
+        for(int i=0;i<sortedStudentAnswers.size();i++)
+            Collections.sort(sortedStudentAnswers.get(i),sorter);
     }
 
     private static void initAnswersStats(){
@@ -177,7 +181,7 @@ public class Statistics {
         for(int i=0;i<correctAnswers.size();i++){
             answersStats.add(new ArrayList<ArrayList<Double>>());
             calcformAnswerStats(answersStats.get(i),i);
-            i++;
+
         }
 
     }
