@@ -28,21 +28,17 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
             <version>8.0.4</version>
         </dependency>
-
-=======
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.6.1</version>
         </dependency>
->>>>>>> ff33bfed7fb74191fbfa8e84cef66ec1aa70fd6c
+
     </dependencies>
     
 </project>
