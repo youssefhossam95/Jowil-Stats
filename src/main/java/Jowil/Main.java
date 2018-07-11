@@ -1,6 +1,17 @@
 package Jowil;
 	
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -19,15 +30,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/FXML/Sample.fxml"));
-            Scene scene = new Scene(root, 400, 400);
-            scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        Controller.resX=primaryScreenBounds.getWidth();
+        Controller.resY=primaryScreenBounds.getHeight();
+        FileConfigController controller =new FileConfigController();
+        controller.startWindow();
     }
 
     public static void main(String[] args) {
