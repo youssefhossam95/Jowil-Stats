@@ -1,7 +1,15 @@
 package Jowil;
+
+import com.sun.org.apache.xerces.internal.xs.StringList;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import static org.apache.commons.math3.stat.StatUtils.* ;
 
 
 public class Statistics {
@@ -21,7 +29,6 @@ public class Statistics {
     private static ArrayList<ArrayList<String>> studentAnswers;
     private static ArrayList<ArrayList<ArrayList<String>>>sortedStudentAnswers; //for each form :student vs (answers+score)
     private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
-    private static ArrayList<String> questionsMaxChoice;
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
     private static ArrayList<Double> subScores; //subjective score
 
@@ -58,9 +65,6 @@ public class Statistics {
         Statistics.studentAnswers = studentAnswers;
     }
 
-    public static void setQuestionsMaxChoice(ArrayList<String> questionsMaxChoice) {
-        Statistics.questionsMaxChoice = questionsMaxChoice;
-    }
     public static void setQuestionsChoices(ArrayList<ArrayList<String>> questionsChoices) {
         Statistics.questionsChoices = questionsChoices;
     }
@@ -126,6 +130,12 @@ public class Statistics {
     }
 
 
+    private static void printMap (Map<String , Double> map ) {
+        System.out.println("Map Data");
+        for(Map.Entry<String , Double> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
 
 
 
@@ -180,8 +190,8 @@ public class Statistics {
 
     public static void init(){
         initScores();
-        initSortedStudentAnswers();
-        initAnswersStats();
+//        initSortedStudentAnswers();
+//        initAnswersStats();
     }
 
 
@@ -192,11 +202,13 @@ public class Statistics {
         studentNames = new ArrayList<String>() ;
         studentNames.add("Walid");
         studentNames.add("youssef");
+        studentNames.add("ahemd") ;
 
         //fill student ids
         studentIDs = new ArrayList<String>() ;
         studentIDs.add("1234") ;
         studentIDs.add("5678") ;
+        studentIDs.add("9999") ;
 
         //fill questionNames
         questionNames = new ArrayList<String>() ;
@@ -217,13 +229,6 @@ public class Statistics {
         questionWeights.add(form1Wieghts);
         questionWeights.add(form2Wieghts) ;
 
-        //fill question max choice
-        questionsMaxChoice = new ArrayList<String>() ;
-        questionsMaxChoice.add("D") ;
-        questionsMaxChoice.add("D") ;
-        questionsMaxChoice.add("D") ;
-        questionsMaxChoice.add("D") ;
-        questionsMaxChoice.add("D") ;
 
         //fill correctAnswers
         correctAnswers = new ArrayList<ArrayList<String>>();
@@ -238,8 +243,9 @@ public class Statistics {
 
         //fill student forms
         studentForms = new ArrayList<Integer>() ;
+        studentForms.add(0) ;
         studentForms.add(1) ;
-        studentForms.add(2) ;
+        studentForms.add(0) ;
 
         //fill student answers
         studentAnswers = new ArrayList<ArrayList<String>>() ;
@@ -249,9 +255,12 @@ public class Statistics {
         ArrayList<String>answer2= new ArrayList<String>() ;
         answer2.add("A") ; answer2.add("B") ; answer2.add("C") ; answer2.add("C") ; answer2.add("D") ;
 
+        ArrayList<String>answer3= new ArrayList<String>() ;
+        answer3.add("D") ; answer3.add("B") ; answer3.add("C") ; answer3.add("C") ; answer3.add("D") ;
+
         studentAnswers.add(answer1)  ;
         studentAnswers.add(answer2) ;
-
+        studentAnswers.add(answer3) ;
 
 
 
@@ -283,6 +292,65 @@ public class Statistics {
                 count++;
         }
         return count;
+    }
+
+
+
+
+
+    public static  Map<String , Double> report3Stats() {
+        Map<String , Double>  statsMap = new HashMap<String, Double>() ;
+
+
+//        ArrayList<Double> sortedStudentScores = new ArrayList<Double>(studentScores);
+//        Collections.sort(sortedStudentScores);
+//        double[] sortedScores = sortedStudentScores.stream().mapToDouble(d -> d).toArray();
+
+
+//        System.out.println("yaaaaa man" + sortedScores.get(2));
+        double[] scores = studentScores.stream().mapToDouble(d -> d).toArray();
+        double[] weights = questionWeights.get(0).stream().mapToDouble(d -> d).toArray() ; // weights of the first Form
+        double benchMark = 75.0 ;
+        double mean = mean(scores) ;
+        double variance = variance(scores);
+        double std = Math.sqrt(variance) ;
+        double maxScore = sum(weights) ;
+        double HightestScore = max(scores);
+        double LowestScore = min(scores);
+//        int numberOfStudents = studentScores.size();
+
+        // 1 3 5 6 7 8 9 10
+//        double[] wello = {3, 7, 8, 5, 12, 14, 21, 15, 18, 14} ;
+        DescriptiveStatistics ds = new DescriptiveStatistics(scores);
+        double median = ds.getPercentile(50);
+        double firstQ = ds.getPercentile(25) ;
+        double thirtQ = ds.getPercentile(75) ;
+//        if(numberOfStudents%2==0) {
+//            double num1 = sortedScores[numberOfStudents/2 ] ;
+//            double num2 = sortedScores[numberOfStudents/2-1] ;
+//            median = (num1+num2)/2 ;
+//        }
+//        else
+//            median = sortedScores[(int)Math.floor(numberOfStudents/2)] ;
+
+        statsMap.put("Mean" , mean);
+        statsMap.put("Number of Graded Questions" , (double)questionWeights.size() );
+        statsMap.put("Maximum Possible Score" , maxScore) ; // assuming all Forms should have the same sum
+        statsMap.put("Benchmark" , benchMark ) ;
+        statsMap.put("Mean Percent Score" , mean/maxScore) ;
+        statsMap.put("Highest Score" ,HightestScore ) ;
+        statsMap.put("Lowest Score" , LowestScore) ;
+        statsMap.put("Standard Deviation" , std ) ;
+        statsMap.put("Variance" , variance) ;
+        statsMap.put("Range" , HightestScore - LowestScore)  ;
+        statsMap.put("Median" , median);
+        statsMap.put("25th Percentile" , firstQ) ;
+        statsMap.put("75th Percentile" , thirtQ) ;
+        statsMap.put("Interquartile Range" , thirtQ-firstQ) ;
+//        statsMap.put()
+
+        printMap(statsMap);
+        return statsMap ;
     }
 }
 class SortByScore implements Comparator<ArrayList<String>>
