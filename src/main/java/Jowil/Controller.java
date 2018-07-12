@@ -28,8 +28,6 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
-    protected double initialRootWidth;
-    protected double initialRootHeight;
 
 
     Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable){
@@ -39,6 +37,7 @@ public abstract class Controller {
         this.XSCALE=XSCALE;
         this.YSCALE=YSCALE;
         this.isResizable = isResizable;
+
     }
 
 
@@ -46,8 +45,8 @@ public abstract class Controller {
 
         rootPane.prefHeightProperty().bind(stage.heightProperty());
         rootPane.prefWidthProperty().bind(stage.widthProperty());
-        updateSizes();
         initActions();
+        updateSizes();
 //        BackgroundFill[] fills={new BackgroundFill(Paint.valueOf("949797"),null,null)};
 //        headersButton.setBackground(new Background(fills));
     }
@@ -85,7 +84,10 @@ public abstract class Controller {
             e.printStackTrace();
         }
     }
-    protected abstract void updateSizes();
+    protected void updateSizes(){
+        rootWidth=rootPane.getPrefWidth();
+        rootHeight=rootPane.getPrefHeight();
+    }
 
     protected abstract void initActions();
 

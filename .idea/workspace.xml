@@ -2,22 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc91c48b-4aa1-4c3c-9e42-c03b74da5a99" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestCSVs/answerKeys1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestCSVs/testMulti1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Jowil/CSVHandlerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler$EmptyAnswerKeyException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler$EmptyCSVException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler$InvalidFormNumberException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/test-classes/Jowil/CSVHandlerTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/SortByScore.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Statistics.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/Jowil/StatisticsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/Jowil/StatisticsTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/FileConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/FileConfigController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Jowil/HeadersConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jowil/HeadersConfigController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/FXML/FileConfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/FXML/FileConfig.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/FXML/HeadersConfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/FXML/HeadersConfig.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FXML/FileConfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FXML/FileConfig.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FXML/HeadersConfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FXML/HeadersConfig.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/CSVHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Controller$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Controller$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Controller$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Controller$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/FileConfigController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Jowil/HeadersConfigController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jowil/HeadersConfigController.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -30,11 +35,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Statistics.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="30" selection-start-line="30" selection-end-line="30" />
+            <state relative-caret-position="272">
+              <caret line="38" selection-start-line="38" selection-end-line="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileConfigController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/FileConfigController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="527">
+              <caret line="65" column="28" selection-start-line="65" selection-start-column="28" selection-end-line="65" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -42,47 +56,47 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
+            <state relative-caret-position="1275">
+              <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Test.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Test.java">
+      <file leaf-file-name="ReportsHandler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/ReportsHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+            <state relative-caret-position="102">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
+      <file leaf-file-name="HeadersConfigController.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/HeadersConfigController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="323">
+              <caret line="62" column="49" lean-forward="true" selection-start-line="62" selection-start-column="49" selection-end-line="62" selection-end-column="49" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StatisticsTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/StatisticsTest.java">
+      <file leaf-file-name="CSVHandler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1309">
-              <caret line="77" column="8" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/Jowil/MainTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="833">
-              <caret line="49" selection-start-column="2" selection-end-line="103" selection-end-column="3" />
+            <state relative-caret-position="2856">
+              <caret line="181" column="22" selection-start-line="181" selection-start-column="22" selection-end-line="181" selection-end-column="22" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -107,11 +121,15 @@
       <find>null</find>
       <find>.fxml</find>
       <find>repor</find>
+      <find>private</find>
+      <find>deptColumn</find>
     </findStrings>
     <replaceStrings>
       <replace>Jowil.Main.STUDENTNAME</replace>
       <replace>Jowil.Main.loadCsv</replace>
       <replace>new ArrayList&lt;String&gt;()</replace>
+      <replace>protected</replace>
+      <replace>weightColumn</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -139,8 +157,15 @@
         <option value="$PROJECT_DIR$/src/test/java/Jowil/MainTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/Jowil/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/Jowil/Test.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/Jowil/Statistics.java" />
+        <option value="$PROJECT_DIR$/Jowil Stats.iml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/resources/FXML/FileConfig.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Jowil/Controller.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Jowil/FileConfigController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/FXML/HeadersConfig.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/Jowil/HeadersConfigController.java" />
       </list>
     </option>
   </component>
@@ -160,9 +185,9 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="316" />
-    <option name="y" value="115" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
     <option name="width" value="1614" />
     <option name="height" value="876" />
   </component>
@@ -174,67 +199,61 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="Jowil" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
+              <item name="Jowil Stats" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jowil Stats" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Jowil-Stats" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jowil-Stats" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Jowil" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="FXML" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -246,7 +265,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3" value="junit.framework.TestCase" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="junit.framework.TestCase" />
     <property name="create.test.in.the.same.root" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/Jowil Trials/itextTest" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -278,7 +297,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.Jowil-Stats">
     <configuration name="Jowil-Stats" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Jowil.Main" />
       <module name="Jowil Stats" />
@@ -460,35 +479,36 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Tool Output" order="10" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info id="Image Layers" order="2" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="6" weight="0.32943013" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.6394558" />
       <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.6394558" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2057101" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20530835" />
+      <window_info anchor="bottom" id="ANTLR Preview" order="12" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.12585033" />
       <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.12585033" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info id="Image Layers" order="2" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="Tool Output" order="10" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Module Dependencies" order="8" weight="0.32943013" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="ANTLR Preview" order="12" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Find" order="2" />
       <window_info anchor="bottom" id="Messages" order="0" weight="0.32993197" />
     </layout>
@@ -500,33 +520,54 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java</url>
+          <url />
           <line>6</line>
           <properties />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java</url>
+          <url />
           <line>142</line>
           <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java</url>
+          <url />
           <line>161</line>
           <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url />
+          <line>98</line>
+          <properties />
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="7" />
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="studentAnswers" language="JAVA" />
+        <watch expression="fileTextField.getScene()" language="JAVA" />
+        <watch expression="stage.getWidth()" language="JAVA" />
+        <watch expression="logger" language="JAVA" />
+        <watch expression="nextButton.getBorder()" language="JAVA" />
+        <watch expression="CSVHandler.getDetectedQHeaders()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>CSVHandler.getDetectedQHeaders()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>CSVHandler.getDetectedInfoHeaders()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>studentAnswers</expression-string>
         <language-id>JAVA</language-id>
@@ -545,6 +586,26 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/HeadersConfigController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="104" column="45" selection-start-line="104" selection-start-column="45" selection-end-line="104" selection-end-column="45" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2856">
+          <caret line="181" column="22" lean-forward="true" selection-start-line="181" selection-start-column="22" selection-end-line="181" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="142">
@@ -666,37 +727,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/ReportsHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Test/TestCSVs/test2.csv" />
     <entry file="file://$PROJECT_DIR$/Test/TestCSVs/test4.csv" />
     <entry file="file://$PROJECT_DIR$/Test/TestCSVs/test1.csv" />
     <entry file="file://$PROJECT_DIR$/Test/TestCSVs/test5.csv" />
     <entry file="file://$PROJECT_DIR$/src/Testing/MainTest.groovy" />
     <entry file="file://$PROJECT_DIR$/src/Jowil/MainTest.java" />
-    <entry file="file://$PROJECT_DIR$/.classpath">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.project">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/modules.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/compiler.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -724,13 +760,6 @@
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/javafx-src.zip!/javafx/fxml/FXMLLoader.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/FXML/Sample.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/TestCSVs/test4.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/TestCSVs/test3.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -768,13 +797,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Test.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -782,17 +804,85 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Jowil Stats.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="9" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        <state relative-caret-position="646">
+          <caret line="38" column="36" selection-start-line="38" selection-start-column="36" selection-end-line="38" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/TestCSVs/testMulti1.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="18" selection-start-column="18" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/CSVHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2856">
+          <caret line="181" column="22" selection-start-line="181" selection-start-column="22" selection-end-line="181" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1275">
+          <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/FileConfigController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="65" column="28" selection-start-line="65" selection-start-column="28" selection-end-line="65" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/ReportsHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Statistics.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        <state relative-caret-position="-1105">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Jowil/HeadersConfigController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="62" column="49" lean-forward="true" selection-start-line="62" selection-start-column="49" selection-end-line="62" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -58,27 +58,26 @@ public class FileConfigController extends Controller{
 
 
     FileConfigController(){
-        super("FileConfig.fxml","File configuration",1.3,1.3,true);
+        super("FileConfig.fxml","File configuration",1.8,1.8,true);
     }
 
 
     protected void updateSizes(){
-        rootWidth=rootPane.getPrefWidth();
-        rootHeight=rootPane.getPrefHeight();
-        fileTextField.setPrefWidth(rootWidth/1.8);
+        super.updateSizes();
+        fileTextField.setPrefWidth(rootWidth/1.4);
         fileTextField.setPrefHeight(resY/60);
         fileTextField.setLayoutX(rootWidth/9);
         fileTextField.setLayoutY(rootHeight/2.5);
         fileChooserButton.setPrefWidth(resY/25);
         fileChooserButton.setPrefHeight(resY/25);
-        fileChooserButton.setLayoutX(rootWidth/1.49);
+        fileChooserButton.setLayoutX(rootWidth/1.2);
         fileChooserButton.setLayoutY(rootHeight/2.5);
         chooserButtonImage.setFitWidth(fileChooserButton.getPrefWidth());
         chooserButtonImage.setFitHeight(fileChooserButton.getPrefHeight());
         nextButton.setPrefWidth(resX/15);
         nextButton.setPrefHeight(resX/250);
-        nextButton.setLayoutX(rootWidth/1.58);
-        nextButton.setLayoutY(rootHeight/1.2);
+        nextButton.setLayoutX(rootWidth/1.275);
+        nextButton.setLayoutY(rootHeight/1.3);
         
 
     }
@@ -121,8 +120,19 @@ public class FileConfigController extends Controller{
                             "Wrong file type: file must have a \".csv\" extension.");
                     return;
                 }
+                CSVHandler.setFilePath(csvFile.getPath());
+                try {
+                    CSVHandler.detectHeaders();
+                } catch (IOException e) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
+                            "Error reading file: "+e.getMessage()+".");
+                } catch (CSVHandler.EmptyCSVException e) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
+                            "CSV file empty.");
+                }
                 HeadersConfigController controller = new HeadersConfigController();
                 controller.startWindow();
+                stage.close();
 
             }
         });
