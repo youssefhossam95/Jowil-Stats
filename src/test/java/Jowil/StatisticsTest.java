@@ -11,9 +11,13 @@ import java.util.List;
 public class StatisticsTest extends TestCase {
 
     public void setUp() throws Exception {
+        System.out.println("hi");
         super.setUp();
     }
 
+    public void welloTest(){
+        System.out.println("yaaay");
+    }
     public static ArrayList<ArrayList<String>> generateTestAllQuestionsChoices(){
         ArrayList<ArrayList<String>> out=new ArrayList<ArrayList<String>>();
         for(int i=0;i<4;i++){
@@ -33,10 +37,22 @@ public class StatisticsTest extends TestCase {
 
     public static ArrayList<Double> generateQuestionsWeights(int n){
         ArrayList<Double> out =new ArrayList<Double>();
-        for(int i=0;i<8;i++)
+        for(int i=0;i<n;i++)
             out.add(1.0);
         return out;
 
+    }
+
+    private static void fillGradeRanges() {
+        ArrayList<String> grades = new ArrayList<String>();
+        grades.add("F") ;grades.add("D") ;grades.add("C") ; grades.add("B");grades.add("A");
+        Statistics.setGrades(grades);
+
+        ArrayList<Double> gradeLowerRange  =new ArrayList<Double>();
+        gradeLowerRange.add(0.0);
+        for(int i=0;i<4;i++)
+            gradeLowerRange.add(0.6 + 0.1 * i);
+        Statistics.setGradesLowerRange(gradeLowerRange);
     }
 
 //    public void testAll() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException {
@@ -75,15 +91,22 @@ public class StatisticsTest extends TestCase {
         questionWeights.add(generateQuestionsWeights(8));
         questionWeights.add(generateQuestionsWeights(8));
         Jowil.Statistics.setQuestionWeights(questionWeights);
+        fillGradeRanges() ;
+        Statistics.setStudentIdentifier(Statistics.getStudentNames()) ;
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
+        Jowil.Statistics.report4Stats() ;
+        ReportsHandler reportsHandler = new ReportsHandler() ;
+//        reportsHandler.g();
     }
 
 
 
 
     public void tearDown() throws Exception {
+
+        System.out.println("fuck you ");
     }
 
 
