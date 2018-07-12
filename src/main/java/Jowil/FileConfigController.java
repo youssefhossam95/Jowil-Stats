@@ -82,13 +82,13 @@ public class FileConfigController extends Controller{
 
     }
 
-    protected void initActions(){
-        initFileChooserButtonActions();
-        initNextButtonActions();
+    protected void initComponents(){
+        initFileChooserButton();
+        initNextButton();
     }
 
 
-    private void initNextButtonActions(){
+    private void initNextButton(){
 
         nextButton.setOnMouseEntered(new EventHandler<MouseEvent>
                 () {
@@ -141,7 +141,7 @@ public class FileConfigController extends Controller{
 
     }
 
-    private void initFileChooserButtonActions(){
+    private void initFileChooserButton(){
 
         fileChooserButton.setOnMouseEntered(new EventHandler<MouseEvent>
                 () {

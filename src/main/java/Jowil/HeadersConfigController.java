@@ -12,10 +12,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -23,20 +32,51 @@ import java.util.ArrayList;
 public class HeadersConfigController extends Controller{
 
 
-    JFXTreeTableColumn<Question, String> headerColumn= new JFXTreeTableColumn<>("Header");
-    JFXTreeTableColumn<Question, String> weightColumn= new JFXTreeTableColumn<>("Weight");
+
     ObservableList<Question> questions = FXCollections.observableArrayList();
     ArrayList<String> headers=CSVHandler.getDetectedQHeaders();
-    TreeItem<Question> root;
-    JFXTreeTableView<Question> treeView;
+    private TableView table = new TableView();
+    TableColumn headersCol = new TableColumn("Question");
+    TableColumn weightsCol = new TableColumn("Weight");
+    final VBox tableVbox = new VBox();
+    final Button addButton = new Button("Add Group");
+    final HBox addHBox= new HBox();
+    final Button deleteButton= new Button("Delete Selection");
 
 
-    private class Question extends RecursiveTreeObject<Question> {
-        public SimpleStringProperty header;
-        public SimpleStringProperty weight;
-        Question(String header, String weight){
+
+    public static class Question {
+
+
+        private SimpleStringProperty header;
+        private SimpleStringProperty weight;
+        private Question(String header, String weight){
             this.header=new SimpleStringProperty(header);
             this.weight=new SimpleStringProperty(weight);
+        }
+
+        public String getHeader() {
+            return header.get();
+        }
+
+        public SimpleStringProperty headerProperty() {
+            return header;
+        }
+
+        public void setHeader(String header) {
+            this.header.set(header);
+        }
+
+        public String getWeight() {
+            return weight.get();
+        }
+
+        public SimpleStringProperty weightProperty() {
+            return weight;
+        }
+
+        public void setWeight(String weight) {
+            this.weight.set(weight);
         }
     }
 
@@ -48,60 +88,115 @@ public class HeadersConfigController extends Controller{
 
     protected void updateSizes() {
         super.updateSizes();
-        treeView.setPrefWidth(rootWidth/1.5);
-        treeView.setPrefHeight(rootHeight/1.5);
+        tableVbox.setSpacing(resY/50);
+        tableVbox.setAlignment(Pos.CENTER);
+        tableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/10));
+        table.setPrefHeight(rootHeight/1.5);
+        addHBox.setSpacing(resX/400);
+        //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
+        deleteButton.setPrefWidth(addHBox.getWidth()/1.5);
+
     }
 
-    protected void initActions() {
-        treeViewInitActions();
+    protected void initComponents() {
+        initTableVBox();
     }
 
 
-    public void treeViewInitActions(){
-
-        headerColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Question, String> param) -> {
-            if (headerColumn.validateValue(param)) {
-                return param.getValue().getValue().header;
-            } else {
-                return headerColumn.getComputedValue(param);
-            }
-        });
 
 
 
-        weightColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Question, String> param) -> {
-            if (weightColumn.validateValue(param)) {
-                return  param.getValue().getValue().weight;
-            } else {
-                return weightColumn.getComputedValue(param);
-            }
-        });
 
 
-        headerColumn.setCellFactory((TreeTableColumn<Question, String> param) -> new GenericEditableTreeTableCell<>(
-                new TextFieldEditorBuilder()));
-        headerColumn.setOnEditCommit((TreeTableColumn.CellEditEvent<Question, String> t) -> t.getTreeTableView()
-                .getTreeItem(t.getTreeTablePosition()
-                        .getRow())
-                .getValue().header.set(t.getNewValue()));
+    public void initTableVBox(){
 
-        weightColumn.setCellFactory((TreeTableColumn<Question, String> param) -> new GenericEditableTreeTableCell<>(
-                new TextFieldEditorBuilder()));
-        headerColumn.setOnEditCommit((TreeTableColumn.CellEditEvent<Question, String> t) -> t.getTreeTableView()
-                .getTreeItem(t.getTreeTablePosition()
-                        .getRow())
-                .getValue().weight.set(t.getNewValue()));
+        final Label label = new Label("Questions");
+        label.setFont(new Font("Arial", 20));
 
 
         for(int i=0;i<headers.size();i++)
             questions.add(new Question(headers.get(i),"1.0"));
 
-        root = new RecursiveTreeItem<>(questions, RecursiveTreeObject::getChildren);
-        treeView = new JFXTreeTableView<>(root);
-        treeView.setShowRoot(false);
-        treeView.setEditable(true);
-        treeView.getColumns().setAll(headerColumn,weightColumn);
-        treeView.setStyle("-fx-border-width:1;-fx-border-color:#949797");
-        rootPane.getChildren().add(treeView);
+
+        headersCol.setCellValueFactory(
+                new PropertyValueFactory<Question,String>("header")
+        );
+
+
+        headersCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        headersCol.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<Question, String>>() {
+
+                    public void handle(TableColumn.CellEditEvent<Question, String> t) {
+                        ((Question) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setHeader(t.getNewValue());
+                    }
+                }
+        );
+
+        weightsCol.setCellValueFactory(
+                new PropertyValueFactory<Question,String>("weight")
+        );
+
+        weightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        weightsCol.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<Question, String>>() {
+
+                    public void handle(TableColumn.CellEditEvent<Question, String> t) {
+                        String w=t.getNewValue().trim();
+                        try
+                        {
+                            Double.parseDouble(w);
+                        }
+                        catch(NumberFormatException e)
+                        {
+                            ((Question) t.getTableView().getItems().get(t.getTablePosition().getRow())).setWeight(t.getOldValue());
+                            t.getTableView().refresh();
+                            return;
+                        }
+                        ((Question) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setWeight(w);
+                    }
+                }
+        );
+
+        initAddHBox();
+        deleteButton.setStyle("-fx-background-color:red;-fx-text-fill: white;");
+        table.setEditable(true);
+        table.setItems(questions);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        table.getColumns().addAll(headersCol,weightsCol);
+        tableVbox.getChildren().addAll(label, table,addHBox,deleteButton);
+        rootPane.getChildren().addAll(tableVbox);
+        headersCol.setSortable(false);
+        headersCol.setSortType(TableColumn.SortType.ASCENDING);
+        weightsCol.setSortable(true);
+
+    }
+
+    private void initAddHBox(){
+
+        final TextField groupName = new TextField();
+        groupName.setPromptText("Group Name");
+        final TextField questionsCount = new TextField();
+        questionsCount.setPromptText("Number of questions");
+
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                for (int i = 1; i <= Integer.parseInt(questionsCount.getText()); i++)
+                    questions.add(new Question(groupName.getText() + Integer.toString(i), "1.0"));
+                table.refresh();
+            }
+
+        });
+
+        addButton.setStyle("-fx-background-color:#3CB371;-fx-text-fill: white;");
+        addHBox.getChildren().addAll(groupName, questionsCount,addButton);
+
+
     }
 }

@@ -17,7 +17,7 @@ public abstract class Controller {
 
     @FXML
     protected Pane rootPane;
-
+    protected Scene scene;
     protected Stage stage;
     static public double resX;
     static public double resY;
@@ -28,6 +28,7 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
+
 
 
     Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable){
@@ -45,7 +46,7 @@ public abstract class Controller {
 
         rootPane.prefHeightProperty().bind(stage.heightProperty());
         rootPane.prefWidthProperty().bind(stage.widthProperty());
-        initActions();
+        initComponents();
         updateSizes();
 //        BackgroundFill[] fills={new BackgroundFill(Paint.valueOf("949797"),null,null)};
 //        headersButton.setBackground(new Background(fills));
@@ -60,10 +61,7 @@ public abstract class Controller {
             stage = new Stage();
             loader.setController(this);
             Pane root = loader.load();
-            Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-            resX=primaryScreenBounds.getWidth();
-            resY=primaryScreenBounds.getHeight();
-            Scene scene = new Scene(root,resX/XSCALE,resY/YSCALE);
+            scene = new Scene(root,resX/XSCALE,resY/YSCALE);
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
@@ -89,7 +87,7 @@ public abstract class Controller {
         rootHeight=rootPane.getPrefHeight();
     }
 
-    protected abstract void initActions();
+    protected abstract void initComponents();
 
 
 }
