@@ -76,17 +76,17 @@ public class CSVHandler {
 
         //initialize internal fields with parsed data
         Statistics.setStudentAnswers(studentsAnswers);
-        Statistics.setIdentifierMode(Statistics.AUTOMODE);
+//        Statistics.setIdentifierMode(Statistics.AUTOMODE);
 
         if (studentIDs.size() != 0) {
             Statistics.setStudentIDs(studentIDs);
-            Statistics.setIdentifierMode(Statistics.IDMODE);
+//            Statistics.setIdentifierMode(Statistics.IDMODE);
         }
 
         if (studentNames.size() != 0) {
             Statistics.setStudentNames(studentNames);
-            if (studentIDs.size() == 0)
-                Statistics.setIdentifierMode(Statistics.NAMEMODE);
+//            if (studentIDs.size() == 0)
+//                Statistics.setIdentifierMode(Statistics.NAMEMODE);
         }
 
         if (studentForms.size() == 0) {
