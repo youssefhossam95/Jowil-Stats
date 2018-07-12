@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+	   <HBox prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: teal;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+	   <Hyperlink focusTraversable="false" layoutX="187.0" layoutY="203.0" prefHeight="19.0" prefWidth="215.0" text="Open an Existing Project" textAlignment="JUSTIFY" underline="true">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Hyperlink>
+      <Hyperlink focusTraversable="false" layoutX="187.0" layoutY="176.0" prefHeight="19.0" prefWidth="215.0" text="Start a new Project" textAlignment="JUSTIFY" underline="true">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Hyperlink>
+      <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="169.0" layoutY="180.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Plus_48px.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="169.0" layoutY="208.0">
+         <image>
+            <Image url="@../Images/Documents Folder_48px.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

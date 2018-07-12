@@ -1,1 +1,5 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+#fileChoserBut{
+-fx-background-image: url("../../../src/main/resources/Images/icons8_Microsoft_Excel_48px.png");
+
+}

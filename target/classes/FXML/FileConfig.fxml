@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <JFXTextField fx:id="fileTextField" prefWidth="10" prefHeight="50" />
+      <JFXButton fx:id="fileChooserButton" >
+          <graphic>
+              <ImageView fx:id="chooserButtonImage" >
+                  <image>
+                      <Image url="@../Images/icons8_Add_File_48px.png" />
+                  </image>
+              </ImageView>
+          </graphic>
+          <tooltip><Tooltip text="Open CSV file" /></tooltip>
+      </JFXButton>
+       <JFXButton fx:id="nextButton" text="Next" style="-fx-border-width:1;-fx-border-color:#949797">
+       </JFXButton>
+   </children>
+</AnchorPane>
