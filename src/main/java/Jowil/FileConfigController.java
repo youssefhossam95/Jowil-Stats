@@ -122,7 +122,16 @@ public class FileConfigController extends Controller{
                 }
                 CSVHandler.setFilePath(csvFile.getPath());
                 try {
-                    CSVHandler.detectHeaders();
+                    if(CSVHandler.processHeaders()){
+                        HeadersEditController controller = new HeadersEditController();
+                        controller.startWindow();
+                    }
+                    else{
+                        HeadersCreateController controller=new HeadersCreateController();
+                        controller.startWindow();
+                    }
+                    stage.close();
+
                 } catch (IOException e) {
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
                             "Error reading file: "+e.getMessage()+".");
@@ -130,9 +139,6 @@ public class FileConfigController extends Controller{
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
                             "CSV file empty.");
                 }
-                HeadersConfigController controller = new HeadersConfigController();
-                controller.startWindow();
-                stage.close();
 
             }
         });
@@ -180,14 +186,7 @@ public class FileConfigController extends Controller{
 
     }
 
-    public static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.initOwner(owner);
-        alert.show();
-    }
+
     
 
 

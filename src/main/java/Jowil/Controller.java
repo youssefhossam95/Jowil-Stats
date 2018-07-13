@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public abstract class Controller {
+
+    ///fields
 
     @FXML
     protected Pane rootPane;
@@ -31,6 +34,7 @@ public abstract class Controller {
 
 
 
+    //Main methods
     Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable){
 
         this.myFXML="/FXML/"+fxmlName;
@@ -89,5 +93,16 @@ public abstract class Controller {
 
     protected abstract void initComponents();
 
+
+
+    //helper methods
+    protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.show();
+    }
 
 }
