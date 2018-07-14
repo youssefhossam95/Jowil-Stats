@@ -82,7 +82,6 @@ public class HeadersEditController extends Controller{
         weightsHBox.setSpacing(resX/400);
         //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
         deleteButton.setPrefWidth(weightsHBox.getWidth()/1.5);
-
     }
 
     protected void initComponents() {

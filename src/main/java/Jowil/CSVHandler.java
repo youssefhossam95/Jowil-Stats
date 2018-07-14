@@ -28,7 +28,7 @@ public class CSVHandler {
     private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
     private static ArrayList<Group> detectedGroups= new ArrayList<Group>();
     private static int subScoresCount=0;
-    private static int scoresStartIndex; //index of column where score columns (subj and non subj) start. (index based on QHeaders only)
+    private static int scoresStartIndex; //index of column where score columns (subj and non subj) start
     private static int subjStartIndex=-1;
     private static int subjEndIndex=-1;
 
@@ -77,9 +77,9 @@ public class CSVHandler {
         while ((line = input.readLine()) != null) { //parse students answers
             String[] row = line.split(",");
             updateIdentifiers(studentIDs, studentNames, studentForms, row, identifiers,formsCount);
-            studentsAnswers.add(cropArray(row, identifiers.size(),identifiers.size()+scoresStartIndex));
-            if(subjEndIndex!=-1)
-                subScores.add(getSubjScoresFromRow(row,identifiers.size()+subjStartIndex,identifiers.size()+subjEndIndex));
+            studentsAnswers.add(cropArray(row, identifiers.size(),scoresStartIndex));
+            if(subjStartIndex!=-1)
+                subScores.add(getSubjScoresFromRow(row,subjStartIndex,subjEndIndex));
         }
 
         //initialize Statistics internal fields with parsed data
@@ -212,8 +212,6 @@ public class CSVHandler {
 
     private static void classifyHeaders(String [] headers){
         Pattern groupsPattern = Pattern.compile(".*\\d+");
-        ArrayList<String> qHeaders= new ArrayList<String>();
-        ArrayList<Group> groups= new ArrayList<Group>();
 
         //info headers
         int i;
@@ -223,51 +221,33 @@ public class CSVHandler {
             detectedInfoHeaders.add(headers[i]);
         }
 
+        //search for scores section start (if exists)
+        scoresStartIndex=headers.length;
+        while(scoresStartIndex>=0 && (headers[i].toLowerCase().trim().startsWith("subj") || headers[i].toLowerCase().contains("score")))
+            scoresStartIndex--;
+
+        scoresStartIndex++;
+
         // question headers and Groups creations
         int expectedIndex=1,digitBegin=0;
         String currentGroup="";
+        for(;i<scoresStartIndex;i++) {
 
-        for(;i<headers.length;i++) {
             if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1){ //expected not found -> probably end of group
-                groups.add(new Group(currentGroup, expectedIndex-1));
+                detectedGroups.add(new Group(currentGroup, expectedIndex-1));
                 expectedIndex=1;
-                if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1){
-                    if(headers[i].toLowerCase().trim().startsWith("subj")) //subj without number -> only one sub score
-                        subScoresCount=1;
-                    else //probably score added by mistake -> ignore
-                    continue;
-                }
+                if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1)//a weird column
+                    break;
             }
             currentGroup=headers[i].substring(0,digitBegin);
             expectedIndex++;
-            qHeaders.add(headers[i]);
-        }
-        cleanGroupsAndHeaders(qHeaders,groups);
-
-    }
-
-    
-    private static boolean isQHeader(String header, Pattern pattern){
-        Matcher matcher = pattern.matcher(header);
-        return matcher.matches();
-    }
-
-
-    private static void cleanGroupsAndHeaders(ArrayList<String> qHeaders, ArrayList<Group> groups){
-
-        //remove score1 ,score2 ,subj score1, etc. from qHeaders
-        scoresStartIndex=qHeaders.size();
-        for(int i=0;i<qHeaders.size();i++){
-            if(qHeaders.get(i).toLowerCase().contains("score") || qHeaders.get(i).toLowerCase().contains("subj")) {
-                scoresStartIndex=i;
-                break;
-            }
-            detectedQHeaders.add(qHeaders.get(i));
+            detectedQHeaders.add(headers[i]);
         }
 
-        //detect subj start and end indices
-        for(int i=0;i<qHeaders.size();i++){
-            if(qHeaders.get(i).toLowerCase().contains("subj")){
+        //find sub score start and end indices(if exist)
+        for(i=scoresStartIndex;i<headers.length;i++){
+
+            if(headers[i].toLowerCase().startsWith("subj")){
                 if(subjStartIndex==-1) { //subj first time
                     subjStartIndex = i;
                     subjEndIndex=i;
@@ -275,19 +255,19 @@ public class CSVHandler {
                 else
                     subjEndIndex=i;
             }
-            subjEndIndex++; //to be exclusive
         }
 
-        //remove redundant score groups
-
-        for(Group group : groups){
-
-            if(group.getName().toLowerCase().contains("score") || group.getName().toLowerCase().contains("subj"))
-                continue;
-            detectedGroups.add(group);
-        }
+        subjEndIndex++; //to be exclusive
 
     }
+
+
+    private static boolean isQHeader(String header, Pattern pattern){
+        Matcher matcher = pattern.matcher(header);
+        return matcher.matches();
+    }
+
+
 
 
 
