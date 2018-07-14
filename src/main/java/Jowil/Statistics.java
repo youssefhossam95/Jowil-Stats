@@ -43,6 +43,7 @@ public class Statistics {
     private static ArrayList<Double> gradesLowerRange; // list of the lower range of the grades assuming that the upper range is the lower range of the next grade
     private static ArrayList<String> studentIdentifier;
     private static String identifierName ;
+    private static ArrayList<Double> subjMaxScores;
 
     ////////////////////setters
 //    public static void setIdentifierMode(int identifierMode) {
@@ -98,6 +99,14 @@ public class Statistics {
 
     public static void setIdentifierName(String idnetifierName) {
         Statistics.identifierName = idnetifierName;
+    }
+
+    public static ArrayList<Double> getSubjMaxScores() {
+        return subjMaxScores;
+    }
+
+    public static void setSubjMaxScores(ArrayList<Double> subjScores) {
+        Statistics.subjMaxScores = subjScores;
     }
 
     //getters

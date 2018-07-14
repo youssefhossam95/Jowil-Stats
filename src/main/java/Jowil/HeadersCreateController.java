@@ -82,8 +82,8 @@ public class HeadersCreateController extends Controller{
     }
 
 
-    HeadersCreateController(){
-        super("HeadersCreate.fxml","Headers and Weights",1.25,1.25,true);
+    HeadersCreateController(Controller back){
+        super("HeadersCreate.fxml","Headers and Weights",1.25,1.25,true,back);
     }
 
 

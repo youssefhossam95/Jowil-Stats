@@ -59,7 +59,7 @@ public class FileConfigController extends Controller{
 
 //methods
     FileConfigController(){
-        super("FileConfig.fxml","File configuration",1.8,1.8,true);
+        super("FileConfig.fxml","File configuration",1.8,1.8,true,null);
     }
 
 
@@ -109,9 +109,7 @@ public class FileConfigController extends Controller{
             }
         });
 
-        nextButton.setOnMouseClicked(new EventHandler<MouseEvent>
-                () {
-            public void handle(MouseEvent t) {
+        nextButton.setOnMouseClicked(t->{
                 csvFile=new File(fileTextField.getText());
                 if(!csvFile.exists()){
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
@@ -126,11 +124,11 @@ public class FileConfigController extends Controller{
                 CSVHandler.setFilePath(csvFile.getPath());
                 try {
                     if(CSVHandler.processHeaders()){
-                        HeadersEditController controller = new HeadersEditController();
+                        ViewGroupsAndSubjsController controller = new ViewGroupsAndSubjsController(this);
                         controller.startWindow();
                     }
                     else{
-                        HeadersCreateController controller=new HeadersCreateController();
+                        HeadersCreateController controller=new HeadersCreateController(this);
                         controller.startWindow();
                     }
                     stage.close();
@@ -143,8 +141,7 @@ public class FileConfigController extends Controller{
                             "CSV file empty.");
                 }
 
-            }
-        });
+            });
 
     }
 

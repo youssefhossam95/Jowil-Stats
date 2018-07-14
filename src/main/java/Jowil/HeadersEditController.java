@@ -68,8 +68,8 @@ public class HeadersEditController extends Controller{
 
     //essentials
 
-    HeadersEditController(){
-        super("HeadersEdit.fxml","Headers and Weights",1.25,1.25,true);
+    HeadersEditController(Controller back){
+        super("HeadersEdit.fxml","Headers and Weights",1.25,1.25,true,back);
     }
 
 
@@ -180,16 +180,5 @@ public class HeadersEditController extends Controller{
 
     }
 
-    private boolean isValidDouble(String s){
-        try
-        {
-            Double.parseDouble(s);
-        }
-        catch(NumberFormatException e)
-        {
-            return false;
-        }
-        return true;
 
-    }
 }

@@ -1,5 +1,6 @@
 package Jowil;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -31,18 +32,22 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
-
+    protected Controller back;
+    protected Controller next;
+    JFXButton backButton= new JFXButton("Back");
 
 
     //Main methods
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable){
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back){
 
         this.myFXML="/FXML/"+fxmlName;
         this.myTitle=myTitle;
         this.XSCALE=XSCALE;
         this.YSCALE=YSCALE;
         this.isResizable = isResizable;
-
+        if(back==null)
+            backButton.setVisible(false);
+        this.back=back;
     }
 
 
@@ -51,9 +56,18 @@ public abstract class Controller {
         rootPane.prefHeightProperty().bind(stage.heightProperty());
         rootPane.prefWidthProperty().bind(stage.widthProperty());
         initComponents();
+        initBackButton();
         updateSizes();
+
+
+
+
 //        BackgroundFill[] fills={new BackgroundFill(Paint.valueOf("949797"),null,null)};
 //        headersButton.setBackground(new Background(fills));
+    }
+
+    public void showWindow(){
+        stage.show();
     }
 
     public void startWindow(){
@@ -89,6 +103,10 @@ public abstract class Controller {
     protected void updateSizes(){
         rootWidth=rootPane.getPrefWidth();
         rootHeight=rootPane.getPrefHeight();
+        backButton.setPrefWidth(resX/15);
+        backButton.setPrefHeight(resX/250);
+        backButton.setLayoutY(rootHeight/1.17);
+        backButton.setLayoutX(rootWidth/1.35);
     }
 
     protected abstract void initComponents();
@@ -104,5 +122,33 @@ public abstract class Controller {
         alert.initOwner(owner);
         alert.show();
     }
+
+
+    protected boolean isValidDouble(String s){
+        try
+        {
+            Double.parseDouble(s);
+        }
+        catch(NumberFormatException e)
+        {
+            return false;
+        }
+        return true;
+
+    }
+
+    private void initBackButton(){
+        backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
+        rootPane.getChildren().add(backButton);
+        backButton.setOnMouseClicked(t->{
+            back.showWindow();
+            stage.close();
+        });
+
+        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
+        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
+    }
+
+
 
 }

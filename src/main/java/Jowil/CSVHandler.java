@@ -27,10 +27,10 @@ public class CSVHandler {
     private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
     private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
     private static ArrayList<Group> detectedGroups= new ArrayList<Group>();
-    private static int subScoresCount=0;
     private static int scoresStartIndex; //index of column where score columns (subj and non subj) start
     private static int subjStartIndex=-1;
     private static int subjEndIndex=-1;
+    private static int subjQuestionsCount=0;
 
     //getters and setters
     public static void setFilePath(String filePath) {
@@ -44,6 +44,20 @@ public class CSVHandler {
         return detectedInfoHeaders;
     }
 
+    public static ArrayList<Group> getDetectedGroups() {
+        return detectedGroups;
+    }
+
+    public static void setDetectedGroups(ArrayList<Group> detectedGroups) {
+        CSVHandler.detectedGroups = detectedGroups;
+    }
+    public static int getSubjQuestionsCount() {
+        return subjQuestionsCount;
+    }
+
+    public static void setSubjQuestionsCount(int subjQuestionsCount) {
+        CSVHandler.subjQuestionsCount = subjQuestionsCount;
+    }
 
 
     //public methods
@@ -128,6 +142,9 @@ public class CSVHandler {
 
 
     public static boolean processHeaders() throws IOException, EmptyCSVException {
+        detectedGroups=new ArrayList<>();
+        detectedQHeaders=new ArrayList<>();
+        detectedInfoHeaders=new ArrayList<>();
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line;
         if((line = input.readLine()) != null){
@@ -222,8 +239,8 @@ public class CSVHandler {
         }
 
         //search for scores section start (if exists)
-        scoresStartIndex=headers.length;
-        while(scoresStartIndex>=0 && (headers[i].toLowerCase().trim().startsWith("subj") || headers[i].toLowerCase().contains("score")))
+        scoresStartIndex=headers.length-1;
+        while(scoresStartIndex>=0 && (headers[scoresStartIndex].toLowerCase().trim().startsWith("subj") || headers[scoresStartIndex].toLowerCase().contains("score")))
             scoresStartIndex--;
 
         scoresStartIndex++;
@@ -233,16 +250,17 @@ public class CSVHandler {
         String currentGroup="";
         for(;i<scoresStartIndex;i++) {
 
-            if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1){ //expected not found -> probably end of group
+            if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1){ //expected not found -> either end of group or weird column
+                if((digitBegin=headers[i].indexOf("1"))==-1)//a weird column
+                    break;
                 detectedGroups.add(new Group(currentGroup, expectedIndex-1));
                 expectedIndex=1;
-                if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1)//a weird column
-                    break;
             }
             currentGroup=headers[i].substring(0,digitBegin);
             expectedIndex++;
             detectedQHeaders.add(headers[i]);
         }
+        detectedGroups.add(new Group(currentGroup,expectedIndex-1)); //add last group
 
         //find sub score start and end indices(if exist)
         for(i=scoresStartIndex;i<headers.length;i++){
@@ -258,6 +276,9 @@ public class CSVHandler {
         }
 
         subjEndIndex++; //to be exclusive
+
+        if(subjStartIndex!=-1)
+            subjQuestionsCount=subjEndIndex-subjStartIndex;
 
     }
 
