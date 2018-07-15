@@ -34,15 +34,16 @@ public class Statistics {
     private static ArrayList<ArrayList<Double>> questionWeights; //form vs question weights
     private static ArrayList<String> questionNames;
     private static ArrayList<ArrayList<String>> correctAnswers; //form vs correct answers
-    private static ArrayList<ArrayList<String>> studentAnswers;
+    private static ArrayList<ArrayList<String>> studentAnswers; //student vs answers
     private static ArrayList<ArrayList<ArrayList<String>>>sortedStudentAnswers; //for each form :student vs (answers+score)
     private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
-    private static ArrayList<Double> subScores; //subjective score
+    private static ArrayList<ArrayList<Double>> subScores; //subjective scores -> student  vs sub scores
     private static ArrayList<String> grades ; // list of university grades i.e. A , B , C
     private static ArrayList<Double> gradesLowerRange; // list of the lower range of the grades assuming that the upper range is the lower range of the next grade
     private static ArrayList<String> studentIdentifier;
-    private static String idnetifierName ;
+    private static String identifierName ;
+    private static ArrayList<Double> subjMaxScores;
 
     ////////////////////setters
 //    public static void setIdentifierMode(int identifierMode) {
@@ -87,7 +88,7 @@ public class Statistics {
     public static void setGrades(ArrayList<String> grades) {
         Statistics.grades = grades;
     }
-    public static void setSubScores(ArrayList<Double> subScores) {
+    public static void setSubScores(ArrayList<ArrayList<Double>> subScores) {
         Statistics.subScores = subScores;
     }
 
@@ -96,8 +97,16 @@ public class Statistics {
         Statistics.studentIdentifier = studentIdentifier;
     }
 
-    public static void setIdnetifierName(String idnetifierName) {
-        Statistics.idnetifierName = idnetifierName;
+    public static void setIdentifierName(String idnetifierName) {
+        Statistics.identifierName = idnetifierName;
+    }
+
+    public static ArrayList<Double> getSubjMaxScores() {
+        return subjMaxScores;
+    }
+
+    public static void setSubjMaxScores(ArrayList<Double> subjScores) {
+        Statistics.subjMaxScores = subjScores;
     }
 
     //getters

@@ -1,11 +1,13 @@
 package Jowil;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -15,9 +17,11 @@ import java.util.logging.Logger;
 
 public abstract class Controller {
 
+    ///fields
+
     @FXML
     protected Pane rootPane;
-
+    protected Scene scene;
     protected Stage stage;
     static public double resX;
     static public double resY;
@@ -28,17 +32,22 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
-    protected double initialRootWidth;
-    protected double initialRootHeight;
+    protected Controller back;
+    protected Controller next;
+    JFXButton backButton= new JFXButton("Back");
 
 
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable){
+    //Main methods
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back){
 
         this.myFXML="/FXML/"+fxmlName;
         this.myTitle=myTitle;
         this.XSCALE=XSCALE;
         this.YSCALE=YSCALE;
         this.isResizable = isResizable;
+        if(back==null)
+            backButton.setVisible(false);
+        this.back=back;
     }
 
 
@@ -46,10 +55,19 @@ public abstract class Controller {
 
         rootPane.prefHeightProperty().bind(stage.heightProperty());
         rootPane.prefWidthProperty().bind(stage.widthProperty());
+        initComponents();
+        initBackButton();
         updateSizes();
-        initActions();
+
+
+
+
 //        BackgroundFill[] fills={new BackgroundFill(Paint.valueOf("949797"),null,null)};
 //        headersButton.setBackground(new Background(fills));
+    }
+
+    public void showWindow(){
+        stage.show();
     }
 
     public void startWindow(){
@@ -61,10 +79,7 @@ public abstract class Controller {
             stage = new Stage();
             loader.setController(this);
             Pane root = loader.load();
-            Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-            resX=primaryScreenBounds.getWidth();
-            resY=primaryScreenBounds.getHeight();
-            Scene scene = new Scene(root,resX/XSCALE,resY/YSCALE);
+            scene = new Scene(root,resX/XSCALE,resY/YSCALE);
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
@@ -85,9 +100,55 @@ public abstract class Controller {
             e.printStackTrace();
         }
     }
-    protected abstract void updateSizes();
+    protected void updateSizes(){
+        rootWidth=rootPane.getPrefWidth();
+        rootHeight=rootPane.getPrefHeight();
+        backButton.setPrefWidth(resX/15);
+        backButton.setPrefHeight(resX/250);
+        backButton.setLayoutY(rootHeight/1.17);
+        backButton.setLayoutX(rootWidth/1.35);
+    }
 
-    protected abstract void initActions();
+    protected abstract void initComponents();
+
+
+
+    //helper methods
+    protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.show();
+    }
+
+
+    protected boolean isValidDouble(String s){
+        try
+        {
+            Double.parseDouble(s);
+        }
+        catch(NumberFormatException e)
+        {
+            return false;
+        }
+        return true;
+
+    }
+
+    private void initBackButton(){
+        backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
+        rootPane.getChildren().add(backButton);
+        backButton.setOnMouseClicked(t->{
+            back.showWindow();
+            stage.close();
+        });
+
+        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
+        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
+    }
+
 
 
 }

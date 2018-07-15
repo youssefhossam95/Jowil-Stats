@@ -84,7 +84,7 @@ public class StatisticsTest extends TestCase {
         studentData.add(CSVHandler.STUDENTNAME);
         studentData.add(CSVHandler.IGNORE);
         studentData.add(CSVHandler.STUDENTFORM);
-        boolean isHeaders=CSVHandler.detectHeaders();
+        boolean isHeaders=CSVHandler.processHeaders();
         if(isHeaders)
             Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
         Jowil.CSVHandler.loadCsv(studentData, isHeaders, false,2);
