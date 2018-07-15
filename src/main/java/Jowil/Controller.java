@@ -35,6 +35,8 @@ public abstract class Controller {
     protected Controller back;
     protected Controller next;
     JFXButton backButton= new JFXButton("Back");
+    protected boolean isContentEdited=false;
+
 
 
     //Main methods
@@ -148,6 +150,8 @@ public abstract class Controller {
         backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
         backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
     }
+
+    protected abstract void saveChanges();
 
 
 

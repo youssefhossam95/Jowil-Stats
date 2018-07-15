@@ -68,7 +68,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
     private HBox tablesHbox= new HBox();
     private HBox buttonsHbox= new HBox();
     private JFXButton manualButton= new JFXButton("Edit Manually");
-    private boolean isContentEdited=false;
 
     //data fields
     ObservableList<Group> tableGroups = FXCollections.observableArrayList();
@@ -77,7 +76,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
     //main methods
     ViewGroupsAndSubjsController(Controller back){
-        super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions Review",1.25,1.25,true,back);
+        super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions",1.25,1.25,true,back);
     }
 
 
@@ -176,12 +175,12 @@ public class ViewGroupsAndSubjsController  extends Controller{
                 next = controller = new HeadersEditController(this);
                 controller.startWindow();
             }
-            else{
-                    controller = (HeadersEditController) next;
-                    controller.showWindow();
-                }
-
+            else {
+                controller = (HeadersEditController) next;
+                controller.showWindow();
+            }
             isContentEdited=false;
+            saveChanges();
         });
 
         buttonsHbox.getChildren().add(nextButton);
@@ -262,6 +261,14 @@ public class ViewGroupsAndSubjsController  extends Controller{
     
     private void initButtonsHBox(){
         rootPane.getChildren().add(buttonsHbox);
+    }
+
+    protected void saveChanges(){
+        ArrayList<Double> maxSubjScores= new ArrayList<>();
+        for(SubjQuestion question : subjQuestions)
+            maxSubjScores.add(Double.parseDouble(question.getMaxScore()));
+
+        Statistics.setSubjMaxScores(maxSubjScores);
     }
     
 
