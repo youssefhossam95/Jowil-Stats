@@ -9,11 +9,14 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import sun.plugin.dom.core.Element;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ReportsHandler {
 
@@ -23,15 +26,50 @@ public class ReportsHandler {
     private final String condensedTestTemplatePath = reportsPath+"condensedTestReport\\condensedTestTemplate.html";
 
     private final String report3TemplatePath = reportsPath + "report3\\report3Template.html";
+    private final String report4TemplatePath = reportsPath + "report4\\report4Template.html";
 
-   private String createRowsHtml(List<List<String>> tableData , String rowClass , String dataClass){
-       String tableHtml = "<tr class= '"+ rowClass +"' > \n" ;
-       for(int i  = 0 ; i < tableData.size(); i ++ ) {
-           for(int j = 0 ; j <tableData.get(0).size() ; j ++ ) {
-               tableHtml += "   <td class='" + dataClass + "'>" + tableData.get(i).get(j) + "</td> \n";
+
+
+    private  Map<String , String > parseCellData(String cellDataString) {
+        Map<String , String > cellDataMap = new HashMap<String , String>() ;
+
+        Pattern pattern = Pattern.compile("#(.+)");
+        Matcher matcher = pattern.matcher(cellDataString);
+        if (matcher.find())
+            cellDataMap.put("attributes" , matcher.group(1)) ;
+        else
+            cellDataMap.put("attributes","") ;
+
+        pattern = Pattern.compile(";([^#]+)#?");
+        matcher = pattern.matcher(cellDataString);
+        if (matcher.find())
+            cellDataMap.put("class" , matcher.group(1)) ;
+        else
+            cellDataMap.put("class" , "") ;
+
+
+        pattern = Pattern.compile("([^;#]+)[#|;]?");
+        matcher = pattern.matcher(cellDataString);
+        if (matcher.find())
+            cellDataMap.put("data" , matcher.group(1)) ;
+        else
+            cellDataMap.put("data" , "") ;
+
+        return cellDataMap ;
+    }
+
+   private String createRowsHtml(ArrayList<ArrayList<String>> tableData , String rowClass , String commonDataClass){
+        String tableHtml = ""  ;
+        for(int i  = 0 ; i < tableData.size(); i ++ ) {
+            tableHtml += "<tr class= '"+ rowClass +"' > \n" ;
+            ArrayList<String> tableRow = tableData.get(i);
+           for(int cellIndex = 0 ; cellIndex <tableData.get(0).size() ; cellIndex ++ ) {
+               Map<String , String > cellData = parseCellData(tableRow.get(cellIndex));
+               tableHtml += "   <td "+ cellData.get("attributes")+" class='" + commonDataClass + " " +cellData.get("class")+"'>"
+                       +cellData.get("data") + "</td> \n";
            }
-       }
-        tableHtml+= "</tr>" ;
+            tableHtml+= "</tr>" ;
+        }
        return tableHtml ;
    }
 
@@ -78,8 +116,8 @@ public class ReportsHandler {
         File file = new File(gradeDistTemplatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
         System.out.println(doc.body().html());
-        String tableRows = createRowsHtml(tableDataAdapter(), "", "tg-l711");
-        doc.select("tr").last().after(tableRows);
+//        String tableRows = createRowsHtml(tableDataAdapter(), "", "tg-l711");
+//        doc.select("tr").last().after(tableRows);
 //        doc.select("img").attr("src" , gradeDistHistogramChartPaht);
 
         writeHtmlFile(reportsPath + "gradesDistributionReport\\test.html", doc);
@@ -127,10 +165,76 @@ public class ReportsHandler {
 
    }
 
-   public void generateReport4() {
-       ArrayList<ArrayList<String>> statsTable = Statistics.report4Stats() ;
+   private  ArrayList<ArrayList<String>> generateFakeTable(int numberOfRows , int numberOfCols) {
+       ArrayList<ArrayList<String>> out = new ArrayList<ArrayList<String>>();
+       for (int i = 0 ; i< numberOfRows ; i++) {
+           ArrayList<String>outRow = new ArrayList<String>() ;
+           for (int j = 0 ; j < numberOfCols ; j ++)
+               outRow.add("R"+(i+1)+" C"+(j+1)) ;
+           out.add(outRow) ;
+       }
+       return out ;
    }
-   public void createCondensedTestReport() throws IOException {
+
+   public void generateReport4() throws IOException, DocumentException {
+
+       final String dataCellCommonClass = "tg-l711" ;
+
+       File file = new File(report4TemplatePath);
+
+       Document doc =  Jsoup.parse(file , "UTF-8") ;
+
+       String headerHtml = doc.select("tr.headerRow").outerHtml();
+
+
+       // get the table data from statistics class
+       ArrayList<ArrayList<String>> statsTable = Statistics.report4Stats() ;
+
+//       to test large number of rows
+//       ArrayList<ArrayList<String>> statsTable = generateFakeTable(1000 , 4) ;
+
+       // separate the maean row (last row)
+       ArrayList<ArrayList<String>> meanRow =new ArrayList<ArrayList<String>> ( statsTable.subList(statsTable.size()-1 , statsTable.size()));
+
+       // adding colspan attribute to first element in each row
+       for(ArrayList<String> tableRow:statsTable) {
+           tableRow.set(0,tableRow.get(0) + "#colspan='2'" ) ;
+       }
+
+       int startIndex = 0 ;
+       int endIndex = (int)Utils.getNumberWithinLimits(statsTable.size() , 0 , 21) ;
+
+       int pageCounter = 0 ;
+       do  {
+           pageCounter++ ;
+           ArrayList<ArrayList<String>> pageTable ;
+           if(endIndex == statsTable.size()) {
+               pageTable = new ArrayList<ArrayList<String>>(statsTable.subList(startIndex, endIndex - 1));
+               String rowsHtml = createRowsHtml(pageTable , "" ,dataCellCommonClass );
+               doc.select("tr.headerRow").last().after(rowsHtml) ;
+           }
+           else {
+               pageTable = new ArrayList<ArrayList<String>>(statsTable.subList(startIndex, endIndex));
+               String rowsHtml = createRowsHtml(pageTable , "" ,dataCellCommonClass );
+               doc.select("tr.headerRow").last().after(rowsHtml + headerHtml);
+           }
+           startIndex = endIndex ;
+           endIndex = (int)Utils.getNumberWithinLimits(endIndex+25 , 0 , statsTable.size())  ;
+       }while ((endIndex != startIndex));
+
+
+       String rowsHtml = createRowsHtml(meanRow , "" ,"MeanRow" );
+       doc.select("tr").last().after(rowsHtml) ;
+
+       //remove the header class from the first header so as not to put a page break before it
+       doc.select("tr.headerRow").first().removeClass("headerRow") ;
+
+
+       writeHtmlFile(reportsPath+"report4\\test.html" , doc);
+       generatePDF(reportsPath + "report4\\test.html", reportsPath + "report4\\test.pdf");
+
+   }
+   public void createCondensedTestReport() throws IOException, DocumentException {
        File file = new File(condensedTestTemplatePath);
 
        Map<String , Double> MainStatistics = new HashMap<String, Double>() ;
@@ -145,6 +249,8 @@ public class ReportsHandler {
        doc.select("td#numberOfStudents").first().text(format.format(MainStatistics.get("mean"))) ;
        doc.select("") ;
        writeHtmlFile("test.html" , doc);
+       generatePDF(reportsPath + "report4\\test.html", reportsPath + "report4\\test.pdf");
+
 //       System.out.println(td) ;
    }
 }

@@ -165,6 +165,12 @@ public class Statistics {
             System.out.println(entry.getKey() + " : " + entry.getValue());
         }
     }
+//    private static void printMap (Map<String , Integer> map ) {
+//        System.out.println("Map Data");
+//        for(Map.Entry<String , Integer> entry : map.entrySet()) {
+//            System.out.println(entry.getKey() + " : " + entry.getValue());
+//        }
+//    }
 
     private static void printTable (ArrayList<ArrayList<String>> table) {
         System.out.println("Table Data: ");
@@ -347,14 +353,6 @@ public class Statistics {
         }
     }
 
-    private static  double getNumberWithinLimits(double number , double lowerLimit , double upperLimit) {
-        if(number < lowerLimit)
-            return lowerLimit;
-        else  if (number > upperLimit)
-            return upperLimit;
-        else
-            return number ;
-    }
 
     private static double calcSEM ( double scoreStd ) {
         return 0  ;
@@ -427,14 +425,14 @@ public class Statistics {
 //        System.out.println("hi :"+ (calcCI(numberOfStudents , .98 , std))) ;
 
 
-        double CI90Lower =getNumberWithinLimits( mean - calcCI(numberOfStudents,0.9 , std)  , 0 , maxScore) ;
-        double CI90Higher = getNumberWithinLimits(mean + calcCI(numberOfStudents,0.9 , std)  , 0 , maxScore) ;
+        double CI90Lower =Utils.getNumberWithinLimits( mean - calcCI(numberOfStudents,0.9 , std)  , 0 , maxScore) ;
+        double CI90Higher = Utils.getNumberWithinLimits(mean + calcCI(numberOfStudents,0.9 , std)  , 0 , maxScore) ;
 
-        double CI95Lower = getNumberWithinLimits(mean - calcCI(numberOfStudents,0.95 , std) , 0 , maxScore)  ;
-        double CI95Higher = getNumberWithinLimits(mean + calcCI(numberOfStudents,0.95 , std)  , 0 , maxScore) ;
+        double CI95Lower = Utils.getNumberWithinLimits(mean - calcCI(numberOfStudents,0.95 , std) , 0 , maxScore)  ;
+        double CI95Higher = Utils.getNumberWithinLimits(mean + calcCI(numberOfStudents,0.95 , std)  , 0 , maxScore) ;
 
-        double CI99Lower = getNumberWithinLimits(mean - calcCI(numberOfStudents,0.99 , std) , 0 , maxScore)  ;
-        double CI99Higher = getNumberWithinLimits(mean + calcCI(numberOfStudents,0.99 , std)  , 0 , maxScore) ;
+        double CI99Lower = Utils.getNumberWithinLimits(mean - calcCI(numberOfStudents,0.99 , std) , 0 , maxScore)  ;
+        double CI99Higher = Utils.getNumberWithinLimits(mean + calcCI(numberOfStudents,0.99 , std)  , 0 , maxScore) ;
 
         double kr20  = calcKr20(variance);
         double kr21 = calcKr21(mean , variance , numberOfStudents) ;
@@ -495,6 +493,8 @@ public class Statistics {
         ArrayList<ArrayList<String>> statsTable = new ArrayList<ArrayList<String>>();
 
         double[] weights = questionWeights.get(0).stream().mapToDouble(d -> d).toArray() ;
+        double[] scores = studentScores.stream().mapToDouble(d -> d).toArray();
+
         double maxScore = sum(weights);
 
 
@@ -508,12 +508,69 @@ public class Statistics {
 
             statsTable.add(tableRow);
         }
+        double meanScore = mean(scores) ;
+        double meanScorePercentage = meanScore / maxScore ;
+        ArrayList<String> meanRow = new ArrayList<String>() ;
+        meanRow.add("mean;bold");
+        meanRow.add(getGrade(meanScorePercentage)) ;
+        meanRow.add(format.format(meanScore)+"/"+format.format(maxScore)) ;
+        meanRow.add(format.format(meanScorePercentage*100) +"%") ;
+
+        statsTable.add(meanRow);
+//        printTable(statsTable);
+        return statsTable ;
+    }
+
+
+
+    public static ArrayList<ArrayList<String>> report1Stats( ) {
+
+        DecimalFormat format = new DecimalFormat("0.#");
+
+        ArrayList<ArrayList<String>> statsTable = new ArrayList<ArrayList<String>>();
+
+        double[] weights = questionWeights.get(0).stream().mapToDouble(d -> d).toArray() ;
+
+        Double maxScore = sum(weights) ;
+        int numberOfStudents = studentScores.size();
+
+        Map<String, Integer> gradesCount = new HashMap<>();
+
+        //initialize all counts to zero
+        for(int i = grades.size()-1 ; i>=0 ; i-- ) {
+            gradesCount.put(grades.get(i) , 0) ;
+        }
+
+        for(Double score: studentScores) {
+           String grade =  getGrade(score/maxScore) ;
+           gradesCount.put(grade , gradesCount.get(grade) +1) ;
+        }
+
+        for(int gradeIndex = grades.size()-1 ; gradeIndex>=0 ; gradeIndex-- ) {
+            ArrayList<String>tableRow  = new ArrayList<>() ;
+            int gradeCount = gradesCount.get(grades.get(gradeIndex));
+            tableRow.add(grades.get(gradeIndex));
+            tableRow.add(gradesLowerRange.get(gradeIndex)*100+" - " + gradesLowerRange.get(gradeIndex+1)*100 );
+            tableRow.add(gradesLowerRange.get(gradeIndex)*maxScore+" - " + gradesLowerRange.get(gradeIndex+1)*maxScore) ;
+            tableRow.add(String.valueOf(gradeCount)) ;
+            tableRow.add(format.format( (double) gradeCount/(double)numberOfStudents *100) + "%");
+            statsTable.add(tableRow);
+        }
+//
+//        for(Map.Entry<String , Integer> entry : gradesCount.entrySet()) {
+//            ArrayList<String>tableRow  = new ArrayList<>() ;
+//            tableRow.add(entry.getKey());
+//            tableRow.add()
+////            System.out.println(entry.getKey() + " : " + entry.getValue());
+//        }
+
+
 
         printTable(statsTable);
         return statsTable ;
     }
 
-}
+    }
 class SortByScore implements Comparator<ArrayList<String>>
 {
     public int compare(ArrayList<String> a, ArrayList<String> b)
