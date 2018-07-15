@@ -71,6 +71,7 @@ public class FileConfigController extends Controller{
         fileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
             isContentEdited=true;
         });
+        buttonsHbox.setVisible(false);
     }
 
 
