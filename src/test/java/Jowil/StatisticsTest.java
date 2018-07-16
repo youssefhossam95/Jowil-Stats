@@ -5,6 +5,7 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +58,14 @@ public class StatisticsTest extends TestCase {
         Statistics.setGradesLowerRange(gradeLowerRange);
     }
 
+    public ArrayList<String> generateAutoIds (int n) {
+        ArrayList<String> out = new ArrayList<>();
+        for(int i = 0 ; i < n ; i ++ )
+            out.add(String.valueOf(i+1));
+
+        return out;
+    }
+
 //    public void testAll() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException {
 //        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testAll2.csv");
 //        ArrayList<Integer> studentData= new ArrayList<Integer>();
@@ -77,6 +86,7 @@ public class StatisticsTest extends TestCase {
 
 
     public void testMulti1() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException {
+            ////////////////////// test using jo csv ///////////////////////////////////////
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testMulti1.csv");
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\answerKeys1.csv");
         ArrayList<Integer> studentData= new ArrayList<Integer>();
@@ -95,17 +105,47 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
         Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;
+//        Statistics.printBasicInfo();
+        Statistics.initFormsScores();
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
-        Jowil.Statistics.report1Stats() ;
+    //        Jowil.Statistics.report1Stats() ;
 //        Jowil.Statistics.report4Stats() ;
-//        ReportsHandler reportsHandler = new ReportsHandler() ;
-//        reportsHandler.generateReport4();
+        ReportsHandler reportsHandler = new ReportsHandler() ;
+////        reportsHandler.generateReport4();
+        reportsHandler.generateReport3();
+
+
     }
 
-
-
+///////////////////// testing with alex csv //////////////////////////////////////////////////
+//   CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testAlex.csv");
+//        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\alexAnswerKeys.csv");
+//    ArrayList<Integer> studentData= new ArrayList<Integer>();
+//    //        studentData.add(CSVHandler.STUDENTID);
+////        studentData.add(CSVHandler.STUDENTNAME);
+////        studentData.add(CSVHandler.IGNORE);
+////        studentData.add(CSVHandler.STUDENTFORM);
+//    boolean isHeaders=CSVHandler.processHeaders();
+//        if(isHeaders)
+//            Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
+//        Jowil.CSVHandler.loadCsv(studentData, isHeaders, false,2);
+//        Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
+//    ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
+//        questionWeights.add(generateQuestionsWeights(100));
+////        questionWeights.add(generateQuestionsWeights(8));
+//        Jowil.Statistics.setQuestionWeights(questionWeights);
+//    fillGradeRanges() ;
+//        Statistics.setStudentIdentifier(generateAutoIds(1273)) ;
+//        Jowil.Statistics.init();
+//        Jowil.Statistics.printBasicInfo();
+//        Jowil.Statistics.printCalculations();
+//    //        Jowil.Statistics.report1Stats() ;
+////        Jowil.Statistics.report4Stats() ;
+//    ReportsHandler reportsHandler = new ReportsHandler() ;
+////        reportsHandler.generateReport4();
+//        reportsHandler.generateReport3();
 
     public void tearDown() throws Exception {
 
