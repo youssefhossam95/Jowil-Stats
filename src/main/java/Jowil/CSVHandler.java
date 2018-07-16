@@ -39,6 +39,10 @@ public class CSVHandler {
     public static ArrayList<String> getDetectedQHeaders() {
         return detectedQHeaders;
     }
+    public static void setDetectedQHeaders(ArrayList<String> detectedQHeaders) {
+        CSVHandler.detectedQHeaders = detectedQHeaders;
+    }
+
 
     public static ArrayList<String> getDetectedInfoHeaders() {
         return detectedInfoHeaders;

@@ -64,7 +64,6 @@ public class HeadersEditController extends Controller{
     final VBox tableVbox = new VBox();
     final Button updateWeightsButton = new Button("Update Selected Weights");
     final HBox weightsHBox= new HBox();
-    final Button deleteButton= new Button("Delete Selection");
 
     //essentials
 
@@ -77,11 +76,10 @@ public class HeadersEditController extends Controller{
         super.updateSizes();
         tableVbox.setSpacing(resY/50);
         tableVbox.setAlignment(Pos.CENTER);
-        tableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
+        tableVbox.setPadding(new Insets(rootHeight/30, 0, 0, rootWidth/20));
         table.setPrefHeight(rootHeight/1.5);
         weightsHBox.setSpacing(resX/400);
         //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
-        deleteButton.setPrefWidth(weightsHBox.getWidth()/1.5);
     }
 
     protected void initComponents() {
@@ -139,13 +137,13 @@ public class HeadersEditController extends Controller{
             questions.add(new Question(headers.get(i),"1.0"));
 
         initAddHBox();
-        deleteButton.setStyle("-fx-background-color:red;-fx-text-fill: white;");
+
         table.setEditable(true);
         table.setItems(questions);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.getColumns().addAll(headersCol,weightsCol);
-        tableVbox.getChildren().addAll(label, table,weightsHBox,deleteButton);
+        tableVbox.getChildren().addAll(label, table,weightsHBox);
         rootPane.getChildren().addAll(tableVbox);
         headersCol.setSortable(false);
         headersCol.setSortType(TableColumn.SortType.ASCENDING);
@@ -180,5 +178,7 @@ public class HeadersEditController extends Controller{
 
     }
 
+    protected void saveChanges(){
 
+    }
 }

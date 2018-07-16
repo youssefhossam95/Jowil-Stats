@@ -5,9 +5,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -36,6 +40,11 @@ public abstract class Controller {
     protected Controller next;
     JFXButton backButton= new JFXButton("Back");
 
+    protected boolean isContentEdited=false;
+    protected HBox buttonsHbox= new HBox();
+
+
+
 
     //Main methods
     Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back){
@@ -50,13 +59,16 @@ public abstract class Controller {
         this.back=back;
     }
 
+    protected abstract void initComponents();
+    protected abstract void saveChanges();
 
     public void initialize() {
 
         rootPane.prefHeightProperty().bind(stage.heightProperty());
         rootPane.prefWidthProperty().bind(stage.widthProperty());
-        initComponents();
         initBackButton();
+        initButtonsHBox();
+        initComponents();
         updateSizes();
 
 
@@ -107,9 +119,18 @@ public abstract class Controller {
         backButton.setPrefHeight(resX/250);
         backButton.setLayoutY(rootHeight/1.17);
         backButton.setLayoutX(rootWidth/1.35);
+        buttonsHbox.setLayoutX(rootWidth/20);
+        if(rootHeight<=resY/1.25)
+            buttonsHbox.setLayoutY(rootHeight/1.14);
+        else
+            buttonsHbox.setLayoutY(rootHeight-resY*(1-1/1.14));
+        buttonsHbox.setSpacing(resX/100);
+        buttonsHbox.setPrefWidth(rootWidth/1.11);
+        buttonsHbox.setPadding(new Insets(resY/100, 0, 0, 0));
+        buttonsHbox.setAlignment(Pos.BASELINE_RIGHT);
+
     }
 
-    protected abstract void initComponents();
 
 
 
@@ -147,7 +168,15 @@ public abstract class Controller {
 
         backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
         backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
+        buttonsHbox.getChildren().add(backButton);
     }
+
+    private void initButtonsHBox(){
+        buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
+        rootPane.getChildren().add(buttonsHbox);
+    }
+
+
 
 
 

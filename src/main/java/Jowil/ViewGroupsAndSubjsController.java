@@ -66,9 +66,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
     TableColumn subjNamesCol = new TableColumn("Question");
     TableColumn maxScoreCol = new TableColumn("Max Score");
     private HBox tablesHbox= new HBox();
-    private HBox buttonsHbox= new HBox();
     private JFXButton manualButton= new JFXButton("Edit Manually");
-    private boolean isContentEdited=false;
 
     //data fields
     ObservableList<Group> tableGroups = FXCollections.observableArrayList();
@@ -77,7 +75,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
     //main methods
     ViewGroupsAndSubjsController(Controller back){
-        super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions Review",1.25,1.25,true,back);
+        super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions",1.25,1.25,true,back);
     }
 
 
@@ -88,7 +86,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
         initNextButton();
         initSubjTableVBox();
         initTablesHBox();
-        initButtonsHBox();
     }
 
     @Override
@@ -105,15 +102,12 @@ public class ViewGroupsAndSubjsController  extends Controller{
 //        nextButton.setLayoutY(rootHeight/1.17);
         //manualButton.setPrefWidth(resX/15);
         manualButton.setPrefHeight(resX/250);
-        //buttonsHbox.setSpacing(resX/50);
-        //buttonsHbox.setLayoutX(rootWidth/20+groupsTable.getPrefWidth()+rootWidth/4+subjTable.getPrefWidth()-(2*manualButton.getPrefWidth()+resX/50));
-        buttonsHbox.setLayoutX(rootWidth/20);
-        buttonsHbox.setSpacing(groupsTable.getPrefWidth()*2+rootWidth/4-2*nextButton.getPrefWidth());
-        buttonsHbox.setLayoutY(rootHeight/1.17);
+        manualButton.setLayoutX(buttonsHbox.getLayoutX());
+        manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
         subjTable.setPrefHeight(rootHeight/1.5);
         subjTable.setPrefWidth(rootWidth/3.2);
         subjTableVbox.setSpacing(resY/50);
-        subjTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/4));
+        subjTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth-2*subjTable.getPrefWidth()-2*rootWidth/20));
     }
 
     //helper methods
@@ -156,7 +150,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
         groupsTable.setItems(tableGroups);
         groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         groupsTable.getColumns().addAll(groupNamesCol,qCountCol);
-        groupsTable.setStyle("-fx-border-color:#1E90FF");
+        //groupsTable.setStyle("-fx-border-color:#1E90FF");
         groupsTableVbox.getChildren().addAll(label, groupsTable);
         tablesHbox.getChildren().add(groupsTableVbox);
         groupNamesCol.setSortable(false);
@@ -171,17 +165,18 @@ public class ViewGroupsAndSubjsController  extends Controller{
         nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
 
         nextButton.setOnMouseClicked(t->{
+            saveChanges();
             HeadersEditController controller;
             if(next==null || isContentEdited) { //if first time or edit manually has been pressed
                 next = controller = new HeadersEditController(this);
                 controller.startWindow();
             }
-            else{
-                    controller = (HeadersEditController) next;
-                    controller.showWindow();
-                }
-
+            else {
+                controller = (HeadersEditController) next;
+                controller.showWindow();
+            }
             isContentEdited=false;
+            stage.close();
         });
 
         buttonsHbox.getChildren().add(nextButton);
@@ -199,7 +194,8 @@ public class ViewGroupsAndSubjsController  extends Controller{
             controller.startWindow();
         });
 
-        buttonsHbox.getChildren().add(manualButton);
+        //buttonsHbox.getChildren().add(manualButton);
+        rootPane.getChildren().add(manualButton);
 
     }
 
@@ -244,7 +240,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
         subjTable.setEditable(true);
         subjTable.setItems(subjQuestions);
         subjTable.setPlaceholder(new Label("No subjective questions detected"));
-        subjTable.setStyle("-fx-border-color:#1E90FF");
+        //subjTable.setStyle("-fx-border-color:#1E90FF");
 
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         subjTable.getColumns().addAll(subjNamesCol,maxScoreCol);
@@ -260,9 +256,24 @@ public class ViewGroupsAndSubjsController  extends Controller{
     }
     
     
-    private void initButtonsHBox(){
-        rootPane.getChildren().add(buttonsHbox);
-    }
-    
 
+
+    protected void saveChanges() {
+        ArrayList<Double> maxSubjScores = new ArrayList<>();
+        for (SubjQuestion question : subjQuestions)
+            maxSubjScores.add(Double.parseDouble(question.getMaxScore()));
+
+        Statistics.setSubjMaxScores(maxSubjScores);
+
+        ArrayList<String> newHeaders = new ArrayList<>();
+
+        for (Group group : tableGroups) {
+
+            for (int i = 0; i < Integer.parseInt(group.getqCountProp()); i++)
+                newHeaders.add(group.getNameProp() + (i + 1));
+
+            CSVHandler.setDetectedQHeaders(newHeaders);
+        }
+
+    }
 }
