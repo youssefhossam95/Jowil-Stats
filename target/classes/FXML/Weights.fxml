@@ -15,7 +15,7 @@
         <graphic>
             <ImageView >
                 <image>
-                    <Image url="@../Images/icons8_Right_32px.png" />
+                    <Image url="@../Images/Up_32px.png" />
                 </image>
             </ImageView>
         </graphic>
@@ -28,7 +28,7 @@
         <graphic>
             <ImageView >
                 <image>
-                    <Image url="@../Images/Back Arrow_48px.png" />
+                    <Image url="@../Images/Down Arrow_32px.png" />
                 </image>
             </ImageView>
         </graphic>
