@@ -60,7 +60,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
     TableColumn groupNamesCol = new TableColumn("Group");
     TableColumn qCountCol = new TableColumn("Number of Questions");
     final VBox groupsTableVbox = new VBox();
-    private JFXButton nextButton=new JFXButton("Next");
     private VBox subjTableVbox=new VBox();
     private TableView subjTable= new TableView();
     TableColumn subjNamesCol = new TableColumn("Question");
@@ -83,7 +82,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
     protected void initComponents() {
         initGroupsTableVBox();
         initManualButton();
-        initNextButton();
         initSubjTableVBox();
         initTablesHBox();
     }
@@ -96,8 +94,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
         groupsTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
         groupsTable.setPrefHeight(rootHeight/1.5);
         groupsTable.setPrefWidth(rootWidth/3.2);
-        nextButton.setPrefWidth(resX/15);
-        nextButton.setPrefHeight(resX/250);
+
 //        nextButton.setLayoutX(rootWidth/1.185);
 //        nextButton.setLayoutY(rootHeight/1.17);
         //manualButton.setPrefWidth(resX/15);
@@ -158,30 +155,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
         qCountCol.setEditable(false);
     }
 
-    private void initNextButton(){
-        //nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
 
-//        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
-//        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
-
-        nextButton.setOnMouseClicked(t->{
-            saveChanges();
-            HeadersEditController controller;
-            if(next==null || isContentEdited) { //if first time or edit manually has been pressed
-                next = controller = new HeadersEditController(this);
-                controller.startWindow();
-            }
-            else {
-                controller = (HeadersEditController) next;
-                controller.showWindow();
-            }
-            isContentEdited=false;
-            stage.close();
-        });
-
-        buttonsHbox.getChildren().add(nextButton);
-
-    }
 
     private void initManualButton(){
         manualButton.setStyle("-fx-background-color:#4169E1;-fx-text-fill: white;");

@@ -39,7 +39,9 @@ public abstract class Controller {
     final boolean isResizable;
     protected Controller back;
     protected Controller next;
-    JFXButton backButton= new JFXButton("Back");
+    protected JFXButton backButton= new JFXButton("Back");
+    protected JFXButton nextButton=new JFXButton("Next");
+
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
@@ -68,6 +70,7 @@ public abstract class Controller {
         rootPane.prefHeightProperty().bind(stage.heightProperty());
         rootPane.prefWidthProperty().bind(stage.widthProperty());
         initBackButton();
+        initNextButton();
         initButtonsHBox();
         initComponents();
         updateSizes();
@@ -81,6 +84,7 @@ public abstract class Controller {
 
     public void showWindow(){
         stage.show();
+        rootPane.requestFocus();
     }
 
     public void startWindow(){
@@ -131,6 +135,8 @@ public abstract class Controller {
         buttonsHbox.setPrefWidth(rootWidth/1.11);
         buttonsHbox.setPadding(new Insets(resY/100, 0, 0, 0));
         buttonsHbox.setAlignment(Pos.BASELINE_RIGHT);
+        nextButton.setPrefWidth(resX/15);
+        nextButton.setPrefHeight(resX/250);
 
     }
 
@@ -176,7 +182,34 @@ public abstract class Controller {
 
     private void initButtonsHBox(){
         buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
+        //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#3184c9");
         rootPane.getChildren().add(buttonsHbox);
+    }
+
+
+    private void initNextButton(){
+        //nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
+
+//        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
+//        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
+
+        nextButton.setOnMouseClicked(t->{
+            saveChanges();
+            HeadersEditController controller;
+            if(next==null || isContentEdited) { //if first time or edit manually has been pressed
+                next = controller = new HeadersEditController(this);
+                controller.startWindow();
+            }
+            else {
+                controller = (HeadersEditController) next;
+                controller.showWindow();
+            }
+            isContentEdited=false;
+            stage.close();
+        });
+
+        buttonsHbox.getChildren().add(nextButton);
+
     }
 
 

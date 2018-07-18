@@ -11,7 +11,7 @@
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
       <JFXTextField fx:id="fileTextField" focusColor="#3184c9" ></JFXTextField>
-      <JFXButton fx:id="fileChooserButton" style="fx-focus-color:#3184c9">
+      <JFXButton fx:id="fileChooserButton">
           <graphic>
               <ImageView fx:id="chooserButtonImage" >
                   <image>

@@ -7,7 +7,6 @@ JFXButton{
 -fx-border-color: #3184c9;
 -fx-text-fill: #3184c9;
 -fx-background-color:white;
--fx-focus-background-color:transparent;
 }
 JFXButton:hover {
     /*-fx-text-fill: white;*/
@@ -19,6 +18,7 @@ JFXTextField{
     -fx-font-size:16;
 
 }
-JFXTextField:focused{
-    -fx-color:#3184c9;
+
+TableView{
+-fx-border-color:#1E90FF;
 }
