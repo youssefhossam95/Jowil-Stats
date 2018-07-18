@@ -97,7 +97,8 @@ public class StatisticsTest extends TestCase {
         boolean isHeaders=CSVHandler.processHeaders();
         if(isHeaders)
             Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
-        Jowil.CSVHandler.loadCsv(studentData, isHeaders, false,2);
+        Jowil.CSVHandler.setFormsCount(2);
+        Jowil.CSVHandler.loadCsv(studentData, isHeaders, false);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
         questionWeights.add(generateQuestionsWeights(8));

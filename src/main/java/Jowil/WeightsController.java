@@ -98,18 +98,15 @@ public class WeightsController extends Controller{
 
     ///fields
 
-    @FXML
-    JFXButton forwardButton;
 
-    @FXML
-    JFXButton backwardButton;
 
 
     ObservableList<Question> questions = FXCollections.observableArrayList();
     ArrayList<String> headers=CSVHandler.getDetectedQHeaders();
     private TableView table = new TableView();
     TableColumn headersCol = new TableColumn("Question");
-    TableColumn weightsCol = new TableColumn("Weight");
+    ArrayList<TableColumn> weightsCols = new ArrayList<TableColumn>();
+    TableColumn weightsCol=new TableColumn("Weight");
     final VBox weightsTableVbox = new VBox();
     final HBox objHBox= new HBox();
     private VBox subjTableVbox=new VBox();
@@ -119,7 +116,7 @@ public class WeightsController extends Controller{
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
     private HBox tablesHbox= new HBox();
     final HBox subjHBox= new HBox();
-    final HBox navigationHBox=new HBox();
+    ;
 
 
 
@@ -144,10 +141,7 @@ public class WeightsController extends Controller{
         subjTableVbox.setSpacing(resY/50);
         tablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
         subjTableVbox.setPadding(new Insets(rootHeight/20,0, 0, 0));
-        navigationHBox.setLayoutX(table.getWidth()+rootWidth/18);
-        navigationHBox.setLayoutY(table.getLayoutY()+table.getPrefHeight()+rootHeight/20-forwardButton.getHeight());
-        forwardButton.setPadding(Insets.EMPTY);
-        backwardButton.setPadding(Insets.EMPTY);
+
         //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
     }
 
@@ -156,7 +150,6 @@ public class WeightsController extends Controller{
         initWeightsTableVBox();
         initSubjTableVBox();
         initTablesHBox();
-        initNavigationHBox();
 
 
     }
@@ -182,9 +175,6 @@ public class WeightsController extends Controller{
         headersCol.setCellFactory(TextFieldTableCell.forTableColumn());
 
 
-        weightsCol.setCellValueFactory(
-                new PropertyValueFactory<Question,String>("weight")
-        );
 
         weightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
         weightsCol.setOnEditCommit(
@@ -341,15 +331,6 @@ public class WeightsController extends Controller{
         rootPane.getChildren().add(tablesHbox);
     }
 
-    private void initNavigationHBox(){
-
-        navigationHBox.getChildren().addAll(backwardButton,forwardButton);
-        forwardButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
-        backwardButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
-
-
-        rootPane.getChildren().add(navigationHBox);
-    }
     protected void saveChanges(){
 
 

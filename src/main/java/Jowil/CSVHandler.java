@@ -31,6 +31,8 @@ public class CSVHandler {
     private static int subjStartIndex=-1;
     private static int subjEndIndex=-1;
     private static int subjQuestionsCount=0;
+    private static Integer formsCount;
+
 
     //getters and setters
     public static void setFilePath(String filePath) {
@@ -62,6 +64,15 @@ public class CSVHandler {
     public static void setSubjQuestionsCount(int subjQuestionsCount) {
         CSVHandler.subjQuestionsCount = subjQuestionsCount;
     }
+    public static Integer getFormsCount() {
+        return formsCount;
+    }
+
+    public static void setFormsCount(Integer formsCount) {
+        CSVHandler.formsCount = formsCount;
+    }
+
+
 
 
     //public methods
@@ -70,7 +81,7 @@ public class CSVHandler {
      * @param identifiers student identifiers placed in the order of columns of the CSV file being loaded
      * @throws IOException
      */
-    public static  void loadCsv(ArrayList<Integer> identifiers , boolean isHeadersExist, boolean isCorrectAnswersExist , int formsCount) throws IOException, InvalidFormNumberException, EmptyAnswerKeyException {
+    public static  void loadCsv(ArrayList<Integer> identifiers , boolean isHeadersExist, boolean isCorrectAnswersExist ) throws IOException, InvalidFormNumberException, EmptyAnswerKeyException {
 
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line = null;
