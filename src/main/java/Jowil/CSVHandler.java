@@ -100,6 +100,7 @@ public class CSVHandler {
                 subScores.add(getSubjScoresFromRow(row,subjStartIndex,subjEndIndex));
         }
 
+//        System.out.println("in parse csv" + studentsAnswers);
         //initialize Statistics internal fields with parsed data
 
 

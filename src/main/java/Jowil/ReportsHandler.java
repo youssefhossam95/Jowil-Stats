@@ -10,6 +10,7 @@ import sun.plugin.dom.core.Element;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.text.AttributedCharacterIterator;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +26,10 @@ public class ReportsHandler {
     private final String gradeDistTemplatePath = reportsPath + "gradesDistributionReport\\gradesDistribution.html";
     private final String condensedTestTemplatePath = reportsPath+"condensedTestReport\\condensedTestTemplate.html";
 
+    private final String report1TemplatePath = reportsPath + "report1\\report1Template.html";
     private final String report3TemplatePath = reportsPath + "report3\\report3Template.html";
     private final String report4TemplatePath = reportsPath + "report4\\report4Template.html";
+
 
 
 
@@ -122,7 +125,23 @@ public class ReportsHandler {
 
         writeHtmlFile(reportsPath + "gradesDistributionReport\\test.html", doc);
         generatePDF(reportsPath + "gradesDistributionReport\\test.html", reportsPath + "gradesDistributionReport\\test.pdf");
+    }
 
+    public  void  generateReport1() throws IOException, DocumentException {
+
+        File file = new File(report1TemplatePath);
+        Document doc = Jsoup.parse(file, "UTF-8");
+
+        ArrayList<ArrayList<String>> statsTable = Statistics.report1Stats() ;
+
+        String tableRowsHtml = createRowsHtml(statsTable , " " , "tg-l711") ;
+
+        doc.select("tr.headerRow").after(tableRowsHtml) ;
+
+
+
+        writeHtmlFile(reportsPath+"report1\\test.html" , doc);
+        generatePDF(reportsPath + "report1\\test.html", reportsPath + "report1\\test.pdf");
 
     }
    public void generateReport3() throws IOException {
@@ -204,9 +223,7 @@ public class ReportsHandler {
        int startIndex = 0 ;
        int endIndex = (int)Utils.getNumberWithinLimits(statsTable.size() , 0 , 21) ;
 
-       int pageCounter = 0 ;
        do  {
-           pageCounter++ ;
            ArrayList<ArrayList<String>> pageTable ;
            if(endIndex == statsTable.size()) {
                pageTable = new ArrayList<ArrayList<String>>(statsTable.subList(startIndex, endIndex - 1));
