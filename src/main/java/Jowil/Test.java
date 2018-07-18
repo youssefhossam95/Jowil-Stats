@@ -22,22 +22,26 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
-//        ArrayList<String> x = new ArrayList<>();
-//        ArrayList<String> y = new ArrayList<>();
-//        x.add("a") ; x.add("b");
-//        y.add("a") ; y.add("b") ;
+
+
+        ReportsHandler reportsHandler = new ReportsHandler() ;
+        reportsHandler.generateReport2();
+
+        /////////////////// test point biserial ////////////////////////////////////
+//        double[] a = {1.0 , 1.0 , 0 , 0,  0} ;
+//        double [] b = {1.0 , 1.0 , 0 , 1.0,  0} ;
+//        double [] c = {1.0 , 1.0 , 1.0 , 0,  1.0 } ;
+//        double [] x = {0 , 0 , 1.0 , 1.0 , 1.0 ,} ;
+//        double[] total = {3.0 , 3.0 , 1.0, 1.0 , 1.0} ;
 //
-//        System.out.println(x.equals(y)) ;
+//        double [] zeros = {1,1,1,1,0};
+//
+//        ArrayList<Double> hi = new ArrayList<>();
+//        hi.add(1.0);hi.add(1.0);hi.add(1.0);hi.add(1.0);hi.add(1.0);
+//
+//        PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation() ;
+//        System.out.println(Double.isNaN(pearsonsCorrelation.correlation( total , zeros))?0:pearsonsCorrelation.correlation( total , zeros)) ;
 
-
-        double[] a = {1.0 , 1.0 , 0 , 0,  0} ;
-        double [] b = {1.0 , 1.0 , 0 , 1.0,  0} ;
-        double [] c = {1.0 , 1.0 , 1.0 , 0,  1.0 } ;
-        double [] x = {0 , 0 , 1.0 , 1.0 , 1.0 ,} ;
-        double[] total = {3.0 , 3.0 , 1.0, 1.0 , 1.0} ;
-
-        PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation() ;
-        System.out.println(pearsonsCorrelation.correlation(total , x)) ;
 
 
 //        //////////////////////// to create pdf from html //////////////////////////////////

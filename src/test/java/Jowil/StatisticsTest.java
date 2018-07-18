@@ -110,11 +110,13 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
-    //        Jowil.Statistics.report1Stats() ;
+//        Jowil.Statistics.report2TableStats(0) ;
+
 //        Jowil.Statistics.report4Stats() ;
         ReportsHandler reportsHandler = new ReportsHandler() ;
+        reportsHandler.generateReport2();
 ////        reportsHandler.generateReport4();
-        reportsHandler.generateReport3();
+//        reportsHandler.generateReport3();
 
 
     }

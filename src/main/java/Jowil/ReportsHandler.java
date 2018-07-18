@@ -27,6 +27,7 @@ public class ReportsHandler {
     private final String condensedTestTemplatePath = reportsPath+"condensedTestReport\\condensedTestTemplate.html";
 
     private final String report1TemplatePath = reportsPath + "report1\\report1Template.html";
+    private final String report2TemplatePath = reportsPath + "report2\\report2Template.html";
     private final String report3TemplatePath = reportsPath + "report3\\report3Template.html";
     private final String report4TemplatePath = reportsPath + "report4\\report4Template.html";
 
@@ -142,6 +143,73 @@ public class ReportsHandler {
 
         writeHtmlFile(reportsPath+"report1\\test.html" , doc);
         generatePDF(reportsPath + "report1\\test.html", reportsPath + "report1\\test.pdf");
+
+    }
+
+    private void fillGeneralStatsReport2 (Document doc , Map<String , String> generalStatsMap) {
+        doc.select("td.NumberOfStudents").first().text(generalStatsMap.get("Number Of Students")) ;
+        doc.select("td.MaxPossibleScore").first().text(generalStatsMap.get("Maximum Possible Score")) ;
+
+        //Basic Statistics
+        doc.select("td.Mean").first().text(generalStatsMap.get("Mean")) ;
+        doc.select("td.HighestScore").first().text(generalStatsMap.get("Highest Score")) ;
+        doc.select("td.LowestScore").first().text(generalStatsMap.get("Lowest Score")) ;
+        //Dispersion
+        doc.select("td.StandardDeviation").first().text(generalStatsMap.get("Standard Deviation")) ;
+        doc.select("td.ScoreRange").first().text(generalStatsMap.get("Range")) ;
+        doc.select("td.Median").first().text(generalStatsMap.get("Median")) ;
+
+
+        //Test Reliability
+        doc.select("td.Kuder-RichardsonFormula20").first().text(generalStatsMap.get("Kuder-Richardson Formula 20")) ;
+
+    }
+
+    public void  generateReport2() throws IOException, DocumentException {
+        File file = new File(report2TemplatePath);
+        Document doc = Jsoup.parse(file, "UTF-8");
+
+        fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(0));
+
+
+        String tableHtml = doc.select("table.t2").last().outerHtml() ;
+//        doc.select("table.t2").remove() ;
+        ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(0) ;
+        int questionIndex = 0 ;
+        for(ArrayList<ArrayList<String>> table : statsTables) {
+            //create new table
+            if(questionIndex!=0)
+                doc.select("table").last().after(tableHtml) ;
+            String questionChoicesHtml = "" ;
+            ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
+            for(String qChoice: questionChoices )
+                questionChoicesHtml+= "<th>" +qChoice+ "</th>\n";
+            doc.select("th.total").last().before(questionChoicesHtml);
+            doc.select("th.responseFreq").last().attr("colspan" , String.valueOf(questionChoices.size())) ;
+
+            String rowsHtml = createRowsHtml(table ,"" , "") ;
+            doc.select("tr.bottom-header-row").last().after(rowsHtml);
+            questionIndex += table.size() ;
+//            break;
+        }
+//
+//        String generalStatsHtml = doc.select("table.t").last().outerHtml() ;
+//        System.out.println(generalStatsHtml);
+
+//        doc.select("td.numberOfStudents").last().text("hi");
+
+//        doc.select("table.t2").last().after(generalStatsHtml) ;
+//        doc.select("td.numberOfStudents").last().text("man");
+
+//        String answerNamesHtml = "<th>A</th>\n" +
+//                "            <th>B</th>\n" +
+//                "            <th>C</th>\n" +
+//                "            <th>D</th>\n" +
+//                "            <th>E</th>" ;
+//        doc.select("th.total").last().before(answerNamesHtml) ;
+//        System.out.println(doc.outerHtml());
+        writeHtmlFile(reportsPath+"report2\\test.html" , doc);
+        generatePDF(reportsPath+"report2\\test.html" , reportsPath + "report2\\test.pdf");
 
     }
    public void generateReport3() throws IOException {
