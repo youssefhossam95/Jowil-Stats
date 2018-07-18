@@ -2,6 +2,7 @@ package Jowil;
 
 
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -200,14 +201,15 @@ public class WeightsController extends Controller{
 
         table.setEditable(true);
         table.setItems(questions);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        Platform.runLater(() -> table.refresh());
         table.getColumns().addAll(headersCol,weightsCol);
         weightsTableVbox.getChildren().addAll(label, table,objHBox);
         headersCol.setSortable(false);
         headersCol.setEditable(false);
         headersCol.setSortType(TableColumn.SortType.ASCENDING);
-        weightsCol.setSortable(true);
+        weightsCol.setSortable(false);
         tablesHbox.getChildren().add(weightsTableVbox);
 
     }
@@ -317,6 +319,7 @@ public class WeightsController extends Controller{
         subjTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         subjTable.getColumns().addAll(subjNamesCol,maxScoreCol);
+        Platform.runLater(()->subjTable.refresh());
         subjTableVbox.getChildren().addAll(label, subjTable,subjHBox);
         tablesHbox.getChildren().add(subjTableVbox);
         subjNamesCol.setSortable(false);
