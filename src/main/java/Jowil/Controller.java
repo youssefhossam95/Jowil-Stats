@@ -154,16 +154,26 @@ public abstract class Controller {
     }
 
 
-    protected boolean isValidDouble(String s){
+    /**
+     *
+     * @param s
+     * @return null if the value is less than zero or is not Parsable to Double , otherwise returns a new string in a non-integer representation
+     */
+    protected String tryDouble(String s){
+
+        s=s.trim();
         try
         {
-            Double.parseDouble(s);
+            double x=Double.parseDouble(s);
+            if(x>=0)
+                return Double.toString(x);
+            else
+                return null;
         }
         catch(NumberFormatException e)
         {
-            return false;
+            return null;
         }
-        return true;
 
     }
 
