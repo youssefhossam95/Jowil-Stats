@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
 
-public class HeadersEditController extends Controller{
+public class WeightsController extends Controller{
 
 
     public static class Question {
@@ -67,8 +67,8 @@ public class HeadersEditController extends Controller{
 
     //essentials
 
-    HeadersEditController(Controller back){
-        super("HeadersEdit.fxml","Headers and Weights",1.25,1.25,true,back);
+    WeightsController(Controller back){
+        super("Weights.fxml","Weights",1.25,1.25,true,back);
     }
 
 
@@ -87,6 +87,11 @@ public class HeadersEditController extends Controller{
     }
 
 
+    @Override
+    protected Controller getNextController() {
+
+        return null;
+    }
 
 
     //helper methods

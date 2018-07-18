@@ -21,7 +21,7 @@
           </graphic>
           <tooltip><Tooltip text="Open CSV file" /></tooltip>
       </JFXButton>
-       <JFXButton fx:id="nextButton" text="Next">
+       <JFXButton fx:id="nextButton" text="Start">
        </JFXButton>
    </children>
 </AnchorPane>

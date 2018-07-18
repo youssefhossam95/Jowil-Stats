@@ -192,28 +192,26 @@ public abstract class Controller {
 
 //        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
 //        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
-
-        nextButton.setOnMouseClicked(t->{
-            saveChanges();
-            HeadersEditController controller;
-            if(next==null || isContentEdited) { //if first time or edit manually has been pressed
-                next = controller = new HeadersEditController(this);
-                controller.startWindow();
-            }
-            else {
-                controller = (HeadersEditController) next;
-                controller.showWindow();
-            }
-            isContentEdited=false;
-            stage.close();
-        });
-
+        nextButton.setOnMouseClicked(t->goToNextWindow());
         buttonsHbox.getChildren().add(nextButton);
 
     }
 
+    protected abstract Controller getNextController();
 
-
-
+    protected void goToNextWindow(){
+        saveChanges();
+        Controller controller;
+        if(next==null || isContentEdited) { //if first time or edit manually has been pressed
+            next = controller = getNextController();
+            controller.startWindow();
+        }
+        else {
+            controller = (WeightsController) next;
+            controller.showWindow();
+        }
+        isContentEdited=false;
+        stage.close();
+    }
 
 }

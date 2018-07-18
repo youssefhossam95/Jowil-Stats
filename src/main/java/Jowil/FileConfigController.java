@@ -75,7 +75,12 @@ public class FileConfigController extends Controller{
 
     }
 
+    @Override
+    protected Controller getNextController() {
+        return null;
+    }
 
+    //private methods
     private void initNextButton(){
 
 //        nextButton.setOnMouseEntered(new EventHandler<MouseEvent>
@@ -140,6 +145,8 @@ public class FileConfigController extends Controller{
 
 
     }
+
+
 
     private void initFileChooserButton(){
 

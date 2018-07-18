@@ -107,6 +107,11 @@ public class ViewGroupsAndSubjsController  extends Controller{
         subjTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth-2*subjTable.getPrefWidth()-2*rootWidth/20));
     }
 
+    @Override
+    protected Controller getNextController() {
+        return new WeightsController(this);
+    }
+
     //helper methods
     private void initGroupsTableVBox(){
 

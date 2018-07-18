@@ -87,6 +87,7 @@ public class HeadersCreateController extends Controller{
     }
 
 
+    @Override
     protected void updateSizes() {
         super.updateSizes();
         tableVbox.setSpacing(resY/50);
@@ -99,17 +100,19 @@ public class HeadersCreateController extends Controller{
         addSpinner.setPrefWidth(addButton.getWidth());
     }
 
+    @Override
     protected void initComponents() {
         initTableVBox();
     }
 
+    @Override
+    protected Controller getNextController() {
+        return null;
+    }
 
+    ///helper mthods
 
-
-
-
-
-    public void initTableVBox(){
+    private void initTableVBox(){
 
         final Label label = new Label("Questions");
         label.setFont(new Font("Arial", 20));
