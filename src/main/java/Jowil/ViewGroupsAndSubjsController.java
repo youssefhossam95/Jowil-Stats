@@ -159,10 +159,10 @@ public class ViewGroupsAndSubjsController  extends Controller{
     }
 
     private void initNextButton(){
-        nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
+        //nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
 
-        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
-        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
+//        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
+//        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
 
         nextButton.setOnMouseClicked(t->{
             saveChanges();

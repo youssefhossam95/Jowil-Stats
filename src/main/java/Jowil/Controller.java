@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -107,6 +108,8 @@ public abstract class Controller {
                 }
             });
             stage.show();
+            rootPane.requestFocus();
+
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -159,15 +162,15 @@ public abstract class Controller {
     }
 
     private void initBackButton(){
-        backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
+        //backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
         rootPane.getChildren().add(backButton);
         backButton.setOnMouseClicked(t->{
             back.showWindow();
             stage.close();
         });
 
-        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
-        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
+//        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
+//        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent"));
         buttonsHbox.getChildren().add(backButton);
     }
 
