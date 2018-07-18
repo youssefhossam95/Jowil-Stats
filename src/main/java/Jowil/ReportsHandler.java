@@ -164,6 +164,15 @@ public class ReportsHandler {
         doc.select("td.Kuder-RichardsonFormula20").first().text(generalStatsMap.get("Kuder-Richardson Formula 20")) ;
 
     }
+    private void fillResponseFreqHeaders(Document doc , int questionIndex) {
+        String questionChoicesHtml = "" ;
+        ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
+        for(String qChoice: questionChoices )
+            questionChoicesHtml+= "<th>" +qChoice+ "</th>\n";
+        doc.select("th.total").last().before(questionChoicesHtml);
+        doc.select("th.responseFreq").last().attr("colspan" , String.valueOf(questionChoices.size())) ;
+
+    }
 
     public void  generateReport2() throws IOException, DocumentException {
         File file = new File(report2TemplatePath);
@@ -174,40 +183,30 @@ public class ReportsHandler {
 
         String tableHtml = doc.select("table.t2").last().outerHtml() ;
 //        doc.select("table.t2").remove() ;
-        ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(0) ;
+//        ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(0) ;
+        ArrayList<ArrayList<ArrayList<String>>> statsTables = new ArrayList<ArrayList<ArrayList<String>>>() ;
+        statsTables.add( generateFakeTable(100 , 11) );
         int questionIndex = 0 ;
+        int remainingRows = 30 ;
         for(ArrayList<ArrayList<String>> table : statsTables) {
             //create new table
-            if(questionIndex!=0)
-                doc.select("table").last().after(tableHtml) ;
-            String questionChoicesHtml = "" ;
-            ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
-            for(String qChoice: questionChoices )
-                questionChoicesHtml+= "<th>" +qChoice+ "</th>\n";
-            doc.select("th.total").last().before(questionChoicesHtml);
-            doc.select("th.responseFreq").last().attr("colspan" , String.valueOf(questionChoices.size())) ;
-
-            String rowsHtml = createRowsHtml(table ,"" , "") ;
-            doc.select("tr.bottom-header-row").last().after(rowsHtml);
+            if(questionIndex!=0) {
+                doc.select("table").last().after(tableHtml);
+//                remainingRows = 48 ;
+            }
+            fillResponseFreqHeaders(doc , questionIndex);
+            int startIndex = 0 ;
+            int endIndex = (int)Utils.getNumberWithinLimits(table.size() ,  0 , remainingRows) ;
+            do {
+                ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
+                String rowsHtml = createRowsHtml(pageTable, "", "");
+                doc.select("tr.bottom-header-row").last().after(rowsHtml);
+                startIndex = endIndex ;
+                endIndex = (int)Utils.getNumberWithinLimits(endIndex+25 , 0 , table.size())  ;
+            }while (startIndex == endIndex) ;
             questionIndex += table.size() ;
 //            break;
         }
-//
-//        String generalStatsHtml = doc.select("table.t").last().outerHtml() ;
-//        System.out.println(generalStatsHtml);
-
-//        doc.select("td.numberOfStudents").last().text("hi");
-
-//        doc.select("table.t2").last().after(generalStatsHtml) ;
-//        doc.select("td.numberOfStudents").last().text("man");
-
-//        String answerNamesHtml = "<th>A</th>\n" +
-//                "            <th>B</th>\n" +
-//                "            <th>C</th>\n" +
-//                "            <th>D</th>\n" +
-//                "            <th>E</th>" ;
-//        doc.select("th.total").last().before(answerNamesHtml) ;
-//        System.out.println(doc.outerHtml());
         writeHtmlFile(reportsPath+"report2\\test.html" , doc);
         generatePDF(reportsPath+"report2\\test.html" , reportsPath + "report2\\test.pdf");
 
@@ -257,7 +256,7 @@ public class ReportsHandler {
        for (int i = 0 ; i< numberOfRows ; i++) {
            ArrayList<String>outRow = new ArrayList<String>() ;
            for (int j = 0 ; j < numberOfCols ; j ++)
-               outRow.add("R"+(i+1)+" C"+(j+1)) ;
+               outRow.add("R"+(i+1)) ;
            out.add(outRow) ;
        }
        return out ;
