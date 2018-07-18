@@ -141,6 +141,12 @@ public class Statistics {
     }
 
 
+    public static ArrayList<String> getSpecificQuestionChoices(int questionIndex){return questionsChoices.get(questionIndex);}
+
+    public static int getNumberOfForms (){
+        double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
+        return (int)max(forms)+1 ;
+    }
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");
@@ -470,6 +476,7 @@ public class Statistics {
         double kr21 = calcKr21(mean , variance , numberOfStudents) ;
 
 
+        statsMap.put("Number Of Students" , format.format(studentScores.size()));
         statsMap.put("Mean" , format.format(mean));
         statsMap.put("Number Of Graded Questions" , format.format(numberOfQuestions) );
         statsMap.put("Maximum Possible Score" , format.format(maxScore)) ; // assuming all Forms should have the same weight sum
@@ -558,13 +565,33 @@ public class Statistics {
         }
         System.out.println(pointBiserialTables);
     }
-    
+
 
     private static double calcPointBiserial(int formIndex , int questionIndex ) {
         double[] questionVector = pointBiserialTables.get(formIndex).get(questionIndex).stream().mapToDouble(d -> d).toArray();
         double[] totalVector = pointBiserialTotalTable.get(formIndex).stream().mapToDouble(d -> d).toArray();
         PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation() ;
-        return pearsonsCorrelation.correlation(totalVector , questionVector) ;
+        double pointBiserial =  pearsonsCorrelation.correlation(totalVector , questionVector) ;
+        return Double.isNaN(pointBiserial)?0:pointBiserial;
+    }
+
+    
+
+    private static double calcPrecentOfSolvers(double startPercent , double endPercent , int formIndex , int questionIndex ) {
+        int totalNumberOfStudents = formsScors.get(formIndex).size();
+        ArrayList<ArrayList<String> > formSortedStudentAnswers = sortedStudentAnswers.get(formIndex);
+        String correctAnswer = correctAnswers.get(formIndex).get(questionIndex);
+        double count = 0  ;
+        int studentStartIndex = (int)(startPercent*totalNumberOfStudents) ;
+        int studentEndIndex = (int) (endPercent * totalNumberOfStudents) ;
+
+        for (int studentIndex =  studentStartIndex ; studentIndex<  studentEndIndex  ; studentIndex++) {
+           if(formSortedStudentAnswers.get(studentIndex).get(questionIndex).equals(correctAnswer))
+               count++;
+        }
+        int numberOfStudents  = studentEndIndex - studentStartIndex ;
+
+        return (double)count/(double)numberOfStudents ;
     }
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
@@ -573,12 +600,18 @@ public class Statistics {
     }
 
     public static ArrayList<ArrayList<ArrayList<String>>> report2TableStats (int formIndex) {
+
+        DecimalFormat format = new DecimalFormat("0.#");
+        DecimalFormat format2 = new DecimalFormat("0.##") ;
+
         ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex) ;
         ArrayList<String> formCorrectAnswers= correctAnswers.get(formIndex);
         ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<ArrayList<ArrayList<String>>>();
         ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>() ;
 
         for(int questionIndex = 0 ; questionIndex < formCorrectAnswers.size() ; questionIndex++) {
+
+
             ArrayList<String> questionChoices = questionsChoices.get(questionIndex);
             ArrayList<String> previousQuestionChoices = questionIndex>0?questionsChoices.get(questionIndex-1):questionChoices;
 
@@ -590,10 +623,34 @@ public class Statistics {
             ArrayList<String>tableRow = new ArrayList<>() ;
             tableRow.add(String.valueOf(questionIndex+1)) ;
             tableRow.add(questionNames.get(questionIndex));
+            ArrayList<Double> questionStats =  answersStats.get(formIndex).get(questionIndex) ;
+            String correctAnswer = correctAnswers.get(formIndex).get(questionIndex) ;
+            int correctAnswerIndex = questionsChoices.get(questionIndex).indexOf(correctAnswer);
+
+            double correctAnswerPrecentage = questionStats.get(correctAnswerIndex);
+
+            for(int answerIndex = 0 ; answerIndex < questionStats.size() ; answerIndex ++ ) {
+                String addedClass = "" ;
+                if(answerIndex== correctAnswerIndex)
+                    addedClass=";green";
+                else if(questionStats.get(answerIndex)> correctAnswerPrecentage)
+                    addedClass=";red" ;
+                else if(questionStats.get(answerIndex) ==0 )
+                    addedClass=";gray";
+                tableRow.add(format.format(questionStats.get(answerIndex) * 100)+addedClass) ;
+            }
+
+            tableRow.add(format.format(correctAnswerPrecentage)) ;
+            tableRow.add(format.format(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex) *100) +"%");
+            System.out.println(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex));
+            tableRow.add(format.format(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)*100) +"%");
+            tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ;
+            table.add(tableRow);
 //            tableRow.add()
         }
+        tables.add(table) ;
 
-
+        System.out.println("el table ya man "+ tables);
         return tables ;
     }
 
@@ -708,6 +765,6 @@ class SortByScore implements Comparator<ArrayList<String>>
 {
     public int compare(ArrayList<String> a, ArrayList<String> b)
     {
-        return (int)Math.round(Double.parseDouble(b.get(b.size()-1))-Double.parseDouble(a.get(a.size()-1)));
+        return (int)Math.round(Double.parseDouble(a.get(a.size()-1))-Double.parseDouble(b.get(b.size()-1)));
     }
 }
