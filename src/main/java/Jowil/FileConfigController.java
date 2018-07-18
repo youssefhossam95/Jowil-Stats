@@ -68,33 +68,41 @@ public class FileConfigController extends Controller{
         initFileChooserButton();
         initNextButton();
         initToggleButton();
-        fileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-            isContentEdited=true;
-        });
+        initFileTextField();
         buttonsHbox.setVisible(false);
+        toggleButton.setVisible(false);
+        slider.setVisible(false);
+
     }
 
+    @Override
+    protected Controller getNextController() {
+        return null;
+    }
 
+    //private methods
     private void initNextButton(){
 
-        nextButton.setOnMouseEntered(new EventHandler<MouseEvent>
-                () {
-            public void handle(MouseEvent t) {
-                nextButton.setStyle("-fx-background-color:#878a8a;");
-            }
-        });
-
-        nextButton.setOnMouseExited(new EventHandler<MouseEvent>
-                () {
-
-
-            public void handle(MouseEvent t) {
-                nextButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797");
-            }
-        });
+//        nextButton.setOnMouseEntered(new EventHandler<MouseEvent>
+//                () {
+//            public void handle(MouseEvent t) {
+//                nextButton.setStyle("-fx-background-color:#878a8a;");
+//            }
+//        });
+//
+//        nextButton.setOnMouseExited(new EventHandler<MouseEvent>
+//                () {
+//
+//
+//            public void handle(MouseEvent t) {
+//                nextButton.setStyle("-fx-background-color:transparent;");
+//            }
+//        });
 
         nextButton.setOnMouseClicked(t->{
-                csvFile=new File(fileTextField.getText());
+            //nextButton.setStyle("-fx-background-color:transparent;");
+
+            csvFile=new File(fileTextField.getText());
                 if(!csvFile.exists()){
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
                             "The file entered doesn't exist.");
@@ -135,25 +143,28 @@ public class FileConfigController extends Controller{
 
             });
 
+
     }
+
+
 
     private void initFileChooserButton(){
 
-        fileChooserButton.setOnMouseEntered(new EventHandler<MouseEvent>
-                () {
-            public void handle(MouseEvent t) {
-                fileChooserButton.setStyle("-fx-background-color:#878a8a;");
-            }
-        });
-
-        fileChooserButton.setOnMouseExited(new EventHandler<MouseEvent>
-                () {
-
-
-            public void handle(MouseEvent t) {
-                fileChooserButton.setStyle("-fx-background-color:transparent;");
-            }
-        });
+//        fileChooserButton.setOnMouseEntered(new EventHandler<MouseEvent>
+//                () {
+//            public void handle(MouseEvent t) {
+//                fileChooserButton.setStyle("-fx-background-color:#878a8a;");
+//            }
+//        });
+//
+//        fileChooserButton.setOnMouseExited(new EventHandler<MouseEvent>
+//                () {
+//
+//
+//            public void handle(MouseEvent t) {
+//                fileChooserButton.setStyle("-fx-background-color:transparent;");
+//            }
+//        });
 
         fileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
@@ -167,9 +178,12 @@ public class FileConfigController extends Controller{
                 if(csvFile!=null) {
                     lastDir = csvFile.getParent();
                     fileTextField.setText(csvFile.getPath());
+                    fileTextField.requestFocus();
+                    fileTextField.deselect();
                 }
             }
         });
+        fileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
 
 
     }
@@ -185,6 +199,14 @@ public class FileConfigController extends Controller{
         rootPane.getChildren().add(subjVBox);
     }
 
+    private void initFileTextField(){
+        fileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
+            isContentEdited=true;
+        });
+        fileTextField.setPromptText("Answers File Path");
+        fileTextField.setLabelFloat(true);
+
+    }
     protected void saveChanges(){
 
     }
