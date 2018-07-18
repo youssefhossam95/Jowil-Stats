@@ -7,5 +7,34 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
+    <JFXButton fx:id="forwardButton">
+        <graphic>
+            <ImageView >
+                <image>
+                    <Image url="@../Images/icons8_Right_32px.png" />
+                </image>
+            </ImageView>
+        </graphic>
+
+
+
+    </JFXButton>
+
+    <JFXButton fx:id="backwardButton"  >
+        <graphic>
+            <ImageView >
+                <image>
+                    <Image url="@../Images/icons8_Left_32px.png" />
+                </image>
+            </ImageView>
+        </graphic>
+
+
+
+    </JFXButton>
+
 </AnchorPane>

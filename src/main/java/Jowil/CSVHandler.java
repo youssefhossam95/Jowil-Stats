@@ -150,6 +150,7 @@ public class CSVHandler {
         detectedGroups=new ArrayList<>();
         detectedQHeaders=new ArrayList<>();
         detectedInfoHeaders=new ArrayList<>();
+        subjStartIndex=-1;
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line;
         if((line = input.readLine()) != null){
@@ -255,8 +256,8 @@ public class CSVHandler {
         String currentGroup="";
         for(;i<scoresStartIndex;i++) {
 
-            if((digitBegin=headers[i].indexOf(Integer.toString(expectedIndex)))==-1){ //expected not found -> either end of group or weird column
-                if((digitBegin=headers[i].indexOf("1"))==-1)//a weird column
+            if((digitBegin=headers[i].lastIndexOf(Integer.toString(expectedIndex)))==-1){ //expected not found -> either end of group or weird column
+                if((digitBegin=headers[i].lastIndexOf("1"))==-1)//a weird column
                     break;
                 detectedGroups.add(new Group(currentGroup, expectedIndex-1));
                 expectedIndex=1;
@@ -282,7 +283,9 @@ public class CSVHandler {
 
         subjEndIndex++; //to be exclusive
 
-        if(subjStartIndex!=-1)
+        if(subjStartIndex==-1)
+            subjQuestionsCount=0;
+        else
             subjQuestionsCount=subjEndIndex-subjStartIndex;
 
     }
