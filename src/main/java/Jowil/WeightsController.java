@@ -102,7 +102,7 @@ public class WeightsController extends Controller{
     private TableView subjTable= new TableView();
     TableColumn subjNamesCol = new TableColumn("Question");
     TableColumn subjWeightsCol = new TableColumn("Weight");
-    private HBox objTablesHbox= new HBox();
+    private HBox tablesHbox= new HBox();
     final HBox subjHBox= new HBox();
     final TextField objWeightText = new TextField();
     final Button objWeightsButton = new Button("Update Selected Weights");
@@ -134,25 +134,22 @@ public class WeightsController extends Controller{
 
     protected void updateSizes() {
         super.updateSizes();
-        objTableVbox.setSpacing(resY/50);
-        //objTableVbox.setAlignment(Pos.CENTER);
-        objTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
-        objTable.setPrefHeight(rootHeight/1.5);
-        //objTableVbox.setPrefWidth(rootWidth/3.2);
-        objHBox.setSpacing(resX/200);
-        subjHBox.setSpacing(resX/200);
-        subjTable.setPrefHeight(rootHeight/1.5);
-        //subjTableVbox.setPrefWidth(rootWidth/3.2);
-        subjTableVbox.setSpacing(resY/50);
-        objTablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
-        subjTableVbox.setPadding(new Insets(rootHeight/20,0, 0, 0));
+        objTableVbox.setSpacing(resYToPixels(0.015));
+        objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, rootWidthToPixels(0.05)));
+        objTable.setPrefHeight(rootHeightToPixels(0.67));
+        objHBox.setSpacing(resXToPixels(0.005));
+        subjHBox.setSpacing(resXToPixels(0.005));
+        subjTable.setPrefHeight(rootHeightToPixels(0.67));
+        subjTableVbox.setSpacing(resYToPixels(0.015));
+        tablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
+        subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04),0, 0, 0));
 
         //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
     }
 
     protected void initComponents() {
         initWeightsHBoxes();
-        initWeightsTableVBox();
+        initObjTableVBox();
         initSubjTableVBox();
     }
 
@@ -189,16 +186,16 @@ public class WeightsController extends Controller{
         subjTableVbox.getChildren().addAll(subjLabel, subjTable,subjHBox);
 
 
-        objTablesHbox.getChildren().add(objTableVbox);
-        objTablesHbox.getChildren().add(subjTableVbox);
+        tablesHbox.getChildren().add(objTableVbox);
+        tablesHbox.getChildren().add(subjTableVbox);
 
-        rootPane.getChildren().add(objTablesHbox);
+        rootPane.getChildren().add(tablesHbox);
 
     }
 
     //helper methods
 
-    private void initWeightsTableVBox(){
+    private void initObjTableVBox(){
 
 
         objHeadersCol.setCellValueFactory(

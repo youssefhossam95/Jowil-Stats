@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -234,6 +235,35 @@ public abstract class Controller {
         rootPane.getChildren().add(buttonsHbox);
     }
 
-    
+    protected double resXToPixels(double relativeVal){
+
+        return relativeVal*resX;
+    }
+
+    protected double resYToPixels(double relativeVal){
+
+        return relativeVal*resY;
+    }
+
+    protected double rootWidthToPixels(double relativeVal){
+
+        return relativeVal*rootWidth;
+    }
+
+    protected double rootHeightToPixels(double relativeVal){
+
+        return relativeVal*rootHeight;
+    }
+
+//    protected static double setPrefWidth(Region element,relativeVal){
+//
+//        //element.setPrefWidth();
+//
+//    }
+
+
+
+
+
 
 }

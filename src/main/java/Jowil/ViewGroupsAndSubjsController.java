@@ -52,19 +52,13 @@ public class ViewGroupsAndSubjsController  extends Controller{
     @Override
     protected void updateSizes(){
         super.updateSizes();
-        groupsTableVbox.setSpacing(resY/50);
-        //groupsTableVbox.setAlignment(Pos.CENTER);
-        groupsTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
-        groupsTable.setPrefHeight(rootHeight/1.5);
-        groupsTable.setPrefWidth(rootWidth/3.2);
-
-//        nextButton.setLayoutX(rootWidth/1.185);
-//        nextButton.setLayoutY(rootHeight/1.17);
-        //manualButton.setPrefWidth(resX/15);
-        manualButton.setPrefHeight(resX/250);
+        groupsTableVbox.setSpacing(resYToPixels(0.02));
+        groupsTableVbox.setPadding(new Insets(rootHeightToPixels(0.05), 0, 0, rootWidthToPixels(0.05)));
+        groupsTable.setPrefHeight(rootHeightToPixels(0.67));
+        groupsTable.setPrefWidth(rootWidthToPixels(0.3125));
+        manualButton.setPrefHeight(resXToPixels(0.004));
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
         manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
-
     }
 
     @Override

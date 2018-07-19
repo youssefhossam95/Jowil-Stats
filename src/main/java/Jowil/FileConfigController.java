@@ -45,22 +45,22 @@ public class FileConfigController extends Controller{
 
     protected void updateSizes(){
         super.updateSizes();
-        fileTextField.setPrefWidth(rootWidth/1.4);
-        fileTextField.setPrefHeight(resY/60);
-        fileTextField.setLayoutX(rootWidth/9);
-        fileTextField.setLayoutY(rootHeight/2.5);
-        fileChooserButton.setPrefWidth(resY/25);
-        fileChooserButton.setPrefHeight(resY/25);
-        fileChooserButton.setLayoutX(rootWidth/1.2);
-        fileChooserButton.setLayoutY(rootHeight/2.5);
+        fileTextField.setPrefWidth(rootWidthToPixels(0.7));
+        fileTextField.setPrefHeight(resYToPixels(0.017));
+        fileTextField.setLayoutX(rootWidthToPixels(0.11));
+        fileTextField.setLayoutY(rootHeightToPixels(0.4));
+        fileChooserButton.setPrefWidth(resYToPixels(0.04));
+        fileChooserButton.setPrefHeight(resYToPixels(0.04));
+        fileChooserButton.setLayoutX(rootWidthToPixels(0.83));
+        fileChooserButton.setLayoutY(rootHeightToPixels(0.4));
         chooserButtonImage.setFitWidth(fileChooserButton.getPrefWidth());
         chooserButtonImage.setFitHeight(fileChooserButton.getPrefHeight());
-        nextButton.setPrefWidth(resX/15);
-        nextButton.setPrefHeight(resX/250);
-        nextButton.setLayoutX(rootWidth/1.275);
-        nextButton.setLayoutY(rootHeight/1.3);
-        subjVBox.setLayoutX(rootWidth/9);
-        subjVBox.setLayoutY(rootHeight/2);
+        nextButton.setPrefWidth(resXToPixels(0.07));
+        nextButton.setPrefHeight(resXToPixels(0.004));
+        nextButton.setLayoutX(rootWidthToPixels(0.78));
+        nextButton.setLayoutY(rootHeightToPixels(0.77));
+        subjVBox.setLayoutX(rootWidthToPixels(0.11));
+        subjVBox.setLayoutY(rootHeightToPixels(0.5));
 
     }
 
