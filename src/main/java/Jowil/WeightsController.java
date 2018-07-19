@@ -117,7 +117,8 @@ public class WeightsController extends Controller{
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
     private HBox tablesHbox= new HBox();
     final HBox subjHBox= new HBox();
-    ;
+
+
 
 
 
@@ -193,7 +194,7 @@ public class WeightsController extends Controller{
 
 
         final Label label = new Label("Objective Questions");
-        label.setFont(new Font("Arial", 20));
+        label.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<headers.size();i++)
             questions.add(new Question(headers.get(i),"1.0"));
@@ -305,7 +306,7 @@ public class WeightsController extends Controller{
         });
 
         final Label label = new Label("Subjective Questions");
-        label.setFont(new Font("Arial", 20));
+        label.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<CSVHandler.getSubjQuestionsCount();i++)
             subjQuestions.add(new SubjQuestion(Integer.toString(i+1),"10"));
@@ -325,8 +326,6 @@ public class WeightsController extends Controller{
         subjNamesCol.setSortable(false);
         maxScoreCol.setSortable(false);
         subjNamesCol.setEditable(false);
-
-
 
     }
 

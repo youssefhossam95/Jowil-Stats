@@ -98,7 +98,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
         qCountCol.setCellFactory(TextFieldTableCell.forTableColumn());
         
         final Label label = new Label("Groups");
-        label.setFont(new Font("Arial", 20));
+        label.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<detectedGroups.size();i++)
             tableGroups.add(detectedGroups.get(i));

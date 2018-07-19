@@ -1,5 +1,4 @@
 package Jowil;
-
 import com.jfoenix.controls.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

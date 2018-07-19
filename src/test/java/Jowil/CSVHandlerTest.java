@@ -9,7 +9,6 @@ public class CSVHandlerTest extends TestCase {
 
     public void testDetectHeaders() throws IOException, CSVHandler.EmptyCSVException {
 
-
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testAll2.csv");
         CSVHandler.processHeaders();
         System.out.println("Info Headers: "+CSVHandler.getDetectedInfoHeaders().toString());

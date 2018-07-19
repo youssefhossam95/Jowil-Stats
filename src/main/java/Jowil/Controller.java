@@ -45,7 +45,7 @@ public abstract class Controller {
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
-
+    protected final double headersFontSize=resX/64;
 
 
 
