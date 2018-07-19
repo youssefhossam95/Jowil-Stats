@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class FileConfigController extends Controller{
 
- //controls
+ //components
 
     @FXML
     private JFXTextField fileTextField;
@@ -68,15 +68,27 @@ public class FileConfigController extends Controller{
         initNextButton();
         initToggleButton();
         initFileTextField();
-        buttonsHbox.setVisible(false);
-        toggleButton.setVisible(false);
-        slider.setVisible(false);
 
     }
 
     @Override
     protected Controller getNextController() {
         return null;
+    }
+
+    @Override
+    protected void saveChanges(){
+
+    }
+
+    @Override
+    protected void buildComponentsGraph(){
+
+//        subjVBox.getChildren().add(toggleButton);
+//        subjVBox.getChildren().add(slider);
+//        rootPane.getChildren().add(subjVBox);
+
+
     }
 
     //private methods
@@ -149,22 +161,6 @@ public class FileConfigController extends Controller{
 
     private void initFileChooserButton(){
 
-//        fileChooserButton.setOnMouseEntered(new EventHandler<MouseEvent>
-//                () {
-//            public void handle(MouseEvent t) {
-//                fileChooserButton.setStyle("-fx-background-color:#878a8a;");
-//            }
-//        });
-//
-//        fileChooserButton.setOnMouseExited(new EventHandler<MouseEvent>
-//                () {
-//
-//
-//            public void handle(MouseEvent t) {
-//                fileChooserButton.setStyle("-fx-background-color:transparent;");
-//            }
-//        });
-
         fileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
             public void handle(MouseEvent t) {
@@ -191,11 +187,8 @@ public class FileConfigController extends Controller{
 
         toggleButton.setText("Subjective Questions");
         toggleButton.setStyle("-fx-font-weight: bold;-jfx-toggle-color: #00BFFF");
-        subjVBox.getChildren().add(toggleButton);
-        subjVBox.getChildren().add(slider);
         slider.setMax(20);
         slider.setMin(0);
-        rootPane.getChildren().add(subjVBox);
     }
 
     private void initFileTextField(){
@@ -206,9 +199,7 @@ public class FileConfigController extends Controller{
         fileTextField.setLabelFloat(true);
 
     }
-    protected void saveChanges(){
 
-    }
 
 
     

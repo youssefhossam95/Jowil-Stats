@@ -27,6 +27,10 @@ public class ViewGroupsAndSubjsController  extends Controller{
     final VBox groupsTableVbox = new VBox();
     private HBox tablesHbox= new HBox();
     private JFXButton manualButton= new JFXButton("Edit Manually");
+    final Label label = new Label("Groups");
+
+
+
 
     //data fields
     ObservableList<Group> tableGroups = FXCollections.observableArrayList();
@@ -68,6 +72,19 @@ public class ViewGroupsAndSubjsController  extends Controller{
         return new WeightsController(this);
     }
 
+
+    @Override
+    protected void buildComponentsGraph(){
+        super.buildComponentsGraph();
+        groupsTable.getColumns().addAll(groupNamesCol,qCountCol);
+        groupsTableVbox.getChildren().addAll(label, groupsTable);
+        tablesHbox.getChildren().add(groupsTableVbox);
+        rootPane.getChildren().add(tablesHbox);
+        rootPane.getChildren().add(manualButton);
+
+    }
+
+
     //helper methods
     private void initGroupsTableVBox(){
 
@@ -84,8 +101,10 @@ public class ViewGroupsAndSubjsController  extends Controller{
                         t.getTableView().getItems().get(t.getTablePosition().getRow()).setNameProp(t.getOldValue());
                         groupsTable.refresh();
                     }
-                    else
+                    else {
                         t.getTableView().getItems().get(t.getTablePosition().getRow()).setNameProp(t.getNewValue());
+                        isContentEdited=true;;
+                    }
 
                 }
         );
@@ -97,7 +116,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
         qCountCol.setCellFactory(TextFieldTableCell.forTableColumn());
         
-        final Label label = new Label("Groups");
         label.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<detectedGroups.size();i++)
@@ -107,10 +125,8 @@ public class ViewGroupsAndSubjsController  extends Controller{
         groupsTable.setEditable(true);
         groupsTable.setItems(tableGroups);
         groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        groupsTable.getColumns().addAll(groupNamesCol,qCountCol);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
-        groupsTableVbox.getChildren().addAll(label, groupsTable);
-        tablesHbox.getChildren().add(groupsTableVbox);
+
         groupNamesCol.setSortable(false);
         qCountCol.setSortable(false);
         qCountCol.setEditable(false);
@@ -130,7 +146,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
         });
 
         //buttonsHbox.getChildren().add(manualButton);
-        rootPane.getChildren().add(manualButton);
 
     }
 
@@ -138,7 +153,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
 
     private void initTablesHBox(){
-        rootPane.getChildren().add(tablesHbox);
+
     }
     
     

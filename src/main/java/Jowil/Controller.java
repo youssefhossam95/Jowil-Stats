@@ -22,12 +22,19 @@ import java.util.logging.Logger;
 
 public abstract class Controller {
 
-    ///fields
+    ///components
 
     @FXML
     protected Pane rootPane;
     protected Scene scene;
     protected Stage stage;
+    protected Controller back;
+    protected Controller next;
+    protected JFXButton backButton= new JFXButton("Back");
+    protected JFXButton nextButton=new JFXButton("Next");
+
+
+    //data fields
     static public double resX;
     static public double resY;
     protected double rootWidth;
@@ -37,10 +44,7 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
-    protected Controller back;
-    protected Controller next;
-    protected JFXButton backButton= new JFXButton("Back");
-    protected JFXButton nextButton=new JFXButton("Next");
+
 
 
     protected boolean isContentEdited=false;
@@ -74,6 +78,7 @@ public abstract class Controller {
         initButtonsHBox();
         initComponents();
         updateSizes();
+        buildComponentsGraph();
 
 
 
@@ -187,13 +192,11 @@ public abstract class Controller {
 
 //        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
 //        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent"));
-        buttonsHbox.getChildren().add(backButton);
     }
 
     private void initButtonsHBox(){
         buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
         //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#3184c9");
-        rootPane.getChildren().add(buttonsHbox);
     }
 
 
@@ -203,7 +206,6 @@ public abstract class Controller {
 //        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
 //        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
         nextButton.setOnMouseClicked(t->goToNextWindow());
-        buttonsHbox.getChildren().add(nextButton);
 
     }
 
@@ -222,6 +224,14 @@ public abstract class Controller {
         }
         isContentEdited=false;
         stage.close();
+    }
+
+
+    protected void buildComponentsGraph(){
+
+        buttonsHbox.getChildren().add(backButton);
+        buttonsHbox.getChildren().add(nextButton);
+        rootPane.getChildren().add(buttonsHbox);
     }
 
 }
