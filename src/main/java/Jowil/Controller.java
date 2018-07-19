@@ -234,4 +234,6 @@ public abstract class Controller {
         rootPane.getChildren().add(buttonsHbox);
     }
 
+    
+
 }

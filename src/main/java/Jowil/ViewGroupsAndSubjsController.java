@@ -126,7 +126,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
         groupsTable.setItems(tableGroups);
         groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
-
         groupNamesCol.setSortable(false);
         qCountCol.setSortable(false);
         qCountCol.setEditable(false);

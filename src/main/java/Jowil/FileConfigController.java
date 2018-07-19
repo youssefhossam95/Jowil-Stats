@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 
 public class FileConfigController extends Controller{
@@ -199,14 +200,5 @@ public class FileConfigController extends Controller{
         fileTextField.setLabelFloat(true);
 
     }
-
-
-
-    
-
-
-
-
-
 
 }

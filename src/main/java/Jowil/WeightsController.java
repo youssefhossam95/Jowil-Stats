@@ -1,21 +1,14 @@
 package Jowil;
-
-
-import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
+import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -99,17 +92,17 @@ public class WeightsController extends Controller{
 
     //components
 
-    private TableView table = new TableView();
-    TableColumn headersCol = new TableColumn("Question");
-    ArrayList<TableColumn> weightsCols = new ArrayList<TableColumn>();
-    TableColumn weightsCol=new TableColumn("Weight");
-    final VBox weightsTableVbox = new VBox();
+    private TableView objTable = new TableView();
+    TableColumn objHeadersCol = new TableColumn("Question");
+    ArrayList<TableColumn> objWeightsCols = new ArrayList<TableColumn>();
+    TableColumn objWeightsCol=new TableColumn("Weight");
+    final VBox objTableVbox = new VBox();
     final HBox objHBox= new HBox();
     private VBox subjTableVbox=new VBox();
     private TableView subjTable= new TableView();
     TableColumn subjNamesCol = new TableColumn("Question");
-    TableColumn maxScoreCol = new TableColumn("Weight");
-    private HBox tablesHbox= new HBox();
+    TableColumn subjWeightsCol = new TableColumn("Weight");
+    private HBox objTablesHbox= new HBox();
     final HBox subjHBox= new HBox();
     final TextField objWeightText = new TextField();
     final Button objWeightsButton = new Button("Update Selected Weights");
@@ -121,7 +114,7 @@ public class WeightsController extends Controller{
 
 
     ///data fields
-    ObservableList<Question> questions = FXCollections.observableArrayList();
+    ObservableList<Question> objQuestions = FXCollections.observableArrayList();
     ArrayList<String> headers=CSVHandler.getDetectedQHeaders();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
 
@@ -141,17 +134,17 @@ public class WeightsController extends Controller{
 
     protected void updateSizes() {
         super.updateSizes();
-        weightsTableVbox.setSpacing(resY/50);
-        //weightsTableVbox.setAlignment(Pos.CENTER);
-        weightsTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
-        table.setPrefHeight(rootHeight/1.5);
-        //weightsTableVbox.setPrefWidth(rootWidth/3.2);
+        objTableVbox.setSpacing(resY/50);
+        //objTableVbox.setAlignment(Pos.CENTER);
+        objTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
+        objTable.setPrefHeight(rootHeight/1.5);
+        //objTableVbox.setPrefWidth(rootWidth/3.2);
         objHBox.setSpacing(resX/200);
         subjHBox.setSpacing(resX/200);
         subjTable.setPrefHeight(rootHeight/1.5);
         //subjTableVbox.setPrefWidth(rootWidth/3.2);
         subjTableVbox.setSpacing(resY/50);
-        tablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
+        objTablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
         subjTableVbox.setPadding(new Insets(rootHeight/20,0, 0, 0));
 
         //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
@@ -173,7 +166,6 @@ public class WeightsController extends Controller{
     @Override
     protected void saveChanges(){
 
-
         ArrayList<Double> maxSubjScores = new ArrayList<>();
         for (SubjQuestion question : subjQuestions)
             maxSubjScores.add(Double.parseDouble(question.getMaxScore()));
@@ -189,18 +181,18 @@ public class WeightsController extends Controller{
         objHBox.getChildren().addAll(objWeightText,objWeightsButton);
         subjHBox.getChildren().addAll(subjWeightText,subjWeightsButton);
 
-        table.getColumns().addAll(headersCol,weightsCol);
-        subjTable.getColumns().addAll(subjNamesCol,maxScoreCol);
+        objTable.getColumns().addAll(objHeadersCol,objWeightsCol);
+        subjTable.getColumns().addAll(subjNamesCol,subjWeightsCol);
 
 
-        weightsTableVbox.getChildren().addAll(objLabel, table,objHBox);
+        objTableVbox.getChildren().addAll(objLabel, objTable,objHBox);
         subjTableVbox.getChildren().addAll(subjLabel, subjTable,subjHBox);
 
 
-        tablesHbox.getChildren().add(weightsTableVbox);
-        tablesHbox.getChildren().add(subjTableVbox);
+        objTablesHbox.getChildren().add(objTableVbox);
+        objTablesHbox.getChildren().add(subjTableVbox);
 
-        rootPane.getChildren().add(tablesHbox);
+        rootPane.getChildren().add(objTablesHbox);
 
     }
 
@@ -209,20 +201,20 @@ public class WeightsController extends Controller{
     private void initWeightsTableVBox(){
 
 
-        headersCol.setCellValueFactory(
+        objHeadersCol.setCellValueFactory(
                 new PropertyValueFactory<Question,String>("header")
         );
 
 
-        headersCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        objHeadersCol.setCellFactory(TextFieldTableCell.forTableColumn());
 
 
 
-        weightsCol.setCellValueFactory( new PropertyValueFactory<Question,String>("weight"));
+        objWeightsCol.setCellValueFactory( new PropertyValueFactory<Question,String>("weight"));
 
 
-        weightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        weightsCol.setOnEditCommit(
+        objWeightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        objWeightsCol.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<Question, String>>() {
 
                     public void handle(TableColumn.CellEditEvent<Question, String> t) {
@@ -239,18 +231,19 @@ public class WeightsController extends Controller{
         objLabel.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<headers.size();i++)
-            questions.add(new Question(headers.get(i),"1.0"));
+            objQuestions.add(new Question(headers.get(i),"1.0"));
 
 
-        table.setEditable(true);
-        table.setItems(questions);
-        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        Platform.runLater(() -> table.refresh());
-        headersCol.setSortable(false);
-        headersCol.setEditable(false);
-        headersCol.setSortType(TableColumn.SortType.ASCENDING);
-        weightsCol.setSortable(false);
+        objTable.setEditable(true);
+        objTable.setItems(objQuestions);
+        objTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        objTable.getSelectionModel().setCellSelectionEnabled(true);
+        objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        Platform.runLater(() -> objTable.refresh());
+        objHeadersCol.setSortable(false);
+        objHeadersCol.setEditable(false);
+        objHeadersCol.setSortType(TableColumn.SortType.ASCENDING);
+        objWeightsCol.setSortable(false);
 
 
     }
@@ -271,11 +264,11 @@ public class WeightsController extends Controller{
                     return;
                 }
 
-                ObservableList<TablePosition> selected=table.getSelectionModel().getSelectedCells();
+                ObservableList<TablePosition> selected=objTable.getSelectionModel().getSelectedCells();
                 for(int i=0;i<selected.size();i++)
-                    ((Question) table.getItems().get(selected.get(i).getRow())).setWeight(w);
+                    ((Question) objTable.getItems().get(selected.get(i).getRow())).setWeight(w);
 
-                table.refresh();
+                objTable.refresh();
 
             }
         });
@@ -321,13 +314,13 @@ public class WeightsController extends Controller{
 
 
 
-        maxScoreCol.setCellValueFactory(
+        subjWeightsCol.setCellValueFactory(
                 new PropertyValueFactory<WeightsController.SubjQuestion,String>("maxScore")
         );
 
-        maxScoreCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        subjWeightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        maxScoreCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SubjQuestion,String>>) t-> {
+        subjWeightsCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SubjQuestion,String>>) t-> {
 
             String w;
             if((w=tryDouble(t.getNewValue()))==null){
@@ -348,13 +341,13 @@ public class WeightsController extends Controller{
 
         subjTable.setEditable(true);
         subjTable.setItems(subjQuestions);
-        subjTable.setPlaceholder(new Label("No subjective questions detected"));
+        subjTable.setPlaceholder(new Label("No subjective objQuestions detected"));
         //subjTable.setStyle("-fx-border-color:#1E90FF");
         subjTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Platform.runLater(()->subjTable.refresh());
         subjNamesCol.setSortable(false);
-        maxScoreCol.setSortable(false);
+        subjWeightsCol.setSortable(false);
         subjNamesCol.setEditable(false);
 
     }
