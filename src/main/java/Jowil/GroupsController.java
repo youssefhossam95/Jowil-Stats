@@ -1,6 +1,7 @@
 package Jowil;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,8 @@ public class GroupsController  extends Controller{
     private HBox tablesHbox= new HBox();
     private JFXButton manualButton= new JFXButton("Edit Manually");
     final Label label = new Label("Groups");
+    private JFXComboBox identifierCombo= new JFXComboBox();
+    private JFXComboBox formCombo=new JFXComboBox();
 
 
 
@@ -38,7 +41,7 @@ public class GroupsController  extends Controller{
 
     //main methods
     GroupsController(Controller back){
-        super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions",1.25,1.25,true,back);
+        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back);
     }
 
 
@@ -46,7 +49,6 @@ public class GroupsController  extends Controller{
     protected void initComponents() {
         initGroupsTableVBox();
         initManualButton();
-        initTablesHBox();
     }
 
     @Override
@@ -78,6 +80,21 @@ public class GroupsController  extends Controller{
 
     }
 
+    @Override
+    protected void saveChanges() {
+
+
+        ArrayList<String> newHeaders = new ArrayList<>();
+
+        for (Group group : tableGroups) {
+
+            for (int i = 0; i < Integer.parseInt(group.getqCountProp()); i++)
+                newHeaders.add(group.getNameProp() + (i + 1));
+
+            CSVHandler.setDetectedQHeaders(newHeaders);
+        }
+
+    }
 
     //helper methods
     private void initGroupsTableVBox(){
@@ -142,28 +159,8 @@ public class GroupsController  extends Controller{
 
     }
 
-
-
-
-    private void initTablesHBox(){
-
-    }
-    
-    
-
-
-    protected void saveChanges() {
-
-
-        ArrayList<String> newHeaders = new ArrayList<>();
-
-        for (Group group : tableGroups) {
-
-            for (int i = 0; i < Integer.parseInt(group.getqCountProp()); i++)
-                newHeaders.add(group.getNameProp() + (i + 1));
-
-            CSVHandler.setDetectedQHeaders(newHeaders);
-        }
+    private void initIdentifierCombo(){
+        ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
 
     }
 }
