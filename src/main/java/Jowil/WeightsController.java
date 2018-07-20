@@ -284,13 +284,12 @@ public class WeightsController extends Controller{
 
     private void initSubjTableVBox(){
 
-
         subjNamesCol.setCellValueFactory(
                 new PropertyValueFactory<SubjQuestion,String>("name")
         );
 
 
-        subjNamesCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        subjNamesCol.setCellFactory((t) -> EditCell.createStringEditCell());
 
 
 
@@ -299,7 +298,7 @@ public class WeightsController extends Controller{
                 new PropertyValueFactory<WeightsController.SubjQuestion,String>("maxScore")
         );
 
-        subjWeightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        subjWeightsCol.setCellFactory((t) -> EditCell.createStringEditCell());
 
         subjWeightsCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SubjQuestion,String>>) t-> {
 
@@ -343,10 +342,11 @@ public class WeightsController extends Controller{
         objTable.setPlaceholder(new Label("Loading..."));
         objTable.setOnKeyPressed(event -> {
             TablePosition<ObservableList<StringProperty>, ?> pos = objTable.getFocusModel().getFocusedCell() ;
-            if (pos != null && event.getCode().isLetterKey()) {
+            if (pos != null && event.getCode().isDigitKey()) {
                 objTable.edit(pos.getRow(), pos.getTableColumn());
             }
         });
+
         initializeObjQuestions();
         objTable.setItems(objQuestions);
 

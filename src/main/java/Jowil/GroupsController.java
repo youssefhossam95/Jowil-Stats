@@ -88,7 +88,7 @@ public class GroupsController  extends Controller{
         );
 
 
-        groupNamesCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        groupNamesCol.setCellFactory((t) -> EditCell.createStringEditCell());
 
         groupNamesCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Group,String>>)t-> {
                     if(t.getNewValue().length()==0){
