@@ -189,18 +189,23 @@ public class ReportsHandler {
         int questionIndex = 0 ;
         int remainingRows = 30 ;
         for(ArrayList<ArrayList<String>> table : statsTables) {
-            //create new table
+            //create new table unless its first time
             if(questionIndex!=0) {
                 doc.select("table").last().after(tableHtml);
 //                remainingRows = 48 ;
             }
             fillResponseFreqHeaders(doc , questionIndex);
+
+            //start and end indeces for questions to be shown in the page
             int startIndex = 0 ;
             int endIndex = (int)Utils.getNumberWithinLimits(table.size() ,  0 , remainingRows) ;
             do {
+                if(startIndex!=0)
+                    ;                 //TODO insert page break
                 ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
                 String rowsHtml = createRowsHtml(pageTable, "", "");
                 doc.select("tr.bottom-header-row").last().after(rowsHtml);
+
                 startIndex = endIndex ;
                 endIndex = (int)Utils.getNumberWithinLimits(endIndex+25 , 0 , table.size())  ;
             }while (startIndex == endIndex) ;
