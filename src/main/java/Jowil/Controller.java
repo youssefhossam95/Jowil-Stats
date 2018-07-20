@@ -3,6 +3,7 @@ package Jowil;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -10,9 +11,11 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -22,12 +25,19 @@ import java.util.logging.Logger;
 
 public abstract class Controller {
 
-    ///fields
+    ///components
 
     @FXML
     protected Pane rootPane;
     protected Scene scene;
     protected Stage stage;
+    protected Controller back;
+    protected Controller next;
+    protected JFXButton backButton= new JFXButton("Back");
+    protected JFXButton nextButton=new JFXButton("Next");
+
+
+    //data fields
     static public double resX;
     static public double resY;
     protected double rootWidth;
@@ -37,15 +47,12 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
-    protected Controller back;
-    protected Controller next;
-    protected JFXButton backButton= new JFXButton("Back");
-    protected JFXButton nextButton=new JFXButton("Next");
+
 
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
-
+    protected final double headersFontSize=resX/64;
 
 
 
@@ -74,6 +81,7 @@ public abstract class Controller {
         initButtonsHBox();
         initComponents();
         updateSizes();
+        buildComponentsGraph();
 
 
 
@@ -113,7 +121,7 @@ public abstract class Controller {
             });
             stage.show();
             rootPane.requestFocus();
-
+            rootPane.setOnMouseClicked(t->rootPane.requestFocus());
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -187,13 +195,11 @@ public abstract class Controller {
 
 //        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
 //        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent"));
-        buttonsHbox.getChildren().add(backButton);
     }
 
     private void initButtonsHBox(){
         buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
         //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#3184c9");
-        rootPane.getChildren().add(buttonsHbox);
     }
 
 
@@ -203,7 +209,6 @@ public abstract class Controller {
 //        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
 //        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
         nextButton.setOnMouseClicked(t->goToNextWindow());
-        buttonsHbox.getChildren().add(nextButton);
 
     }
 
@@ -223,5 +228,44 @@ public abstract class Controller {
         isContentEdited=false;
         stage.close();
     }
+
+
+    protected void buildComponentsGraph(){
+
+        buttonsHbox.getChildren().add(backButton);
+        buttonsHbox.getChildren().add(nextButton);
+        rootPane.getChildren().add(buttonsHbox);
+    }
+
+    protected double resXToPixels(double relativeVal){
+
+        return relativeVal*resX;
+    }
+
+    protected double resYToPixels(double relativeVal){
+
+        return relativeVal*resY;
+    }
+
+    protected double rootWidthToPixels(double relativeVal){
+
+        return relativeVal*rootWidth;
+    }
+
+    protected double rootHeightToPixels(double relativeVal){
+
+        return relativeVal*rootHeight;
+    }
+
+//    protected static double setPrefWidth(Region element,relativeVal){
+//
+//        //element.setPrefWidth();
+//
+//    }
+
+
+
+
+
 
 }

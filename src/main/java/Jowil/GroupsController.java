@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
-public class ViewGroupsAndSubjsController  extends Controller{
+public class GroupsController  extends Controller{
 
 
     //components
@@ -27,13 +27,17 @@ public class ViewGroupsAndSubjsController  extends Controller{
     final VBox groupsTableVbox = new VBox();
     private HBox tablesHbox= new HBox();
     private JFXButton manualButton= new JFXButton("Edit Manually");
+    final Label label = new Label("Groups");
+
+
+
 
     //data fields
     ObservableList<Group> tableGroups = FXCollections.observableArrayList();
     ArrayList<Group> detectedGroups=CSVHandler.getDetectedGroups();
 
     //main methods
-    ViewGroupsAndSubjsController(Controller back){
+    GroupsController(Controller back){
         super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions",1.25,1.25,true,back);
     }
 
@@ -48,25 +52,32 @@ public class ViewGroupsAndSubjsController  extends Controller{
     @Override
     protected void updateSizes(){
         super.updateSizes();
-        groupsTableVbox.setSpacing(resY/50);
-        //groupsTableVbox.setAlignment(Pos.CENTER);
-        groupsTableVbox.setPadding(new Insets(rootHeight/20, 0, 0, rootWidth/20));
-        groupsTable.setPrefHeight(rootHeight/1.5);
-        groupsTable.setPrefWidth(rootWidth/3.2);
-
-//        nextButton.setLayoutX(rootWidth/1.185);
-//        nextButton.setLayoutY(rootHeight/1.17);
-        //manualButton.setPrefWidth(resX/15);
-        manualButton.setPrefHeight(resX/250);
+        groupsTableVbox.setSpacing(resYToPixels(0.02));
+        groupsTableVbox.setPadding(new Insets(rootHeightToPixels(0.05), 0, 0, rootWidthToPixels(0.05)));
+        groupsTable.setPrefHeight(rootHeightToPixels(0.67));
+        groupsTable.setPrefWidth(rootWidthToPixels(0.3125));
+        manualButton.setPrefHeight(resXToPixels(0.004));
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
         manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
-
     }
 
     @Override
     protected Controller getNextController() {
         return new WeightsController(this);
     }
+
+
+    @Override
+    protected void buildComponentsGraph(){
+        super.buildComponentsGraph();
+        groupsTable.getColumns().addAll(groupNamesCol,qCountCol);
+        groupsTableVbox.getChildren().addAll(label, groupsTable);
+        tablesHbox.getChildren().add(groupsTableVbox);
+        rootPane.getChildren().add(tablesHbox);
+        rootPane.getChildren().add(manualButton);
+
+    }
+
 
     //helper methods
     private void initGroupsTableVBox(){
@@ -77,15 +88,17 @@ public class ViewGroupsAndSubjsController  extends Controller{
         );
 
 
-        groupNamesCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        groupNamesCol.setCellFactory((t) -> EditCell.createStringEditCell());
 
         groupNamesCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Group,String>>)t-> {
                     if(t.getNewValue().length()==0){
                         t.getTableView().getItems().get(t.getTablePosition().getRow()).setNameProp(t.getOldValue());
                         groupsTable.refresh();
                     }
-                    else
+                    else {
                         t.getTableView().getItems().get(t.getTablePosition().getRow()).setNameProp(t.getNewValue());
+                        isContentEdited=true;;
+                    }
 
                 }
         );
@@ -97,8 +110,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
         qCountCol.setCellFactory(TextFieldTableCell.forTableColumn());
         
-        final Label label = new Label("Groups");
-        label.setFont(new Font("Arial", 20));
+        label.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<detectedGroups.size();i++)
             tableGroups.add(detectedGroups.get(i));
@@ -107,10 +119,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
         groupsTable.setEditable(true);
         groupsTable.setItems(tableGroups);
         groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        groupsTable.getColumns().addAll(groupNamesCol,qCountCol);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
-        groupsTableVbox.getChildren().addAll(label, groupsTable);
-        tablesHbox.getChildren().add(groupsTableVbox);
         groupNamesCol.setSortable(false);
         qCountCol.setSortable(false);
         qCountCol.setEditable(false);
@@ -119,7 +128,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
 
     private void initManualButton(){
-        manualButton.setStyle("-fx-background-color:#4169E1;-fx-text-fill: white;");
+        manualButton.getStyleClass().add("BlueJFXButton");
 //        manualButton.setOnMouseEntered(t->manualButton.setStyle("-fx-background-color:#878a8a;"));
 //        manualButton.setOnMouseExited(t->manualButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
 
@@ -130,7 +139,6 @@ public class ViewGroupsAndSubjsController  extends Controller{
         });
 
         //buttonsHbox.getChildren().add(manualButton);
-        rootPane.getChildren().add(manualButton);
 
     }
 
@@ -138,7 +146,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
 
 
     private void initTablesHBox(){
-        rootPane.getChildren().add(tablesHbox);
+
     }
     
     

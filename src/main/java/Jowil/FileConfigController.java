@@ -1,5 +1,4 @@
 package Jowil;
-
 import com.jfoenix.controls.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,11 +9,12 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 
 public class FileConfigController extends Controller{
 
- //controls
+ //components
 
     @FXML
     private JFXTextField fileTextField;
@@ -45,22 +45,22 @@ public class FileConfigController extends Controller{
 
     protected void updateSizes(){
         super.updateSizes();
-        fileTextField.setPrefWidth(rootWidth/1.4);
-        fileTextField.setPrefHeight(resY/60);
-        fileTextField.setLayoutX(rootWidth/9);
-        fileTextField.setLayoutY(rootHeight/2.5);
-        fileChooserButton.setPrefWidth(resY/25);
-        fileChooserButton.setPrefHeight(resY/25);
-        fileChooserButton.setLayoutX(rootWidth/1.2);
-        fileChooserButton.setLayoutY(rootHeight/2.5);
+        fileTextField.setPrefWidth(rootWidthToPixels(0.7));
+        fileTextField.setPrefHeight(resYToPixels(0.017));
+        fileTextField.setLayoutX(rootWidthToPixels(0.11));
+        fileTextField.setLayoutY(rootHeightToPixels(0.4));
+        fileChooserButton.setPrefWidth(resYToPixels(0.04));
+        fileChooserButton.setPrefHeight(resYToPixels(0.04));
+        fileChooserButton.setLayoutX(rootWidthToPixels(0.83));
+        fileChooserButton.setLayoutY(rootHeightToPixels(0.4));
         chooserButtonImage.setFitWidth(fileChooserButton.getPrefWidth());
         chooserButtonImage.setFitHeight(fileChooserButton.getPrefHeight());
-        nextButton.setPrefWidth(resX/15);
-        nextButton.setPrefHeight(resX/250);
-        nextButton.setLayoutX(rootWidth/1.275);
-        nextButton.setLayoutY(rootHeight/1.3);
-        subjVBox.setLayoutX(rootWidth/9);
-        subjVBox.setLayoutY(rootHeight/2);
+        nextButton.setPrefWidth(resXToPixels(0.07));
+        nextButton.setPrefHeight(resXToPixels(0.004));
+        nextButton.setLayoutX(rootWidthToPixels(0.78));
+        nextButton.setLayoutY(rootHeightToPixels(0.77));
+        subjVBox.setLayoutX(rootWidthToPixels(0.11));
+        subjVBox.setLayoutY(rootHeightToPixels(0.5));
 
     }
 
@@ -69,15 +69,27 @@ public class FileConfigController extends Controller{
         initNextButton();
         initToggleButton();
         initFileTextField();
-        buttonsHbox.setVisible(false);
-        toggleButton.setVisible(false);
-        slider.setVisible(false);
 
     }
 
     @Override
     protected Controller getNextController() {
         return null;
+    }
+
+    @Override
+    protected void saveChanges(){
+
+    }
+
+    @Override
+    protected void buildComponentsGraph(){
+
+//        subjVBox.getChildren().add(toggleButton);
+//        subjVBox.getChildren().add(slider);
+//        rootPane.getChildren().add(subjVBox);
+
+
     }
 
     //private methods
@@ -116,13 +128,13 @@ public class FileConfigController extends Controller{
                 CSVHandler.setFilePath(csvFile.getPath());
                 try {
                     if(CSVHandler.processHeaders()){
-                        ViewGroupsAndSubjsController controller;
+                        GroupsController controller;
                         if(next==null || isContentEdited) {
-                            next = controller = new ViewGroupsAndSubjsController(this);
+                            next = controller = new GroupsController(this);
                             controller.startWindow();
                         }
                         else {
-                            controller = (ViewGroupsAndSubjsController) next;
+                            controller = (GroupsController) next;
                             controller.showWindow();
                         }
                         isContentEdited=false;
@@ -150,22 +162,6 @@ public class FileConfigController extends Controller{
 
     private void initFileChooserButton(){
 
-//        fileChooserButton.setOnMouseEntered(new EventHandler<MouseEvent>
-//                () {
-//            public void handle(MouseEvent t) {
-//                fileChooserButton.setStyle("-fx-background-color:#878a8a;");
-//            }
-//        });
-//
-//        fileChooserButton.setOnMouseExited(new EventHandler<MouseEvent>
-//                () {
-//
-//
-//            public void handle(MouseEvent t) {
-//                fileChooserButton.setStyle("-fx-background-color:transparent;");
-//            }
-//        });
-
         fileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
             public void handle(MouseEvent t) {
@@ -192,11 +188,8 @@ public class FileConfigController extends Controller{
 
         toggleButton.setText("Subjective Questions");
         toggleButton.setStyle("-fx-font-weight: bold;-jfx-toggle-color: #00BFFF");
-        subjVBox.getChildren().add(toggleButton);
-        subjVBox.getChildren().add(slider);
         slider.setMax(20);
         slider.setMin(0);
-        rootPane.getChildren().add(subjVBox);
     }
 
     private void initFileTextField(){
@@ -207,16 +200,5 @@ public class FileConfigController extends Controller{
         fileTextField.setLabelFloat(true);
 
     }
-    protected void saveChanges(){
-
-    }
-
-
-    
-
-
-
-
-
 
 }
