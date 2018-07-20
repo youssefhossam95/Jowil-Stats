@@ -5,7 +5,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
@@ -16,8 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
-
-import java.io.BufferedReader;
 import java.util.ArrayList;
 
 public class WeightsController extends Controller{
@@ -231,7 +228,7 @@ public class WeightsController extends Controller{
         //objective hbox
 
         objWeightText.setPromptText("New weight");
-        objWeightsButton.setStyle("-fx-background-color:#4169E1;-fx-text-fill: white;");
+        objWeightsButton.getStyleClass().add("BlueJFXButton");
         objWeightsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -260,7 +257,7 @@ public class WeightsController extends Controller{
         ////subjective hbox
 
         subjWeightText.setPromptText("New weight");
-        subjWeightsButton.setStyle("-fx-background-color:#4169E1;-fx-text-fill: white;");
+        subjWeightsButton.getStyleClass().add("BlueJFXButton");
         subjWeightsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -344,8 +341,15 @@ public class WeightsController extends Controller{
         objTable.getItems().clear();
         objTable.getColumns().clear();
         objTable.setPlaceholder(new Label("Loading..."));
+        objTable.setOnKeyPressed(event -> {
+            TablePosition<ObservableList<StringProperty>, ?> pos = objTable.getFocusModel().getFocusedCell() ;
+            if (pos != null && event.getCode().isLetterKey()) {
+                objTable.edit(pos.getRow(), pos.getTableColumn());
+            }
+        });
         initializeObjQuestions();
         objTable.setItems(objQuestions);
+
         //add Question column
         objTable.getColumns().add(createColumn(0, "Question"));
         objTable.getColumns().get(0).setEditable(false);
@@ -382,7 +386,7 @@ public class WeightsController extends Controller{
             title = columnTitle;
         }
 
-        column.setCellFactory(TextFieldTableCell.forTableColumn());
+        column.setCellFactory((t) -> EditCell.createStringEditCell());
         column.setSortable(true);
 
 

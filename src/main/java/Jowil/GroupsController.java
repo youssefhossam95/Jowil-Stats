@@ -128,7 +128,7 @@ public class GroupsController  extends Controller{
 
 
     private void initManualButton(){
-        manualButton.setStyle("-fx-background-color:#4169E1;-fx-text-fill: white;");
+        manualButton.getStyleClass().add("BlueJFXButton");
 //        manualButton.setOnMouseEntered(t->manualButton.setStyle("-fx-background-color:#878a8a;"));
 //        manualButton.setOnMouseExited(t->manualButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
 

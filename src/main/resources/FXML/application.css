@@ -13,6 +13,7 @@ JFXButton:hover {
     -fx-background-color: 	#87CEEB;
 }
 
+
 JFXTextField{
     -fx-prompt-text-fill: #989898;
     -fx-font-size:16;
@@ -22,4 +23,16 @@ JFXTextField{
 TableView{
 -fx-border-color:#1E90FF;
 }
+
+.BlueJFXButton{
+    -fx-background-color:#4169E1;-fx-text-fill: white;
+}
+.BlueJFXButton:hover{
+    -fx-background-color:#6585e7;
+}
+
+.BlueJFXButton:pressed{
+    -fx-background-color:#4169E1;
+}
+
 

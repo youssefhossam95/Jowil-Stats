@@ -3,6 +3,7 @@ package Jowil;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -10,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -119,7 +121,7 @@ public abstract class Controller {
             });
             stage.show();
             rootPane.requestFocus();
-
+            rootPane.setOnMouseClicked(t->rootPane.requestFocus());
         }
         catch (IOException e) {
             e.printStackTrace();
