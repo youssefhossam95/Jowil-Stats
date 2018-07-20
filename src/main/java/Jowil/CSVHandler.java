@@ -31,7 +31,7 @@ public class CSVHandler {
     private static int subjStartIndex=-1;
     private static int subjEndIndex=-1;
     private static int subjQuestionsCount=0;
-    private static Integer formsCount;
+    private static int formsCount=2;
 
 
     //getters and setters
@@ -64,11 +64,11 @@ public class CSVHandler {
     public static void setSubjQuestionsCount(int subjQuestionsCount) {
         CSVHandler.subjQuestionsCount = subjQuestionsCount;
     }
-    public static Integer getFormsCount() {
+    public static int getFormsCount() {
         return formsCount;
     }
 
-    public static void setFormsCount(Integer formsCount) {
+    public static void setFormsCount(int formsCount) {
         CSVHandler.formsCount = formsCount;
     }
 

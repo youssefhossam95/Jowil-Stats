@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
-public class ViewGroupsAndSubjsController  extends Controller{
+public class GroupsController  extends Controller{
 
 
     //components
@@ -37,7 +37,7 @@ public class ViewGroupsAndSubjsController  extends Controller{
     ArrayList<Group> detectedGroups=CSVHandler.getDetectedGroups();
 
     //main methods
-    ViewGroupsAndSubjsController(Controller back){
+    GroupsController(Controller back){
         super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions",1.25,1.25,true,back);
     }
 

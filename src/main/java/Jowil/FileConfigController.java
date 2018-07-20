@@ -128,13 +128,13 @@ public class FileConfigController extends Controller{
                 CSVHandler.setFilePath(csvFile.getPath());
                 try {
                     if(CSVHandler.processHeaders()){
-                        ViewGroupsAndSubjsController controller;
+                        GroupsController controller;
                         if(next==null || isContentEdited) {
-                            next = controller = new ViewGroupsAndSubjsController(this);
+                            next = controller = new GroupsController(this);
                             controller.startWindow();
                         }
                         else {
-                            controller = (ViewGroupsAndSubjsController) next;
+                            controller = (GroupsController) next;
                             controller.showWindow();
                         }
                         isContentEdited=false;

@@ -1,8 +1,11 @@
 package Jowil;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
@@ -12,6 +15,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
+
+import java.io.BufferedReader;
 import java.util.ArrayList;
 
 public class WeightsController extends Controller{
@@ -92,9 +98,8 @@ public class WeightsController extends Controller{
 
     //components
 
-    private TableView objTable = new TableView();
+    private TableView<ObservableList<StringProperty>> objTable = new TableView();
     TableColumn objHeadersCol = new TableColumn("Question");
-    ArrayList<TableColumn> objWeightsCols = new ArrayList<TableColumn>();
     TableColumn objWeightsCol=new TableColumn("Weight");
     final VBox objTableVbox = new VBox();
     final HBox objHBox= new HBox();
@@ -114,7 +119,7 @@ public class WeightsController extends Controller{
 
 
     ///data fields
-    ObservableList<Question> objQuestions = FXCollections.observableArrayList();
+    ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
     ArrayList<String> headers=CSVHandler.getDetectedQHeaders();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
 
@@ -143,6 +148,12 @@ public class WeightsController extends Controller{
         subjTableVbox.setSpacing(resYToPixels(0.015));
         tablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
         subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04),0, 0, 0));
+        objTable.setPrefWidth(objHBox.getWidth());
+        if(objTable.getPrefWidth()>getObjTableColumnsWidth())
+            objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        else
+            objTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
 
         //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
     }
@@ -178,7 +189,7 @@ public class WeightsController extends Controller{
         objHBox.getChildren().addAll(objWeightText,objWeightsButton);
         subjHBox.getChildren().addAll(subjWeightText,subjWeightsButton);
 
-        objTable.getColumns().addAll(objHeadersCol,objWeightsCol);
+//        objTable.getColumns().addAll(objHeadersCol,objWeightsCol); objTable construction in "populateObjTable" method
         subjTable.getColumns().addAll(subjNamesCol,subjWeightsCol);
 
 
@@ -197,50 +208,20 @@ public class WeightsController extends Controller{
 
     private void initObjTableVBox(){
 
-
-        objHeadersCol.setCellValueFactory(
-                new PropertyValueFactory<Question,String>("header")
-        );
-
-
-        objHeadersCol.setCellFactory(TextFieldTableCell.forTableColumn());
-
-
-
-        objWeightsCol.setCellValueFactory( new PropertyValueFactory<Question,String>("weight"));
-
-
-        objWeightsCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        objWeightsCol.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<Question, String>>() {
-
-                    public void handle(TableColumn.CellEditEvent<Question, String> t) {
-                        String w;
-                        if((w=tryDouble(t.getNewValue()))!=null)
-                            ((Question) t.getTableView().getItems().get(t.getTablePosition().getRow())).setWeight(w);
-                        else //return to old text before editing
-                            ((Question) t.getTableView().getItems().get(t.getTablePosition().getRow())).setWeight(t.getOldValue());t.getTableView().refresh();
-                    }
-                }
-        );
-
-
         objLabel.setFont(new Font("Arial", headersFontSize));
 
-        for(int i=0;i<headers.size();i++)
-            objQuestions.add(new Question(headers.get(i),"1.0"));
+//        for(int i=0;i<headers.size();i++)
+//            objQuestions.add(new Question(headers.get(i),"1.0"));
 
 
+
+        populateObjTable();
         objTable.setEditable(true);
-        objTable.setItems(objQuestions);
         objTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         objTable.getSelectionModel().setCellSelectionEnabled(true);
-        objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//        objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Platform.runLater(() -> objTable.refresh());
-        objHeadersCol.setSortable(false);
-        objHeadersCol.setEditable(false);
-        objHeadersCol.setSortType(TableColumn.SortType.ASCENDING);
-        objWeightsCol.setSortable(false);
+
 
 
     }
@@ -262,8 +243,14 @@ public class WeightsController extends Controller{
                 }
 
                 ObservableList<TablePosition> selected=objTable.getSelectionModel().getSelectedCells();
-                for(int i=0;i<selected.size();i++)
-                    ((Question) objTable.getItems().get(selected.get(i).getRow())).setWeight(w);
+                for(int i=0;i<selected.size();i++) {
+                    int row=selected.get(i).getRow();
+                    int col=selected.get(i).getColumn();
+                    if(col==0)
+                        continue;
+
+                    objTable.getItems().get(row).set(col,new SimpleStringProperty(w));
+                }
 
                 objTable.refresh();
 
@@ -332,13 +319,13 @@ public class WeightsController extends Controller{
         subjLabel.setFont(new Font("Arial", headersFontSize));
 
         for(int i=0;i<CSVHandler.getSubjQuestionsCount();i++)
-            subjQuestions.add(new SubjQuestion(Integer.toString(i+1),"10"));
+            subjQuestions.add(new SubjQuestion(Integer.toString(i+1),"10.0"));
 
 
 
         subjTable.setEditable(true);
         subjTable.setItems(subjQuestions);
-        subjTable.setPlaceholder(new Label("No subjective objQuestions detected"));
+        subjTable.setPlaceholder(new Label("No subjective  Questions detected"));
         //subjTable.setStyle("-fx-border-color:#1E90FF");
         subjTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -348,6 +335,117 @@ public class WeightsController extends Controller{
         subjNamesCol.setEditable(false);
 
     }
+
+    private void populateObjTable() {
+
+        ObservableList<StringProperty> headers = FXCollections.observableArrayList();
+
+        //initialize table
+        objTable.getItems().clear();
+        objTable.getColumns().clear();
+        objTable.setPlaceholder(new Label("Loading..."));
+        initializeObjQuestions();
+        objTable.setItems(objQuestions);
+        //add Question column
+        objTable.getColumns().add(createColumn(0, "Question"));
+        objTable.getColumns().get(0).setEditable(false);
+        objTable.getColumns().get(0).setSortable(false);
+
+
+        int formsCount=CSVHandler.getFormsCount();
+        //add Weight columns
+        if(formsCount==1) {
+            objTable.getColumns().add(createColumn(1, "Weight"));
+        }
+        else{
+//            TableColumn weightCol=new TableColumn<>("Weight");
+//            objTable.getColumns().add(weightCol);
+            for (int i=0; i< formsCount; i++) {
+                //weightCol.getColumns().add(createColumn(i+1, ""));
+                objTable.getColumns().add(createColumn(i+1, ""));
+            }
+        }
+
+
+
+
+
+    }
+
+    private TableColumn<ObservableList<StringProperty>, String> createColumn(
+            final int columnIndex, String columnTitle) {
+        TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
+        String title;
+        if (columnTitle == null || columnTitle.trim().length() == 0) {
+            title = "Form " + (columnIndex)+" Weight";
+        } else {
+            title = columnTitle;
+        }
+
+        column.setCellFactory(TextFieldTableCell.forTableColumn());
+        column.setSortable(true);
+
+
+        column.setText(title);
+        column
+                .setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
+                    @Override
+                    public ObservableValue<String> call(
+                            TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
+                        ObservableList<StringProperty> values = cellDataFeatures.getValue();
+                        if (columnIndex >= values.size()) {
+                            return new SimpleStringProperty("");
+                        } else {
+                            return cellDataFeatures.getValue().get(columnIndex);
+                        }
+                    }
+                });
+
+
+
+        column.setOnEditCommit( t->{
+            String w;
+            int row=t.getTablePosition().getRow();
+            int col=t.getTablePosition().getColumn();
+            if((w=tryDouble(t.getNewValue()))!=null) {
+                 t.getTableView().getItems().get(row).set(col,new SimpleStringProperty(w));
+                 objTable.refresh();
+               System.out.println(objTable.getItems());
+            }
+            else { //return to old text before editing
+                t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
+                objTable.refresh();
+            }
+        }
+
+        );
+
+
+
+        return column;
+    }
+
+    private void initializeObjQuestions(){
+
+        for(int i=0;i<CSVHandler.getDetectedQHeaders().size();i++){
+            ObservableList<StringProperty> row= FXCollections.observableArrayList();
+            row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
+            for(int j=0;j<CSVHandler.getFormsCount();j++)
+                row.add(new SimpleStringProperty("1.0"));
+            objQuestions.add(row);
+        }
+
+    }
+
+    private double getObjTableColumnsWidth(){
+        int totalWidth=0;
+        for(TableColumn column: objTable.getColumns())
+            totalWidth+=column.getWidth();
+        return totalWidth;
+    }
+
+    
+    
 
 
 
