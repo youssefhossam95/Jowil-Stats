@@ -29,5 +29,6 @@
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk14:1.59" level="project" />
     <orderEntry type="library" name="Maven: org.xhtmlrenderer:flying-saucer-core:9.1.13" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.8.3" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:font-awesome:5.1.0" level="project" />
   </component>
 </module>

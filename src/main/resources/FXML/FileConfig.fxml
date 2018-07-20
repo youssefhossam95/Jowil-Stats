@@ -10,18 +10,45 @@
 
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
-      <JFXTextField fx:id="fileTextField" prefWidth="100" focusColor="#3184c9" ></JFXTextField>
-      <JFXButton fx:id="fileChooserButton">
-          <graphic>
-              <ImageView fx:id="chooserButtonImage" >
-                  <image>
-                      <Image url="@../Images/icons8_Add_File_32px_1.png" />
-                  </image>
-              </ImageView>
-          </graphic>
-          <tooltip><Tooltip text="Open CSV file" /></tooltip>
-      </JFXButton>
-       <JFXButton fx:id="nextButton" text="Start">
-       </JFXButton>
+        <VBox fx:id="contentVbox">
+        <HBox fx:id="mainHBox">
+            <JFXTextField fx:id="mainFileTextField" labelFloat="true"  promptText="Students Responses File Path"  focusColor="#3184c9"/>
+            <JFXButton fx:id="mainFileChooserButton">
+                    <graphic>
+                        <ImageView fx:id="mainChooserButtonImage" >
+                            <image>
+                                <Image url="@../Images/icons8_Add_File_32px_1.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip><Tooltip text="Open CSV file" /></tooltip>
+                </JFXButton>
+        </HBox>
+        <HBox fx:id="answersHBox">
+            <JFXTextField fx:id="answersFileTextField" labelFloat="true" promptText="Answer Key File Path" focusColor="#3184c9"/>
+            <JFXButton fx:id="answersFileChooserButton">
+                <graphic>
+                    <ImageView fx:id="answersChooserButtonImage" >
+                        <image>
+                            <Image url="@../Images/icons8_Add_File_32px_1.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+                <tooltip><Tooltip text="Open CSV file" /></tooltip>
+            </JFXButton>
+
+        </HBox>
+
+        <AnchorPane fx:id="combosAnchor">
+            <JFXComboBox fx:id="identifierCombo" labelFloat="true" promptText="Identifier Column" focusColor="#3184c9"/>
+            <JFXComboBox fx:id="formCombo" labelFloat="true" promptText="Form Column" focusColor="#3184c9"/>
+        </AnchorPane>
+
+        <JFXToggleButton fx:id="manualModeToggle" text="Manual Mode" />
+        </VBox>
+
+        <JFXButton fx:id="nextButton" text="Start">
+        </JFXButton>
+
    </children>
 </AnchorPane>
