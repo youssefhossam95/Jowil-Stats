@@ -30,6 +30,8 @@ public class CSVFileValidator extends ValidatorBase {
 
 
     JFXTextField myTextField;
+    int textFieldID;
+    final public static int MAINFILETEXTFIELD=0, ANSWERSFILETEXTFIELD=1;
 
     private boolean isHeadersFound=true;
 
@@ -40,8 +42,10 @@ public class CSVFileValidator extends ValidatorBase {
     }
 
 
-    public CSVFileValidator(JFXTextField myTextField){
+    public CSVFileValidator(JFXTextField myTextField,int textFieldID){
         this.myTextField=myTextField;
+        this.textFieldID=textFieldID;
+
     }
 
     public boolean isHeadersFound() {
@@ -70,7 +74,16 @@ public class CSVFileValidator extends ValidatorBase {
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
         String text = textField.getText();
-        validateCSV(text);
+        File csvFile = new File(text);
+        switch (textFieldID){
+            case MAINFILETEXTFIELD:
+                validateMainCSV(csvFile);
+                break;
+            case ANSWERSFILETEXTFIELD:
+                validateAnswersCSV(csvFile);
+                break;
+        }
+
 
         //textField.pseudoClassStateChanged( PseudoClass.getPseudoClass("focused"),true);
 
@@ -84,55 +97,80 @@ public class CSVFileValidator extends ValidatorBase {
     }
 
 
-    private void validateCSV(String text){
+    private void validateCSV(File file) {
 
-//        errorTooltip.getStyleClass().removeAll();
-        //errorTooltip.getStyleClass().add("error-tooltip");
 
+        if(myTextField==null)
+            return;
+
+        //initialization
         myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("error-label");
         FileConfigController.setIsError(true);
-        isHeadersFound=true;
         hasErrors.set(false);
-        File csvFile=new File(text);
 
 
-        if(!csvFile.exists()){
+        //basic csv checks
+        if (!file.exists()) {
             setMessage("File doesn't exist.");
-            hasErrors.set(true);
-            return ;
-        }
-        if(!csvFile.getPath().endsWith(".csv")) {
-            setMessage("file must have a \".csv\" extension.");
             hasErrors.set(true);
             return;
         }
-        CSVHandler.setFilePath(csvFile.getPath());
+        if (!file.getPath().endsWith(".csv")) {
+            setMessage("File must have a \".csv\" extension.");
+            hasErrors.set(true);
+            return;
+        }
+        try{
+            if(CSVHandler.isCSVFileEmpty(file)){
+                setMessage("Empty CSV file.");
+                hasErrors.set(true);
+                return;
+            }
+        } catch (IOException e) {
+            setMessage("Error in reading file.");
+            hasErrors.set(true);
+            return;
+        }
+
+
+    }
+
+    private void validateMainCSV(File file){
+
+        validateCSV(file);
+        if(hasErrors.get())
+            return;
+
+        isHeadersFound = true;
+        CSVHandler.setFilePath(file.getPath());
         try {
             if (!CSVHandler.processHeaders()) {
-                setMessage("No headers detected");
-                isHeadersFound=false;
+                setMessage("No headers detected.");
+                isHeadersFound = false;
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
                 FileConfigController.setIsError(false);
                 hasErrors.set(true);
                 return;
             }
-        }
-        catch (IOException e) {
-            setMessage("Error reading file!");
+        } catch (IOException e) {
+            setMessage("Error in reading file.");
             hasErrors.set(true);
             return;
 
         } catch (CSVHandler.EmptyCSVException e) {
-            setMessage("File empty.");
+            setMessage("Empty CSV file.");
             hasErrors.set(true);
             return;
         }
 
-
-
     }
 
+    private void validateAnswersCSV(File file){
+        validateCSV(file);
+        if(hasErrors.get())
+            return;
 
+    }
 
 }
 

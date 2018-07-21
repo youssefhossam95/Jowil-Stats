@@ -1,9 +1,6 @@
 package Jowil;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -178,6 +175,10 @@ public class CSVHandler {
 
 
 
+    public static boolean isCSVFileEmpty(File file) throws IOException {
+        return new BufferedReader(new FileReader(file)).readLine()==null;
+    }
+
     //helper functions
     private static ArrayList<String> cropArray(String [] original,int skipCols,int end){
         ArrayList<String> cropped=new ArrayList<String>();
@@ -306,6 +307,7 @@ public class CSVHandler {
         Matcher matcher = pattern.matcher(header);
         return matcher.matches();
     }
+
 
 
 

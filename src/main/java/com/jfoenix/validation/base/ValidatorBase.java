@@ -222,21 +222,16 @@ public abstract class ValidatorBase extends Parent {
 
     //Joe edit start
     public Node getIcon() {
-        if (iconSupplier.get() == null) {
-            return null;
+
+        Node icon;
+        if(FileConfigController.isError()){
+            icon=FileConfigController.getErrorIcon();
+            icon.getStyleClass().add("error-icon");
         }
-        Node icon = iconSupplier.get().get();
-
-            if(FileConfigController.isError()){
-                icon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
-                icon.getStyleClass().add("error-icon");
-            }
-            else{
-                icon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").styleClass("error").build();
-                icon.getStyleClass().add("warning-icon");
-            }
-
-
+        else{
+            icon=FileConfigController.getWarningIcon();
+            icon.getStyleClass().add("warning-icon");
+        }
 
         return icon;
     }

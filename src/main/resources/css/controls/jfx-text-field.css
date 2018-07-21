@@ -50,18 +50,22 @@
     -fx-text-fill: #D34336;
 }
 
-.jfx-text-field .warning-label {
-    -fx-text-fill: #e6c300;
-}
-
-
 .jfx-text-field .error-icon {
     -fx-fill: #D34336;
 }
 
+/*joe add start*/
+.jfx-text-field .warning-label {
+    -fx-text-fill: #e6c300;
+    /*-fx-fill: #9F6000;*/
+}
+
 .jfx-text-field .warning-icon {
     -fx-fill: #e6c300;
+    /*-fx-fill: #9F6000;*/
 }
+
+/*joe add end*/
 
 
 

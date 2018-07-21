@@ -9,6 +9,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -100,11 +101,17 @@ public class FileConfigController extends Controller{
     private static final String ERROR = "error";
 
 
-//methods
-    FileConfigController(){
-        super("FileConfig.fxml","File configuration",1.6,1.45,true,null);
-    }
 
+    private final static Node errorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();;
+
+
+
+    private final static Node warningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").styleClass("error").build();
+
+
+
+
+    //getters and setters
     public static boolean isError() {
         return isError;
     }
@@ -113,6 +120,17 @@ public class FileConfigController extends Controller{
         FileConfigController.isError = isError;
     }
 
+    public static Node getErrorIcon() {
+        return errorIcon;
+    }
+    public static Node getWarningIcon() {
+        return warningIcon;
+    }
+
+    //Main methods
+    FileConfigController(){
+        super("FileConfig.fxml","File configuration",1.6,1.45,true,null);
+    }
     protected void updateSizes(){
         super.updateSizes();
 
@@ -202,7 +220,7 @@ public class FileConfigController extends Controller{
 
     }
 
-    //private methods
+    //helper methods
     private void initNextButton(){
 
 //        nextButton.setOnMouseEntered(new EventHandler<MouseEvent>
@@ -305,8 +323,6 @@ public class FileConfigController extends Controller{
     private void initMainFileTextField(){
 
 
-
-
         mainFileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
             isContentEdited=true;
         });
@@ -314,12 +330,10 @@ public class FileConfigController extends Controller{
         mainFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
 
             if(!newValue){
-                CSVFileValidator validator= new CSVFileValidator(mainFileTextField);
+                CSVFileValidator validator= new CSVFileValidator(mainFileTextField,CSVFileValidator.MAINFILETEXTFIELD);
                 mainFileTextField.getValidators().clear();
                 mainFileTextField.getValidators().add(validator);
-                validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size(EM1).styleClass(ERROR).build());
                 mainFileTextField.validate();
-
                 if(!validator.isHeadersFound()){
                     mainFileTextField.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
                 }
@@ -332,22 +346,17 @@ public class FileConfigController extends Controller{
 
     private void initAnswersFileTextField(){
 
-        CSVFileValidator validator= new CSVFileValidator();
-        answersFileTextField.getValidators().add(validator);
-        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-                .glyph(FontAwesomeIcon.TIMES_CIRCLE)
-                .size(EM1)
-                .styleClass(ERROR)
-                .build());
-
         answersFileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
             isContentEdited=true;
         });
 
         answersFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
-            if(!newValue){
-                answersFileTextField.validate();
 
+            if(!newValue){
+                CSVFileValidator validator= new CSVFileValidator(answersFileTextField,CSVFileValidator.ANSWERSFILETEXTFIELD);
+                answersFileTextField.getValidators().clear();
+                answersFileTextField.getValidators().add(validator);
+                answersFileTextField.validate();
             }
 
         });
