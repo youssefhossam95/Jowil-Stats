@@ -84,7 +84,6 @@ public class FileConfigController extends Controller{
 
 
 
-    private static boolean isError=true;
 
     JFXToggleButton toggleButton = new JFXToggleButton();
     VBox subjVBox = new VBox();
@@ -99,6 +98,7 @@ public class FileConfigController extends Controller{
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
+    private static boolean isError=true;
 
 
 
@@ -193,6 +193,8 @@ public class FileConfigController extends Controller{
         initToggleButton();
         initMainFileTextField();
         initAnswersFileTextField();
+        initIdentifierCombo();
+        initFormCombo();
 
     }
 
@@ -334,8 +336,17 @@ public class FileConfigController extends Controller{
                 mainFileTextField.getValidators().clear();
                 mainFileTextField.getValidators().add(validator);
                 mainFileTextField.validate();
-                if(!validator.isHeadersFound()){
+
+                if(!validator.isHeadersFound())
                     mainFileTextField.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+
+                if(validator.getHasErrors()){
+                    formCombo.setDisable(true);
+                    identifierCombo.setDisable(true);
+                }
+                else{
+                    formCombo.setDisable(false);
+                    identifierCombo.setDisable(false);
                 }
             }
 
@@ -361,6 +372,15 @@ public class FileConfigController extends Controller{
 
         });
 
+    }
+
+    private void initIdentifierCombo(){
+        identifierCombo.setDisable(true);
+    }
+
+
+    private void initFormCombo(){
+        formCombo.setDisable(true);
     }
 
 }
