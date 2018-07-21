@@ -223,11 +223,15 @@ public abstract class ValidatorBase extends Parent {
     //Joe edit start
     public Node getIcon() {
 
-        Node icon;
-        if(FileConfigController.isError()){
-            icon=FileConfigController.getErrorIcon();
+        if (iconSupplier.get() == null) {
+            return null;
+        }
+
+        Node icon = iconSupplier.get().get();
+        if(FileConfigController.isError() && icon!=null){
             icon.getStyleClass().add("error-icon");
         }
+
         else{
             icon=FileConfigController.getWarningIcon();
             icon.getStyleClass().add("warning-icon");
@@ -235,5 +239,6 @@ public abstract class ValidatorBase extends Parent {
 
         return icon;
     }
+
     //Joe edit end
 }

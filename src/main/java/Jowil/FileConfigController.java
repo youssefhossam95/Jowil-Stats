@@ -102,7 +102,8 @@ public class FileConfigController extends Controller{
 
 
 
-    private final static Node errorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();;
+    private final static Node mainErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
+    private final static Node answersErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
 
 
 
@@ -120,9 +121,6 @@ public class FileConfigController extends Controller{
         FileConfigController.isError = isError;
     }
 
-    public static Node getErrorIcon() {
-        return errorIcon;
-    }
     public static Node getWarningIcon() {
         return warningIcon;
     }
@@ -335,6 +333,8 @@ public class FileConfigController extends Controller{
                 CSVFileValidator validator= new CSVFileValidator(mainFileTextField,CSVFileValidator.MAINFILETEXTFIELD);
                 mainFileTextField.getValidators().clear();
                 mainFileTextField.getValidators().add(validator);
+                validator.setIcon(mainErrorIcon);
+
                 mainFileTextField.validate();
 
                 if(!validator.isHeadersFound())
@@ -365,6 +365,7 @@ public class FileConfigController extends Controller{
 
             if(!newValue){
                 CSVFileValidator validator= new CSVFileValidator(answersFileTextField,CSVFileValidator.ANSWERSFILETEXTFIELD);
+                validator.setIcon(answersErrorIcon);
                 answersFileTextField.getValidators().clear();
                 answersFileTextField.getValidators().add(validator);
                 answersFileTextField.validate();
