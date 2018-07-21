@@ -31,8 +31,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        Controller.resX=primaryScreenBounds.getWidth();
-        Controller.resY=primaryScreenBounds.getHeight();
+        System.out.println(Controller.resX=primaryScreenBounds.getWidth());
+        System.out.println(Controller.resY=primaryScreenBounds.getHeight());
         FileConfigController controller =new FileConfigController();
         controller.startWindow();
     }
@@ -45,6 +45,8 @@ public class Main extends Application {
         Statistics.setQuestionNames(qHeaders);
     }
 }
+
+
 
 
 

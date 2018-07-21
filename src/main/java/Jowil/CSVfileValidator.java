@@ -1,7 +1,9 @@
 package Jowil;
 
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.DefaultProperty;
+import javafx.css.PseudoClass;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -27,6 +29,10 @@ public class CSVFileValidator extends ValidatorBase {
 
 
 
+    JFXTextField myTextField;
+
+    private boolean isHeadersFound=true;
+
     public CSVFileValidator() { }
 
     public CSVFileValidator(String message) {
@@ -34,6 +40,17 @@ public class CSVFileValidator extends ValidatorBase {
     }
 
 
+    public CSVFileValidator(JFXTextField myTextField){
+        this.myTextField=myTextField;
+    }
+
+    public boolean isHeadersFound() {
+        return isHeadersFound;
+    }
+
+    public void setTextField(JFXTextField myTextField){
+        this.myTextField=myTextField;
+    }
 
 //    public CSVFileValidator(String message, NumberStringConverter numberStringConverter) {
 //        super(message);
@@ -55,6 +72,7 @@ public class CSVFileValidator extends ValidatorBase {
         String text = textField.getText();
         validateCSV(text);
 
+        //textField.pseudoClassStateChanged( PseudoClass.getPseudoClass("focused"),true);
 
 //        try {
 //            hasErrors.set(false);
@@ -68,7 +86,16 @@ public class CSVFileValidator extends ValidatorBase {
 
     private void validateCSV(String text){
 
+//        errorTooltip.getStyleClass().removeAll();
+        //errorTooltip.getStyleClass().add("error-tooltip");
+
+        myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("error-label");
+        FileConfigController.setIsError(true);
+        isHeadersFound=true;
+        hasErrors.set(false);
         File csvFile=new File(text);
+
+
         if(!csvFile.exists()){
             setMessage("File doesn't exist.");
             hasErrors.set(true);
@@ -83,6 +110,9 @@ public class CSVFileValidator extends ValidatorBase {
         try {
             if (!CSVHandler.processHeaders()) {
                 setMessage("No headers detected");
+                isHeadersFound=false;
+                myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
+                FileConfigController.setIsError(false);
                 hasErrors.set(true);
                 return;
             }
@@ -98,7 +128,7 @@ public class CSVFileValidator extends ValidatorBase {
             return;
         }
 
-        hasErrors.set(false);
+
 
     }
 

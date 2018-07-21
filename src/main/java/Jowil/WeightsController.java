@@ -220,6 +220,12 @@ public class WeightsController extends Controller{
 
     }
 
+    @Override
+    protected void stabalizeTables(){
+        disableTableDrag(subjTable);
+        disableTableDrag(objTable);
+    }
+
     //helper methods
 
     private void initObjTableVBox(){

@@ -1,6 +1,8 @@
 package Jowil;
 import com.jfoenix.controls.*;
+import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -21,9 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-//import de.jensd.fx.glyphs.GlyphsBuilder;
-//import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-//import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+
+import static com.jfoenix.validation.base.ValidatorBase.PSEUDO_CLASS_ERROR;
 
 
 public class FileConfigController extends Controller{
@@ -78,6 +82,9 @@ public class FileConfigController extends Controller{
 
 
 
+
+    private static boolean isError=true;
+
     JFXToggleButton toggleButton = new JFXToggleButton();
     VBox subjVBox = new VBox();
     JFXSlider slider= new JFXSlider();
@@ -88,7 +95,9 @@ public class FileConfigController extends Controller{
  //data fields
     private String lastDir;
     File csvFile;
-
+    private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
+    private static final String EM1 = "1em";
+    private static final String ERROR = "error";
 
 
 //methods
@@ -96,6 +105,13 @@ public class FileConfigController extends Controller{
         super("FileConfig.fxml","File configuration",1.6,1.45,true,null);
     }
 
+    public static boolean isError() {
+        return isError;
+    }
+
+    public static void setIsError(boolean isError) {
+        FileConfigController.isError = isError;
+    }
 
     protected void updateSizes(){
         super.updateSizes();
@@ -288,21 +304,25 @@ public class FileConfigController extends Controller{
 
     private void initMainFileTextField(){
 
-        CSVFileValidator validator= new CSVFileValidator();
-        mainFileTextField.getValidators().add(validator);
-//        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-//                .glyph(FontAwesomeIcon.WARNING)
-//                .size(EM1)
-//                .styleClass(ERROR)
-//                .build());
+
+
 
         mainFileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
             isContentEdited=true;
         });
 
         mainFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
+
             if(!newValue){
+                CSVFileValidator validator= new CSVFileValidator(mainFileTextField);
+                mainFileTextField.getValidators().clear();
+                mainFileTextField.getValidators().add(validator);
+                validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size(EM1).styleClass(ERROR).build());
                 mainFileTextField.validate();
+
+                if(!validator.isHeadersFound()){
+                    mainFileTextField.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+                }
             }
 
         });
@@ -314,11 +334,11 @@ public class FileConfigController extends Controller{
 
         CSVFileValidator validator= new CSVFileValidator();
         answersFileTextField.getValidators().add(validator);
-//        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-//                .glyph(FontAwesomeIcon.WARNING)
-//                .size(EM1)
-//                .styleClass(ERROR)
-//                .build());
+        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
+                .glyph(FontAwesomeIcon.TIMES_CIRCLE)
+                .size(EM1)
+                .styleClass(ERROR)
+                .build());
 
         answersFileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
             isContentEdited=true;
@@ -327,6 +347,7 @@ public class FileConfigController extends Controller{
         answersFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
             if(!newValue){
                 answersFileTextField.validate();
+
             }
 
         });

@@ -28,11 +28,11 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.jfoenix</groupId>
-            <artifactId>jfoenix</artifactId>
-            <version>8.0.4</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.jfoenix</groupId>-->
+            <!--<artifactId>jfoenix</artifactId>-->
+            <!--<version>8.0.4</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
@@ -53,9 +53,9 @@
         </dependency>
 
         <dependency>
-        <groupId>org.webjars</groupId>
-        <artifactId>font-awesome</artifactId>
-        <version>5.1.0</version>
+        <groupId>de.jensd</groupId>
+        <artifactId>fontawesomefx</artifactId>
+        <version>8.9</version>
     </dependency>
     </dependencies>
 

@@ -2,6 +2,7 @@ package Jowil;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -78,6 +79,9 @@ public class GroupsController  extends Controller{
         rootPane.getChildren().add(tablesHbox);
         rootPane.getChildren().add(manualButton);
 
+
+
+
     }
 
     @Override
@@ -93,6 +97,12 @@ public class GroupsController  extends Controller{
 
             CSVHandler.setDetectedQHeaders(newHeaders);
         }
+
+    }
+
+    @Override
+    protected void stabalizeTables(){
+        disableTableDrag(groupsTable);
 
     }
 
@@ -134,12 +144,15 @@ public class GroupsController  extends Controller{
 
         
         groupsTable.setEditable(true);
+
         groupsTable.setItems(tableGroups);
         groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
         groupNamesCol.setSortable(false);
         qCountCol.setSortable(false);
         qCountCol.setEditable(false);
+        //groupsTable.setStyle("-fx-font-size:"+Double.toString(resX/106.7));
+
     }
 
 

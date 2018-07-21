@@ -1,6 +1,7 @@
 package Jowil;
 
 import com.jfoenix.controls.JFXButton;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -11,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -82,6 +84,7 @@ public abstract class Controller {
         initComponents();
         updateSizes();
         buildComponentsGraph();
+        stabalizeTables();
 
 
 
@@ -255,6 +258,23 @@ public abstract class Controller {
     protected double rootHeightToPixels(double relativeVal){
 
         return relativeVal*rootHeight;
+    }
+
+
+
+    protected void stabalizeTables(){
+
+    }
+
+    protected static void disableTableDrag(TableView table){
+        try {
+            table.setOnMouseEntered(t -> {
+                TableHeaderRow header = (TableHeaderRow) table.lookup("TableHeaderRow");
+                header.setMouseTransparent(true);
+            });
+        }catch(Exception e){
+
+        }
     }
 
 //    protected static double setPrefWidth(Region element,relativeVal){
