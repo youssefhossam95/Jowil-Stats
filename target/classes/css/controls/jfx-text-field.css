@@ -65,6 +65,11 @@
     /*-fx-fill: #9F6000;*/
 }
 
+.jfx-text-field .success-icon {
+    -fx-fill:#3CB371;
+    /*-fx-fill: #9F6000;*/
+}
+
 /*joe add end*/
 
 

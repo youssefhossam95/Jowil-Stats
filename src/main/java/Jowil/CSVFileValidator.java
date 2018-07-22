@@ -2,8 +2,12 @@ package Jowil;
 
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.base.ValidatorBase;
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.DefaultProperty;
 import javafx.css.PseudoClass;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -32,6 +36,10 @@ public class CSVFileValidator extends ValidatorBase {
     JFXTextField myTextField;
     int textFieldID;
     final public static int MAINFILETEXTFIELD=0, ANSWERSFILETEXTFIELD=1;
+    private final static Node mainErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
+    private final static Node answersErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
+    private final static Node warningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").styleClass("error").build();
+    private final static Node successIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.2em").styleClass("error").build();
 
     private boolean isHeadersFound=true;
 
@@ -75,6 +83,7 @@ public class CSVFileValidator extends ValidatorBase {
         TextInputControl textField = (TextInputControl) srcControl.get();
         String text = textField.getText();
         File csvFile = new File(text);
+        messageType=ERROR;
         switch (textFieldID){
             case MAINFILETEXTFIELD:
                 validateMainCSV(csvFile);
@@ -84,6 +93,12 @@ public class CSVFileValidator extends ValidatorBase {
                 break;
         }
 
+
+        if(!hasErrors.get()) {
+            setIcon(successIcon);
+            messageType = SUCCESS;
+            hasErrors.set(true);
+        }
 
         //textField.pseudoClassStateChanged( PseudoClass.getPseudoClass("focused"),true);
 
@@ -105,7 +120,6 @@ public class CSVFileValidator extends ValidatorBase {
 
         //initialization
         myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("error-label");
-        FileConfigController.setIsError(true);
         hasErrors.set(false);
 
 
@@ -137,6 +151,7 @@ public class CSVFileValidator extends ValidatorBase {
 
     private void validateMainCSV(File file){
 
+        setIcon(mainErrorIcon);
         validateCSV(file);
         if(hasErrors.get())
             return;
@@ -148,7 +163,8 @@ public class CSVFileValidator extends ValidatorBase {
                 setMessage("No headers detected.");
                 isHeadersFound = false;
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
-                FileConfigController.setIsError(false);
+                setIcon(warningIcon);
+                messageType=WARNING;
                 hasErrors.set(true);
                 return;
             }
@@ -166,6 +182,7 @@ public class CSVFileValidator extends ValidatorBase {
     }
 
     private void validateAnswersCSV(File file){
+        setIcon(answersErrorIcon);
         validateCSV(file);
         if(hasErrors.get())
             return;

@@ -98,32 +98,19 @@ public class FileConfigController extends Controller{
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
-    private static boolean isError=true;
 
 
 
-    private final static Node mainErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
-    private final static Node answersErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
 
 
 
-    private final static Node warningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").styleClass("error").build();
+
 
 
 
 
     //getters and setters
-    public static boolean isError() {
-        return isError;
-    }
 
-    public static void setIsError(boolean isError) {
-        FileConfigController.isError = isError;
-    }
-
-    public static Node getWarningIcon() {
-        return warningIcon;
-    }
 
     //Main methods
     FileConfigController(){
@@ -333,12 +320,9 @@ public class FileConfigController extends Controller{
                 CSVFileValidator validator= new CSVFileValidator(mainFileTextField,CSVFileValidator.MAINFILETEXTFIELD);
                 mainFileTextField.getValidators().clear();
                 mainFileTextField.getValidators().add(validator);
-                validator.setIcon(mainErrorIcon);
 
                 mainFileTextField.validate();
 
-                if(!validator.isHeadersFound())
-                    mainFileTextField.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
 
                 if(validator.getHasErrors()){
                     formCombo.setDisable(true);
@@ -365,10 +349,10 @@ public class FileConfigController extends Controller{
 
             if(!newValue){
                 CSVFileValidator validator= new CSVFileValidator(answersFileTextField,CSVFileValidator.ANSWERSFILETEXTFIELD);
-                validator.setIcon(answersErrorIcon);
                 answersFileTextField.getValidators().clear();
                 answersFileTextField.getValidators().add(validator);
                 answersFileTextField.validate();
+
             }
 
         });

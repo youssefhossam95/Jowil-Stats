@@ -48,7 +48,9 @@ public abstract class ValidatorBase extends Parent {
 
     private Tooltip tooltip = null;
     protected Tooltip errorTooltip = null;
-    protected boolean isWarning=false;
+    protected final static int ERROR=0,WARNING=1,SUCCESS=2;
+    protected int messageType=ERROR;
+
 
     public ValidatorBase(String message) {
         this();
@@ -99,7 +101,14 @@ public abstract class ValidatorBase extends Parent {
     protected void onEval() {
         Node control = getSrcControl();
         if (hasErrors.get()) {
-            control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
+
+            //joe edit start (el satr el gwa el if hwa bs el kan mawgod)
+            if(messageType==ERROR)
+                control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
+            else
+                control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+            //joe edit end
+
 
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
@@ -228,13 +237,20 @@ public abstract class ValidatorBase extends Parent {
         }
 
         Node icon = iconSupplier.get().get();
-        if(FileConfigController.isError() && icon!=null){
-            icon.getStyleClass().add("error-icon");
-        }
 
-        else{
-            icon=FileConfigController.getWarningIcon();
-            icon.getStyleClass().add("warning-icon");
+        if(icon!=null) {
+            switch (messageType) {
+                case ERROR:
+                    icon.getStyleClass().add("error-icon");
+                    break;
+                case WARNING:
+                    icon.getStyleClass().add("warning-icon");
+                    break;
+                case SUCCESS:
+                    icon.getStyleClass().add("success-icon");
+                    break;
+
+            }
         }
 
         return icon;
