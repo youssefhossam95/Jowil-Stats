@@ -152,6 +152,11 @@ public class CSVFileValidator extends ValidatorBase {
     private void validateMainCSV(File file){
 
         setIcon(mainErrorIcon);
+        if(file.getPath().length()==0){
+            setMessage("Required field.");
+            hasErrors.set(true);
+            return;
+        }
         validateCSV(file);
         if(hasErrors.get())
             return;
@@ -183,6 +188,13 @@ public class CSVFileValidator extends ValidatorBase {
 
     private void validateAnswersCSV(File file){
         setIcon(answersErrorIcon);
+
+        if(file.getPath().length()==0){
+            setMessage("Required field.");
+            hasErrors.set(true);
+            return;
+        }
+
         validateCSV(file);
         if(hasErrors.get())
             return;
