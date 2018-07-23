@@ -2,6 +2,8 @@ package Jowil;
 import com.jfoenix.controls.*;
 import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,8 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -22,11 +23,18 @@ import javafx.stage.Popup;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.jensd.fx.glyphs.GlyphsBuilder;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.util.Callback;
 
 import static com.jfoenix.validation.base.ValidatorBase.PSEUDO_CLASS_ERROR;
 
@@ -98,6 +106,11 @@ public class FileConfigController extends Controller{
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
+    private int complexIDIndex=-1;
+    private ArrayList<Integer> infoHeadersTypes=new ArrayList<>();
+    private ObservableList<String> combosItems=FXCollections.observableArrayList();
+    private int identifierComboSelectedIndex; //including none at index zero
+    private int formComboSelectedIndex; //including none at index zero
 
 
 
@@ -153,7 +166,7 @@ public class FileConfigController extends Controller{
         formCombo.setPadding(Insets.EMPTY);
         formCombo.setPrefWidth(rootWidthToPixels(0.227));
         identifierCombo.setPrefWidth(rootWidthToPixels(0.227));
-        manualModeToggle.setPadding(Insets.EMPTY);
+        manualModeToggle.setPadding(new Insets(rootHeightToPixels(0.03),0,0,0));
 
 
         nextButton.setPrefWidth(resXToPixels(0.07));
@@ -324,13 +337,15 @@ public class FileConfigController extends Controller{
                 mainFileTextField.validate();
 
 
-                if(validator.getHasErrors()){
-                    formCombo.setDisable(true);
-                    identifierCombo.setDisable(true);
-                }
-                else{
+                if(validator.getMessageType()==ValidatorBase.SUCCESS){
+                    populateCombos();
                     formCombo.setDisable(false);
                     identifierCombo.setDisable(false);
+                }
+                else{
+                    formCombo.setDisable(true);
+                    identifierCombo.setDisable(true);
+
                 }
             }
 
@@ -356,16 +371,174 @@ public class FileConfigController extends Controller{
             }
 
         });
-
     }
 
     private void initIdentifierCombo(){
         identifierCombo.setDisable(true);
+        identifierCombo.setItems(combosItems);
+        identifierCombo.setVisibleRowCount(3);
+        identifierCombo.setOnShown(t->identifierCombo.getSelectionModel().clearSelection());
+        identifierCombo.setOnHidden(t->{identifierCombo.getSelectionModel().select(identifierComboSelectedIndex); System.out.println("easy"+identifierComboSelectedIndex);});
+        identifierCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
+
+            if((Integer)newValue!=-1)
+                identifierComboSelectedIndex=(Integer)newValue;
+
+        });
+        
+        identifierCombo.setCellFactory(
+                new Callback<ListView<String>, ListCell<String>>() {
+                    @Override public ListCell<String> call(ListView<String> param) {
+                        final ListCell<String> cell = new ListCell<String>() {
+                            {
+                                //super.setPrefHeight(identifierCombo.getPrefHeight());
+                            }
+                            @Override public void updateItem(String item,
+                                                             boolean empty) {
+                                super.updateItem(item, empty);
+                                if (item != null) {
+                                    setText(item);
+                                }
+                                else {
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+
+                });
     }
 
 
     private void initFormCombo(){
         formCombo.setDisable(true);
+        formCombo.setItems(combosItems);
+        formCombo.setVisibleRowCount(3);
+        formCombo.setOnShown(t->formCombo.getSelectionModel().clearSelection());
+        formCombo.setOnHidden(t->{formCombo.getSelectionModel().select(formComboSelectedIndex); System.out.println("easy"+formComboSelectedIndex);});
+        formCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
+
+            if((Integer)newValue!=-1)
+                formComboSelectedIndex=(Integer)newValue;
+
+        });
+
+
+        formCombo.setCellFactory(
+                new Callback<ListView<String>, ListCell<String>>() {
+                    @Override public ListCell<String> call(ListView<String> param) {
+                        final ListCell<String> cell = new ListCell<String>() {
+                            {
+                                //super.setPrefHeight(identifierCombo.getPrefHeight());
+                            }
+                            @Override public void updateItem(String item,
+                                                             boolean empty) {
+                                super.updateItem(item, empty);
+                                if (item != null) {
+                                    setText(item);
+                                }
+                                else {
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+
+                });
     }
+
+    private void populateCombos(){
+        ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
+        ArrayList<String> filteredInfoHeaders;
+        Pattern digitsPattern = Pattern.compile("d+");
+        List <Group> idGroups=new ArrayList<Group>();
+        int countIDs=0;
+
+        filteredInfoHeaders=processInfoHeaders(infoHeaders,idGroups);
+
+        combosItems.clear();
+        combosItems.add("None");
+        identifierCombo.getSelectionModel().selectFirst();
+        formCombo.getSelectionModel().selectFirst();
+
+        for(String header: filteredInfoHeaders){
+            combosItems.add(header);
+            if(header.toLowerCase().trim().contains("id"))
+                identifierCombo.getSelectionModel().select(combosItems.size()-1);
+            else if(header.toLowerCase().trim().contains("form") || header.toLowerCase().trim().contains("model"))
+                formCombo.getSelectionModel().select(combosItems.size()-1);
+        }
+
+
+    }
+
+
+    /*
+    prepares the content of combo boxes while handling the complex IDs logic
+     */
+    private ArrayList<String> processInfoHeaders(ArrayList<String> infoHeaders,List<Group> idGroups) {
+
+        ArrayList<String> filteredInfoHeaders = new ArrayList<>();
+        ArrayList<Group> realIDGroups=new ArrayList<>();
+        int expectedIndex = 1, digitBegin = 0;
+        String currentGroup = "";
+
+
+        //remove any header having an index and starting with keyword "id" from info headers and add it to IdGroups
+        for (String header : infoHeaders) {
+            if (!header.toLowerCase().trim().startsWith("id")) { //doesn't start with "id" -> normal info header
+                filteredInfoHeaders.add(header);
+                infoHeadersTypes.add(CSVHandler.IGNORE);
+            }
+            else {
+
+                if ((digitBegin = header.lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found -> either end of group or non-indexed id header
+                    if ((digitBegin = header.lastIndexOf("1")) == -1) {// column starting with id and contains no digits -> treat as normal info header
+                        filteredInfoHeaders.add(header);
+                        infoHeadersTypes.add(CSVHandler.IGNORE);
+                        continue;
+                    }
+
+                    idGroups.add(new Group(currentGroup, expectedIndex - 1));
+                    expectedIndex = 1;
+
+                }
+                currentGroup = header.substring(0, digitBegin);
+                expectedIndex++;
+
+            }
+        }
+
+
+        //extract realIdGroups from idGroups and add non-real idGroups(complexIDs) to filteredInfoHeaders
+        for(Group group: idGroups){
+            if(group.getqCount()>3) // real group
+                realIDGroups.add(group);
+            else{
+                complexIDIndex=filteredInfoHeaders.size();
+                String complexIDName=group.getName()+" ";
+                for(int i=1;i<group.getqCount();i++) {
+                    complexIDName += Integer.toString(i) + "-";
+                    infoHeadersTypes.add(CSVHandler.STUDENTIDCONT);
+                }
+                complexIDName+=Integer.toString(group.getqCount());
+                infoHeadersTypes.add(CSVHandler.STUDENTIDCONT);
+                filteredInfoHeaders.add(complexIDName);
+            }
+        }
+
+
+        //add realIDGroups to detected groups
+        CSVHandler.addRealIDGroups(realIDGroups);
+
+
+        return filteredInfoHeaders;
+
+    }
+
+
+
 
 }

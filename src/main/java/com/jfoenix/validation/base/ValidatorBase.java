@@ -48,7 +48,7 @@ public abstract class ValidatorBase extends Parent {
 
     private Tooltip tooltip = null;
     protected Tooltip errorTooltip = null;
-    protected final static int ERROR=0,WARNING=1,SUCCESS=2;
+    public final static int ERROR=0,WARNING=1,SUCCESS=2;
     protected int messageType=ERROR;
 
 
@@ -85,6 +85,13 @@ public abstract class ValidatorBase extends Parent {
     /**
      * will validate the source control
      */
+
+    //joe add start
+    public int getMessageType() {
+        return messageType;
+    }
+    //joe add end
+
     public void validate() {
         eval();
         onEval();

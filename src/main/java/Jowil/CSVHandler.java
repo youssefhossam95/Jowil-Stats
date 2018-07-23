@@ -179,6 +179,11 @@ public class CSVHandler {
         return new BufferedReader(new FileReader(file)).readLine()==null;
     }
 
+    public static void addRealIDGroups(ArrayList<Group> realIDGroups){
+        realIDGroups.addAll(detectedGroups);
+        detectedGroups=realIDGroups;
+    }
+
     //helper functions
     private static ArrayList<String> cropArray(String [] original,int skipCols,int end){
         ArrayList<String> cropped=new ArrayList<String>();
@@ -307,6 +312,8 @@ public class CSVHandler {
         Matcher matcher = pattern.matcher(header);
         return matcher.matches();
     }
+
+
 
 
 
