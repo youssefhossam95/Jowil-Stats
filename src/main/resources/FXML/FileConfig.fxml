@@ -8,21 +8,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <VBox fx:id="contentVbox">
         <HBox fx:id="mainHBox">
             <JFXTextField fx:id="mainFileTextField" labelFloat="true"  promptText="Students Responses File Path"  focusColor="#3184c9"/>
-            <JFXButton fx:id="mainFileChooserButton">
-                    <graphic>
-                        <ImageView fx:id="mainChooserButtonImage" >
-                            <image>
-                                <Image url="@../Images/icons8_Add_File_32px_1.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip><Tooltip text="Open CSV file" /></tooltip>
-                </JFXButton>
+            <FontAwesomeIconView styleClass="FolderIcon" fill="darkgrey" glyphName="FOLDER" size="30.0"/>
+
         </HBox>
         <HBox fx:id="answersHBox">
             <JFXTextField fx:id="answersFileTextField" labelFloat="true" promptText="Answer Key File Path" focusColor="#3184c9"/>

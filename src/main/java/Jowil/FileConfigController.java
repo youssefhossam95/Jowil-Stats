@@ -153,15 +153,15 @@ public class FileConfigController extends Controller{
         answersFileTextField.setPadding(Insets.EMPTY);
 
 
-        mainFileChooserButton.setPrefWidth(resYToPixels(0.04));
-        mainFileChooserButton.setPrefHeight(resYToPixels(0.04));
-        mainChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
-        mainChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
+        //mainFileChooserButton.setPrefWidth(resYToPixels(0.04));
+        //mainFileChooserButton.setPrefHeight(resYToPixels(0.04));
+//        mainChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
+//        mainChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
 
         answersFileChooserButton.setPrefWidth(resYToPixels(0.04));
         answersFileChooserButton.setPrefHeight(resYToPixels(0.04));
-        answersChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
-        answersChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
+//        answersChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
+//        answersChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
 
 
         formCombo.setPadding(Insets.EMPTY);
@@ -188,7 +188,7 @@ public class FileConfigController extends Controller{
 
     protected void initComponents(){
         initAnswersFileChooserButton();
-        initMainFileChooserButton();
+        //initMainFileChooserButton();
         initNextButton();
         initMainFileTextField();
         initAnswersFileTextField();

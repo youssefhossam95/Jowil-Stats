@@ -40,7 +40,9 @@ JFXComboBox{
     -fx-font-size:14;
 
 }
-
+.FolderIcon:hover{
+-fx-fill:#87CEEB;
+}
 
 
 
