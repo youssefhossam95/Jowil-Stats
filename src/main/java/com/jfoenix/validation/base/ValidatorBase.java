@@ -50,6 +50,7 @@ public abstract class ValidatorBase extends Parent {
     protected Tooltip errorTooltip = null;
     public final static int ERROR=0,WARNING=1,SUCCESS=2;
     protected int messageType=ERROR;
+    public static final PseudoClass PSEUDO_CLASS_SUCCESS = PseudoClass.getPseudoClass("success");
 
 
     public ValidatorBase(String message) {
@@ -109,11 +110,28 @@ public abstract class ValidatorBase extends Parent {
         Node control = getSrcControl();
         if (hasErrors.get()) {
 
-            //joe edit start (el satr el gwa el if hwa bs el kan mawgod)
-            if(messageType==ERROR)
+            //joe edit start
+            if(messageType==ERROR){
+                control.pseudoClassStateChanged(PSEUDO_CLASS_SUCCESS, false);
                 control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
-            else
+                //control.setStyle("-jfx-focus-color: #D34336;");
+            }
+
+            else if(messageType==SUCCESS) {
                 control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+//                control.pseudoClassStateChanged(PSEUDO_CLASS_SUCCESS, true);
+                errorTooltip.setText("File parsed successfully");
+                ((Control) control).setTooltip(errorTooltip);
+
+                //control.setStyle("-jfx-focus-color: #3CB371;");
+                return;
+            }
+            else{
+                control.pseudoClassStateChanged(PSEUDO_CLASS_SUCCESS, false);
+                control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+                //control.setStyle("-jfx-focus-color: #3184c9");
+            }
+
             //joe edit end
 
 

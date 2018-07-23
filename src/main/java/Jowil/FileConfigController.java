@@ -111,6 +111,7 @@ public class FileConfigController extends Controller{
     private ObservableList<String> combosItems=FXCollections.observableArrayList();
     private int identifierComboSelectedIndex; //including none at index zero
     private int formComboSelectedIndex; //including none at index zero
+    private boolean isCombosAllowed=false;
 
 
 
@@ -186,13 +187,14 @@ public class FileConfigController extends Controller{
     }
 
     protected void initComponents(){
-        initFileChooserButton();
+        initAnswersFileChooserButton();
+        initMainFileChooserButton();
         initNextButton();
-        initToggleButton();
         initMainFileTextField();
         initAnswersFileTextField();
         initIdentifierCombo();
         initFormCombo();
+        initManualModeToggle();
 
     }
 
@@ -288,7 +290,7 @@ public class FileConfigController extends Controller{
 
 
 
-    private void initFileChooserButton(){
+    private void initMainFileChooserButton(){
 
         mainFileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
@@ -308,6 +310,30 @@ public class FileConfigController extends Controller{
             }
         });
         mainFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+
+
+    }
+
+    private void initAnswersFileChooserButton(){
+
+        answersFileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
+                () {
+            public void handle(MouseEvent t) {
+                answersFileChooserButton.setStyle("-fx-background-color:transparent;");
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open CSV file");
+                fileChooser.setInitialDirectory(new File((lastDir==null?System.getProperty("user.home"):lastDir)));
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
+                csvFile =fileChooser.showOpenDialog(stage);
+                if(csvFile!=null) {
+                    lastDir = csvFile.getParent();
+                    answersFileTextField.setText(csvFile.getPath());
+                    answersFileTextField.requestFocus();
+                    answersFileTextField.deselect();
+                }
+            }
+        });
+        answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
 
 
     }
@@ -339,12 +365,17 @@ public class FileConfigController extends Controller{
 
                 if(validator.getMessageType()==ValidatorBase.SUCCESS){
                     populateCombos();
+                    manualModeToggle.setSelected(false);
+                    isCombosAllowed=true;
                     formCombo.setDisable(false);
                     identifierCombo.setDisable(false);
                 }
                 else{
+                    if(validator.getMessageType()==ValidatorBase.WARNING)
+                        manualModeToggle.setSelected(true);
                     formCombo.setDisable(true);
                     identifierCombo.setDisable(true);
+                    isCombosAllowed=false;
 
                 }
             }
@@ -532,12 +563,26 @@ public class FileConfigController extends Controller{
 
         //add realIDGroups to detected groups
         CSVHandler.addRealIDGroups(realIDGroups);
-
-
         return filteredInfoHeaders;
 
     }
 
+    private void initManualModeToggle(){
+        manualModeToggle.setStyle("-jfx-toggle-color: #3184c9");
+        manualModeToggle.selectedProperty().addListener((observable,oldValue,newValue)->
+        {
+            if(newValue) {
+                identifierCombo.setDisable(true);
+                formCombo.setDisable(true);
+            }
+            else if(isCombosAllowed) {
+                identifierCombo.setDisable(false);
+                formCombo.setDisable(false);
+            }
+
+        });
+
+    }
 
 
 

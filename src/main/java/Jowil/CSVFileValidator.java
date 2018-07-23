@@ -39,7 +39,9 @@ public class CSVFileValidator extends ValidatorBase {
     private final static Node mainErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
     private final static Node answersErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
     private final static Node warningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").styleClass("error").build();
-    private final static Node successIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.2em").styleClass("error").build();
+    private final static Node mainSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.2em").styleClass("error").build();
+    private final static Node answersSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.2em").styleClass("error").build();
+
 
     private boolean isHeadersFound=true;
 
@@ -87,18 +89,16 @@ public class CSVFileValidator extends ValidatorBase {
         switch (textFieldID){
             case MAINFILETEXTFIELD:
                 validateMainCSV(csvFile);
+                setSuccessIcon(mainSuccessIcon);
                 break;
             case ANSWERSFILETEXTFIELD:
                 validateAnswersCSV(csvFile);
+                setSuccessIcon(answersSuccessIcon);
                 break;
         }
 
 
-        if(!hasErrors.get()) {
-            setIcon(successIcon);
-            messageType = SUCCESS;
-            hasErrors.set(true);
-        }
+
 
         //textField.pseudoClassStateChanged( PseudoClass.getPseudoClass("focused"),true);
 
@@ -187,6 +187,15 @@ public class CSVFileValidator extends ValidatorBase {
         if(hasErrors.get())
             return;
 
+    }
+
+    private void setSuccessIcon(Node successIcon){
+
+        if(!hasErrors.get()) {
+            setIcon(successIcon);
+            messageType = SUCCESS;
+            hasErrors.set(true);
+        }
     }
 
 }

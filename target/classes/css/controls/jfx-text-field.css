@@ -45,6 +45,11 @@
     -jfx-unfocus-color: #D34336;
 }
 
+.jfx-text-field:success {
+    -jfx-focus-color: #3CB371;
+    -jfx-unfocus-color: #3CB371;
+}
+
 
 .jfx-text-field .error-label {
     -fx-text-fill: #D34336;
