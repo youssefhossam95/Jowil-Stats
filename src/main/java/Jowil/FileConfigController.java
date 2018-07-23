@@ -243,7 +243,7 @@ public class FileConfigController extends Controller{
 
         nextButton.setOnMouseClicked(t->{
             //nextButton.setStyle("-fx-background-color:transparent;");
-
+            rootPane.requestFocus();
             csvFile=new File(mainFileTextField.getText());
                 if(!csvFile.exists()){
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
@@ -286,6 +286,8 @@ public class FileConfigController extends Controller{
             });
 
 
+
+
     }
 
 
@@ -307,6 +309,7 @@ public class FileConfigController extends Controller{
                     mainFileTextField.requestFocus();
                     mainFileTextField.deselect();
                 }
+                mainFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
             }
         });
         mainFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
@@ -331,9 +334,12 @@ public class FileConfigController extends Controller{
                     answersFileTextField.requestFocus();
                     answersFileTextField.deselect();
                 }
+
+                answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
             }
         });
         answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+
 
 
     }

@@ -192,6 +192,7 @@ public abstract class Controller {
         //backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
         rootPane.getChildren().add(backButton);
         backButton.setOnMouseClicked(t->{
+            rootPane.requestFocus();
             back.showWindow();
             stage.close();
         });
@@ -211,7 +212,9 @@ public abstract class Controller {
 
 //        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
 //        nextButton.setOnMouseExited(t->nextButton.setStyle("-fx-background-color:transparent;"));
-        nextButton.setOnMouseClicked(t->goToNextWindow());
+        nextButton.setOnMouseClicked(t->{
+            rootPane.requestFocus();
+            goToNextWindow();});
 
     }
 
