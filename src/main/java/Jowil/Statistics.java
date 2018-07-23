@@ -43,7 +43,7 @@ public class Statistics {
     private static ArrayList<String> grades ; // list of university grades i.e. A , B , C
     private static ArrayList<Double> gradesLowerRange; // list of the lower range of the grades assuming that the upper range is the lower range of the next grade
     private static ArrayList<String> studentIdentifier;
-    private static String identifierName ;
+    private static String identifierName ="ID";
     private static ArrayList<Double> subjMaxScores;
     private static ArrayList<ArrayList<Double>> formsScors ;
     private static ArrayList<ArrayList<ArrayList<Integer>>> pointBiserialTables;

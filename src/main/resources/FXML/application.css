@@ -38,6 +38,7 @@ TableView{
 JFXComboBox{
     -fx-prompt-text-fill: #989898;
     -fx-font-size:14;
+    -fx-selection-bar:#3184c9;
 
 }
 

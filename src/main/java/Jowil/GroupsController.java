@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GroupsController  extends Controller{
@@ -87,16 +88,11 @@ public class GroupsController  extends Controller{
     @Override
     protected void saveChanges() {
 
+        ArrayList<Group> newGroups=new ArrayList<>();
+        for (Group group : tableGroups)
+            newGroups.add(group);
 
-        ArrayList<String> newHeaders = new ArrayList<>();
-
-        for (Group group : tableGroups) {
-
-            for (int i = 0; i < Integer.parseInt(group.getqCountProp()); i++)
-                newHeaders.add(group.getNameProp() + (i + 1));
-
-            CSVHandler.setDetectedQHeaders(newHeaders);
-        }
+        CSVHandler.updateGroupsAndQHeaders(newGroups);
 
     }
 

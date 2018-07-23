@@ -106,13 +106,13 @@ public class FileConfigController extends Controller{
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
-    private int complexIDIndex=-1;
+    private ArrayList<String> filteredInfoHeaders;
     private ArrayList<Integer> infoHeadersTypes=new ArrayList<>();
     private ObservableList<String> combosItems=FXCollections.observableArrayList();
     private int identifierComboSelectedIndex; //including none at index zero
     private int formComboSelectedIndex; //including none at index zero
-    private boolean isCombosAllowed=false;
-
+    private int mainTextFieldResult=CSVFileValidator.ERROR,answersTextFieldResult=CSVFileValidator.ERROR;
+    private boolean isComplexIDAdded=false;
 
 
 
@@ -205,6 +205,11 @@ public class FileConfigController extends Controller{
 
     @Override
     protected void saveChanges(){
+        //remove None effect
+        formComboSelectedIndex--;
+        identifierComboSelectedIndex--;
+
+
 
     }
 
@@ -245,43 +250,26 @@ public class FileConfigController extends Controller{
             //nextButton.setStyle("-fx-background-color:transparent;");
             rootPane.requestFocus();
             csvFile=new File(mainFileTextField.getText());
-                if(!csvFile.exists()){
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
-                            "The file entered doesn't exist.");
-                    return ;
-                }
-                if(!csvFile.getPath().endsWith(".csv")) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
-                            "Wrong file type: file must have a \".csv\" extension.");
-                    return;
-                }
-                CSVHandler.setFilePath(csvFile.getPath());
-                try {
-                    if(CSVHandler.processHeaders()){
-                        GroupsController controller;
-                        if(next==null || isContentEdited) {
-                            next = controller = new GroupsController(this);
-                            controller.startWindow();
-                        }
-                        else {
-                            controller = (GroupsController) next;
-                            controller.showWindow();
-                        }
-                        isContentEdited=false;
-                    }
-                    else{
-                        HeadersCreateController controller=new HeadersCreateController(this);
-                        controller.startWindow();
-                    }
-                    stage.close();
 
-                } catch (IOException e) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
-                            "Error reading file: "+e.getMessage()+".");
-                } catch (CSVHandler.EmptyCSVException e) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV file Error",
-                            "CSV file empty.");
+
+            if(true){
+                GroupsController controller;
+                if(next==null || isContentEdited) {
+                    next = controller = new GroupsController(this);
+                    controller.startWindow();
                 }
+                else {
+                    controller = (GroupsController) next;
+                    controller.showWindow();
+                }
+                isContentEdited=false;
+            }
+            else{
+                HeadersCreateController controller=new HeadersCreateController(this);
+                controller.startWindow();
+            }
+            stage.close();
+
 
             });
 
@@ -372,7 +360,6 @@ public class FileConfigController extends Controller{
                 if(validator.getMessageType()==ValidatorBase.SUCCESS){
                     populateCombos();
                     manualModeToggle.setSelected(false);
-                    isCombosAllowed=true;
                     formCombo.setDisable(false);
                     identifierCombo.setDisable(false);
                 }
@@ -381,9 +368,9 @@ public class FileConfigController extends Controller{
                         manualModeToggle.setSelected(true);
                     formCombo.setDisable(true);
                     identifierCombo.setDisable(true);
-                    isCombosAllowed=false;
-
                 }
+
+                mainTextFieldResult=validator.getMessageType();
             }
 
         });
@@ -404,7 +391,7 @@ public class FileConfigController extends Controller{
                 answersFileTextField.getValidators().clear();
                 answersFileTextField.getValidators().add(validator);
                 answersFileTextField.validate();
-
+                answersTextFieldResult=validator.getMessageType();
             }
 
         });
@@ -488,12 +475,11 @@ public class FileConfigController extends Controller{
 
     private void populateCombos(){
         ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
-        ArrayList<String> filteredInfoHeaders;
         Pattern digitsPattern = Pattern.compile("d+");
         List <Group> idGroups=new ArrayList<Group>();
         int countIDs=0;
 
-        filteredInfoHeaders=processInfoHeaders(infoHeaders,idGroups);
+        processInfoHeaders(infoHeaders,idGroups);
 
         combosItems.clear();
         combosItems.add("None");
@@ -513,11 +499,11 @@ public class FileConfigController extends Controller{
 
 
     /*
-    prepares the content of combo boxes while handling the complex IDs logic
+    prepares the content of combo boxes while handling the complexIDs logic
      */
-    private ArrayList<String> processInfoHeaders(ArrayList<String> infoHeaders,List<Group> idGroups) {
+    private void processInfoHeaders(ArrayList<String> infoHeaders,List<Group> idGroups) {
 
-        ArrayList<String> filteredInfoHeaders = new ArrayList<>();
+        filteredInfoHeaders = new ArrayList<>();
         ArrayList<Group> realIDGroups=new ArrayList<>();
         int expectedIndex = 1, digitBegin = 0;
         String currentGroup = "";
@@ -547,14 +533,16 @@ public class FileConfigController extends Controller{
 
             }
         }
+        if(!(currentGroup.length()==0))
+            idGroups.add(new Group(currentGroup,expectedIndex-1)); //add last group
+
 
 
         //extract realIdGroups from idGroups and add non-real idGroups(complexIDs) to filteredInfoHeaders
         for(Group group: idGroups){
             if(group.getqCount()>3) // real group
                 realIDGroups.add(group);
-            else{
-                complexIDIndex=filteredInfoHeaders.size();
+            else if(!isComplexIDAdded){ //only one complexID allowed
                 String complexIDName=group.getName()+" ";
                 for(int i=1;i<group.getqCount();i++) {
                     complexIDName += Integer.toString(i) + "-";
@@ -563,13 +551,14 @@ public class FileConfigController extends Controller{
                 complexIDName+=Integer.toString(group.getqCount());
                 infoHeadersTypes.add(CSVHandler.STUDENTIDCONT);
                 filteredInfoHeaders.add(complexIDName);
+                isComplexIDAdded=true;
             }
         }
 
 
         //add realIDGroups to detected groups
         CSVHandler.addRealIDGroups(realIDGroups);
-        return filteredInfoHeaders;
+
 
     }
 
@@ -581,13 +570,45 @@ public class FileConfigController extends Controller{
                 identifierCombo.setDisable(true);
                 formCombo.setDisable(true);
             }
-            else if(isCombosAllowed) {
+            else{
+                if(mainTextFieldResult==CSVFileValidator.SUCCESS) {
                 identifierCombo.setDisable(false);
                 formCombo.setDisable(false);
+                }
+                else if(mainTextFieldResult==CSVFileValidator.WARNING){
+                    manualModeToggle.setSelected(true);
+                }
             }
 
         });
 
+    }
+
+    private void saveIdentifierColumn(){
+
+        if(isComplexIDAdded){
+            if(identifierComboSelectedIndex!=filteredInfoHeaders.size()-1) { //complexID must be last info header
+                int i=infoHeadersTypes.size()-1;
+                while(infoHeadersTypes.get(i)== CSVHandler.STUDENTIDCONT && i>=0){
+                    infoHeadersTypes.set(i,CSVHandler.IGNORE);
+                    i--;
+                }
+                infoHeadersTypes.set(identifierComboSelectedIndex,CSVHandler.STUDENTID);
+            }
+        }
+        else
+            infoHeadersTypes.set(identifierComboSelectedIndex,CSVHandler.STUDENTID);
+
+
+        if(identifierComboSelectedIndex!=-1) { //None not chosen
+            CSVHandler.setAutoIDMode(false);
+            Statistics.setIdentifierName(filteredInfoHeaders.get(identifierComboSelectedIndex));
+        }
+
+    }
+
+    private void saveFormColumn(){
+        infoHeadersTypes.set(formComboSelectedIndex)
     }
 
 
