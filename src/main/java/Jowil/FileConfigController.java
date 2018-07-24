@@ -47,7 +47,7 @@ public class FileConfigController extends Controller{
     @FXML
     private JFXTextField mainFileTextField;
     @FXML
-    private StackPane mainFileChooserButton;
+    private StackPane mainFileChooser;
 
     @FXML
     private ImageView mainChooserButtonImage;
@@ -69,7 +69,7 @@ public class FileConfigController extends Controller{
 
 
     @FXML
-    private StackPane answersFileChooserButton;
+    private StackPane answersFileChooser;
 
     @FXML
     private ImageView answersChooserButtonImage;
@@ -108,7 +108,6 @@ public class FileConfigController extends Controller{
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
     private ArrayList<String> filteredInfoHeaders;
-    private ArrayList<Integer> infoHeadersTypes=new ArrayList<>();
     private ObservableList<String> combosItems=FXCollections.observableArrayList();
     private int identifierComboSelectedIndex; //including none at index zero
     private int formComboSelectedIndex; //including none at index zero
@@ -116,9 +115,7 @@ public class FileConfigController extends Controller{
     private String mainTextFieldMessage="", answersTextFieldMessage="";
     private boolean isComplexIDAdded=false;
     private int complexIDSize=0;
-    private String complexIDPrefix;
     private int complexIdStartIndex;
-    private int complexIdEndIndex;
     private final static int SKIPROW=0,CONTINUEANYWAY=1,CANCEL=2;
 
 
@@ -147,8 +144,8 @@ public class FileConfigController extends Controller{
 
         mainHBox.setSpacing(resXToPixels(0.005));
         answersHBox.setSpacing(resXToPixels(0.005));
-        //combosHBox.setSpacing(rootWidthToPixels(0.15));
-        //formCombo.setLayoutX(rootWidthToPixels(0.7));
+        
+        
         mainFileTextField.setPrefWidth(rootWidthToPixels(0.5));
         mainFileTextField.setPrefHeight(resYToPixels(0.04));
         mainFileTextField.setPadding(Insets.EMPTY);
@@ -161,13 +158,7 @@ public class FileConfigController extends Controller{
 
 
 
-//        mainChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
-//        mainChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
 
-//        answersFileChooserButton.setPrefWidth(resYToPixels(0.04));
-//        answersFileChooserButton.setPrefHeight(resYToPixels(0.04));
-//        answersChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
-//        answersChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
 
 
         formCombo.setPadding(Insets.EMPTY);
@@ -185,7 +176,7 @@ public class FileConfigController extends Controller{
         combosAnchor.setPrefWidth(rootWidthToPixels(0.4));
         AnchorPane.setLeftAnchor(identifierCombo,0.0);
         AnchorPane.setRightAnchor(formCombo,0.0);
-        combosAnchor.setPadding(new Insets(0,answersFileChooserButton.getLayoutBounds().getWidth()+answersHBox.getSpacing(),0,0));
+        combosAnchor.setPadding(new Insets(0,answersFileChooser.getLayoutBounds().getWidth()+answersHBox.getSpacing(),0,0));
 
         subjVBox.setLayoutX(rootWidthToPixels(0.11));
         subjVBox.setLayoutY(rootHeightToPixels(0.5));
@@ -193,8 +184,8 @@ public class FileConfigController extends Controller{
     }
 
     protected void initComponents(){
-        initAnswersFileChooserButton();
-        initMainFileChooserButton();
+        initAnswersFileChooser();
+        initMainFileChooser();
         initNextButton();
         initMainFileTextField();
         initAnswersFileTextField();
@@ -362,16 +353,16 @@ public class FileConfigController extends Controller{
 
 
 
-    private void initMainFileChooserButton(){
+    private void initMainFileChooser(){
 
 
         Tooltip tooltip = new Tooltip("Open CSV file");
-        Tooltip.install(mainFileChooserButton, tooltip);
+        Tooltip.install(mainFileChooser, tooltip);
 
-        mainFileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
+        mainFileChooser.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
             public void handle(MouseEvent t) {
-                mainFileChooserButton.setStyle("-fx-background-color:transparent;");
+                mainFileChooser.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
                 fileChooser.setInitialDirectory(new File((lastDir==null?System.getProperty("user.home"):lastDir)));
@@ -385,25 +376,24 @@ public class FileConfigController extends Controller{
                     mainFileTextField.deselect();
 
                 }
-                mainFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
             }
         });
-        mainFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+
 
 
     }
 
-    private void initAnswersFileChooserButton(){
+    private void initAnswersFileChooser(){
 
         Tooltip tooltip = new Tooltip("Open CSV file");
-        Tooltip.install(answersFileChooserButton, tooltip);
+        Tooltip.install(answersFileChooser, tooltip);
 
 
 
-        answersFileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
+        answersFileChooser.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
             public void handle(MouseEvent t) {
-                //answersFileChooserButton.setStyle("-fx-background-color:transparent;");
+                //answersFileChooser.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
                 fileChooser.setInitialDirectory(new File((lastDir==null?System.getProperty("user.home"):lastDir)));
@@ -417,10 +407,10 @@ public class FileConfigController extends Controller{
                     validateAnswersTextField();
                 }
 
-                //answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+
             }
         });
-        //answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+
 
 
 
@@ -631,7 +621,6 @@ public class FileConfigController extends Controller{
         }
         else{
             isComplexIDAdded=true;
-            complexIdEndIndex=idEnd;
             complexIdStartIndex=idEnd-groupSize;
             complexIDSize=groupSize;
             filteredInfoHeaders.add(constructComplexIDString(currentGroup,groupSize));

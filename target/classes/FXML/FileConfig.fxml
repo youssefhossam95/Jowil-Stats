@@ -14,7 +14,7 @@
         <VBox fx:id="contentVbox">
         <HBox fx:id="mainHBox">
             <JFXTextField fx:id="mainFileTextField" labelFloat="true"  promptText="Students Responses File Path"  focusColor="#3184c9"/>
-            <StackPane fx:id="mainFileChooserButton">
+            <StackPane fx:id="mainFileChooser">
                 <FontAwesomeIconView styleClass="FolderIcon" fill="darkgrey" glyphName="FOLDER" size="27.0"></FontAwesomeIconView>
             </StackPane>
 
@@ -22,7 +22,7 @@
         </HBox>
         <HBox fx:id="answersHBox">
             <JFXTextField fx:id="answersFileTextField" labelFloat="true" promptText="Answer Key File Path" focusColor="#3184c9"/>
-            <StackPane fx:id="answersFileChooserButton">
+            <StackPane fx:id="answersFileChooser">
                 <FontAwesomeIconView styleClass="FolderIcon" fill="darkgrey" glyphName="FOLDER" size="27.0"></FontAwesomeIconView>
             </StackPane>
 
