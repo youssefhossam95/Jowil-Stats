@@ -1,6 +1,7 @@
 package Jowil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
     public static  double getNumberWithinLimits(double number , double lowerLimit , double upperLimit) {
@@ -10,6 +11,39 @@ public class Utils {
             return upperLimit;
         else
             return number ;
+    }
+
+    public static ArrayList<ArrayList<String>> transposeStringList(ArrayList<ArrayList<String>> matrixIn) {
+        ArrayList<ArrayList<String>> matrixOut = new ArrayList<ArrayList<String>>();
+        if (!matrixIn.isEmpty()) {
+            int noOfElementsInList = matrixIn.get(0).size();
+            for (int i = 0; i < noOfElementsInList; i++) {
+                ArrayList<String> col = new ArrayList<String>();
+                for (List<String> row : matrixIn) {
+                    col.add(row.get(i));
+                }
+                matrixOut.add(col);
+            }
+        }
+
+        return matrixOut;
+    }
+
+
+    public static ArrayList<ArrayList<Integer>> transpose(ArrayList<ArrayList<Integer>> matrixIn) {
+        ArrayList<ArrayList<Integer>> matrixOut = new ArrayList<ArrayList<Integer>>();
+        if (!matrixIn.isEmpty()) {
+            int noOfElementsInList = matrixIn.get(0).size();
+            for (int i = 0; i < noOfElementsInList; i++) {
+                ArrayList<Integer> col = new ArrayList<Integer>();
+                for (List<Integer> row : matrixIn) {
+                    col.add(row.get(i));
+                }
+                matrixOut.add(col);
+            }
+        }
+
+        return matrixOut;
     }
 
 }

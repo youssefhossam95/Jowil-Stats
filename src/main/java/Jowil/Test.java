@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +24,9 @@ public class Test {
 
 
 
-
-        ReportsHandler reportsHandler = new ReportsHandler() ;
-        reportsHandler.generateReport2();
+//        DecimalFormat format = new DecimalFormat("0.##");
+//
+//        System.out.println(format.format(0));
 
         /////////////////// test point biserial ////////////////////////////////////
 //        double[] a = {1.0 , 1.0 , 0 , 0,  0} ;
@@ -46,18 +47,9 @@ public class Test {
 
 //        //////////////////////// to create pdf from html //////////////////////////////////
 
-//         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-//
-//         final String report4TemplatePath = reportsPath + "report1\\report1Template.html";
-//
-//        File file = new File(report4TemplatePath);
-//
-//        Document doc =  Jsoup.parse(file , "UTF-8");
-//
-////        System.out.println("hi"+doc.select("tr.headerRow").last().outerHtml());
-//
-//        ReportsHandler reportsHandler = new ReportsHandler();
-//        reportsHandler.generatePDF(reportsPath + "report1\\report1Template.html", reportsPath + "report1\\test.pdf");
+         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+        ReportsHandler reportsHandler = new ReportsHandler();
+        reportsHandler.generatePDF(reportsPath + "report1\\test.html", reportsPath + "report1\\test2.pdf");
 
     }
 }

@@ -1,6 +1,37 @@
 <html>
  <head> 
   <style type="text/css">
+
+  @page {
+
+margin: 100px 25px;
+size: letter portrait;
+
+/* @top-left {
+    content: element(pageHeader);
+} */
+
+@bottom-left {
+    content: element(pageFooter);
+}
+@bottom-right { 
+  content:element(footerRight)
+}
+}
+
+/* #pageHeader{
+position: running(pageHeader);
+} */
+
+#pageFooter{
+position: running(pageFooter);
+padding-left: 200px ;
+}
+
+#footerRight{ 
+  position: running(footerRight) ; 
+}
+
     .divTitle {
       top: 28px;
       margin-left: 5%;
@@ -194,6 +225,9 @@
      <td class="tg-l711" id="Kuder-RichardsonFormula21" style="text-align:right">0.6</td> 
     </tr> 
    </tbody>
-  </table>  
+  </table> 
+
+  <div id="pageFooter"> hello  </div>
+  <div id="footerRight"> hi </div> 
  </body>
 </html>

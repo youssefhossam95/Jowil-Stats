@@ -1,6 +1,16 @@
 package Jowil;
 
 import com.lowagie.text.DocumentException;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.stage.Stage;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 //import org.jfree.io.FileUtilities;
@@ -8,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import sun.plugin.dom.core.Element;
 
+import javax.imageio.ImageIO;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.text.AttributedCharacterIterator;
@@ -62,10 +73,32 @@ public class ReportsHandler {
         return cellDataMap ;
     }
 
-   private String createRowsHtml(ArrayList<ArrayList<String>> tableData , String rowClass , String commonDataClass){
+    /**
+     *
+     * @param tableData 2D ArrayList<String>  data in each cell ... Convention each data in the 2D list shold be in the form
+     *                  : data;classes#attributes  example:  "20;red header#colspan='2'"
+     * @param rowClasses String containing class to be added to table rows ... Convention:  All Rows Class; on Off Class; last Row Class
+     *                   examples:  red; grayRow ; underLine if you only want to apply one type of classes you can do
+     *                   red OR ;grayRow  OR ;;underLine
+     * @param commonDataClass class that will be applied to each data cell
+     * @return String containg the html of the table
+     */
+   private String createRowsHtml(ArrayList<ArrayList<String>> tableData , String rowClasses , String commonDataClass){
         String tableHtml = ""  ;
+
+        String[] rowClassesArray = rowClasses.split(";") ;
+        String allRowsClass =rowClassesArray.length>0?rowClassesArray[0] +" ":"";
+        String onOffRowClass = rowClassesArray.length>1?rowClassesArray[1] +" ":"";
+        String lastRowClass = rowClassesArray.length>2?rowClassesArray[2] +" ":"";
+
+
         for(int i  = 0 ; i < tableData.size(); i ++ ) {
-            tableHtml += "<tr class= '"+ rowClass +"' > \n" ;
+            String thisRowClasses = "" ;
+            thisRowClasses += allRowsClass ;
+            thisRowClasses += i%2==1?onOffRowClass:""  ;
+            thisRowClasses += i==tableData.size()-1? lastRowClass:"" ;
+
+            tableHtml += "<tr class= '"+ thisRowClasses +"' > \n" ;
             ArrayList<String> tableRow = tableData.get(i);
            for(int cellIndex = 0 ; cellIndex <tableData.get(0).size() ; cellIndex ++ ) {
                Map<String , String > cellData = parseCellData(tableRow.get(cellIndex));
@@ -76,19 +109,6 @@ public class ReportsHandler {
         }
        return tableHtml ;
    }
-
-   private List<List<String>> tableDataAdapter(){
-       List<List<String>> tableData = new ArrayList<List<String>>() ;
-       List<String>row = new ArrayList<String>() ;
-       row.add("F") ;
-       row.add("93-100") ;
-       row.add("26-28");
-       row.add("5") ;
-       row.add("10.5") ;
-       tableData.add(row) ;
-       return  tableData ;
-   }
-
 
     public void generatePDF(String inputHtmlPath, String outputPdfPath) throws IOException, com.lowagie.text.DocumentException {
 
@@ -128,18 +148,62 @@ public class ReportsHandler {
         generatePDF(reportsPath + "gradesDistributionReport\\test.html", reportsPath + "gradesDistributionReport\\test.pdf");
     }
 
-    public  void  generateReport1() throws IOException, DocumentException {
+    private void generateReport1Chart(Stage stage ,ArrayList<String> grades , double[] numberOfStudents) throws IOException {
+        stage.setTitle("Student Grades");
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String,Number> bc =
+                new BarChart<String,Number>(xAxis,yAxis);
+        bc.setTitle("Grades Distribution");
+        xAxis.setLabel("Grade");
+        yAxis.setLabel("Number Of students");
 
+        XYChart.Series series1 = new XYChart.Series();
+        bc.setLegendVisible(false);
+//        series1.setName("2003");
+        for(int gradeIndex = 0 ;  gradeIndex<grades.size() ; gradeIndex++) {
+            series1.getData().add(new XYChart.Data(grades.get(gradeIndex), numberOfStudents[gradeIndex]));
+        }
+        bc.setAnimated(false);
+        Scene scene  = new Scene(bc,1000,1000);
+        bc.getData().addAll(series1);
+
+        scene.getStylesheets().add("style.css");
+        System.out.println("here");
+        bc.applyCss();
+        bc.layout();
+        stage.setScene(scene);
+        stage.show();
+
+        System.out.println("there");
+        WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
+        ImageView imageView = new ImageView(snapShot);
+        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(reportsPath+"report1\\GradesDistributionHistogram.png"));
+        System.out.println("everyWhere");
+    }
+
+    public  void  generateReport1(Stage stage) throws IOException, DocumentException {
+
+        final int MAX_NUMBER_OF_1PAGE_ROWS = 7;
         File file = new File(report1TemplatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
+
         ArrayList<ArrayList<String>> statsTable = Statistics.report1Stats() ;
 
-        String tableRowsHtml = createRowsHtml(statsTable , " " , "tg-l711") ;
+        ArrayList<ArrayList<String>> statsTableTrans = Utils.transposeStringList(statsTable);
+
+        double[] freq = statsTableTrans.get(3).stream().mapToDouble(d -> Double.valueOf(d)).toArray() ;
+
+        generateReport1Chart(stage , statsTableTrans.get(0) , freq );
+
+        String tableRowsHtml = createRowsHtml(statsTable , ";grayRow" , "tg-l711") ;
 
         doc.select("tr.headerRow").after(tableRowsHtml) ;
 
-
+        // check if img need to be put in a new page
+        if(statsTable.size()>MAX_NUMBER_OF_1PAGE_ROWS)
+            doc.select("img").addClass("new-page-img");
 
         writeHtmlFile(reportsPath+"report1\\test.html" , doc);
         generatePDF(reportsPath + "report1\\test.html", reportsPath + "report1\\test.pdf");
@@ -147,21 +211,21 @@ public class ReportsHandler {
     }
 
     private void fillGeneralStatsReport2 (Document doc , Map<String , String> generalStatsMap) {
-        doc.select("td.NumberOfStudents").first().text(generalStatsMap.get("Number Of Students")) ;
-        doc.select("td.MaxPossibleScore").first().text(generalStatsMap.get("Maximum Possible Score")) ;
+        doc.select("td.NumberOfStudents").last().text(generalStatsMap.get("Number Of Students")) ;
+        doc.select("td.MaxPossibleScore").last().text(generalStatsMap.get("Maximum Possible Score")) ;
 
         //Basic Statistics
-        doc.select("td.Mean").first().text(generalStatsMap.get("Mean")) ;
-        doc.select("td.HighestScore").first().text(generalStatsMap.get("Highest Score")) ;
-        doc.select("td.LowestScore").first().text(generalStatsMap.get("Lowest Score")) ;
+        doc.select("td.Mean").last().text(generalStatsMap.get("Mean")) ;
+        doc.select("td.HighestScore").last().text(generalStatsMap.get("Highest Score")) ;
+        doc.select("td.LowestScore").last().text(generalStatsMap.get("Lowest Score")) ;
         //Dispersion
-        doc.select("td.StandardDeviation").first().text(generalStatsMap.get("Standard Deviation")) ;
-        doc.select("td.ScoreRange").first().text(generalStatsMap.get("Range")) ;
-        doc.select("td.Median").first().text(generalStatsMap.get("Median")) ;
+        doc.select("td.StandardDeviation").last().text(generalStatsMap.get("Standard Deviation")) ;
+        doc.select("td.ScoreRange").last().text(generalStatsMap.get("Range")) ;
+        doc.select("td.Median").last().text(generalStatsMap.get("Median")) ;
 
 
         //Test Reliability
-        doc.select("td.Kuder-RichardsonFormula20").first().text(generalStatsMap.get("Kuder-Richardson Formula 20")) ;
+        doc.select("td.Kuder-RichardsonFormula20").last().text(generalStatsMap.get("Kuder-Richardson Formula 20")) ;
 
     }
     private void fillResponseFreqHeaders(Document doc , int questionIndex) {
@@ -178,39 +242,75 @@ public class ReportsHandler {
         File file = new File(report2TemplatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
-        fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(0));
 
+        final int ROWS_IN_BLANK_PAGE = 48 ;
+        final int ROWS_IN_FIRST_PAGE = 32 ;
+        final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 6 ;
+        final int MINIMUM_REMAINING_ROWS = 7 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
+
+        final String pageBreakHtml= "<div class='page-break'></div>\n" ;
 
         String tableHtml = doc.select("table.t2").last().outerHtml() ;
+        String templateBodyHtml = doc.select("body").html() ;
 //        doc.select("table.t2").remove() ;
-//        ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(0) ;
-        ArrayList<ArrayList<ArrayList<String>>> statsTables = new ArrayList<ArrayList<ArrayList<String>>>() ;
-        statsTables.add( generateFakeTable(100 , 11) );
-        int questionIndex = 0 ;
-        int remainingRows = 30 ;
-        for(ArrayList<ArrayList<String>> table : statsTables) {
-            //create new table unless its first time
-            if(questionIndex!=0) {
-                doc.select("table").last().after(tableHtml);
-//                remainingRows = 48 ;
+        for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            if(formIndex>0) {
+                doc.select("table").last().after(pageBreakHtml);
+                doc.select("div.page-break").after(templateBodyHtml) ;
+                doc.select("div.divTitle").addClass("second-page-header") ;
+                doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
             }
-            fillResponseFreqHeaders(doc , questionIndex);
+            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
+//        ArrayList<ArrayList<ArrayList<String>>> statsTables = new ArrayList<ArrayList<ArrayList<String>>>() ;
+//        statsTables.add( generateFakeTable(10 , 11) );
+//        statsTables.add(generateFakeTable(40 , 11)) ;
+            int questionIndex = 0;
+            int remainingRows = ROWS_IN_FIRST_PAGE;
+            for (ArrayList<ArrayList<String>> table : statsTables) {
+                //create new table unless its first time
+                if (questionIndex != 0) {
 
-            //start and end indeces for questions to be shown in the page
-            int startIndex = 0 ;
-            int endIndex = (int)Utils.getNumberWithinLimits(table.size() ,  0 , remainingRows) ;
-            do {
-                if(startIndex!=0)
-                    ;                 //TODO insert page break
-                ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
-                String rowsHtml = createRowsHtml(pageTable, "", "");
-                doc.select("tr.bottom-header-row").last().after(rowsHtml);
+                    //check if page break is needed
+                    if (remainingRows < MINIMUM_REMAINING_ROWS) {
+                        doc.select("table").last().after(pageBreakHtml);
+                        remainingRows = ROWS_IN_BLANK_PAGE - 2;
+                        doc.select("div.page-break").last().after(tableHtml);
 
-                startIndex = endIndex ;
-                endIndex = (int)Utils.getNumberWithinLimits(endIndex+25 , 0 , table.size())  ;
-            }while (startIndex == endIndex) ;
-            questionIndex += table.size() ;
+                    } else {
+                        remainingRows -= NUMBER_OF_ROWS_FOR_TABLE_HEADER;
+                        doc.select("table").last().after(tableHtml);
+                    }
+                }
+                fillResponseFreqHeaders(doc, questionIndex);
+
+                //start and end indeces for questions to be shown in the page
+                int startIndex = 0;
+                int endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, remainingRows);
+                do {
+                    System.out.println("in the while looop");
+                    //create html table
+                    ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
+                    String rowsHtml = createRowsHtml(pageTable, ";grayRow", "");
+                    doc.select("tr.bottom-header-row").last().after(rowsHtml);
+
+                    //update remaining rows counter
+                    int numberOfInsertedRows = endIndex - startIndex;
+                    remainingRows -= numberOfInsertedRows;
+                    if (remainingRows < MINIMUM_REMAINING_ROWS && endIndex != table.size()) {
+                        //TODO insert page break
+                        doc.select("table").last().after(pageBreakHtml);
+                        //insert a new table in the new page
+                        doc.select("div.page-break").last().after(tableHtml);
+                        fillResponseFreqHeaders(doc, questionIndex);
+                        remainingRows = ROWS_IN_BLANK_PAGE;
+                    }
+                    startIndex = endIndex;
+                    endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, endIndex + remainingRows);
+                } while (startIndex != endIndex);
+                questionIndex += table.size();
 //            break;
+            }
         }
         writeHtmlFile(reportsPath+"report2\\test.html" , doc);
         generatePDF(reportsPath+"report2\\test.html" , reportsPath + "report2\\test.pdf");
@@ -299,7 +399,7 @@ public class ReportsHandler {
            ArrayList<ArrayList<String>> pageTable ;
            if(endIndex == statsTable.size()) {
                pageTable = new ArrayList<ArrayList<String>>(statsTable.subList(startIndex, endIndex - 1));
-               String rowsHtml = createRowsHtml(pageTable , "" ,dataCellCommonClass );
+               String rowsHtml = createRowsHtml(pageTable , "grayRow" ,dataCellCommonClass );
                doc.select("tr.headerRow").last().after(rowsHtml) ;
            }
            else {
