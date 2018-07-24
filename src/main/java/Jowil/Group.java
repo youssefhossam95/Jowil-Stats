@@ -30,6 +30,7 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+        this.nameProp.set(name);
     }
 
     public Integer getqCount() {
@@ -38,6 +39,7 @@ public class Group {
 
     public void setqCount(Integer qCount) {
         this.qCount = qCount;
+        this.qCountProp.set(qCount.toString());
     }
 
     public String getNameProp() {
@@ -50,6 +52,7 @@ public class Group {
 
     public void setNameProp(String nameProp) {
         this.nameProp.set(nameProp);
+        this.name=nameProp;
     }
 
     public String getqCountProp() {
@@ -62,6 +65,7 @@ public class Group {
 
     public void setqCountProp(String qCountProp) {
         this.qCountProp.set(qCountProp);
+        this.qCount=Integer.parseInt(qCountProp);
     }
 
 

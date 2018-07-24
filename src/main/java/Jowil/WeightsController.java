@@ -5,6 +5,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
@@ -171,11 +172,29 @@ public class WeightsController extends Controller{
     @Override
     protected void saveChanges(){
 
+        //save objective weights
+        ArrayList<ArrayList<Double>> objWeights= new ArrayList<>();
+
+
+        for (int i = 1; i < objQuestions.get(0).size(); i++)
+        {
+            objWeights.add(new ArrayList<Double>());
+            for (int j = 0; j < objQuestions.size(); j++)
+                objWeights.get(objWeights.size() - 1).add(Double.parseDouble(objQuestions.get(j).get(i).toString()));
+
+        }
+
+
+        Statistics.setQuestionWeights(objWeights);
+
+
+        //Save subjective weights
         ArrayList<Double> maxSubjScores = new ArrayList<>();
         for (SubjQuestion question : subjQuestions)
             maxSubjScores.add(Double.parseDouble(question.getMaxScore()));
 
         Statistics.setSubjMaxScores(maxSubjScores);
+
     }
 
     @Override
@@ -199,6 +218,12 @@ public class WeightsController extends Controller{
 
         rootPane.getChildren().add(tablesHbox);
 
+    }
+
+    @Override
+    protected void stabalizeTables(){
+        disableTableDrag(subjTable);
+        disableTableDrag(objTable);
     }
 
     //helper methods

@@ -1,6 +1,8 @@
 package Jowil;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GroupsController  extends Controller{
@@ -28,6 +31,8 @@ public class GroupsController  extends Controller{
     private HBox tablesHbox= new HBox();
     private JFXButton manualButton= new JFXButton("Edit Manually");
     final Label label = new Label("Groups");
+    private JFXComboBox identifierCombo= new JFXComboBox();
+    private JFXComboBox formCombo=new JFXComboBox();
 
 
 
@@ -38,7 +43,7 @@ public class GroupsController  extends Controller{
 
     //main methods
     GroupsController(Controller back){
-        super("ViewGroupsAndSubjs.fxml","Groups and Subjective Questions",1.25,1.25,true,back);
+        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back);
     }
 
 
@@ -46,7 +51,6 @@ public class GroupsController  extends Controller{
     protected void initComponents() {
         initGroupsTableVBox();
         initManualButton();
-        initTablesHBox();
     }
 
     @Override
@@ -76,8 +80,27 @@ public class GroupsController  extends Controller{
         rootPane.getChildren().add(tablesHbox);
         rootPane.getChildren().add(manualButton);
 
+
+
+
     }
 
+    @Override
+    protected void saveChanges() {
+
+        ArrayList<Group> newGroups=new ArrayList<>();
+        for (Group group : tableGroups)
+            newGroups.add(group);
+
+        CSVHandler.updateGroupsAndQHeaders(newGroups);
+
+    }
+
+    @Override
+    protected void stabalizeTables(){
+        disableTableDrag(groupsTable);
+
+    }
 
     //helper methods
     private void initGroupsTableVBox(){
@@ -117,12 +140,15 @@ public class GroupsController  extends Controller{
 
         
         groupsTable.setEditable(true);
+
         groupsTable.setItems(tableGroups);
         groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
         groupNamesCol.setSortable(false);
         qCountCol.setSortable(false);
         qCountCol.setEditable(false);
+        //groupsTable.setStyle("-fx-font-size:"+Double.toString(resX/106.7));
+
     }
 
 
@@ -142,28 +168,8 @@ public class GroupsController  extends Controller{
 
     }
 
-
-
-
-    private void initTablesHBox(){
-
-    }
-    
-    
-
-
-    protected void saveChanges() {
-
-
-        ArrayList<String> newHeaders = new ArrayList<>();
-
-        for (Group group : tableGroups) {
-
-            for (int i = 0; i < Integer.parseInt(group.getqCountProp()); i++)
-                newHeaders.add(group.getNameProp() + (i + 1));
-
-            CSVHandler.setDetectedQHeaders(newHeaders);
-        }
+    private void initIdentifierCombo(){
+        ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
 
     }
 }

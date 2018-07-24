@@ -16,7 +16,7 @@ JFXButton:hover {
 
 JFXTextField{
     -fx-prompt-text-fill: #989898;
-    -fx-font-size:16;
+    -fx-font-size:14;
 
 }
 
@@ -34,5 +34,17 @@ TableView{
 .BlueJFXButton:pressed{
     -fx-background-color:#4169E1;
 }
+
+JFXComboBox{
+    -fx-prompt-text-fill: #989898;
+    -fx-font-size:14;
+    -fx-selection-bar:#3184c9;
+
+}
+
+
+
+
+
 
 
