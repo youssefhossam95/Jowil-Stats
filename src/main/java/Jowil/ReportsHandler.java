@@ -243,20 +243,22 @@ public class ReportsHandler {
         Document doc = Jsoup.parse(file, "UTF-8");
 
 
-        final int ROWS_IN_BLANK_PAGE = 48 ;
-        final int ROWS_IN_FIRST_PAGE = 32 ;
+        final int ROWS_IN_BLANK_PAGE = 37 ;
+        final int ROWS_IN_FIRST_PAGE = 19 ;
         final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 6 ;
         final int MINIMUM_REMAINING_ROWS = 7 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
 
         final String pageBreakHtml= "<div class='page-break'></div>\n" ;
 
         String tableHtml = doc.select("table.t2").last().outerHtml() ;
-        String templateBodyHtml = doc.select("body").html() ;
+        String templateBodyHtml = doc.select("div#template").html() ;
+        System.out.println(templateBodyHtml);
+
 //        doc.select("table.t2").remove() ;
         for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
             if(formIndex>0) {
                 doc.select("table").last().after(pageBreakHtml);
-                doc.select("div.page-break").after(templateBodyHtml) ;
+                doc.select("div.page-break").last().after(templateBodyHtml) ;
                 doc.select("div.divTitle").addClass("second-page-header") ;
                 doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
             }

@@ -80,7 +80,7 @@ public class fxChartawy extends Application {
         if(isHeaders)
             Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
         Jowil.CSVHandler.setFormsCount(2);
-        Jowil.CSVHandler.loadCsv(studentData, isHeaders, false);
+        Jowil.CSVHandler.loadCsv( isHeaders, false);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
         questionWeights.add(generateQuestionsWeights(8));

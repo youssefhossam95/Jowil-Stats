@@ -624,10 +624,10 @@ public class Statistics {
                 tableRow.add(format.format(questionStats.get(answerIndex) * 100)+addedClass) ;
             }
 
+            tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ;
             tableRow.add(format.format(correctAnswerPrecentage * 100)+"%") ;
             tableRow.add(format.format(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex) *100) +"%");
             tableRow.add(format.format(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)*100) +"%");
-            tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ;
             table.add(tableRow);
 //            tableRow.add()
         }

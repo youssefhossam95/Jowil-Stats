@@ -23,6 +23,19 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
+//        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//
+//
+//        final String report2TemplatePath = reportsPath + "report2\\report2Template.html";
+//
+//        File file = new File(report2TemplatePath);
+//        Document doc = Jsoup.parse(file, "UTF-8");
+//
+////        doc.select("div#footer").remove();
+//        String templateBodyHtml = doc.select("body").html() ;
+//        System.out.println(templateBodyHtml);
+
+
 
 //        DecimalFormat format = new DecimalFormat("0.##");
 //
@@ -47,9 +60,9 @@ public class Test {
 
 //        //////////////////////// to create pdf from html //////////////////////////////////
 
-         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-        ReportsHandler reportsHandler = new ReportsHandler();
-        reportsHandler.generatePDF(reportsPath + "report1\\test.html", reportsPath + "report1\\test2.pdf");
+//         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//        ReportsHandler reportsHandler = new ReportsHandler();
+//        reportsHandler.generatePDF(reportsPath + "report2\\test.html", reportsPath + "report2\\test2.pdf");
 
     }
 }
