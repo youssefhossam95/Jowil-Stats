@@ -22,16 +22,16 @@ public class StatisticsTest extends TestCase {
     }
     public static ArrayList<ArrayList<String>> generateTestAllQuestionsChoices(){
         ArrayList<ArrayList<String>> out=new ArrayList<ArrayList<String>>();
-        for(int i=0;i<4;i++){
+        for(int i=0;i<50;i++){
             out.add(new ArrayList<String>());
             char choice='a';
             for(int j=0;j<5;j++)
                 out.get(i).add(Character.toString((char)(choice+j)));
         }
 
-        for(int i=0;i<4;i++){
+        for(int i=0;i<50;i++){
             out.add(new ArrayList<String>());
-            for(int j=0;j<6;j++)
+            for(int j=0;j<20;j++)
                 out.get(out.size()-1).add(Integer.toString(j+1));
         }
         return out;
@@ -87,8 +87,8 @@ public class StatisticsTest extends TestCase {
 
     public void testMulti1() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException {
             ////////////////////// test using jo csv ///////////////////////////////////////
-        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testMulti1.csv");
-        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\answerKeys1.csv");
+        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\welloTest.csv");
+        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloTestAnswerKeys.csv");
         ArrayList<Integer> studentData= new ArrayList<Integer>();
         studentData.add(CSVHandler.STUDENTID);
         studentData.add(CSVHandler.STUDENTNAME);
@@ -102,8 +102,8 @@ public class StatisticsTest extends TestCase {
         Jowil.CSVHandler.loadCsv(isHeaders, false);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
-        questionWeights.add(generateQuestionsWeights(8));
-        questionWeights.add(generateQuestionsWeights(8));
+        questionWeights.add(generateQuestionsWeights(100));
+        questionWeights.add(generateQuestionsWeights(100));
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
         Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;

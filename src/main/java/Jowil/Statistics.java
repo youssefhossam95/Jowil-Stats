@@ -500,7 +500,6 @@ public class Statistics {
         statsMap.put("Kuder-Richardson Formula 21" ,  format.format(kr21)) ;
 
 
-        printMap(statsMap);
         return statsMap ;
 
     }
@@ -512,21 +511,6 @@ public class Statistics {
 
     }
 
-    private static ArrayList<ArrayList<Integer>> transpose(ArrayList<ArrayList<Integer>> matrixIn) {
-        ArrayList<ArrayList<Integer>> matrixOut = new ArrayList<ArrayList<Integer>>();
-        if (!matrixIn.isEmpty()) {
-            int noOfElementsInList = matrixIn.get(0).size();
-            for (int i = 0; i < noOfElementsInList; i++) {
-                ArrayList<Integer> col = new ArrayList<Integer>();
-                for (List<Integer> row : matrixIn) {
-                    col.add(row.get(i));
-                }
-                matrixOut.add(col);
-            }
-        }
-
-        return matrixOut;
-    }
 
     private static void  initPointBiserialTables ()  {
 
@@ -561,7 +545,7 @@ public class Statistics {
         }
 
         for(int i = 0 ; i < numberOfForms ; i++) {
-            pointBiserialTables.set(i ,  transpose(pointBiserialTables.get(i)));
+            pointBiserialTables.set(i ,  Utils.transpose(pointBiserialTables.get(i)));
         }
         System.out.println(pointBiserialTables);
     }
@@ -640,11 +624,10 @@ public class Statistics {
                 tableRow.add(format.format(questionStats.get(answerIndex) * 100)+addedClass) ;
             }
 
-            tableRow.add(format.format(correctAnswerPrecentage)) ;
-            tableRow.add(format.format(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex) *100) +"%");
-            System.out.println(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex));
-            tableRow.add(format.format(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)*100) +"%");
             tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ;
+            tableRow.add(format.format(correctAnswerPrecentage * 100)+"%") ;
+            tableRow.add(format.format(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex) *100) +"%");
+            tableRow.add(format.format(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)*100) +"%");
             table.add(tableRow);
 //            tableRow.add()
         }
@@ -741,7 +724,8 @@ public class Statistics {
             tableRow.add(grades.get(gradeIndex));
             tableRow.add(format.format(gradesLowerRange.get(gradeIndex)*100)+
                     " - " + format.format(gradesLowerRange.get(gradeIndex+1)*100) );
-            tableRow.add(gradesLowerRange.get(gradeIndex)*maxScore+" - " + gradesLowerRange.get(gradeIndex+1)*maxScore) ;
+            tableRow.add(format.format(gradesLowerRange.get(gradeIndex)*maxScore)+
+                    " - " + format.format( gradesLowerRange.get(gradeIndex+1)*maxScore)) ;
             tableRow.add(String.valueOf(gradeCount)) ;
             tableRow.add(format.format( (double) gradeCount/(double)numberOfStudents *100) + "%");
             statsTable.add(tableRow);

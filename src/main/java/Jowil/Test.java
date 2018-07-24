@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +23,23 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
+//        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//
+//
+//        final String report2TemplatePath = reportsPath + "report2\\report2Template.html";
+//
+//        File file = new File(report2TemplatePath);
+//        Document doc = Jsoup.parse(file, "UTF-8");
+//
+////        doc.select("div#footer").remove();
+//        String templateBodyHtml = doc.select("body").html() ;
+//        System.out.println(templateBodyHtml);
 
 
-        ReportsHandler reportsHandler = new ReportsHandler() ;
-        reportsHandler.generateReport2();
+
+//        DecimalFormat format = new DecimalFormat("0.##");
+//
+//        System.out.println(format.format(0));
 
         /////////////////// test point biserial ////////////////////////////////////
 //        double[] a = {1.0 , 1.0 , 0 , 0,  0} ;
@@ -47,17 +61,8 @@ public class Test {
 //        //////////////////////// to create pdf from html //////////////////////////////////
 
 //         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-//
-//         final String report4TemplatePath = reportsPath + "report1\\report1Template.html";
-//
-//        File file = new File(report4TemplatePath);
-//
-//        Document doc =  Jsoup.parse(file , "UTF-8");
-//
-////        System.out.println("hi"+doc.select("tr.headerRow").last().outerHtml());
-//
 //        ReportsHandler reportsHandler = new ReportsHandler();
-//        reportsHandler.generatePDF(reportsPath + "report1\\report1Template.html", reportsPath + "report1\\test.pdf");
+//        reportsHandler.generatePDF(reportsPath + "report2\\test.html", reportsPath + "report2\\test2.pdf");
 
     }
 }
