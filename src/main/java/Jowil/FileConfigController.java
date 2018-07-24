@@ -112,7 +112,13 @@ public class FileConfigController extends Controller{
     private int identifierComboSelectedIndex; //including none at index zero
     private int formComboSelectedIndex; //including none at index zero
     private int mainTextFieldResult=CSVFileValidator.ERROR,answersTextFieldResult=CSVFileValidator.ERROR;
+    private String mainTextFieldMessage, answersTextFieldMessage;
     private boolean isComplexIDAdded=false;
+    private int complexIDSize=0;
+    private String complexIDPrefix;
+    private int complexIdStartIndex;
+    private int complexIdEndIndex;
+    private int  formsCount;
 
 
 
@@ -205,11 +211,23 @@ public class FileConfigController extends Controller{
 
     @Override
     protected void saveChanges(){
-        //remove None effect
-        formComboSelectedIndex--;
+
+        //remove the None effect
         identifierComboSelectedIndex--;
+        formComboSelectedIndex--;
 
+        saveIdentifierColumn();
+        saveFormColumn();
 
+        try {
+            formsCount=CSVHandler.loadAnswerKeys(answersFileTextField.getText());
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV File Error",
+                    "Error reading answers file: "+e.getMessage()+".");
+        } catch (CSVHandler.EmptyAnswerKeyException e) {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
+                    "Answers file has empty cells.");
+        }
 
     }
 
@@ -249,7 +267,22 @@ public class FileConfigController extends Controller{
         nextButton.setOnMouseClicked(t->{
             //nextButton.setStyle("-fx-background-color:transparent;");
             rootPane.requestFocus();
-            csvFile=new File(mainFileTextField.getText());
+
+            if(mainTextFieldResult==CSVFileValidator.ERROR) {
+                if (mainTextFieldMessage.toLowerCase().trim().contains("empty")) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "Answers file has empty cells.");
+                }else if(mainTextFieldMessage.toLowerCase().trim().contains("")){
+
+
+                }
+            }
+
+
+
+
+            saveChanges();
+            CSVHandler.setFormsCount(formsCount);
+
 
 
             if(true){
@@ -356,6 +389,8 @@ public class FileConfigController extends Controller{
 
                 mainFileTextField.validate();
 
+                mainTextFieldResult=validator.getMessageType();
+                mainTextFieldMessage=validator.getMessage();
 
                 if(validator.getMessageType()==ValidatorBase.SUCCESS){
                     populateCombos();
@@ -370,7 +405,7 @@ public class FileConfigController extends Controller{
                     identifierCombo.setDisable(true);
                 }
 
-                mainTextFieldResult=validator.getMessageType();
+
             }
 
         });
@@ -392,6 +427,7 @@ public class FileConfigController extends Controller{
                 answersFileTextField.getValidators().add(validator);
                 answersFileTextField.validate();
                 answersTextFieldResult=validator.getMessageType();
+                answersTextFieldMessage=validator.getMessage();
             }
 
         });
@@ -476,10 +512,9 @@ public class FileConfigController extends Controller{
     private void populateCombos(){
         ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
         Pattern digitsPattern = Pattern.compile("d+");
-        List <Group> idGroups=new ArrayList<Group>();
         int countIDs=0;
 
-        processInfoHeaders(infoHeaders,idGroups);
+        processInfoHeaders(infoHeaders);
 
         combosItems.clear();
         combosItems.add("None");
@@ -501,64 +536,52 @@ public class FileConfigController extends Controller{
     /*
     prepares the content of combo boxes while handling the complexIDs logic
      */
-    private void processInfoHeaders(ArrayList<String> infoHeaders,List<Group> idGroups) {
+    private void processInfoHeaders(ArrayList<String> infoHeaders) {
 
         filteredInfoHeaders = new ArrayList<>();
-        ArrayList<Group> realIDGroups=new ArrayList<>();
         int expectedIndex = 1, digitBegin = 0;
         String currentGroup = "";
+        Pattern groupsPattern = Pattern.compile(".*\\d+");
+        ArrayList <Group> idGroups=new ArrayList<Group>();
+
 
 
         //remove any header having an index and starting with keyword "id" from info headers and add it to IdGroups
-        for (String header : infoHeaders) {
-            if (!header.toLowerCase().trim().startsWith("id")) { //doesn't start with "id" -> normal info header
-                filteredInfoHeaders.add(header);
-                infoHeadersTypes.add(CSVHandler.IGNORE);
+        for (int i=0;i<infoHeaders.size();i++) {
+            if (!groupsPattern.matcher(infoHeaders.get(i)).matches()) { //no groups pattern -> normal header
+                filteredInfoHeaders.add(infoHeaders.get(i));
             }
-            else {
+            else { //groups pattern 
+                if ((digitBegin = infoHeaders.get(i).lastIndexOf(Integer.toString(expectedIndex))) == -1  || i==infoHeaders.size()-1) { //expected not found or end of array-> end of group
+                    
+                    int groupSize=expectedIndex-1;
+                    if(groupSize>3 || isComplexIDAdded) { //if a complexID occurred before or consider this a questions group
+                        if(idGroups.size()==0) //start of questions groups
+                            CSVHandler.setQuestionsColStartIndex(i-groupSize);
+                        idGroups.add(new Group(currentGroup, groupSize));
 
-                if ((digitBegin = header.lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found -> either end of group or non-indexed id header
-                    if ((digitBegin = header.lastIndexOf("1")) == -1) {// column starting with id and contains no digits -> treat as normal info header
-                        filteredInfoHeaders.add(header);
-                        infoHeadersTypes.add(CSVHandler.IGNORE);
-                        continue;
                     }
-
-                    idGroups.add(new Group(currentGroup, expectedIndex - 1));
+                    else{ 
+                        isComplexIDAdded=true;
+                        complexIdEndIndex=i;
+                        complexIdStartIndex=i-groupSize;
+                        complexIDSize=groupSize;
+                        filteredInfoHeaders.add(constructComplexIDString(currentGroup,groupSize));
+                    }
                     expectedIndex = 1;
 
                 }
-                currentGroup = header.substring(0, digitBegin);
-                expectedIndex++;
-
-            }
-        }
-        if(!(currentGroup.length()==0))
-            idGroups.add(new Group(currentGroup,expectedIndex-1)); //add last group
-
-
-
-        //extract realIdGroups from idGroups and add non-real idGroups(complexIDs) to filteredInfoHeaders
-        for(Group group: idGroups){
-            if(group.getqCount()>3) // real group
-                realIDGroups.add(group);
-            else if(!isComplexIDAdded){ //only one complexID allowed
-                String complexIDName=group.getName()+" ";
-                for(int i=1;i<group.getqCount();i++) {
-                    complexIDName += Integer.toString(i) + "-";
-                    infoHeadersTypes.add(CSVHandler.STUDENTIDCONT);
+                else { //still inside same group
+                    currentGroup = infoHeaders.get(i).substring(0, digitBegin);
+                    expectedIndex++;
                 }
-                complexIDName+=Integer.toString(group.getqCount());
-                infoHeadersTypes.add(CSVHandler.STUDENTIDCONT);
-                filteredInfoHeaders.add(complexIDName);
-                isComplexIDAdded=true;
             }
         }
 
 
-        //add realIDGroups to detected groups
-        CSVHandler.addRealIDGroups(realIDGroups);
-
+        //add idGroups to detected groups
+        if(idGroups.size()!=0)
+            CSVHandler.addRealIDGroups(idGroups);
 
     }
 
@@ -586,31 +609,53 @@ public class FileConfigController extends Controller{
 
     private void saveIdentifierColumn(){
 
-        if(isComplexIDAdded){
-            if(identifierComboSelectedIndex!=filteredInfoHeaders.size()-1) { //complexID must be last info header
-                int i=infoHeadersTypes.size()-1;
-                while(infoHeadersTypes.get(i)== CSVHandler.STUDENTIDCONT && i>=0){
-                    infoHeadersTypes.set(i,CSVHandler.IGNORE);
-                    i--;
-                }
-                infoHeadersTypes.set(identifierComboSelectedIndex,CSVHandler.STUDENTID);
-            }
+        if(identifierComboSelectedIndex==-1) { //none chosen
+            CSVHandler.setAutoIDMode(true);
+            return;
         }
+
+        Statistics.setIdentifierName(filteredInfoHeaders.get(identifierComboSelectedIndex));
+
+        int idStartIndex=getUnFilteredIndex(identifierComboSelectedIndex);
+        CSVHandler.setIdentifierColStartIndex(idStartIndex);
+
+
+        int idEndIndex;
+
+        if(identifierComboSelectedIndex==complexIdStartIndex && isComplexIDAdded)
+            idEndIndex=complexIDSize+idStartIndex;
         else
-            infoHeadersTypes.set(identifierComboSelectedIndex,CSVHandler.STUDENTID);
+            idEndIndex=idStartIndex+1;
 
-
-        if(identifierComboSelectedIndex!=-1) { //None not chosen
-            CSVHandler.setAutoIDMode(false);
-            Statistics.setIdentifierName(filteredInfoHeaders.get(identifierComboSelectedIndex));
-        }
+        CSVHandler.setIdentifierColEndIndex(idEndIndex);
 
     }
 
     private void saveFormColumn(){
-        infoHeadersTypes.set(formComboSelectedIndex)
+
+        CSVHandler.setFormColIndex(getUnFilteredIndex(formComboSelectedIndex));
     }
 
 
+    private String constructComplexIDString(String groupName, int groupSize){
+        String complexIDString=groupName+" ";
+        for(int i=1;i<groupSize;i++) {
+            complexIDString += Integer.toString(i) + "-";
+        }
+        complexIDString+=Integer.toString(groupSize);
+        
+        return complexIDString;
+        
+    }
+
+    private int getUnFilteredIndex(int filteredIndex){
+
+        if(!isComplexIDAdded || filteredIndex<=complexIdStartIndex)  //still one to one mapping between filtered and unfiltered info headers
+            return filteredIndex;
+
+        return filteredIndex+(complexIDSize-1);
+
+
+    }
 
 }

@@ -30,7 +30,12 @@ public class CSVHandler {
     private static int subjEndIndex=-1;
     private static int subjQuestionsCount=0;
     private static int formsCount=2;
-    private static boolean isAutoIDMode=true;
+    private static int identifierColStartIndex;
+    private static int identifierColEndIndex;
+    private static int formColIndex;
+    private static boolean isAutoIDMode=false;
+    private static int questionsColStartIndex;
+
 
     //getters and setters
     public static void setFilePath(String filePath) {
@@ -77,8 +82,23 @@ public class CSVHandler {
     public static void setAutoIDMode(boolean autoIDMode) {
         isAutoIDMode = autoIDMode;
     }
+    public static void setIdentifierColStartIndex(int identifierColStartIndex) {
+        CSVHandler.identifierColStartIndex = identifierColStartIndex;
+    }
+
+    public static void setIdentifierColEndIndex(int identifierColEndIndex) {
+        CSVHandler.identifierColEndIndex = identifierColEndIndex;
+    }
 
 
+
+    public static void setFormColIndex(int formColIndex) {
+        CSVHandler.formColIndex = formColIndex;
+    }
+
+    public static void setQuestionsColStartIndex(int questionsColStartIndex) {
+        CSVHandler.questionsColStartIndex = questionsColStartIndex;
+    }
 
     //public methods
     /**
@@ -203,7 +223,16 @@ public class CSVHandler {
         }
     }
 
-    //helper functions
+    public static int getLinesCount(String filePath) throws IOException {
+        BufferedReader input = new BufferedReader(new FileReader(filePath));
+        int count=0;
+        while(input.readLine() != null)
+            count++;
+        return count;
+    }
+
+
+    ////////////////////helper functions
     private static ArrayList<String> cropArray(String [] original,int skipCols,int end){
         ArrayList<String> cropped=new ArrayList<String>();
         for(int i=skipCols;i<end;i++)
@@ -280,6 +309,7 @@ public class CSVHandler {
             detectedInfoHeaders.add(headers[i]);
         }
 
+        questionsColStartIndex=detectedInfoHeaders.size();
         //search for scores section start (if exists)
         scoresStartIndex=headers.length-1;
         while(scoresStartIndex>=0 && (headers[scoresStartIndex].toLowerCase().trim().startsWith("subj") || headers[scoresStartIndex].toLowerCase().contains("score")))
