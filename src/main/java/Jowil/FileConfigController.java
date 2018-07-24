@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -112,13 +113,13 @@ public class FileConfigController extends Controller{
     private int identifierComboSelectedIndex; //including none at index zero
     private int formComboSelectedIndex; //including none at index zero
     private int mainTextFieldResult=CSVFileValidator.ERROR,answersTextFieldResult=CSVFileValidator.ERROR;
-    private String mainTextFieldMessage, answersTextFieldMessage;
+    private String mainTextFieldMessage="", answersTextFieldMessage="";
     private boolean isComplexIDAdded=false;
     private int complexIDSize=0;
     private String complexIDPrefix;
     private int complexIdStartIndex;
     private int complexIdEndIndex;
-    private int  formsCount;
+    private final static int SKIPROW=0,CONTINUEANYWAY=1,CANCEL=2;
 
 
 
@@ -219,15 +220,8 @@ public class FileConfigController extends Controller{
         saveIdentifierColumn();
         saveFormColumn();
 
-        try {
-            formsCount=CSVHandler.loadAnswerKeys(answersFileTextField.getText());
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV File Error",
-                    "Error reading answers file: "+e.getMessage()+".");
-        } catch (CSVHandler.EmptyAnswerKeyException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
-                    "Answers file has empty cells.");
-        }
+
+
 
     }
 
@@ -268,20 +262,76 @@ public class FileConfigController extends Controller{
             //nextButton.setStyle("-fx-background-color:transparent;");
             rootPane.requestFocus();
 
-            if(mainTextFieldResult==CSVFileValidator.ERROR) {
-                if (mainTextFieldMessage.toLowerCase().trim().contains("empty")) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "Answers file has empty cells.");
-                }else if(mainTextFieldMessage.toLowerCase().trim().contains("")){
 
 
-                }
+            if(mainFileTextField.getText().length()==0){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "No students responses file provided.");
+                return;
             }
 
+            if(answersFileTextField.getText().length()==0){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer key File Error", "No answer key file provided.");
+                return;
+            }
 
+            if(mainTextFieldResult==CSVFileValidator.ERROR){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "Error in students responses file: "+mainTextFieldMessage);
+                return;
+            }
 
+            if(answersTextFieldResult==CSVFileValidator.ERROR){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer key File Error", "Error in answer key file: "+answersTextFieldMessage);
+                return;
+            }
 
-            saveChanges();
+            int formsCount=0;
+
+            try {
+                formsCount=CSVHandler.loadAnswerKeys(answersFileTextField.getText());
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV File Error",
+                        "Error reading answers file: "+e.getMessage()+".");
+                return;
+            } catch (CSVHandler.EmptyAnswerKeyException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
+                        "Answer key file has empty cells.");
+                return;
+            }
+
+            if(formsCount>1 && formComboSelectedIndex==0 &&mainTextFieldResult!=CSVFileValidator.WARNING){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
+                        formsCount+" answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.");
+                return;
+            }
+
+            boolean isHeadersExist=true;
+
+            if(mainTextFieldResult==CSVFileValidator.WARNING){
+                isHeadersExist=false;
+                int selectedAction=showHeadersWarningDialog();
+                if(selectedAction==CANCEL)
+                    return;
+                if(selectedAction==SKIPROW)
+                    isHeadersExist=true;
+            }
+
             CSVHandler.setFormsCount(formsCount);
+            saveChanges();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -327,8 +377,10 @@ public class FileConfigController extends Controller{
                 if(csvFile!=null) {
                     lastDir = csvFile.getParent();
                     mainFileTextField.setText(csvFile.getPath());
+                    validateMainTextField();
                     mainFileTextField.requestFocus();
                     mainFileTextField.deselect();
+
                 }
                 mainFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
             }
@@ -354,6 +406,7 @@ public class FileConfigController extends Controller{
                     answersFileTextField.setText(csvFile.getPath());
                     answersFileTextField.requestFocus();
                     answersFileTextField.deselect();
+                    validateAnswersTextField();
                 }
 
                 answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
@@ -383,27 +436,7 @@ public class FileConfigController extends Controller{
         mainFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
 
             if(!newValue){
-                CSVFileValidator validator= new CSVFileValidator(mainFileTextField,CSVFileValidator.MAINFILETEXTFIELD);
-                mainFileTextField.getValidators().clear();
-                mainFileTextField.getValidators().add(validator);
-
-                mainFileTextField.validate();
-
-                mainTextFieldResult=validator.getMessageType();
-                mainTextFieldMessage=validator.getMessage();
-
-                if(validator.getMessageType()==ValidatorBase.SUCCESS){
-                    populateCombos();
-                    manualModeToggle.setSelected(false);
-                    formCombo.setDisable(false);
-                    identifierCombo.setDisable(false);
-                }
-                else{
-                    if(validator.getMessageType()==ValidatorBase.WARNING)
-                        manualModeToggle.setSelected(true);
-                    formCombo.setDisable(true);
-                    identifierCombo.setDisable(true);
-                }
+                validateMainTextField();
 
 
             }
@@ -422,12 +455,7 @@ public class FileConfigController extends Controller{
         answersFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
 
             if(!newValue){
-                CSVFileValidator validator= new CSVFileValidator(answersFileTextField,CSVFileValidator.ANSWERSFILETEXTFIELD);
-                answersFileTextField.getValidators().clear();
-                answersFileTextField.getValidators().add(validator);
-                answersFileTextField.validate();
-                answersTextFieldResult=validator.getMessageType();
-                answersTextFieldMessage=validator.getMessage();
+                validateAnswersTextField();
             }
 
         });
@@ -539,36 +567,34 @@ public class FileConfigController extends Controller{
     private void processInfoHeaders(ArrayList<String> infoHeaders) {
 
         filteredInfoHeaders = new ArrayList<>();
-        int expectedIndex = 1, digitBegin = 0;
+        int expectedIndex = 1, digitBegin = 0, lastNumberedHeader=-2;
         String currentGroup = "";
         Pattern groupsPattern = Pattern.compile(".*\\d+");
         ArrayList <Group> idGroups=new ArrayList<Group>();
+        isComplexIDAdded=false;
 
 
 
         //remove any header having an index and starting with keyword "id" from info headers and add it to IdGroups
         for (int i=0;i<infoHeaders.size();i++) {
             if (!groupsPattern.matcher(infoHeaders.get(i)).matches()) { //no groups pattern -> normal header
-                filteredInfoHeaders.add(infoHeaders.get(i));
-            }
-            else { //groups pattern 
-                if ((digitBegin = infoHeaders.get(i).lastIndexOf(Integer.toString(expectedIndex))) == -1  || i==infoHeaders.size()-1) { //expected not found or end of array-> end of group
-                    
+                if(lastNumberedHeader==i-1){
                     int groupSize=expectedIndex-1;
-                    if(groupSize>3 || isComplexIDAdded) { //if a complexID occurred before or consider this a questions group
-                        if(idGroups.size()==0) //start of questions groups
-                            CSVHandler.setQuestionsColStartIndex(i-groupSize);
-                        idGroups.add(new Group(currentGroup, groupSize));
-
-                    }
-                    else{ 
-                        isComplexIDAdded=true;
-                        complexIdEndIndex=i;
-                        complexIdStartIndex=i-groupSize;
-                        complexIDSize=groupSize;
-                        filteredInfoHeaders.add(constructComplexIDString(currentGroup,groupSize));
-                    }
+                    processGroup(groupSize,currentGroup,idGroups,i);
                     expectedIndex = 1;
+                    currentGroup="";
+                }
+                filteredInfoHeaders.add(infoHeaders.get(i));
+
+            }
+            else { //groups pattern
+                lastNumberedHeader=i;
+                if ((digitBegin = infoHeaders.get(i).lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found or end of array-> end of group
+
+                    int groupSize=expectedIndex-1;
+                    processGroup(groupSize,currentGroup,idGroups,i);
+                    expectedIndex = 2;
+                    currentGroup="";
 
                 }
                 else { //still inside same group
@@ -578,11 +604,30 @@ public class FileConfigController extends Controller{
             }
         }
 
+        if(currentGroup.length()!=0) //process last group if exists
+            processGroup(expectedIndex-1,currentGroup,idGroups,lastNumberedHeader+1);
+
 
         //add idGroups to detected groups
         if(idGroups.size()!=0)
             CSVHandler.addRealIDGroups(idGroups);
 
+    }
+
+
+    private void processGroup(int groupSize,String currentGroup,ArrayList<Group> idGroups, int idEnd){
+        if(groupSize>3 || isComplexIDAdded) { //if a complexID occurred before or consider this a questions group
+            if(idGroups.size()==0) //start of questions groups
+                CSVHandler.setQuestionsColStartIndex(idEnd-groupSize);
+            idGroups.add(new Group(currentGroup, groupSize));
+        }
+        else{
+            isComplexIDAdded=true;
+            complexIdEndIndex=idEnd;
+            complexIdStartIndex=idEnd-groupSize;
+            complexIDSize=groupSize;
+            filteredInfoHeaders.add(constructComplexIDString(currentGroup,groupSize));
+        }
     }
 
     private void initManualModeToggle(){
@@ -656,6 +701,65 @@ public class FileConfigController extends Controller{
         return filteredIndex+(complexIDSize-1);
 
 
+    }
+
+    private int showHeadersWarningDialog(){
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Headers Detected");
+        alert.setHeaderText("Students Responses file doesn't contain headers.");
+        alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\".");
+        ButtonType skipRowButton = new ButtonType("Skip First Row");
+        ButtonType continueButton = new ButtonType("Continue Anyway");
+        ButtonType cancelButton= new ButtonType("Cancel");
+        alert.getButtonTypes().setAll(skipRowButton,continueButton,cancelButton);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        int selected;
+        if(result.get()==skipRowButton)
+            selected=SKIPROW;
+        else if(result.get()==continueButton)
+            selected=CONTINUEANYWAY;
+        else
+            selected=CANCEL;
+
+        return selected;
+
+
+    }
+
+    private void validateMainTextField(){
+
+        CSVFileValidator validator= new CSVFileValidator(mainFileTextField,CSVFileValidator.MAINFILETEXTFIELD);
+        mainFileTextField.getValidators().clear();
+        mainFileTextField.getValidators().add(validator);
+
+        mainFileTextField.validate();
+
+        mainTextFieldResult=validator.getMessageType();
+        mainTextFieldMessage=validator.getMessage();
+
+        if(validator.getMessageType()==ValidatorBase.SUCCESS){
+            populateCombos();
+            manualModeToggle.setSelected(false);
+            formCombo.setDisable(false);
+            identifierCombo.setDisable(false);
+        }
+        else{
+            if(validator.getMessageType()==ValidatorBase.WARNING)
+                manualModeToggle.setSelected(true);
+            formCombo.setDisable(true);
+            identifierCombo.setDisable(true);
+        }
+    }
+
+    private void validateAnswersTextField(){
+        CSVFileValidator validator= new CSVFileValidator(answersFileTextField,CSVFileValidator.ANSWERSFILETEXTFIELD);
+        answersFileTextField.getValidators().clear();
+        answersFileTextField.getValidators().add(validator);
+        answersFileTextField.validate();
+        answersTextFieldResult=validator.getMessageType();
+        answersTextFieldMessage=validator.getMessage();
     }
 
 }

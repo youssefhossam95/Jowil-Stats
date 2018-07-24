@@ -206,6 +206,7 @@ public class CSVFileValidator extends ValidatorBase {
         if(!hasErrors.get()) {
             setIcon(successIcon);
             messageType = SUCCESS;
+            setMessage("");
             hasErrors.set(true);
         }
     }
