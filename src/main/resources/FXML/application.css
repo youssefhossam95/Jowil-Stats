@@ -42,6 +42,19 @@ JFXComboBox{
 
 }
 
+.FolderIcon:hover{
+-fx-fill:#87CEEB;
+}
+
+.ImageJFXButton:hover{
+
+    -fx-background-color: transparent;
+}
+
+
+
+
+
 
 
 

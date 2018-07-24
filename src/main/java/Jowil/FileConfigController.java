@@ -47,7 +47,7 @@ public class FileConfigController extends Controller{
     @FXML
     private JFXTextField mainFileTextField;
     @FXML
-    private JFXButton mainFileChooserButton;
+    private StackPane mainFileChooserButton;
 
     @FXML
     private ImageView mainChooserButtonImage;
@@ -69,7 +69,7 @@ public class FileConfigController extends Controller{
 
 
     @FXML
-    private JFXButton answersFileChooserButton;
+    private StackPane answersFileChooserButton;
 
     @FXML
     private ImageView answersChooserButtonImage;
@@ -160,15 +160,14 @@ public class FileConfigController extends Controller{
         answersFileTextField.setPadding(Insets.EMPTY);
 
 
-        mainFileChooserButton.setPrefWidth(resYToPixels(0.04));
-        mainFileChooserButton.setPrefHeight(resYToPixels(0.04));
-        mainChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
-        mainChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
 
-        answersFileChooserButton.setPrefWidth(resYToPixels(0.04));
-        answersFileChooserButton.setPrefHeight(resYToPixels(0.04));
-        answersChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
-        answersChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
+//        mainChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
+//        mainChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
+
+//        answersFileChooserButton.setPrefWidth(resYToPixels(0.04));
+//        answersFileChooserButton.setPrefHeight(resYToPixels(0.04));
+//        answersChooserButtonImage.setFitWidth(mainFileChooserButton.getPrefWidth());
+//        answersChooserButtonImage.setFitHeight(mainFileChooserButton.getPrefHeight());
 
 
         formCombo.setPadding(Insets.EMPTY);
@@ -365,6 +364,10 @@ public class FileConfigController extends Controller{
 
     private void initMainFileChooserButton(){
 
+
+        Tooltip tooltip = new Tooltip("Open CSV file");
+        Tooltip.install(mainFileChooserButton, tooltip);
+
         mainFileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
             public void handle(MouseEvent t) {
@@ -392,10 +395,15 @@ public class FileConfigController extends Controller{
 
     private void initAnswersFileChooserButton(){
 
+        Tooltip tooltip = new Tooltip("Open CSV file");
+        Tooltip.install(answersFileChooserButton, tooltip);
+
+
+
         answersFileChooserButton.setOnMouseClicked(new EventHandler<MouseEvent>
                 () {
             public void handle(MouseEvent t) {
-                answersFileChooserButton.setStyle("-fx-background-color:transparent;");
+                //answersFileChooserButton.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
                 fileChooser.setInitialDirectory(new File((lastDir==null?System.getProperty("user.home"):lastDir)));
@@ -409,10 +417,10 @@ public class FileConfigController extends Controller{
                     validateAnswersTextField();
                 }
 
-                answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+                //answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
             }
         });
-        answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
+        //answersFileChooserButton.setStyle("-fx-border-width:0;fx-background-color:transparent");
 
 
 
