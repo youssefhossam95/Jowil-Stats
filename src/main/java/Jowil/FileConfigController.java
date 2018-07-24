@@ -253,6 +253,8 @@ public class FileConfigController extends Controller{
             rootPane.requestFocus();
 
 
+            validateMainTextField();
+            validateAnswersTextField();
 
             if(mainFileTextField.getText().length()==0){
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "No students responses file provided.");
