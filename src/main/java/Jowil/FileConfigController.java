@@ -780,6 +780,6 @@ public class FileConfigController extends Controller{
         answersTextFieldResult=validator.getMessageType();
         answersTextFieldMessage=validator.getMessage();
     }
-    
+
 
 }
