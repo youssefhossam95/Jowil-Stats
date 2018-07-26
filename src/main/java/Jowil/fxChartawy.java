@@ -71,23 +71,17 @@ public class fxChartawy extends Application {
     @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException {
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testMulti1.csv");
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\answerKeys1.csv");
-        ArrayList<Integer> studentData= new ArrayList<Integer>();
-        studentData.add(CSVHandler.STUDENTID);
-        studentData.add(CSVHandler.STUDENTNAME);
-        studentData.add(CSVHandler.IGNORE);
-        studentData.add(CSVHandler.STUDENTFORM);
+        CSVHandler.setFormColIndex(3);
+        CSVHandler.setIdentifierColStartIndex(0);
+        CSVHandler.setIdentifierColEndIndex(1);
         boolean isHeaders=CSVHandler.processHeaders();
-        if(isHeaders)
-            Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
-        Jowil.CSVHandler.setFormsCount(2);
-        Jowil.CSVHandler.loadCsv( isHeaders, false);
+        Jowil.CSVHandler.loadCsv(isHeaders);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
         questionWeights.add(generateQuestionsWeights(8));
         questionWeights.add(generateQuestionsWeights(8));
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
-        Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;
 //        Statistics.printBasicInfo();
         Statistics.initFormsScores();
         Jowil.Statistics.init();

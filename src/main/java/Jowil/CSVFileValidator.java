@@ -20,14 +20,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 
-/**
- * An example of Number field validation, that is applied on text input controls
- * such as {@link TextField} and {@link TextArea}
- *
- * @author Shadi Shaheen
- * @version 1.0
- * @since 2016-03-09
- */
+
 @DefaultProperty(value = "icon")
 public class CSVFileValidator extends ValidatorBase {
 

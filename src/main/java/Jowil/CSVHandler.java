@@ -1,5 +1,8 @@
 package Jowil;
 
+import org.omg.CORBA.DynAnyPackage.Invalid;
+import sun.swing.plaf.synth.DefaultSynthStyle;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +15,10 @@ public class CSVHandler {
     }
     public static class InvalidFormNumberException extends Exception{
 
+
+        InvalidFormNumberException(int rowNumber){
+            super("Student in row "+rowNumber+ " has an invalid form number.");
+        }
     }
     public static class EmptyCSVException extends Exception{
 
@@ -103,66 +110,35 @@ public class CSVHandler {
     //public methods
     /**
      *
-     * @param identifiers student identifiers placed in the order of columns of the CSV file being loaded
      * @throws IOException
      */
-    public static  void loadCsv(boolean isHeadersExist, boolean isCorrectAnswersExist ) throws IOException, InvalidFormNumberException, EmptyAnswerKeyException {
+    public static  void loadCsv(boolean isHeadersExist ) throws IOException, InvalidFormNumberException, EmptyAnswerKeyException {
 
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line = null;
-        ArrayList<ArrayList<String>> studentsAnswers = new ArrayList<ArrayList<String>>();
-        ArrayList<String> studentNames = new ArrayList<String>();
-        ArrayList<String> studentIDs = new ArrayList<String>();
-        ArrayList<Integer> studentForms = new ArrayList<Integer>();
-        ArrayList<ArrayList<Double>> subScores= new ArrayList<>();
+
+
+        //initialization
+        Statistics.setStudentIdentifier(new ArrayList<String>());
+        Statistics.setStudentAnswers(new ArrayList<ArrayList<String>>());
+        Statistics.setStudentForms(new ArrayList<Integer>());
+        Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
 
         if (isHeadersExist)//ignore headers
             input.readLine();
 
 
-        if (isCorrectAnswersExist && (line = input.readLine()) != null) { //parse correct answers
-            ArrayList<ArrayList<String>> correctAnswers = new ArrayList<ArrayList<String>>();
-            ArrayList<String> answers=cropArray(line.split(","), infoHeadersTypes.size(),infoHeadersTypes.size()+scoresStartIndex);
-            if(!isAllCellsFilled(answers))
-                throw new EmptyAnswerKeyException();
-            correctAnswers.add(answers);
-            Statistics.setCorrectAnswers(correctAnswers);
-        }
-        while ((line = input.readLine()) != null) { //parse students answers
+        int rowNumber=1;
+
+        //parse students data
+        while ((line = input.readLine()) != null) {
             String[] row = line.split(",");
-            updateInfoHeadersTypes(studentIDs, studentNames, studentForms, row, infoHeadersTypes,formsCount);
-            studentsAnswers.add(cropArray(row, infoHeadersTypes.size(),scoresStartIndex));
-            if(subjStartIndex!=-1)
-                subScores.add(getSubjScoresFromRow(row,subjStartIndex,subjEndIndex));
+            Statistics.getStudentAnswers().add(cropArray(row, questionsColStartIndex,scoresStartIndex));
+            updateStudentIdentifier(row);
+            updateStudentForms(row,rowNumber);
+            updateSubjScores(row);
+            rowNumber++;
         }
-
-//        System.out.println("in parse csv" + studentsAnswers);
-        //initialize Statistics internal fields with parsed data
-
-
-        Statistics.setStudentAnswers(studentsAnswers);
-
-        if(subjStartIndex!=-1)
-            Statistics.setSubScores(subScores);
-
-
-        if (studentIDs.size() != 0) {
-            Statistics.setStudentIDs(studentIDs);
-//            Statistics.setIdentifierMode(Statistics.IDMODE);
-        }
-
-        if (studentNames.size() != 0) {
-            Statistics.setStudentNames(studentNames);
-//            if (studentIDs.size() == 0)
-//                Statistics.setIdentifierMode(Statistics.NAMEMODE);
-        }
-
-        if (studentForms.size() == 0) {
-            for (int i = 0; i < studentsAnswers.size(); i++)
-                studentForms.add(0);
-        }
-        Statistics.setStudentForms(studentForms);
-
     }
 
 
@@ -178,7 +154,10 @@ public class CSVHandler {
             correctAnswers.add(answerKey);
         }
         Statistics.setCorrectAnswers(correctAnswers);
-        return correctAnswers.size();
+
+        formsCount=correctAnswers.size();
+
+        return formsCount;
     }
 
 
@@ -198,6 +177,7 @@ public class CSVHandler {
         else
             throw new EmptyCSVException();
 
+        Statistics.setQuestionNames(detectedQHeaders);
         return true;
     }
 
@@ -221,6 +201,7 @@ public class CSVHandler {
             for (int i = 0; i < group.getqCount(); i++)
                 detectedQHeaders.add(group.getName() + (i + 1));
         }
+        Statistics.setQuestionNames(detectedQHeaders);
     }
 
     public static int getLinesCount(String filePath) throws IOException {
@@ -241,34 +222,49 @@ public class CSVHandler {
     }
 
 
-    private static ArrayList<Double> getSubjScoresFromRow(String [] row, int subjStart, int subjEnd){
+    private static void updateSubjScores(String [] row){
+
+        //no subj questions
+        if(subjStartIndex==-1)
+            return;
 
         ArrayList<Double> studentSubScores= new ArrayList<Double>();
 
-        for(int i=subjStart;i<subjEnd;i++)
+        for(int i=subjStartIndex;i<subjEndIndex;i++)
             studentSubScores.add(Double.parseDouble(row[i]));
 
-        return studentSubScores;
+        Statistics.getSubjScores().add(studentSubScores);
     }
 
 
-    private static  void updateInfoHeadersTypes(ArrayList<String> studentIDs, ArrayList<String> studentNames,ArrayList<Integer> studentForms, String [] row,ArrayList<Integer> infoHeadersTypes, int formsCount) throws InvalidFormNumberException {
+    private static void updateStudentForms( String [] row, int rowNumber) throws InvalidFormNumberException {
 
-        for(int i=0;i<infoHeadersTypes.size();i++){
-            if(infoHeadersTypes.get(i)==STUDENTID)
-                studentIDs.add(row[i]);
-            else if(infoHeadersTypes.get(i)==STUDENTNAME)
-                studentNames.add(row[i]);
-            else if(infoHeadersTypes.get(i)==STUDENTFORM) {
-                int f=Integer.parseInt(row[i])-1;
-                if(f>=formsCount || f<0)
-                    throw new InvalidFormNumberException();
-                studentForms.add(f);
-            }
-            else if(infoHeadersTypes.get(i)== STUDENTIDCONT)
-                studentIDs.set(studentIDs.size()-1,studentIDs.get(studentIDs.size()-1)+row[i]);
-
+        if(formColIndex<0){
+            Statistics.getStudentForms().add(0);
+            return;
         }
+
+        int f;
+        try {
+             f = Integer.parseInt(row[formColIndex].trim()) - 1;
+        }catch (NumberFormatException e){
+            throw new InvalidFormNumberException(rowNumber);
+        }
+
+        if(f>=formsCount || f<0)
+            throw new InvalidFormNumberException(rowNumber);
+
+        Statistics.getStudentForms().add(f);
+
+    }
+
+    private static void updateStudentIdentifier(String [] row){
+
+        StringBuilder identifier=new StringBuilder();
+        for(int i=identifierColStartIndex;i<identifierColEndIndex;i++)
+            identifier.append(row[i]);
+
+        Statistics.getStudentIdentifier().add(identifier.toString());
     }
 
     private static boolean isAllCellsFilled(String [] cells){

@@ -707,7 +707,7 @@ public class FileConfigController extends Controller{
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("No Headers Detected");
         alert.setHeaderText("Students Responses file doesn't contain headers.");
-        alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\".");
+        alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\". Both of these options will direct you to the manual mode.");
         ButtonType skipRowButton = new ButtonType("Skip First Row");
         ButtonType continueButton = new ButtonType("Continue Anyway");
         ButtonType cancelButton= new ButtonType("Cancel");
