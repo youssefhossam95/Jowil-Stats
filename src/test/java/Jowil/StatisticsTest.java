@@ -85,7 +85,7 @@ public class StatisticsTest extends TestCase {
 //    }
 
 
-    public void testMulti1() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException {
+    public void testMulti1() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException, CSVHandler.IllFormedCSVException {
             ////////////////////// test using jo csv ///////////////////////////////////////
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\welloTest.csv");
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloTestAnswerKeys.csv");
@@ -94,7 +94,7 @@ public class StatisticsTest extends TestCase {
         studentData.add(CSVHandler.STUDENTNAME);
         studentData.add(CSVHandler.IGNORE);
         studentData.add(CSVHandler.STUDENTFORM);
-        boolean isHeaders=CSVHandler.processHeaders();
+        boolean isHeaders=CSVHandler.processHeaders(false);
         if(isHeaders)
             Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
         Jowil.CSVHandler.setFormsCount(2);

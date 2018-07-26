@@ -37,7 +37,8 @@ public class CSVFileValidator extends ValidatorBase {
 
     public final static String EMPTYCSVMESSAGE="Empty CSV file.",DOESNOTEXISTMESSAGE="File doesn't exist.",
             REQUIREDFIELDMESSAGE="Required field.",CSVEXTENSIONMESSAGE="File must have a \".csv\" extension.",
-            ERRORREADINGMESSAGE="Error in reading file.",NOHEADERSMESSAGE="Error in reading file.";
+            ERRORREADINGMESSAGE="Error in reading file.",NOHEADERSMESSAGE="No headers detected.",
+            EMPTYCELLSMESSAGE="File contains empty cells at row ", ILLFORMEDCSVMESSAGE="Invalid number of columns at row %d";
 
     private boolean isHeadersFound=true;
 
@@ -162,7 +163,7 @@ public class CSVFileValidator extends ValidatorBase {
         isHeadersFound = true;
         CSVHandler.setFilePath(file.getPath());
         try {
-            if (!CSVHandler.processHeaders()) {
+            if (!CSVHandler.processHeaders(false)) {
                 setMessage(NOHEADERSMESSAGE);
                 isHeadersFound = false;
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
@@ -187,10 +188,23 @@ public class CSVFileValidator extends ValidatorBase {
     private void validateAnswersCSV(File file){
         setIcon(answersErrorIcon);
 
-
         validateCSV(file);
         if(hasErrors.get())
             return;
+
+        try {
+            CSVHandler.loadAnswerKeys(file.getPath());
+        }
+        catch(CSVHandler.IllFormedCSVException e){
+            setMessage(String.format(ILLFORMEDCSVMESSAGE,e.getRowNumber()));
+            hasErrors.set(true);
+        }  catch(IOException e) {
+            setMessage(ERRORREADINGMESSAGE);
+            hasErrors.set(true);
+        } catch (CSVHandler.EmptyAnswerKeyException e) {
+            setMessage(EMPTYCELLSMESSAGE+e.getRowNumber());
+            hasErrors.set(true);
+        }
 
     }
 

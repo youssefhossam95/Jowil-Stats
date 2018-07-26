@@ -68,13 +68,13 @@ public class fxChartawy extends Application {
         Statistics.setGradesLowerRange(gradeLowerRange);
     }
 
-    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException {
+    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testMulti1.csv");
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\answerKeys1.csv");
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders();
+        boolean isHeaders=CSVHandler.processHeaders(false);
         Jowil.CSVHandler.loadCsv(isHeaders);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();

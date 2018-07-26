@@ -12,6 +12,16 @@ import java.util.regex.Pattern;
 public class CSVHandler {
     public static class EmptyAnswerKeyException extends Exception{
 
+        private int rowNumber;
+
+        EmptyAnswerKeyException(int rowNumber){
+            this.rowNumber=rowNumber;
+        }
+
+        public int getRowNumber() {
+            return rowNumber;
+        }
+
     }
     public static class InvalidFormNumberException extends Exception{
 
@@ -24,6 +34,21 @@ public class CSVHandler {
 
     }
 
+    public static class IllFormedCSVException extends Exception{
+
+
+        private int rowNumber;
+        public int getRowNumber() {
+            return rowNumber;
+        }
+
+        IllFormedCSVException(int rowNumber){
+            this.rowNumber=rowNumber;
+        }
+
+
+    }
+
 
     //fields
     public final static Integer STUDENTID=0, STUDENTNAME=1, STUDENTFORM=2, STUDENTIDCONT=3,IGNORE=4;
@@ -33,15 +58,16 @@ public class CSVHandler {
     private static ArrayList<Group> detectedGroups= new ArrayList<Group>();
     private static ArrayList<Integer> infoHeadersTypes=new ArrayList<>();
     private static int scoresStartIndex; //index of column where score columns (subj and non subj) start
-    private static int subjStartIndex=-1;
-    private static int subjEndIndex=-1;
-    private static int subjQuestionsCount=0;
-    private static int formsCount=2;
+    private static int subjStartIndex;
+    private static int subjEndIndex;
+    private static int subjQuestionsCount;
+    private static int formsCount;
     private static int identifierColStartIndex;
     private static int identifierColEndIndex;
     private static int formColIndex;
-    private static boolean isAutoIDMode=false;
     private static int questionsColStartIndex;
+    private static int questionsLimit;
+    private static int CSVHeaderColsCount;
 
 
     //getters and setters
@@ -86,9 +112,6 @@ public class CSVHandler {
         CSVHandler.infoHeadersTypes = infoHeadersTypes;
     }
 
-    public static void setAutoIDMode(boolean autoIDMode) {
-        isAutoIDMode = autoIDMode;
-    }
     public static void setIdentifierColStartIndex(int identifierColStartIndex) {
         CSVHandler.identifierColStartIndex = identifierColStartIndex;
     }
@@ -107,16 +130,22 @@ public class CSVHandler {
         CSVHandler.questionsColStartIndex = questionsColStartIndex;
     }
 
+    public static void setQuestionsLimit(int questionsLimit) {
+        CSVHandler.questionsLimit = questionsLimit;
+    }
+
+
+
     //public methods
     /**
      *
      * @throws IOException
      */
-    public static  void loadCsv(boolean isHeadersExist ) throws IOException, InvalidFormNumberException, EmptyAnswerKeyException {
+    public static  void loadCsv(boolean isHeadersExist ) throws IOException, InvalidFormNumberException, IllFormedCSVException {
 
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line = null;
-
+        int rowNumber=1;
 
         //initialization
         Statistics.setStudentIdentifier(new ArrayList<String>());
@@ -124,17 +153,23 @@ public class CSVHandler {
         Statistics.setStudentForms(new ArrayList<Integer>());
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
 
-        if (isHeadersExist)//ignore headers
-            input.readLine();
+        if (isHeadersExist) {//ignore headers
+             input.readLine();
+             rowNumber=2;
+        }
 
 
-        int rowNumber=1;
+        int colsCount=CSVHeaderColsCount;
 
         //parse students data
         while ((line = input.readLine()) != null) {
-            String[] row = line.split(",");
+            String[] row = line.split(",",-1);
+            if(row.length!=colsCount && colsCount!=0)
+                throw new IllFormedCSVException(rowNumber);
+            else
+                colsCount=row.length;
             Statistics.getStudentAnswers().add(cropArray(row, questionsColStartIndex,scoresStartIndex));
-            updateStudentIdentifier(row);
+            updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
             updateStudentForms(row,rowNumber);
             updateSubjScores(row);
             rowNumber++;
@@ -142,16 +177,23 @@ public class CSVHandler {
     }
 
 
-    public static int loadAnswerKeys(String answersFilePath) throws IOException, EmptyAnswerKeyException {
+    public static int loadAnswerKeys(String answersFilePath) throws IOException, EmptyAnswerKeyException, IllFormedCSVException {
         BufferedReader input = new BufferedReader(new FileReader(answersFilePath));
         String line;
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
+        int rowNumber=1;
+        int colsCount=0;
         while ((line = input.readLine()) != null) {
-            String [] answers=line.split(",");
+            String [] answers=line.split(",",-1);
+            if(answers.length!=colsCount && colsCount!=0)
+                throw new IllFormedCSVException(rowNumber);
+            else
+                colsCount=answers.length;
             if(!isAllCellsFilled(answers))
-                throw new EmptyAnswerKeyException();
+                throw new EmptyAnswerKeyException(rowNumber);
             ArrayList<String> answerKey= new ArrayList<String>(Arrays.asList(answers));
             correctAnswers.add(answerKey);
+            rowNumber++;
         }
         Statistics.setCorrectAnswers(correctAnswers);
 
@@ -161,7 +203,7 @@ public class CSVHandler {
     }
 
 
-    public static boolean processHeaders() throws IOException, EmptyCSVException {
+    public static boolean processHeaders(boolean isHeadersModificationMode) throws IOException, EmptyCSVException {
         detectedGroups=new ArrayList<>();
         detectedQHeaders=new ArrayList<>();
         detectedInfoHeaders=new ArrayList<>();
@@ -169,10 +211,11 @@ public class CSVHandler {
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line;
         if((line = input.readLine()) != null){
-            String headers[]=line.split(",");
+            String headers[]=line.split(",",-1);
+            CSVHeaderColsCount=headers.length;
             if(!isAllCellsLarge(headers))
                 return false;
-            classifyHeaders(headers);
+            classifyHeaders(headers,isHeadersModificationMode);
         }
         else
             throw new EmptyCSVException();
@@ -230,8 +273,14 @@ public class CSVHandler {
 
         ArrayList<Double> studentSubScores= new ArrayList<Double>();
 
-        for(int i=subjStartIndex;i<subjEndIndex;i++)
-            studentSubScores.add(Double.parseDouble(row[i]));
+        for(int i=subjStartIndex;i<subjEndIndex;i++){
+            try{
+                studentSubScores.add(Double.parseDouble(row[i]));
+            }catch(NumberFormatException e){
+                studentSubScores.add(0.0);
+            }
+        }
+
 
         Statistics.getSubjScores().add(studentSubScores);
     }
@@ -258,7 +307,12 @@ public class CSVHandler {
 
     }
 
-    private static void updateStudentIdentifier(String [] row){
+    private static void updateStudentIdentifier(String [] row,int studentAutoNumber){
+
+        if(identifierColStartIndex==-1){ //autoID mode
+            Statistics.getStudentIdentifier().add(Integer.toString(studentAutoNumber));
+            return;
+        }
 
         StringBuilder identifier=new StringBuilder();
         for(int i=identifierColStartIndex;i<identifierColEndIndex;i++)
@@ -294,61 +348,76 @@ public class CSVHandler {
     }
 
 
-    private static void classifyHeaders(String [] headers){
+    private static void classifyHeaders(String [] headers,boolean isHeadersModificationMode) {
         Pattern groupsPattern = Pattern.compile(".*\\d+");
-
+        subjStartIndex=-1;
+        subjEndIndex=-1;
         //info headers
         int i;
-        for(i=0;i<headers.length;i++){
-            if(!(headers[i].toLowerCase().trim().startsWith("id")) && isQHeader(headers[i],groupsPattern)) //reached groups start
+        for (i = 0; i < headers.length; i++) {
+            if (!(headers[i].toLowerCase().trim().startsWith("id")) && isQHeader(headers[i], groupsPattern)) //reached groups start
                 break;
             detectedInfoHeaders.add(headers[i]);
         }
 
-        questionsColStartIndex=detectedInfoHeaders.size();
+        questionsColStartIndex = detectedInfoHeaders.size();
+
+
+
+        scoresStartIndex = headers.length - 1;
+
         //search for scores section start (if exists)
-        scoresStartIndex=headers.length-1;
-        while(scoresStartIndex>=0 && (headers[scoresStartIndex].toLowerCase().trim().startsWith("subj") || headers[scoresStartIndex].toLowerCase().contains("score")))
+        while (scoresStartIndex >= 0 && (headers[scoresStartIndex].toLowerCase().trim().startsWith("subj") || headers[scoresStartIndex].toLowerCase().contains("score")))
             scoresStartIndex--;
 
         scoresStartIndex++;
 
-        // question headers and Groups creations
-        int expectedIndex=1,digitBegin=0;
-        String currentGroup="";
-        for(;i<scoresStartIndex;i++) {
+        if (isHeadersModificationMode)
+            scoresStartIndex = questionsLimit + questionsColStartIndex;
 
-            if((digitBegin=headers[i].lastIndexOf(Integer.toString(expectedIndex)))==-1){ //expected not found -> either end of group or weird column
-                if((digitBegin=headers[i].lastIndexOf("1"))==-1)//a weird column
+        // question headers and Groups creations
+        int expectedIndex = 1, digitBegin = 0;
+        String currentGroup = "";
+        for (; i < scoresStartIndex; i++) {
+
+            if ((digitBegin = headers[i].lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found -> either end of group or weird column
+                if ((digitBegin = headers[i].lastIndexOf("1")) == -1)//a weird column
                     break;
-                detectedGroups.add(new Group(currentGroup, expectedIndex-1));
-                expectedIndex=1;
+                detectedGroups.add(new Group(currentGroup, expectedIndex - 1));
+                expectedIndex = 1;
             }
-            currentGroup=headers[i].substring(0,digitBegin);
+            currentGroup = headers[i].substring(0, digitBegin);
             expectedIndex++;
             detectedQHeaders.add(headers[i]);
         }
-        detectedGroups.add(new Group(currentGroup,expectedIndex-1)); //add last group
+
+        detectedGroups.add(new Group(currentGroup, expectedIndex - 1)); //add last group
+
+        if (isHeadersModificationMode) {
+            subjStartIndex=scoresStartIndex;
+            subjEndIndex=headers.length;
+            subjQuestionsCount=subjEndIndex-subjStartIndex;
+            return;
+        }
 
         //find sub score start and end indices(if exist)
-        for(i=scoresStartIndex;i<headers.length;i++){
+        for (i = scoresStartIndex; i < headers.length; i++) {
 
-            if(headers[i].toLowerCase().startsWith("subj")){
-                if(subjStartIndex==-1) { //subj first time
+            if (headers[i].toLowerCase().startsWith("subj")) {
+                if (subjStartIndex == -1) { //subj first time
                     subjStartIndex = i;
-                    subjEndIndex=i;
-                }
-                else
-                    subjEndIndex=i;
+                    subjEndIndex = i;
+                } else
+                    subjEndIndex = i;
             }
         }
 
         subjEndIndex++; //to be exclusive
 
-        if(subjStartIndex==-1)
-            subjQuestionsCount=0;
+        if (subjStartIndex == -1)
+            subjQuestionsCount = 0;
         else
-            subjQuestionsCount=subjEndIndex-subjStartIndex;
+            subjQuestionsCount = subjEndIndex - subjStartIndex;
 
     }
 
@@ -358,7 +427,9 @@ public class CSVHandler {
         return matcher.matches();
     }
 
+    private static void removeExtraQuestions(int qCount){
 
+    }
 
 
 

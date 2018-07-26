@@ -116,7 +116,7 @@ public class FileConfigController extends Controller{
     private boolean isComplexIDAdded=false;
     private int complexIDSize=0;
     private int complexIdStartIndex;
-    private final static int SKIPROW=0,CONTINUEANYWAY=1,CANCEL=2;
+    private final static int SKIPROW=0,CONTINUE=1,CANCEL=2,DECLARESUBJ=3;
 
 
 
@@ -129,11 +129,14 @@ public class FileConfigController extends Controller{
 
     //getters and setters
 
+   
 
     //Main methods
     FileConfigController(){
         super("FileConfig.fxml","File configuration",1.6,1.45,true,null);
     }
+    
+    
     protected void updateSizes(){
         super.updateSizes();
 
@@ -203,10 +206,6 @@ public class FileConfigController extends Controller{
     @Override
     protected void saveChanges(){
 
-        //remove the None effect
-        identifierComboSelectedIndex--;
-        formComboSelectedIndex--;
-
         saveIdentifierColumn();
         saveFormColumn();
 
@@ -232,24 +231,11 @@ public class FileConfigController extends Controller{
     //helper methods
     private void initNextButton(){
 
-//        nextButton.setOnMouseEntered(new EventHandler<MouseEvent>
-//                () {
-//            public void handle(MouseEvent t) {
-//                nextButton.setStyle("-fx-background-color:#878a8a;");
-//            }
-//        });
 //
-//        nextButton.setOnMouseExited(new EventHandler<MouseEvent>
-//                () {
-//
-//
-//            public void handle(MouseEvent t) {
-//                nextButton.setStyle("-fx-background-color:transparent;");
-//            }
-//        });
-
         nextButton.setOnMouseClicked(t->{
-            //nextButton.setStyle("-fx-background-color:transparent;");
+
+            boolean isHeadersExist=true;
+            boolean isManualMode=manualModeToggle.isSelected();
             rootPane.requestFocus();
 
 
@@ -276,19 +262,7 @@ public class FileConfigController extends Controller{
                 return;
             }
 
-            int formsCount=0;
-
-            try {
-                formsCount=CSVHandler.loadAnswerKeys(answersFileTextField.getText());
-            } catch (IOException e) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CSV File Error",
-                        "Error reading answers file: "+e.getMessage()+".");
-                return;
-            } catch (CSVHandler.EmptyAnswerKeyException e) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
-                        "Answer key file has empty cells.");
-                return;
-            }
+            int formsCount=CSVHandler.getFormsCount();
 
             if(formsCount>1 && formComboSelectedIndex==0 &&mainTextFieldResult!=CSVFileValidator.WARNING){
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
@@ -296,55 +270,70 @@ public class FileConfigController extends Controller{
                 return;
             }
 
-            boolean isHeadersExist=true;
+
 
             if(mainTextFieldResult==CSVFileValidator.WARNING){
                 isHeadersExist=false;
+                isManualMode=true;
                 int selectedAction=showHeadersWarningDialog();
                 if(selectedAction==CANCEL)
                     return;
                 if(selectedAction==SKIPROW)
                     isHeadersExist=true;
             }
+            else if(!isManualMode){
+                int answerKeyQCount=Statistics.getCorrectAnswers().get(0).size();
+                int studentResponsesQCount=CSVHandler.getDetectedQHeaders().size();
+                if(answerKeyQCount!=studentResponsesQCount){
+                    int selectedAction=showQCountWarningDialog(answerKeyQCount,studentResponsesQCount);
+                    if(selectedAction==CANCEL)
+                        return;
 
-            CSVHandler.setFormsCount(formsCount);
+                    if(selectedAction==DECLARESUBJ){
+                        CSVHandler.setQuestionsLimit(answerKeyQCount);
+                        try {
+                            CSVHandler.processHeaders(true);
+                        } catch(Exception e){
+                            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
+                                    "Error in reloading responses file.");
+                            return;
+                        }
+                    }
+                    else //continue to manual mode
+                        isManualMode=true;
+                }
+            }
+
             saveChanges();
 
+            try {
+                CSVHandler.loadCsv(isHeadersExist);
+            } catch (CSVHandler.IllFormedCSVException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file at row "+e.getRowNumber()+". File must contain a constant number of columns in all rows.");
+                return;
+            }catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in reading students responses file.");
+                return;
+            } catch (CSVHandler.InvalidFormNumberException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: "+e.getMessage());
+                return;
+            }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            if(true){
+            if(!isManualMode){
                 GroupsController controller;
-                if(next==null || isContentEdited) {
-                    next = controller = new GroupsController(this);
-                    controller.startWindow();
-                }
-                else {
-                    controller = (GroupsController) next;
-                    controller.showWindow();
-                }
-                isContentEdited=false;
+                next = controller = new GroupsController(this);
+                controller.startWindow();
             }
             else{
                 HeadersCreateController controller=new HeadersCreateController(this);
                 controller.startWindow();
             }
             stage.close();
-
 
             });
 
@@ -653,20 +642,25 @@ public class FileConfigController extends Controller{
 
     private void saveIdentifierColumn(){
 
-        if(identifierComboSelectedIndex==-1) { //none chosen
-            CSVHandler.setAutoIDMode(true);
+        int identifierSelectedIndex=identifierComboSelectedIndex-1; //remove None effect
+        String idenfierName=identifierSelectedIndex==-1?"ID":filteredInfoHeaders.get(identifierSelectedIndex);
+        Statistics.setIdentifierName(idenfierName);
+
+        if(identifierSelectedIndex==-1) { //none chosen
+            CSVHandler.setIdentifierColStartIndex(-1);
+            CSVHandler.setIdentifierColEndIndex(-1);
             return;
         }
 
-        Statistics.setIdentifierName(filteredInfoHeaders.get(identifierComboSelectedIndex));
 
-        int idStartIndex=getUnFilteredIndex(identifierComboSelectedIndex);
+
+        int idStartIndex=getUnFilteredIndex(identifierSelectedIndex);
         CSVHandler.setIdentifierColStartIndex(idStartIndex);
 
 
         int idEndIndex;
 
-        if(identifierComboSelectedIndex==complexIdStartIndex && isComplexIDAdded)
+        if(identifierSelectedIndex==complexIdStartIndex && isComplexIDAdded)
             idEndIndex=complexIDSize+idStartIndex;
         else
             idEndIndex=idStartIndex+1;
@@ -677,7 +671,8 @@ public class FileConfigController extends Controller{
 
     private void saveFormColumn(){
 
-        CSVHandler.setFormColIndex(getUnFilteredIndex(formComboSelectedIndex));
+        int formSelectedIndex=CSVHandler.getFormsCount()==1?-1:formComboSelectedIndex-1; //remove None effect
+        CSVHandler.setFormColIndex(getUnFilteredIndex(formSelectedIndex));
     }
 
 
@@ -706,7 +701,7 @@ public class FileConfigController extends Controller{
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("No Headers Detected");
-        alert.setHeaderText("Students Responses file doesn't contain headers.");
+        alert.setHeaderText("Students Responses file doesn't contain headers");
         alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\". Both of these options will direct you to the manual mode.");
         ButtonType skipRowButton = new ButtonType("Skip First Row");
         ButtonType continueButton = new ButtonType("Continue Anyway");
@@ -718,12 +713,37 @@ public class FileConfigController extends Controller{
         if(result.get()==skipRowButton)
             selected=SKIPROW;
         else if(result.get()==continueButton)
-            selected=CONTINUEANYWAY;
+            selected=CONTINUE;
         else
             selected=CANCEL;
 
         return selected;
 
+
+    }
+
+    private int showQCountWarningDialog(int answersQCount, int responsesQcount){
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Questions Count");
+        alert.setHeaderText("Questions count mismatch");
+        alert.setContentText(responsesQcount+" questions were detected in student responses file, while the answer key file contains only "+ answersQCount+" answers.");
+        ButtonType declareSubjButton= new ButtonType("Declare The Extra "+(responsesQcount-answersQCount)+" Questions As Subjective");
+        ButtonType continueButton = new ButtonType("Continue To Manual Mode");
+        ButtonType cancelButton= new ButtonType("Cancel");
+        if(responsesQcount>answersQCount)
+            alert.getButtonTypes().setAll(declareSubjButton,continueButton,cancelButton);
+        else
+            alert.getButtonTypes().setAll(continueButton,cancelButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.get()==continueButton)
+            return CONTINUE;
+        else if(result.get()==declareSubjButton)
+            return DECLARESUBJ;
+        else
+            return CANCEL;
 
     }
 
@@ -760,5 +780,6 @@ public class FileConfigController extends Controller{
         answersTextFieldResult=validator.getMessageType();
         answersTextFieldMessage=validator.getMessage();
     }
+    
 
 }
