@@ -155,8 +155,10 @@ public abstract class Controller {
 
 
     //helper methods
-    protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+    protected  void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

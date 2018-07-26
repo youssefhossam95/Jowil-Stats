@@ -700,6 +700,7 @@ public class FileConfigController extends Controller{
     private int showHeadersWarningDialog(){
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("No Headers Detected");
         alert.setHeaderText("Students Responses file doesn't contain headers");
         alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\". Both of these options will direct you to the manual mode.");
@@ -725,6 +726,7 @@ public class FileConfigController extends Controller{
     private int showQCountWarningDialog(int answersQCount, int responsesQcount){
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("Questions Count");
         alert.setHeaderText("Questions count mismatch");
         alert.setContentText(responsesQcount+" questions were detected in student responses file, while the answer key file contains only "+ answersQCount+" answers.");
