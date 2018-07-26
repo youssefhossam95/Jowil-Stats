@@ -31,7 +31,7 @@ public class Statistics {
     private static ArrayList<String> studentNames;
     private static ArrayList<String> studentIDs;
     private static ArrayList<Double> studentScores;
-    private static ArrayList<Integer> studentForms;
+    private static ArrayList<Integer> studentForms; //zero based form number for each student
     private static ArrayList<ArrayList<Double>> questionWeights; //form vs question weights
     private static ArrayList<String> questionNames;
     private static ArrayList<ArrayList<String>> correctAnswers; //form vs correct answers
@@ -39,7 +39,7 @@ public class Statistics {
     private static ArrayList<ArrayList<ArrayList<String>>>sortedStudentAnswers; //for each form :student vs (answers+score)
     private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
-    private static ArrayList<ArrayList<Double>> subScores; //subjective scores -> student  vs sub scores
+    private static ArrayList<ArrayList<Double>> subjScores; //subjective scores -> student  vs sub scores
     private static ArrayList<String> grades ; // list of university grades i.e. A , B , C
     private static ArrayList<Double> gradesLowerRange; // list of the lower range of the grades assuming that the upper range is the lower range of the next grade
     private static ArrayList<String> studentIdentifier;
@@ -92,8 +92,8 @@ public class Statistics {
     public static void setGrades(ArrayList<String> grades) {
         Statistics.grades = grades;
     }
-    public static void setSubScores(ArrayList<ArrayList<Double>> subScores) {
-        Statistics.subScores = subScores;
+    public static void setSubjScores(ArrayList<ArrayList<Double>> subScores) {
+        Statistics.subjScores = subScores;
     }
 
 
@@ -128,6 +128,10 @@ public class Statistics {
     public static ArrayList<String> getStudentIDs() {
         return studentIDs;
     }
+
+    public static ArrayList<Integer> getStudentForms() {
+        return studentForms;
+    }
     public static ArrayList<String> getQuestionNames() {
         return questionNames;
     }
@@ -141,12 +145,22 @@ public class Statistics {
     }
 
 
+    public static ArrayList<ArrayList<Double>> getSubjScores() {
+        return subjScores;
+    }
+
+    public static ArrayList<String> getStudentIdentifier() {
+        return studentIdentifier;
+    }
+
     public static ArrayList<String> getSpecificQuestionChoices(int questionIndex){return questionsChoices.get(questionIndex);}
 
     public static int getNumberOfForms (){
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
         return (int)max(forms)+1 ;
     }
+
+
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");
@@ -165,8 +179,8 @@ public class Statistics {
         System.out.println("-----------------------------------------------------");
         System.out.println("Info Headers: "+CSVHandler.getDetectedInfoHeaders());
         System.out.println("Q names: " + Jowil.Statistics.getQuestionNames().toString());
-        System.out.println("Student Ids: " + Jowil.Statistics.getStudentIDs().toString());
-        System.out.println("Student names: " + Jowil.Statistics.getStudentNames().toString());
+        System.out.println("Student Identifiers: " + Jowil.Statistics.getStudentIdentifier().toString());
+        //System.out.println("Student names: " + Jowil.Statistics.getStudentNames().toString());
 //        System.out.println("ID mode " + Jowil.Statistics.getIdentifierMode());
         System.out.println("Correct ans: " + Jowil.Statistics.getCorrectAnswers().toString());
         System.out.println("Student ans: " + Jowil.Statistics.getStudentAnswers().toString());

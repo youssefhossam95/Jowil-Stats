@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class ReportsHandler {
 
     public final static int HTML=0,PDF=1,TXT=2,WORD=3,XLS=4 ;
-    private final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+    private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
     private final String gradeDistTemplatePath = reportsPath + "gradesDistributionReport\\gradesDistribution.html";
     private final String condensedTestTemplatePath = reportsPath+"condensedTestReport\\condensedTestTemplate.html";
 

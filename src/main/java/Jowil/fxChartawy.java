@@ -73,27 +73,36 @@ public class fxChartawy extends Application {
         Statistics.setGradesLowerRange(gradeLowerRange);
     }
 
-    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException {
+//<<<<<<< HEAD
+//    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException {
+//        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\wello.csv");
+//        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv");
+//        ArrayList<Integer> studentData= new ArrayList<Integer>();
+//        studentData.add(CSVHandler.STUDENTID);
+//        studentData.add(CSVHandler.STUDENTNAME);
+//        studentData.add(CSVHandler.IGNORE);
+//        studentData.add(CSVHandler.STUDENTFORM);
+//        boolean isHeaders=CSVHandler.processHeaders();
+//        if(isHeaders)
+//            Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
+//        Jowil.CSVHandler.setFormsCount(2);
+//        Jowil.CSVHandler.setInfoHeadersTypes(studentData);
+//        Jowil.CSVHandler.loadCsv(isHeaders, false);
+//=======
+    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\wello.csv");
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv");
-        ArrayList<Integer> studentData= new ArrayList<Integer>();
-        studentData.add(CSVHandler.STUDENTID);
-        studentData.add(CSVHandler.STUDENTNAME);
-        studentData.add(CSVHandler.IGNORE);
-        studentData.add(CSVHandler.STUDENTFORM);
-        boolean isHeaders=CSVHandler.processHeaders();
-        if(isHeaders)
-            Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
-        Jowil.CSVHandler.setFormsCount(2);
-        Jowil.CSVHandler.setInfoHeadersTypes(studentData);
-        Jowil.CSVHandler.loadCsv(isHeaders, false);
+        CSVHandler.setFormColIndex(3);
+        CSVHandler.setIdentifierColStartIndex(0);
+        CSVHandler.setIdentifierColEndIndex(1);
+        boolean isHeaders=CSVHandler.processHeaders(false);
+        Jowil.CSVHandler.loadCsv(isHeaders);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
         questionWeights.add(generateQuestionsWeights(20));
         questionWeights.add(generateQuestionsWeights(20));
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
-        Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;
 //        Statistics.printBasicInfo();
         Statistics.initFormsScores();
         Jowil.Statistics.init();
