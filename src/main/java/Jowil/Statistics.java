@@ -620,7 +620,7 @@ public class Statistics {
                 else if(questionStats.get(answerIndex)> correctAnswerPrecentage)
                     addedClass=";red" ;
                 else if(questionStats.get(answerIndex) ==0 )
-                    addedClass=";gray";
+                    addedClass=";gold";
                 tableRow.add(format.format(questionStats.get(answerIndex) * 100)+addedClass) ;
             }
 

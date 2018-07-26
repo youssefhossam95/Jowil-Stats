@@ -32,14 +32,14 @@ public class fxChartawy extends Application {
     }
     public static ArrayList<ArrayList<String>> generateTestAllQuestionsChoices(){
         ArrayList<ArrayList<String>> out=new ArrayList<ArrayList<String>>();
-        for(int i=0;i<4;i++){
+        for(int i=0;i<10;i++){
             out.add(new ArrayList<String>());
             char choice='a';
             for(int j=0;j<5;j++)
                 out.get(i).add(Character.toString((char)(choice+j)));
         }
 
-        for(int i=0;i<4;i++){
+        for(int i=0;i<10;i++){
             out.add(new ArrayList<String>());
             for(int j=0;j<6;j++)
                 out.get(out.size()-1).add(Integer.toString(j+1));
@@ -57,20 +57,25 @@ public class fxChartawy extends Application {
     //grade lower range contains the lower range of the corresponding grade and one extra element which is 1 (the lower range of what is after A+)
     private static void fillGradeRanges() {
         ArrayList<String> grades = new ArrayList<String>();
-        grades.add("F") ;grades.add("D") ;grades.add("C") ; grades.add("B");grades.add("A");grades.add("W"); grades.add("h") ; grades.add("C+");
+//        grades.add("F") ;grades.add("D") ;grades.add("C") ; grades.add("B");grades.add("A");
+        grades.add("F")  ;grades.add("D"); grades.add("D+") ;
+        grades.add("C-") ;grades.add("C") ;grades.add("C+") ; grades.add("B-");
+        grades.add("B"); grades.add("B+") ; grades.add("A-"); grades.add("A") ;
+        grades.add("A+") ;
         Statistics.setGrades(grades);
 
         ArrayList<Double> gradeLowerRange  =new ArrayList<Double>();
         gradeLowerRange.add(0.0);
-        for(int i=0;i<7;i++)
-            gradeLowerRange.add(0.3 + 0.1 * i);
+        for(int i=0;i<grades.size();i++)
+            gradeLowerRange.add(0.6 + 0.035 * i);
         gradeLowerRange.add(1.0);
+        System.out.println("grades lower ranges "+gradeLowerRange);
         Statistics.setGradesLowerRange(gradeLowerRange);
     }
 
     @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException {
-        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\testMulti1.csv");
-        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\answerKeys1.csv");
+        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\wello.csv");
+        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv");
         ArrayList<Integer> studentData= new ArrayList<Integer>();
         studentData.add(CSVHandler.STUDENTID);
         studentData.add(CSVHandler.STUDENTNAME);
@@ -80,11 +85,12 @@ public class fxChartawy extends Application {
         if(isHeaders)
             Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
         Jowil.CSVHandler.setFormsCount(2);
-        Jowil.CSVHandler.loadCsv( isHeaders, false);
+        Jowil.CSVHandler.setInfoHeadersTypes(studentData);
+        Jowil.CSVHandler.loadCsv(isHeaders, false);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
-        questionWeights.add(generateQuestionsWeights(8));
-        questionWeights.add(generateQuestionsWeights(8));
+        questionWeights.add(generateQuestionsWeights(20));
+        questionWeights.add(generateQuestionsWeights(20));
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
         Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;
@@ -94,7 +100,11 @@ public class fxChartawy extends Application {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
         ReportsHandler reportsHandler = new ReportsHandler() ;
-        reportsHandler.generateReport1(stage);
+        ArrayList<String> responses = new ArrayList<String>();
+        responses.add("20; "); responses.add("30;green"); responses.add("0;gold"); responses.add("50;red");
+        ArrayList<String> choices = new ArrayList<>() ;
+        choices.add("A"); choices.add("B");  choices.add("C") ; choices.add("D") ;
+        reportsHandler.generateReport5Chart(stage ,responses , choices );
          }
 
     public static void main(String[] args) {

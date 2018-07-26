@@ -2,6 +2,7 @@ package Jowil;
 
 import com.lowagie.text.DocumentException;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.BarChart;
@@ -161,25 +162,42 @@ public class ReportsHandler {
         XYChart.Series series1 = new XYChart.Series();
         bc.setLegendVisible(false);
 //        series1.setName("2003");
+        int maxIndex = 0 ;
+        int max = 0  ;
         for(int gradeIndex = 0 ;  gradeIndex<grades.size() ; gradeIndex++) {
-            series1.getData().add(new XYChart.Data(grades.get(gradeIndex), numberOfStudents[gradeIndex]));
-        }
-        bc.setAnimated(false);
-        Scene scene  = new Scene(bc,1000,1000);
-        bc.getData().addAll(series1);
 
-        scene.getStylesheets().add("style.css");
-        System.out.println("here");
+            int freq = (int) numberOfStudents[gradeIndex];
+            if(freq>max) {
+                max = freq;
+                maxIndex = gradeIndex ;
+            }
+            series1.getData().add(new XYChart.Data(grades.get(gradeIndex), freq));
+
+        }
+        bc.getData().add(series1);
+
+        for(int gradeIndex = 0 ;  gradeIndex<grades.size() ; gradeIndex++) {
+            String addedClass = "normal" ;
+            if(gradeIndex == maxIndex)
+                addedClass = "largest" ;
+            Node n = bc.lookup(".data"+gradeIndex+".chart-bar");
+            n.getStyleClass().add(addedClass);
+        }
+
+
+        bc.setAnimated(false);
+        Scene scene  = new Scene(bc,1000,700);
+
+
+        scene.getStylesheets().add("reports/report1/style.css");
         bc.applyCss();
         bc.layout();
         stage.setScene(scene);
         stage.show();
 
-        System.out.println("there");
         WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
         ImageView imageView = new ImageView(snapShot);
         ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(reportsPath+"report1\\GradesDistributionHistogram.png"));
-        System.out.println("everyWhere");
     }
 
     public  void  generateReport1(Stage stage) throws IOException, DocumentException {
@@ -244,7 +262,7 @@ public class ReportsHandler {
 
 
         final int ROWS_IN_BLANK_PAGE = 37 ;
-        final int ROWS_IN_FIRST_PAGE = 19 ;
+        final int ROWS_IN_FIRST_PAGE = 18 ;
         final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 6 ;
         final int MINIMUM_REMAINING_ROWS = 7 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
 
@@ -425,23 +443,52 @@ public class ReportsHandler {
        generatePDF(reportsPath + "report4\\test.html", reportsPath + "report4\\test.pdf");
 
    }
-   public void createCondensedTestReport() throws IOException, DocumentException {
-       File file = new File(condensedTestTemplatePath);
 
-       Map<String , Double> MainStatistics = new HashMap<String, Double>() ;
+   public  void generateReport5Chart(Stage stage , ArrayList<String> responsePercentagesWithClasses  , ArrayList<String> questionChoices ) throws IOException {
 
-       MainStatistics.put("mean" , 50.0) ;
+       stage.setTitle("Bar Chart Sample");
+       final NumberAxis yAxis = new NumberAxis(0 , 100 ,10);
+       final CategoryAxis xAxis = new CategoryAxis();
+       final BarChart<String,Number> bc =
+               new BarChart<String,Number>(xAxis,yAxis);
+//       bc.setTitle("Country Summary");
+       bc.setLegendVisible(false);
+//       xAxis.setLabel("Percentage");
+//       xAxis.setTickLabelRotation(0);
+//       yAxis.setLabel("");
+       XYChart.Series series1 = new XYChart.Series();
+       for(int choiceIndex =0 ; choiceIndex<questionChoices.size() ; choiceIndex++) {
+           double responsePercent = Double.valueOf(responsePercentagesWithClasses.get(choiceIndex).split(";")[0])  ;
+           series1.getData().add(new XYChart.Data( questionChoices.get(choiceIndex),responsePercent));
+       }
+       bc.getData().add(series1);
 
 
-       Document doc =  Jsoup.parse(file , "UTF-8") ;
-       DecimalFormat format = new DecimalFormat("0.#");
+       for(int choiceIndex =0 ; choiceIndex<questionChoices.size() ; choiceIndex++) {
+           String responseClass = responsePercentagesWithClasses.get(choiceIndex).split(";")[1] ;
+//           ".data"+choiceIndex+".chart-bar"
+           Node n = bc.lookup(".data"+choiceIndex+".chart-bar");
+           if(responseClass.length()<2)
+               responseClass = "normal";
+           System.out.println(responseClass);
+           n.getStyleClass().add(responseClass);
+       }
+
+       bc.setAnimated(false);
+       Scene scene  = new Scene(bc,450,350);
+
+       scene.getStylesheets().add("reports/report5/style.css");
+       bc.applyCss();
+       bc.layout();
+       stage.setScene(scene);
+       stage.show();
+
+       WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
+       ImageView imageView = new ImageView(snapShot);
+       ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(reportsPath+"report5\\Q1stats.png"));
 
 
-       doc.select("td#numberOfStudents").first().text(format.format(MainStatistics.get("mean"))) ;
-       doc.select("") ;
-       writeHtmlFile("test.html" , doc);
-       generatePDF(reportsPath + "report4\\test.html", reportsPath + "report4\\test.pdf");
-
-//       System.out.println(td) ;
    }
+
+
 }

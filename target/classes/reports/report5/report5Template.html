@@ -1,0 +1,399 @@
+<html>
+
+<head>
+    <style type="text/css">
+
+
+        .divTitle {
+            top: 28px;
+            margin-left: 5%;
+            margin-right: 5%;
+            height: 30px;
+            background-color: #08436b;
+            margin-bottom: 20px;
+
+        }
+
+        .t {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        th {
+            border-width: 0px;
+            background-color: #efefef;
+            border-style: solid;
+            border-top-width: 2px;
+            border-top-color: #08436b;
+            padding: 5px;
+            font-size: 15px;
+        }
+
+        td {
+            border-width: 0px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .tableTitle {
+            text-align: center; 
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .emptyBar {
+            width: 98%;
+            border-width: 2px;
+            border-style: solid;
+            border-color: #08436b;
+            background-color: white;
+            height: 10px;
+
+        }
+
+        .greenBar {
+            background-color: green;
+            height: 10px;
+        }
+
+        .redBar {
+
+            background-color: red;
+            height: 10px;
+        }
+
+        .distBar {
+
+            background-color: #64686b;
+            height: 10px;
+        }
+
+        .wrapper {
+            margin-left: 5%;
+            width: 90%;
+            margin-left: 5%;
+            overflow: hidden;
+            margin-bottom: 20px;
+
+        }
+
+        .first {
+            width: 45%;
+            float: left;
+            margin-right: 10%
+        }
+
+        .second {
+            width: 45%;
+            overflow: hidden;
+            vertical-align: top;
+            float: right;
+        }
+
+        .correctAns {
+            font-weight: bold;
+        }
+
+        .left {
+            width: 12px;
+            height: 12px;
+            float: left;
+            /* add this */
+            margin-right: 8px;
+            margin-top: 2px;
+        }
+
+        .right {
+            width: 300px;
+            overflow: hidden;
+            /* if you don't want #second to wrap below #first */
+            vertical-align: top;
+            font-weight: bold;
+        }
+
+        .wrapperSmall {
+            margin-left: 5%;
+            width: 90%;
+            margin-left: 5%;
+            overflow: hidden;
+            margin-bottom: 5px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="divTitle" style="text-align:center">
+        <h2 style="color:white">
+            Condensed Test Report
+        </h2>
+    </div>
+    <div class="wrapperSmall">
+        <span class="left" style="background-color:green"></span>
+        <span class=" right"> Correct Answer</span>
+    </div>
+    <div class="wrapperSmall">
+        <span class="left" style="background-color:red"></span>
+        <span class=" right"> Wrong Answer</span>
+    </div>
+    <div class="wrapperSmall">
+        <span class="left" style="background-color: #64686b;margin-bottom:50px"></span>
+        <span class=" right"> Distractor</span>
+    </div>
+
+    <div class="wrapper">
+        <span class="first">
+            <div class="tableTitle">
+                Question 1
+            </div>
+            <img src = "Q1stats.png"> </img> 
+            <!-- <table class="t">
+                <tr>
+                    <th>Response</th>
+                    <th>Count</th>
+                    <th>Percent</th>
+                    <th width="30%"></th>
+                </tr>
+                <tr>
+                    <td class="correctAns">A</td>
+                    <td>10</td>
+                    <td>35.2</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="greenBar" style="width:35.2%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>8</td>
+                    <td>28.1</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:28.1%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>4</td>
+                    <td>14.05</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:14.05%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>12</td>
+                    <td>40.1</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="distBar" style="width:40.1%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table> -->
+        </span>
+        <span class="second">
+            <div class="tableTitle">
+                Question 2
+            </div>
+            <table class="t">
+                <tr>
+                    <th>Response</th>
+                    <th>Count</th>
+                    <th>Percent</th>
+                    <th width="30%"></th>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>10</td>
+                    <td>35.2</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:35.2%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="correctAns">B</td>
+                    <td>14</td>
+                    <td>45.2</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="greenBar" style="width:45.2%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>4</td>
+                    <td>19.2</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:19.2%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>12</td>
+                    <td>0.5</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:0.5%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+
+        </span>
+    </div>
+    <div class="wrapper">
+        <span class="first"></span>
+        <span class="second"> </span>
+    </div>
+
+    <div class="wrapper">
+        <span class="first">
+            <div class="tableTitle">
+                Question 3
+            </div>
+            <table class="t">
+                <tr>
+                    <th>Response</th>
+                    <th>Count</th>
+                    <th>Percent</th>
+                    <th width="30%"></th>
+                </tr>
+                <tr>
+                    <td class="correctAns">A</td>
+                    <td>8</td>
+                    <td>27.1</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="greenBar" style="width:27.1%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>11</td>
+                    <td>31.4</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="distBar" style="width:31.4%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>4</td>
+                    <td>8.05</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:8.05%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>12</td>
+                    <td>16.1</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:16.1%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </span>
+        <span class="second">
+            <div class="tableTitle">
+                Question 4
+            </div>
+            <table class="t">
+                <tr>
+                    <th>Response</th>
+                    <th>Count</th>
+                    <th>Percent</th>
+                    <th width="30%"></th>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>5</td>
+                    <td>11.1</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:11.1%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>4</td>
+                    <td>7.1</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:7.1%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="correctAns">C</td>
+                    <td>20</td>
+                    <td>80.2</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="greenBar" style="width:80.2%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>2</td>
+                    <td>0.5</td>
+                    <td>
+                        <div class="emptyBar">
+                            <div class="redBar" style="width:0.5%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+
+        </span>
+    </div>
+    <div class="wrapper">
+        <span class="first"></span>
+        <span class="second"> </span>
+    </div>
+
+
+</body>
+
+</html>
