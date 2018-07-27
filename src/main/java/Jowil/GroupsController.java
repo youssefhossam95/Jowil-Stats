@@ -90,8 +90,8 @@ public class GroupsController  extends Controller{
         manualButton.setPrefHeight(resXToPixels(0.004));
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
         manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
-        AnchorPane.setRightAnchor(groupsTableVbox,rootWidth/20);
-        AnchorPane.setLeftAnchor(choicesTreeVBox,rootWidth/20);
+        AnchorPane.setRightAnchor(choicesTreeVBox,rootWidth/20);
+        AnchorPane.setLeftAnchor(groupsTableVbox,rootWidth/20);
         tablesAnchoPane.setPrefWidth(rootPane.getPrefWidth());
         choicesTreeView.setLayoutY(groupsTable.getLayoutY());
 
