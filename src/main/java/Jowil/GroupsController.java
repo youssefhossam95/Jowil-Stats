@@ -231,7 +231,7 @@ public class GroupsController  extends Controller{
 
         for(Group group: treeViewGroups){  //init isPossible
             ArrayList<Boolean> possibles=new ArrayList<Boolean>();
-            for(int i=0;i<group.getqCount();i++)
+            for(int i=0;i<group.getPossibleAnswers().size();i++)
                 possibles.add(true);
             isPossible.add(possibles);
         }
@@ -241,14 +241,14 @@ public class GroupsController  extends Controller{
 
         choicesTreeView.setCellFactory(t->new TreeViewCustomCell());
 
-        constructChoicesTreeView(choicesTreeView);
+        constructChoicesTreeView(choicesTreeView,"");
 
 
 
         choicesTreeView.setShowRoot(false);
     }
     
-    public static void constructChoicesTreeView(TreeView treeView){
+    public static void constructChoicesTreeView(TreeView treeView,String callingGroup){
 
 
         TreeItem<String> rootItem =
@@ -264,7 +264,8 @@ public class GroupsController  extends Controller{
             rootItem.getChildren().add(groupItem);
             TreeItem rangeItem=new TreeItem(group.getPossibleAnswers().get(0)+"-"+group.getPossibleAnswers().get(group.getPossibleAnswers().size()-1));
             groupItem.getChildren().add(rangeItem);
-
+            if(group.getCleanedNameProp().equals(callingGroup))
+                rangeItem.setExpanded(true);
             for(String answer: group.getPossibleAnswers())
                 rangeItem.getChildren().add(new TreeItem<>(answer));
 
@@ -339,6 +340,35 @@ public class GroupsController  extends Controller{
         }
 
     }
+
+    public static int getFirstPossible(String groupName){
+
+        int i=0;
+        for(Group group: treeViewGroups){  //group names are unique
+            if(group.getCleanedName().equals(groupName))
+                break;
+
+            i++;
+        }
+
+
+        return isPossible.get(i).indexOf(true);
+
+    }
+
+    public static int getLastPossible(String groupName){
+
+        int i=0;
+        for(Group group: treeViewGroups){  //group names are unique
+            if(group.getCleanedName().equals(groupName))
+                break;
+
+            i++;
+        }
+
+        return isPossible.get(i).lastIndexOf(true);
+    }
+
 
 }
 
