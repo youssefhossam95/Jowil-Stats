@@ -195,6 +195,8 @@ public class FileConfigController extends Controller{
         initIdentifierCombo();
         initFormCombo();
         initManualModeToggle();
+        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\Test.csv");
+        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeys2.csv");
 
     }
 
@@ -208,8 +210,6 @@ public class FileConfigController extends Controller{
 
         saveIdentifierColumn();
         saveFormColumn();
-
-
 
 
     }
@@ -729,7 +729,7 @@ public class FileConfigController extends Controller{
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("Questions Count");
         alert.setHeaderText("Questions count mismatch");
-        alert.setContentText(responsesQcount+" questions were detected in student responses file, while the answer key file contains only "+ answersQCount+" answers.");
+        alert.setContentText(responsesQcount+" questions were detected in student responses file, while the answer key file contains "+ answersQCount+" answers.");
         ButtonType declareSubjButton= new ButtonType("Declare The Extra "+(responsesQcount-answersQCount)+" Questions As Subjective");
         ButtonType continueButton = new ButtonType("Continue To Manual Mode");
         ButtonType cancelButton= new ButtonType("Cancel");
