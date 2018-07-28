@@ -159,6 +159,9 @@ public class Statistics {
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
         return (int)max(forms)+1 ;
     }
+    public static ArrayList<ArrayList<String>> getQuestionsChoices(){
+        return questionsChoices;
+    }
 
 
     // print fuctions

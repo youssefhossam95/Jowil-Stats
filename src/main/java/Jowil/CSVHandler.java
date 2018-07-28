@@ -50,6 +50,15 @@ public class CSVHandler {
     }
 
 
+    public static class AnswersCaseInsensitive extends Exception{
+
+
+        AnswersCaseInsensitive(String group){
+            super("Group "+group+" contains answers with different case sensitivity.");
+        }
+    }
+
+
     //fields
     public final static Integer STUDENTID=0, STUDENTNAME=1, STUDENTFORM=2, STUDENTIDCONT=3,IGNORE=4;
     private static String filePath;
@@ -152,6 +161,7 @@ public class CSVHandler {
         Statistics.setStudentAnswers(new ArrayList<ArrayList<String>>());
         Statistics.setStudentForms(new ArrayList<Integer>());
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
+
 
         if (isHeadersExist) {//ignore headers
              input.readLine();
@@ -281,7 +291,6 @@ public class CSVHandler {
             }
         }
 
-
         Statistics.getSubjScores().add(studentSubScores);
     }
 
@@ -319,6 +328,89 @@ public class CSVHandler {
             identifier.append(row[i]);
 
         Statistics.getStudentIdentifier().add(identifier.toString());
+    }
+
+    public static void updateQuestionsChoices(){
+
+        Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
+
+        int i=0;
+        for(Group group : detectedGroups){
+
+            String groupMax=getGroupMax(group,i);
+            i+=group.getqCount();
+            group.generatePossibleAnswers(groupMax);
+
+            for(int j=0;j<group.getqCount();j++)
+                Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
+
+        }
+    }
+
+    private static String getGroupMax(Group group,int groupStartCol) {
+
+        boolean isAnswersNumeric=false;
+        boolean isUpperCase=false;
+
+        String firstAnswer=Statistics.getCorrectAnswers().get(0).get(groupStartCol).trim();
+
+        try{
+            Integer.parseInt(firstAnswer);
+            isAnswersNumeric=true;
+        }catch(NumberFormatException e){
+            isUpperCase=isUpperCase(firstAnswer);
+        }
+
+        String currentMaxChoice=firstAnswer;
+
+
+        currentMaxChoice=get2DArrayMax(Statistics.getCorrectAnswers(),isAnswersNumeric,groupStartCol,group.getqCount(),currentMaxChoice,isUpperCase);
+
+        currentMaxChoice=get2DArrayMax(Statistics.getStudentAnswers(),isAnswersNumeric,groupStartCol,group.getqCount(),currentMaxChoice,isUpperCase);
+
+        return currentMaxChoice;
+
+
+
+    }
+
+    private static String get2DArrayMax(ArrayList<ArrayList<String>> array,boolean isAnswersNumeric,int groupStartCol,int groupQCount,String currentMaxChoice,boolean isUpperCase) {
+
+
+
+        int maxInt=0,currentInt;
+        String maxString="",currentString;
+
+        if(isAnswersNumeric)
+            maxInt=Integer.parseInt(currentMaxChoice);
+        else
+            maxString=currentMaxChoice;
+
+
+
+
+        for(int j=groupStartCol;j<groupStartCol+groupQCount;j++) //for all questions in group
+        {
+            for(int i=0;i<array.size();i++) { //for each form in answer key
+                currentString=array.get(i).get(j).trim();
+                try{
+                    if(isAnswersNumeric) {
+                        currentInt = Integer.parseInt(currentString);
+                        maxInt = Math.max(currentInt, maxInt);
+                    }
+                    else
+                        maxString=currentString.compareTo(maxString)>0?currentString:maxString;
+
+                }catch(NumberFormatException e){ //ignore non-integers when isAnswerNumeric=true
+
+                }
+            }
+        }
+
+        if(isAnswersNumeric)
+            maxString=Integer.toString(maxInt);
+
+        return maxString;
     }
 
     private static boolean isAllCellsFilled(String [] cells){
@@ -427,8 +519,13 @@ public class CSVHandler {
         return matcher.matches();
     }
 
-    private static void removeExtraQuestions(int qCount){
+    private static boolean isUpperCase(String s){
 
+        return s.toUpperCase().equals(s);
+    }
+
+    private static boolean isLowerCase(String s){
+        return s.toLowerCase().equals(s);
     }
 
 

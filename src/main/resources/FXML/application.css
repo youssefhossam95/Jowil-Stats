@@ -20,9 +20,10 @@ JFXTextField{
 
 }
 
-TableView{
--fx-border-color:#1E90FF;
+TableView:focused{
+-fx-border-color:#A9A9A9;
 }
+
 
 .BlueJFXButton{
     -fx-background-color:#4169E1;-fx-text-fill: white;
@@ -63,12 +64,47 @@ DialogPane{
 -fx-background-color:white;
 }
 
+/*.smallCheckBox{
+    -jfx-unchecked-color: #5A5A5A;
+    -jfx-checked-color: #3184c9;
+}
+*/
 
 
+TreeView:focused{
+-fx-border-color:#A9A9A9;
+}
+
+.groupPlusIcon{
+-fx-fill:green
+}
+
+.groupPlusIcon:hover{
+-fx-fill:#87CEEB;
+}
 
 
+JFXCheckBox {
+    -jfx-unchecked-color: #5A5A5A;
+    -jfx-checked-color: #3184c9;
+}
 
 
+.smallCheckBox .box,
+.smallCheckBox:indeterminate .box,
+.smallCheckBox:indeterminate:selected .box{
+    -fx-pref-width: 14;
+    -fx-pref-height: 14;
+
+}
+
+
+.smallCheckBox .mark {
+    -fx-max-width: 13;
+    -fx-max-height: 11;
+
+
+}
 
 
 

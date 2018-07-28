@@ -89,8 +89,7 @@ public abstract class Controller {
 
 
 
-//        BackgroundFill[] fills={new BackgroundFill(Paint.valueOf("949797"),null,null)};
-//        headersButton.setBackground(new Background(fills));
+
     }
 
     public void showWindow(){
