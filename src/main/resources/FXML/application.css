@@ -72,7 +72,7 @@ DialogPane{
 
 
 TreeView:focused{
--fx-border-color:#A9A9A9;
+-fx-background-color:#3184c9,#3184c9;
 }
 
 .groupPlusIcon{
@@ -110,4 +110,34 @@ JFXCheckBox {
 
 
 
+.jfx-tree-table-view .column-header {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #A9A9A9;
+    -fx-background-color:#3184c9;
+}
+
+.jfx-tree-table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-font-size:14;
+    -fx-text-fill:black;
+    -fx-padding: 12 0 12 0;
+}
+
+
+.jfx-tree-table-view .tree-table-cell {
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color:transparent;
+    -fx-pref-height: 48px;
+    -fx-alignment: center;
+    -fx-font-size:13
+}
+
+
+
+.jfx-tree-table-view:focused {
+    -fx-background-color: #3184c9, #3184c9,white;
+    -fx-background-insets: -1.4, 0, 1;
+    -fx-background-radius: 1.4, 0, 0;
+    -fx-padding: 1; /* 0.083333em; */
+}
 

@@ -1,6 +1,9 @@
 package Jowil;
 
 import com.jfoenix.controls.*;
+import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
+import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -36,9 +39,9 @@ public class GroupsController  extends Controller{
 
 
     //components
-    private TableView groupsTable = new TableView();
-    TableColumn groupNamesCol = new TableColumn("Group");
-    TableColumn qCountCol = new TableColumn("Number of Questions");
+    private JFXTreeTableView groupsTable = new JFXTreeTableView();
+    JFXTreeTableColumn<Group,String> groupNamesCol = new JFXTreeTableColumn<>("Group");
+    JFXTreeTableColumn<Group,String> qCountCol = new JFXTreeTableColumn<>("Number of Questions");
     final VBox groupsTableVbox = new VBox();
     final VBox choicesTreeVBox = new VBox();
     private AnchorPane tablesAnchoPane=new AnchorPane();
@@ -140,7 +143,7 @@ public class GroupsController  extends Controller{
 
     @Override
     protected void stabalizeTables(){
-        disableTableDrag(groupsTable);
+        //disableTableDrag(groupsTable);
 
     }
 
@@ -148,20 +151,21 @@ public class GroupsController  extends Controller{
     private void initGroupsTableVBox(){
 
 
-        groupNamesCol.setCellValueFactory(
-                new PropertyValueFactory<Group,String>("cleanedNameProp")
-        );
+        groupNamesCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Group, String> param) -> {
+           return param.getValue().getValue().getCleanedNameProp();
+        });
 
 
-        groupNamesCol.setCellFactory((t) -> EditCell.createStringEditCell());
+        groupNamesCol.setCellFactory((TreeTableColumn<Group, String> param) -> new GenericEditableTreeTableCell<>(
+                new TextFieldEditorBuilder()));
 
-        groupNamesCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Group,String>>)t-> {
+        groupNamesCol.setOnEditCommit((TreeTableColumn.CellEditEvent<Group,String>t)-> {
                     if(t.getNewValue().length()==0){
-                        t.getTableView().getItems().get(t.getTablePosition().getRow()).setNameProp(t.getOldValue());
+                        t.getTreeTableView().getTreeItem(t.getTreeTablePosition().getRow()).getValue().setNameProp(t.getOldValue());
                         groupsTable.refresh();
                     }
                     else {
-                        t.getTableView().getItems().get(t.getTablePosition().getRow()).setNameProp(t.getNewValue());
+                        t.getTreeTableView().getTreeItem(t.getTreeTablePosition().getRow()).getValue().setNameProp(t.getNewValue());
                         isContentEdited=true;;
                     }
 
@@ -169,12 +173,19 @@ public class GroupsController  extends Controller{
         );
 
 
-        qCountCol.setCellValueFactory(
-                new PropertyValueFactory<Group,String>("qCountProp")
-        );
+        qCountCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Group, String> param) -> {
+            return param.getValue().getValue().getObsQcountProp();
+        });
 
-        qCountCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        
+        qCountCol.setCellFactory((TreeTableColumn<Group, String> param) -> new GenericEditableTreeTableCell<>(
+                new TextFieldEditorBuilder()));
+
+
+        final TreeItem<Group> root = new RecursiveTreeItem<>(tableGroups, RecursiveTreeObject::getChildren);
+
+        groupsTable.setRoot(root);
+        groupsTable.setShowRoot(false);
+
 
         detectedGroups=CSVHandler.getDetectedGroups();
 
@@ -186,11 +197,16 @@ public class GroupsController  extends Controller{
 
         groupsTable.setEditable(false);
 
-        groupsTable.setItems(tableGroups);
-        groupsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        groupsTable.setSelectionModel(null);
+
+        groupsTable.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+        //groupsTable.setSelectionModel(null);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
         groupNamesCol.setSortable(false);
+        groupsTable.setOnMousePressed(t->{
+            for(Object pos:groupsTable.getSelectionModel().getSelectedIndices())
+                groupsTable.getSelectionModel().clearSelection((Integer)pos);
+
+            });
         qCountCol.setSortable(false);
         qCountCol.setEditable(false);
         //groupsTable.setStyle("-fx-font-size:"+Double.toString(resX/106.7));

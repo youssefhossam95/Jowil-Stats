@@ -1,10 +1,11 @@
 package Jowil;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
 
-public class Group {
+public class Group extends RecursiveTreeObject<Group> {
 
     //fields
     private String name;
@@ -52,9 +53,11 @@ public class Group {
         return nameProp.get();
     }
 
-    public String getCleanedNameProp() {
-        return getCleanedName();
+    public SimpleStringProperty getCleanedNameProp() {
+        return new SimpleStringProperty(getCleanedName());
     }
+
+
 
     public SimpleStringProperty namePropProperty() {
         return nameProp;
@@ -67,6 +70,10 @@ public class Group {
 
     public String getqCountProp() {
         return qCountProp.get();
+    }
+
+    public SimpleStringProperty getObsQcountProp(){
+        return new SimpleStringProperty(getqCountProp());
     }
 
     public SimpleStringProperty qCountPropProperty() {
