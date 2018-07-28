@@ -31,6 +31,7 @@ import javafx.scene.text.Font;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 import static java.util.Arrays.asList;
@@ -52,7 +53,7 @@ public class GroupsController  extends Controller{
     private static TreeView choicesTreeView=new TreeView();
     final Label treeLabel= new Label("Groups Choices");
 
-
+    private static HashMap<String,Integer> groupsIndices=new HashMap<String,Integer>();
 
 
 
@@ -141,6 +142,91 @@ public class GroupsController  extends Controller{
     }
 
 
+    /////static utility methods
+
+    public static void addToGroup(String groupName){
+
+        int i=0;
+        for(Group group: treeViewGroups){  //group names are unique
+            if(group.getCleanedName().equals(groupName)) {
+                group.addAnswerToEnd();
+                isPossible.get(i).add(true);
+                TreeItem groupItem=(TreeItem)(choicesTreeView.getRoot().getChildren().get(i));
+                TreeItem rangeItem=(TreeItem)groupItem.getChildren().get(0);
+                rangeItem.getChildren().add(new TreeItem<>(group.getPossibleAnswers().get(group.getPossibleAnswers().size()-1)));
+                break;
+            }
+            i++;
+        }
+    }
+
+    public static void deleteFromGroup(String groupName,String deletedChoice){
+
+        int i=indexOfGroup(groupName);
+        isPossible.get(i).set(treeViewGroups.get(i).getPossibleAnswers().indexOf(deletedChoice),false);
+
+    }
+
+    public static void saveTreeViewGroups(){
+
+        ArrayList<Group> newDetectedGroups=new ArrayList<>();
+
+        for(Group group:treeViewGroups) //copy by value using copy constructor to have different possible answers array
+            newDetectedGroups.add(new Group(group));
+
+
+        for(int i=0;i<newDetectedGroups.size();i++)
+            newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i));
+
+        CSVHandler.setDetectedGroups(newDetectedGroups);
+
+    }
+
+    public static boolean isChoicePossible(String groupName,String choiceName){
+
+        int i=indexOfGroup(groupName);
+
+        return isPossible.get(i).get(treeViewGroups.get(i).getPossibleAnswers().indexOf(choiceName));
+    }
+
+
+    public static void restoreToGroup(String groupName,String restoredChoice){
+
+        int i=indexOfGroup(groupName);
+
+        isPossible.get(i).set(treeViewGroups.get(i).getPossibleAnswers().indexOf(restoredChoice),true);
+
+
+    }
+
+    public static int getFirstPossible(String groupName){
+
+        int i=indexOfGroup(groupName);
+        return isPossible.get(i).indexOf(true);
+
+    }
+
+    public static int getLastPossible(String groupName){
+
+        int i=indexOfGroup(groupName);
+        return isPossible.get(i).lastIndexOf(true);
+    }
+
+
+    public void populateTreeViewGroups(){
+        treeViewGroups=new ArrayList<Group>();
+
+        int i=0;
+        for(Group group:CSVHandler.getDetectedGroups()){ //copy by value using copy constructor.
+            groupsIndices.put(group.getCleanedName(),i);
+            treeViewGroups.add(new Group(group));
+            i++;
+        }
+
+    }
+
+
+
 
     //helper methods
     private void initGroupsTableVBox(){
@@ -218,7 +304,12 @@ public class GroupsController  extends Controller{
 
     }
 
+    public void initChoicesTreeVBox(){
 
+        choicesTreeVBox.getChildren().addAll(treeLabel,choicesTreeView);
+        treeLabel.setFont(new Font("Arial", headersFontSize));
+
+    }
 
 
     private void initTreeView(){
@@ -247,7 +338,7 @@ public class GroupsController  extends Controller{
         choicesTreeView.setShowRoot(false);
     }
     
-    public static void constructChoicesTreeView(TreeView treeView){
+    private static void constructChoicesTreeView(TreeView treeView){
 
 
         TreeItem<String> rootItem =
@@ -275,122 +366,10 @@ public class GroupsController  extends Controller{
     }
 
 
-    public static void addToGroup(String groupName){
 
-        int i=0;
-        for(Group group: treeViewGroups){  //group names are unique
-            if(group.getCleanedName().equals(groupName)) {
-                group.addAnswerToEnd();
-                isPossible.get(i).add(true);
-                TreeItem groupItem=(TreeItem)(choicesTreeView.getRoot().getChildren().get(i));
-                TreeItem rangeItem=(TreeItem)groupItem.getChildren().get(0);
-                rangeItem.getChildren().add(new TreeItem<>(group.getPossibleAnswers().get(group.getPossibleAnswers().size()-1)));
-                break;
-            }
-            i++;
-        }
-    }
+    private static int indexOfGroup(String groupName){
 
-    public static void deleteFromGroup(String groupName,String deletedChoice){
-
-        int i=0;
-        for(Group group: treeViewGroups){  //group names are unique
-            if(group.getCleanedName().equals(groupName)) {
-                isPossible.get(i).set(group.getPossibleAnswers().indexOf(deletedChoice),false);
-                break;
-            }
-            i++;
-        }
-
-    }
-
-    public static void saveTreeViewGroups(){
-
-        ArrayList<Group> newDetectedGroups=new ArrayList<>();
-
-        for(Group group:treeViewGroups) //copy by value using copy constructor to have different possible answers array
-            newDetectedGroups.add(new Group(group));
-
-
-        for(int i=0;i<newDetectedGroups.size();i++)
-            newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i));
-
-        CSVHandler.setDetectedGroups(newDetectedGroups);
-
-    }
-
-    public static boolean isChoicePossible(String groupName,String choiceName){
-
-        int i=0;
-        for(Group group: treeViewGroups){  //group names are unique
-
-            if(group.getCleanedName().equals(groupName))
-                return isPossible.get(i).get(group.getPossibleAnswers().indexOf(choiceName));
-
-            i++;
-        }
-
-        return true;
-    }
-
-
-    public void initChoicesTreeVBox(){
-
-        choicesTreeVBox.getChildren().addAll(treeLabel,choicesTreeView);
-        treeLabel.setFont(new Font("Arial", headersFontSize));
-
-    }
-
-    public static void restoreToGroup(String groupName,String restoredChoice){
-
-        int i=0;
-        for(Group group: treeViewGroups){  //group names are unique
-            if(group.getCleanedName().equals(groupName)) {
-                System.out.println(restoredChoice);
-                isPossible.get(i).set(group.getPossibleAnswers().indexOf(restoredChoice),true);
-                break;
-            }
-            i++;
-        }
-
-    }
-
-    public static int getFirstPossible(String groupName){
-
-        int i=0;
-        for(Group group: treeViewGroups){  //group names are unique
-            if(group.getCleanedName().equals(groupName))
-                break;
-
-            i++;
-        }
-
-
-        return isPossible.get(i).indexOf(true);
-
-    }
-
-    public static int getLastPossible(String groupName){
-
-        int i=0;
-        for(Group group: treeViewGroups){  //group names are unique
-            if(group.getCleanedName().equals(groupName))
-                break;
-
-            i++;
-        }
-
-        return isPossible.get(i).lastIndexOf(true);
-    }
-
-
-    public void populateTreeViewGroups(){
-        treeViewGroups=new ArrayList<Group>();
-
-        for(Group group:CSVHandler.getDetectedGroups()){ //copy by value using copy constructor.
-            treeViewGroups.add(new Group(group));
-        }
-
+        return groupsIndices.get(groupName);
     }
 
 }

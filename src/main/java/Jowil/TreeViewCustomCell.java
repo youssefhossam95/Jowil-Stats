@@ -42,26 +42,31 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 checkBox.setPadding(new Insets(0,0,0,0));
                 checkBox.getStyleClass().add("smallCheckBox");
                 checkBox.setSelected(GroupsController.isChoicePossible(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue()));
+
                 checkBox.selectedProperty().addListener((observable,oldValue,newValue)->{
+
+                    String groupName=this.getTreeItem().getParent().getParent().getValue();
                     if(newValue) {
-                        GroupsController.restoreToGroup(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue());
+                        GroupsController.restoreToGroup(groupName, this.getTreeItem().getValue());
                         this.getTreeView().refresh();
                     }
-                    else if(GroupsController.getLastPossible(this.getTreeItem().getParent().getParent().getValue())==GroupsController.getFirstPossible(this.getTreeItem().getParent().getParent().getValue()))
+                    else if(GroupsController.getLastPossible(groupName)==GroupsController.getFirstPossible(groupName))
                         checkBox.setSelected(true);
                     else{
-                        GroupsController.deleteFromGroup(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue());
+                        GroupsController.deleteFromGroup(groupName, this.getTreeItem().getValue());
                         this.getTreeView().refresh();
                     }
+
                 });
-                //Button button = new Button("Press!");
-                // Here we bind the pref height of the label to the height of the checkbox. This way the label and the checkbox will have the same size.
+
+
                 label.prefHeightProperty().bind(checkBox.heightProperty());
                 cellBox.getChildren().addAll(checkBox, label);
 
                 // We set the cellBox as the graphic of the cell.
                 setGraphic(cellBox);
                 setText(null);
+                
             } else if(isGroupNameNode()) {
 
 
