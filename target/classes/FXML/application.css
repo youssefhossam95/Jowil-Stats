@@ -1,6 +1,6 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 AnchorPane{
--fx-background-color:grey;
+/*-fx-background-color:white;*/
 
 }
 JFXButton{
@@ -113,8 +113,8 @@ JFXCheckBox {
 .jfx-tree-table-view .column-header {
     -fx-border-width: 0 0 2 0;
      -fx-border-color: #A9A9A9;
-     /*-fx-border-color: #3184c9;*/
-    -fx-background-color:#3184c9;
+     -fx-border-color: #3184c9;
+    -fx-background-color:white;
 
 }
 
