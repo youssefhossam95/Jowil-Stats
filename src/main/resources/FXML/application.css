@@ -1,12 +1,12 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 AnchorPane{
--fx-background-color:white;
+/*-fx-background-color:white;*/
 
 }
 JFXButton{
 -fx-border-color: #3184c9;
 -fx-text-fill: #3184c9;
--fx-background-color:white;
+-fx-background-color:transparent;
 }
 JFXButton:hover {
     /*-fx-text-fill: white;*/

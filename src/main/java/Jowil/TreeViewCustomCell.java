@@ -10,9 +10,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Paint;
+
 
 public class TreeViewCustomCell extends TreeCell<String> {
 
@@ -66,7 +65,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 // We set the cellBox as the graphic of the cell.
                 setGraphic(cellBox);
                 setText(null);
-                
+
             } else if(isGroupNameNode()) {
 
 
