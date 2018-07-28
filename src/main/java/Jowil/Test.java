@@ -23,17 +23,17 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
-//        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-//
-//
-//        final String report2TemplatePath = reportsPath + "report2\\report2Template.html";
-//
-//        File file = new File(report2TemplatePath);
-//        Document doc = Jsoup.parse(file, "UTF-8");
-//
-////        doc.select("div#footer").remove();
-//        String templateBodyHtml = doc.select("body").html() ;
-//        System.out.println(templateBodyHtml);
+        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+
+
+        final String report2TemplatePath = reportsPath + "report5\\report5Template.html";
+
+        File file = new File(report2TemplatePath);
+        Document doc = Jsoup.parse(file, "UTF-8");
+
+//        doc.select("div#footer").remove();
+        String templateBodyHtml = doc.select("span.second").last().select("tr.header-row").html() ;
+        System.out.println(templateBodyHtml);
 
 
 

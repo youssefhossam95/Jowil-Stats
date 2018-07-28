@@ -42,6 +42,7 @@ public class ReportsHandler {
     private final String report2TemplatePath = reportsPath + "report2\\report2Template.html";
     private final String report3TemplatePath = reportsPath + "report3\\report3Template.html";
     private final String report4TemplatePath = reportsPath + "report4\\report4Template.html";
+    private final String report5TemplatePath = reportsPath + "report5\\report5Template.html";
 
 
 
@@ -486,6 +487,66 @@ public class ReportsHandler {
        WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
        ImageView imageView = new ImageView(snapShot);
        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(reportsPath+"report5\\Q1stats.png"));
+
+
+   }
+
+
+   public void generateReport5() throws IOException, DocumentException {
+       File file = new File(report5TemplatePath);
+       Document doc =  Jsoup.parse(file , "UTF-8") ;
+       String wrapperHtml = doc.select("div.wrapper").outerHtml() ;
+       String pageBreakHtml = "<div class='page-break'> </div>" ;
+       String templateHtml = doc.select("div#template").html() ;
+
+       final int  NUMBER_OF_ROWS_IN_PAGE = 42 ;
+       final int  ROWS_OF_MAIN_HEADER = 8 ;
+       final int  ROWS_OF_TABLE_HEADER = 6 ;
+
+       for (int formIndex = 0 ; formIndex <Statistics.getNumberOfForms() ; formIndex++) {
+           ArrayList<ArrayList<ArrayList<String>>> tables = Statistics.report5stats(formIndex);
+
+           if(formIndex>0) {
+               doc.select("div.wrapper").last().after(pageBreakHtml);
+               doc.select("div.page-break").last().after(templateHtml) ;
+               doc.select("div.divTitle").addClass("second-page-header") ;
+               doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+           }else
+               if(Statistics.getNumberOfForms()>1)
+                   doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+
+           int remainingRows = NUMBER_OF_ROWS_IN_PAGE - ROWS_OF_MAIN_HEADER;
+           for (int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
+               ArrayList<ArrayList<String>> table = tables.get(tableIndex);
+               String questionName = Statistics.getQuestionNames().get(tableIndex);
+               String spanClass = "second";
+               if (tableIndex % 2 == 0) {
+                   spanClass = "first";
+                   if (tableIndex != 0) {
+                       remainingRows -= (table.size() + ROWS_OF_TABLE_HEADER);
+                       doc.select("div.wrapper").last().after(wrapperHtml);
+                       if (remainingRows < 0) {
+                           doc.select("div.wrapper").last().before(pageBreakHtml);
+                           remainingRows = NUMBER_OF_ROWS_IN_PAGE;
+                       }
+
+                   }
+               }
+               for (ArrayList<String> tableRow : table) {
+                   String barClass = tableRow.get(tableRow.size() - 1);
+                   String barWidth = tableRow.get(tableRow.size() - 2);
+                   String divHtml = "<div class='emptyBar'> \n <div class='" + barClass + "' style='width:" + barWidth + "%'></div>\n</div>";
+                   tableRow.set(tableRow.size() - 1, divHtml);
+               }
+               String tableRowsHtml = createRowsHtml(table, ";gray-row", " ");
+               doc.select("span." + spanClass).last().select("tr.header-row").after(tableRowsHtml);
+               doc.select("span." + spanClass).last().select("div.tableTitle").last().text(questionName);
+           }
+       }
+
+       writeHtmlFile(reportsPath+"report5\\test.html" , doc);
+       generatePDF(reportsPath + "report5\\test.html", reportsPath + "report5\\test.pdf");
+
 
 
    }
