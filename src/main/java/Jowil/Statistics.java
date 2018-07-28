@@ -179,7 +179,7 @@ public class Statistics {
         System.out.println("-----------------------------------------------------");
         System.out.println("Info Headers: "+CSVHandler.getDetectedInfoHeaders());
         System.out.println("Q names: " + Jowil.Statistics.getQuestionNames().toString());
-        System.out.println("Student Identifiers: " + Jowil.Statistics.getStudentIdentifier().toString());
+//        System.out.println("Student Identifiers: " + Jowil.Statistics.getStudentIdentifier().toString());
         //System.out.println("Student names: " + Jowil.Statistics.getStudentNames().toString());
 //        System.out.println("ID mode " + Jowil.Statistics.getIdentifierMode());
         System.out.println("Correct ans: " + Jowil.Statistics.getCorrectAnswers().toString());
@@ -648,6 +648,46 @@ public class Statistics {
         tables.add(table) ;
 
         System.out.println("el table ya man "+ tables);
+        return tables ;
+    }
+
+    public static ArrayList<ArrayList<ArrayList<String>>> report5stats (int formIndex ){
+
+        DecimalFormat format = new DecimalFormat("0.#");
+        DecimalFormat format2 = new DecimalFormat("0.##") ;
+        int numberOfStudents = studentScores.size();
+
+
+        ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex) ;
+        ArrayList<String> formCorrectAnswers= correctAnswers.get(formIndex);
+        ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<ArrayList<ArrayList<String>>>();
+
+        for(int questionIndex = 0 ; questionIndex < formCorrectAnswers.size() ; questionIndex++ ){
+            ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>() ;
+            ArrayList<String> questionChoices = questionsChoices.get(questionIndex) ;
+            ArrayList<Double> questionStats = formStats.get(questionIndex) ;
+            String correctAnswer = formCorrectAnswers.get(questionIndex);
+            int correctAnswerIndex = questionChoices.indexOf(correctAnswer);
+            double correctAnswerPrecentage = questionStats.get(correctAnswerIndex);
+            for(int choiceIndex = 0 ; choiceIndex< questionChoices.size() ; choiceIndex ++) {
+                ArrayList<String>tableRow = new ArrayList<>() ;
+                String addedClass = "; " ;
+                String barClass = "redBar" ;
+                if(correctAnswerIndex == choiceIndex) {
+                    addedClass = ";correct-answer";
+                    barClass = "greenBar" ;
+                }
+                tableRow.add(questionChoices.get(choiceIndex) + addedClass) ;
+                tableRow.add(format.format(questionStats.get(choiceIndex)*numberOfStudents)) ;
+                tableRow.add(format.format(questionStats.get(choiceIndex)*100)) ;
+                if(questionStats.get(choiceIndex)> correctAnswerPrecentage)
+                    barClass= "distBar" ;
+                tableRow.add(barClass);
+                table.add(tableRow);
+            }
+            tables.add(table);
+        }
+        System.out.println(tables);
         return tables ;
     }
 

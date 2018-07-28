@@ -2,6 +2,54 @@
 
 <head>
     <style type="text/css">
+        @page {
+
+            /* margin: 25px 25px 40px 25px; */
+            /* size: A4 landscape; */
+            @bottom-left {
+                content: element(footerLeft);
+            }
+            @bottom-right {
+                content: element(footerRight);
+            }
+            @bottom-center {
+                content: element(footerCenter);
+            }
+        }
+
+
+
+        #pagenumber:before {
+            content: counter(page);
+        }
+
+        #pagecount:before {
+            content: counter(pages);
+        }
+
+        #footerCenter {
+            position: running(footerCenter);
+            text-align: center;
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+
+        }
+
+        #footerLeft {
+            position: running(footerLeft);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: left;
+        }
+
+        #footerRight {
+            position: running(footerRight);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: right;
+            /* padding-right: 50px ;   */
+        }
+
         .divTitle {
             top: 28px;
             margin-left: 5%;
@@ -20,7 +68,7 @@
 
         th {
             border-width: 0px;
-            background-color: #efefef;
+            background-color: #dfdfdf;
             border-style: solid;
             border-top-width: 2px;
             border-top-color: #08436b;
@@ -35,7 +83,6 @@
         }
 
         .tableTitle {
-            text-align: center;
             font-weight: bold;
             margin-bottom: 3px;
         }
@@ -72,7 +119,7 @@
             width: 90%;
             margin-left: 5%;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 50px;
 
         }
 
@@ -118,291 +165,81 @@
             margin-bottom: 5px;
 
         }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .second-page-header {
+            margin-top: 20px;
+        }
+        .gray-row{ 
+            background-color: #efefef;
+        }
     </style>
 </head>
 
 <body>
-    <div class="divTitle" style="text-align:center">
-        <h2 style="color:white">
-            Condensed Test Report
-        </h2>
+
+    <div id="footerLeft"> 25/7/2018 </div>
+    <div id="footerRight">Page
+        <span id="pagenumber"></span> of
+        <span id="pagecount"></span>
     </div>
-    <div class="wrapperSmall">
-        <span class="left" style="background-color:green"></span>
-        <span class=" right"> Correct Answer</span>
+    <div id="footerCenter">Condensed Test Report</div>
+
+    <div id='template'>
+        <div class="divTitle" style="text-align:center">
+            <h2 style="color:white">
+                Condensed Test Report
+            </h2>
+        </div>
+        <div class="wrapperSmall">
+            <span class="left" style="background-color:green"></span>
+            <span class=" right"> Correct Answer</span>
+        </div>
+        <div class="wrapperSmall">
+            <span class="left" style="background-color:red"></span>
+            <span class=" right"> Wrong Answer</span>
+        </div>
+        <div class="wrapperSmall">
+            <span class="left" style="background-color: #64686b;margin-bottom:50px"></span>
+            <span class=" right"> Distractor</span>
+        </div>
+
+        <div class="wrapper">
+            <span class="first">
+                <div class="tableTitle">
+                    Question 1
+                </div>
+                <table class="t">
+                    <tr class='header-row'>
+                        <th>Response</th>
+                        <th>Count</th>
+                        <th>Percent</th>
+                        <th width="30%"></th>
+                    </tr>
+
+                </table>
+            </span>
+            <span class="second">
+                <div class="tableTitle">
+                    Question 2
+                </div>
+                <table class="t">
+                    <tr class='header-row'>
+                        <th>Response2</th>
+                        <th>Count</th>
+                        <th>Percent</th>
+                        <th width="30%"></th>
+                    </tr>
+
+                </table>
+
+
+            </span>
+        </div>
     </div>
-    <div class="wrapperSmall">
-        <span class="left" style="background-color:red"></span>
-        <span class=" right"> Wrong Answer</span>
-    </div>
-    <div class="wrapperSmall">
-        <span class="left" style="background-color: #64686b;margin-bottom:50px"></span>
-        <span class=" right"> Distractor</span>
-    </div>
-
-    <div class="wrapper">
-        <span class="first">
-            <div class="tableTitle">
-                Question 1
-            </div>
-            <div style="text-align:center">
-                <img src="Q1stats.png"> </img>
-            </div>
-            <!-- <table class="t">
-                <tr>
-                    <th>Response</th>
-                    <th>Count</th>
-                    <th>Percent</th>
-                    <th width="30%"></th>
-                </tr>
-                <tr>
-                    <td class="correctAns">A</td>
-                    <td>10</td>
-                    <td>35.2</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="greenBar" style="width:35.2%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>B</td>
-                    <td>8</td>
-                    <td>28.1</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:28.1%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>C</td>
-                    <td>4</td>
-                    <td>14.05</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:14.05%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>D</td>
-                    <td>12</td>
-                    <td>40.1</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="distBar" style="width:40.1%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-            </table> -->
-        </span>
-        <span class="second">
-            <div class="tableTitle">
-                Question 2
-            </div>
-            <!-- <table class="t">
-                <tr>
-                    <th>Response</th>
-                    <th>Count</th>
-                    <th>Percent</th>
-                    <th width="30%"></th>
-                </tr>
-                <tr>
-                    <td>A</td>
-                    <td>10</td>
-                    <td>35.2</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:35.2%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="correctAns">B</td>
-                    <td>14</td>
-                    <td>45.2</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="greenBar" style="width:45.2%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>C</td>
-                    <td>4</td>
-                    <td>19.2</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:19.2%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>D</td>
-                    <td>12</td>
-                    <td>0.5</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:0.5%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-            </table> -->
-
-            <div style="text-align:center">
-                <img src="Q1stats.png"> </img>
-            </div>
-
-        </span>
-    </div>
-    <div class="wrapper">
-        <span class="first"></span>
-        <span class="second"> </span>
-    </div>
-
-    <div class="wrapper">
-        <span class="first">
-            <div class="tableTitle">
-                Question 3
-            </div>
-            <!-- <table class="t">
-                <tr>
-                    <th>Response</th>
-                    <th>Count</th>
-                    <th>Percent</th>
-                    <th width="30%"></th>
-                </tr>
-                <tr>
-                    <td class="correctAns">A</td>
-                    <td>8</td>
-                    <td>27.1</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="greenBar" style="width:27.1%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>B</td>
-                    <td>11</td>
-                    <td>31.4</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="distBar" style="width:31.4%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>C</td>
-                    <td>4</td>
-                    <td>8.05</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:8.05%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>D</td>
-                    <td>12</td>
-                    <td>16.1</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:16.1%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-            </table> -->
-            <div style="text-align:center">
-                <img src="Q1stats.png"> </img>
-            </div>
-
-        </span>
-        <span class="second">
-            <div class="tableTitle">
-                Question 4
-            </div>
-            <!-- <table class="t">
-                <tr>
-                    <th>Response</th>
-                    <th>Count</th>
-                    <th>Percent</th>
-                    <th width="30%"></th>
-                </tr>
-                <tr>
-                    <td>A</td>
-                    <td>5</td>
-                    <td>11.1</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:11.1%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>B</td>
-                    <td>4</td>
-                    <td>7.1</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:7.1%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="correctAns">C</td>
-                    <td>20</td>
-                    <td>80.2</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="greenBar" style="width:80.2%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>D</td>
-                    <td>2</td>
-                    <td>0.5</td>
-                    <td>
-                        <div class="emptyBar">
-                            <div class="redBar" style="width:0.5%">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-            </table> -->
-
-            <div style="text-align:center">
-                <img src="Q1stats.png"> </img>
-            </div>
-
-        </span>
-    </div>
-    <div class="wrapper">
-        <span class="first"></span>
-        <span class="second"> </span>
-    </div>
-
 
 </body>
 

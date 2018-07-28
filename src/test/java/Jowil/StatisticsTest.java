@@ -22,16 +22,16 @@ public class StatisticsTest extends TestCase {
     }
     public static ArrayList<ArrayList<String>> generateTestAllQuestionsChoices(){
         ArrayList<ArrayList<String>> out=new ArrayList<ArrayList<String>>();
-        for(int i=0;i<50;i++){
+        for(int i=0;i<3;i++){
             out.add(new ArrayList<String>());
             char choice='a';
             for(int j=0;j<5;j++)
                 out.get(i).add(Character.toString((char)(choice+j)));
         }
 
-        for(int i=0;i<50;i++){
+        for(int i=0;i<3;i++){
             out.add(new ArrayList<String>());
-            for(int j=0;j<20;j++)
+            for(int j=0;j<9;j++)
                 out.get(out.size()-1).add(Integer.toString(j+1));
         }
         return out;
@@ -87,23 +87,28 @@ public class StatisticsTest extends TestCase {
 
     public void testMulti1() throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException, CSVHandler.IllFormedCSVException {
             ////////////////////// test using jo csv ///////////////////////////////////////
-        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\welloTest.csv");
-        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloTestAnswerKeys.csv");
-        ArrayList<Integer> studentData= new ArrayList<Integer>();
-        studentData.add(CSVHandler.STUDENTID);
-        studentData.add(CSVHandler.STUDENTNAME);
-        studentData.add(CSVHandler.IGNORE);
-        studentData.add(CSVHandler.STUDENTFORM);
+        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\wello.csv");
+        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv");
+//        ArrayList<Integer> studentData= new ArrayList<Integer>();
+//        studentData.add(CSVHandler.STUDENTID);
+//        studentData.add(CSVHandler.STUDENTNAME);
+//        studentData.add(CSVHandler.IGNORE);
+//        studentData.add(CSVHandler.STUDENTFORM);
+//        boolean isHeaders=CSVHandler.processHeaders(false);
+//        if(isHeaders)
+//            Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
+//        Jowil.CSVHandler.setFormsCount(2);
+//        Jowil.CSVHandler.setInfoHeadersTypes(studentData);
+//        Jowil.CSVHandler.loadCsv(isHeaders);
+        CSVHandler.setFormColIndex(3);
+        CSVHandler.setIdentifierColStartIndex(0);
+        CSVHandler.setIdentifierColEndIndex(1);
         boolean isHeaders=CSVHandler.processHeaders(false);
-        if(isHeaders)
-            Main.updateQuestionHeaders(CSVHandler.getDetectedQHeaders());
-        Jowil.CSVHandler.setFormsCount(2);
-        Jowil.CSVHandler.setInfoHeadersTypes(studentData);
         Jowil.CSVHandler.loadCsv(isHeaders);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
-        questionWeights.add(generateQuestionsWeights(100));
-        questionWeights.add(generateQuestionsWeights(100));
+        questionWeights.add(generateQuestionsWeights(6));
+        questionWeights.add(generateQuestionsWeights(6));
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
         Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;
@@ -114,9 +119,9 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.printCalculations();
 //        Jowil.Statistics.report2TableStats(0) ;
 
-//        Jowil.Statistics.report4Stats() ;
+//        Jowil.Statistics.report5stats(0) ;
         ReportsHandler reportsHandler = new ReportsHandler() ;
-        reportsHandler.generateReport2();
+        reportsHandler.generateReport5();
 ////        reportsHandler.generateReport4();
 //        reportsHandler.generateReport3();
 
