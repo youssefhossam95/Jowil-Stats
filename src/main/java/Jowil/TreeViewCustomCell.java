@@ -75,10 +75,10 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 iconPane.getChildren().add(plusIcon);
 
                 this.setId(this.getTreeItem().getValue());
-                iconPane.setOnMouseClicked(t->{
+                iconPane.setOnMouseReleased(t->{
                     GroupsController.addToGroup(this.getTreeItem().getValue());
                     System.out.println(this.getTreeItem().getValue());
-                    GroupsController.constructChoicesTreeView(this.getTreeView());
+                    this.getTreeView().refresh();
                 });
 
 

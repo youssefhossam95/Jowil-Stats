@@ -46,7 +46,7 @@ public class GroupsController  extends Controller{
     final Label label = new Label("Groups Overview");
     private JFXComboBox identifierCombo= new JFXComboBox();
     private JFXComboBox formCombo=new JFXComboBox();
-    private TreeView choicesTreeView=new TreeView();
+    private static TreeView choicesTreeView=new TreeView();
     final Label treeLabel= new Label("Groups Choices");
 
 
@@ -275,7 +275,7 @@ public class GroupsController  extends Controller{
 
     }
 
-    
+
     public static void addToGroup(String groupName){
 
         int i=0;
@@ -283,6 +283,9 @@ public class GroupsController  extends Controller{
             if(group.getCleanedName().equals(groupName)) {
                 group.addAnswerToEnd();
                 isPossible.get(i).add(true);
+                TreeItem groupItem=(TreeItem)(choicesTreeView.getRoot().getChildren().get(i));
+                TreeItem rangeItem=(TreeItem)groupItem.getChildren().get(0);
+                rangeItem.getChildren().add(new TreeItem<>(group.getPossibleAnswers().get(group.getPossibleAnswers().size()-1)));
                 break;
             }
             i++;
