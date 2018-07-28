@@ -35,9 +35,6 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
                 this.setStyle("-fx-font-size:12");
 
-
-                // A custom HBox that will contain your check box, label and
-                // button.
                 HBox cellBox = new HBox(0);
                 JFXCheckBox checkBox = new JFXCheckBox();
                 Label label = new Label(item);
@@ -48,13 +45,13 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 checkBox.selectedProperty().addListener((observable,oldValue,newValue)->{
                     if(newValue) {
                         GroupsController.restoreToGroup(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue());
-                        GroupsController.constructChoicesTreeView(this.getTreeView(),this.getTreeItem().getParent().getParent().getValue());
+                        this.getTreeView().refresh();
                     }
                     else if(GroupsController.getLastPossible(this.getTreeItem().getParent().getParent().getValue())==GroupsController.getFirstPossible(this.getTreeItem().getParent().getParent().getValue()))
                         checkBox.setSelected(true);
                     else{
                         GroupsController.deleteFromGroup(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue());
-                        GroupsController.constructChoicesTreeView(this.getTreeView(),this.getTreeItem().getParent().getParent().getValue());
+                        this.getTreeView().refresh();
                     }
                 });
                 //Button button = new Button("Press!");
@@ -78,9 +75,10 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 iconPane.getChildren().add(plusIcon);
 
                 this.setId(this.getTreeItem().getValue());
-                iconPane.setOnMouseClicked(t->{GroupsController.addToGroup(this.getTreeItem().getValue());
+                iconPane.setOnMouseClicked(t->{
+                    GroupsController.addToGroup(this.getTreeItem().getValue());
                     System.out.println(this.getTreeItem().getValue());
-                    GroupsController.constructChoicesTreeView(this.getTreeView(),"");
+                    GroupsController.constructChoicesTreeView(this.getTreeView());
                 });
 
 
@@ -95,7 +93,6 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
                 HBox cellBox = new HBox(3);
                 cellBox.setAlignment(Pos.CENTER_LEFT);
-                String [] limits=item.split("-");
                 String min=this.getTreeItem().getChildren().get(GroupsController.getFirstPossible(this.getTreeItem().getParent().getValue())).getValue();
                 String max=this.getTreeItem().getChildren().get(GroupsController.getLastPossible(this.getTreeItem().getParent().getValue())).getValue();
                 Label minLabel=new Label(min);

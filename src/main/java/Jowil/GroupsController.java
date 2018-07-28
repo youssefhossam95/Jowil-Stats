@@ -241,14 +241,14 @@ public class GroupsController  extends Controller{
 
         choicesTreeView.setCellFactory(t->new TreeViewCustomCell());
 
-        constructChoicesTreeView(choicesTreeView,"");
+        constructChoicesTreeView(choicesTreeView);
 
 
 
         choicesTreeView.setShowRoot(false);
     }
     
-    public static void constructChoicesTreeView(TreeView treeView,String callingGroup){
+    public static void constructChoicesTreeView(TreeView treeView){
 
 
         TreeItem<String> rootItem =
@@ -256,23 +256,26 @@ public class GroupsController  extends Controller{
 
         rootItem.setExpanded(true);
         treeView.setRoot(rootItem);
-        
+
+        int i=0;
 
         for(Group group: treeViewGroups){
             TreeItem groupItem=new TreeItem<>(group.getCleanedName());
             groupItem.setExpanded(true);
             rootItem.getChildren().add(groupItem);
-            TreeItem rangeItem=new TreeItem(group.getPossibleAnswers().get(0)+"-"+group.getPossibleAnswers().get(group.getPossibleAnswers().size()-1));
+            TreeItem rangeItem=new TreeItem();
             groupItem.getChildren().add(rangeItem);
-            if(group.getCleanedNameProp().equals(callingGroup))
-                rangeItem.setExpanded(true);
+                //treeView.scrollTo(i);
+
             for(String answer: group.getPossibleAnswers())
                 rangeItem.getChildren().add(new TreeItem<>(answer));
 
+            i++;
         }
 
     }
 
+    
     public static void addToGroup(String groupName){
 
         int i=0;
