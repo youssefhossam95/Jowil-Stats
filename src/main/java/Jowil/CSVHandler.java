@@ -266,6 +266,35 @@ public class CSVHandler {
     }
 
 
+    public static void initQuestionsChoices(){
+
+        Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
+
+        int i=0;
+        for(Group group : detectedGroups){
+
+            String groupMax=getGroupMax(group,i);
+            i+=group.getqCount();
+            group.generatePossibleAnswers(groupMax);
+
+            for(int j=0;j<group.getqCount();j++)
+                Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
+
+        }
+    }
+
+
+    public static void updateQuestionsChoices(){
+
+        Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
+
+        for(Group group : detectedGroups){
+            for(int i=0;i<group.getqCount();i++)
+                Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
+        }
+    }
+
+
     ////////////////////helper functions
     private static ArrayList<String> cropArray(String [] original,int skipCols,int end){
         ArrayList<String> cropped=new ArrayList<String>();
@@ -330,22 +359,6 @@ public class CSVHandler {
         Statistics.getStudentIdentifier().add(identifier.toString());
     }
 
-    public static void updateQuestionsChoices(){
-
-        Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
-
-        int i=0;
-        for(Group group : detectedGroups){
-
-            String groupMax=getGroupMax(group,i);
-            i+=group.getqCount();
-            group.generatePossibleAnswers(groupMax);
-
-            for(int j=0;j<group.getqCount();j++)
-                Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
-
-        }
-    }
 
     private static String getGroupMax(Group group,int groupStartCol) {
 

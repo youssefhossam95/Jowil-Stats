@@ -66,7 +66,7 @@ public class GroupsController  extends Controller{
     GroupsController(Controller back){
 
         super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back);
-        CSVHandler.updateQuestionsChoices();
+        CSVHandler.initQuestionsChoices();
     }
 
 
@@ -125,19 +125,12 @@ public class GroupsController  extends Controller{
     @Override
     protected void saveChanges() {
 
-        ArrayList<Group> newGroups=new ArrayList<>();
-        for (Group group : tableGroups)
-            newGroups.add(group);
 
-        CSVHandler.updateGroupsAndQHeaders(newGroups);
+        saveTreeViewGroups();
+        for(Group group : CSVHandler.getDetectedGroups())
+            System.out.println(group.getPossibleAnswers());
 
-
-
-
-        saveToTreeViewGroups();
-
-
-        CSVHandler.setDetectedGroups(treeViewGroups);
+        CSVHandler.updateQuestionsChoices();
 
     }
 
@@ -146,6 +139,8 @@ public class GroupsController  extends Controller{
         //disableTableDrag(groupsTable);
 
     }
+
+
 
     //helper methods
     private void initGroupsTableVBox(){
@@ -159,18 +154,6 @@ public class GroupsController  extends Controller{
         groupNamesCol.setCellFactory((TreeTableColumn<Group, String> param) -> new GenericEditableTreeTableCell<>(
                 new TextFieldEditorBuilder()));
 
-        groupNamesCol.setOnEditCommit((TreeTableColumn.CellEditEvent<Group,String>t)-> {
-                    if(t.getNewValue().length()==0){
-                        t.getTreeTableView().getTreeItem(t.getTreeTablePosition().getRow()).getValue().setNameProp(t.getOldValue());
-                        groupsTable.refresh();
-                    }
-                    else {
-                        t.getTreeTableView().getTreeItem(t.getTreeTablePosition().getRow()).getValue().setNameProp(t.getNewValue());
-                        isContentEdited=true;;
-                    }
-
-                }
-        );
 
 
         qCountCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Group, String> param) -> {
@@ -241,7 +224,7 @@ public class GroupsController  extends Controller{
     private void initTreeView(){
 
 
-        treeViewGroups=CSVHandler.getDetectedGroups();
+        populateTreeViewGroups();
 
         isPossible=new ArrayList<ArrayList<Boolean>>();
 
@@ -321,10 +304,18 @@ public class GroupsController  extends Controller{
 
     }
 
-    public static void saveToTreeViewGroups(){
+    public static void saveTreeViewGroups(){
 
-        for(int i=0;i<treeViewGroups.size();i++)
-            treeViewGroups.get(i).updatePossibleAnswers(isPossible.get(i));
+        ArrayList<Group> newDetectedGroups=new ArrayList<>();
+
+        for(Group group:treeViewGroups) //copy by value using copy constructor to have different possible answers array
+            newDetectedGroups.add(new Group(group));
+
+
+        for(int i=0;i<newDetectedGroups.size();i++)
+            newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i));
+
+        CSVHandler.setDetectedGroups(newDetectedGroups);
 
     }
 
@@ -355,6 +346,7 @@ public class GroupsController  extends Controller{
         int i=0;
         for(Group group: treeViewGroups){  //group names are unique
             if(group.getCleanedName().equals(groupName)) {
+                System.out.println(restoredChoice);
                 isPossible.get(i).set(group.getPossibleAnswers().indexOf(restoredChoice),true);
                 break;
             }
@@ -391,6 +383,15 @@ public class GroupsController  extends Controller{
         return isPossible.get(i).lastIndexOf(true);
     }
 
+
+    public void populateTreeViewGroups(){
+        treeViewGroups=new ArrayList<Group>();
+
+        for(Group group:CSVHandler.getDetectedGroups()){ //copy by value using copy constructor.
+            treeViewGroups.add(new Group(group));
+        }
+
+    }
 
 }
 

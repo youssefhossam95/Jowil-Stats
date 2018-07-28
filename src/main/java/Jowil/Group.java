@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class Group extends RecursiveTreeObject<Group> {
 
     //fields
-    private String name;
-    private Integer qCount;
-    private SimpleStringProperty nameProp;
-    private SimpleStringProperty qCountProp;
+    final private String name;
+    final private Integer qCount;
+    final private SimpleStringProperty nameProp;
+    final private SimpleStringProperty qCountProp;
     private ArrayList<String> possibleAnswers;
     private boolean isNumeric;
 
@@ -24,6 +24,16 @@ public class Group extends RecursiveTreeObject<Group> {
         qCountProp=new SimpleStringProperty(Integer.toString(qCount));
     }
 
+    Group(Group original){
+        this.name=original.name;
+        this.qCount=original.qCount;
+        this.nameProp=original.nameProp;
+        this.qCountProp=original.qCountProp;
+        this.isNumeric=original.isNumeric;
+        this.possibleAnswers=new ArrayList<String>();
+        for(String answer:original.possibleAnswers)
+            this.possibleAnswers.add(answer);
+    }
 
 
     //setters and getters
@@ -35,19 +45,12 @@ public class Group extends RecursiveTreeObject<Group> {
         return name.charAt(name.length()-1)=='-'?name.substring(0,name.length()-1):name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-        this.nameProp.set(name);
-    }
 
     public Integer getqCount() {
         return qCount;
     }
 
-    public void setqCount(Integer qCount) {
-        this.qCount = qCount;
-        this.qCountProp.set(qCount.toString());
-    }
+
 
     public String getNameProp() {
         return nameProp.get();
@@ -63,10 +66,6 @@ public class Group extends RecursiveTreeObject<Group> {
         return nameProp;
     }
 
-    public void setNameProp(String nameProp) {
-        this.nameProp.set(nameProp);
-        this.name=nameProp;
-    }
 
     public String getqCountProp() {
         return qCountProp.get();
@@ -80,10 +79,6 @@ public class Group extends RecursiveTreeObject<Group> {
         return qCountProp;
     }
 
-    public void setqCountProp(String qCountProp) {
-        this.qCountProp.set(qCountProp);
-        this.qCount=Integer.parseInt(qCountProp);
-    }
 
 
     public ArrayList<String> getPossibleAnswers() {
