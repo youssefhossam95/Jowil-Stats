@@ -26,13 +26,15 @@ public class Test {
         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
 
 
-        final String report2TemplatePath = reportsPath + "report5\\report5Template.html";
+        final String report2TemplatePath = reportsPath + "report5\\test.html";
 
         File file = new File(report2TemplatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
 //        doc.select("div#footer").remove();
-        String templateBodyHtml = doc.select("span.second").last().select("tr.header-row").html() ;
+        doc.select("p.group-name").last().select("span").last().text("hi");
+        String templateBodyHtml = doc.select("p.group-name").last().select("span").last().text();
+
         System.out.println(templateBodyHtml);
 
 

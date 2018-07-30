@@ -1,5 +1,6 @@
 package Jowil;
 
+import Jowil.Reports.Report1;
 import com.lowagie.text.DocumentException;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
@@ -20,26 +21,20 @@ import java.util.ArrayList;
 public class fxChartawy extends Application {
 
     String  reportsPath="E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-    final static String austria = "A";
-    final static String brazil = "B";
-    final static String france = "C";
-    final static String italy = "D";
-    final static String usa = "F";
-
 
     public void welloTest(){
         System.out.println("yaaay");
     }
     public static ArrayList<ArrayList<String>> generateTestAllQuestionsChoices(){
         ArrayList<ArrayList<String>> out=new ArrayList<ArrayList<String>>();
-        for(int i=0;i<10;i++){
+        for(int i=0;i<3;i++){
             out.add(new ArrayList<String>());
             char choice='a';
             for(int j=0;j<5;j++)
                 out.get(i).add(Character.toString((char)(choice+j)));
         }
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<3;i++){
             out.add(new ArrayList<String>());
             for(int j=0;j<6;j++)
                 out.get(out.size()-1).add(Integer.toString(j+1));
@@ -99,8 +94,8 @@ public class fxChartawy extends Application {
         Jowil.CSVHandler.loadCsv(isHeaders);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
-        questionWeights.add(generateQuestionsWeights(20));
-        questionWeights.add(generateQuestionsWeights(20));
+        questionWeights.add(generateQuestionsWeights(6));
+        questionWeights.add(generateQuestionsWeights(6));
         Jowil.Statistics.setQuestionWeights(questionWeights);
         fillGradeRanges() ;
 //        Statistics.printBasicInfo();
@@ -108,12 +103,10 @@ public class fxChartawy extends Application {
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
-        ReportsHandler reportsHandler = new ReportsHandler() ;
-        ArrayList<String> responses = new ArrayList<String>();
-        responses.add("20; "); responses.add("30;green"); responses.add("0;gold"); responses.add("50;red");
-        ArrayList<String> choices = new ArrayList<>() ;
-        choices.add("A"); choices.add("B");  choices.add("C") ; choices.add("D") ;
-        reportsHandler.generateReport5Chart(stage ,responses , choices );
+
+        Report1 report1 = new Report1() ;
+        report1.generatePdfReport();
+
          }
 
     public static void main(String[] args) {
