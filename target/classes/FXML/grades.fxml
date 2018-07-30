@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="742.0" prefWidth="1068.0" style="ukgjh: kjhkj; ds: dsfs; fdsfdsf: fdsfs; dsfsdf: fsdfds;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane fx:id="scrollPane" layoutX="113.0" layoutY="20.0" prefHeight="454.0" prefWidth="430.0"  />
+      <VBox fx:id="vbox" layoutX="583.0" layoutY="54.0" prefHeight="610.0" prefWidth="424.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="361.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0" >
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0" >
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0" >
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="424.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="292.0" spacing="10.0">
+               <children>
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXTextField prefHeight="10.0" prefWidth="64.0" />
+                  <JFXSlider prefHeight="30.0">
+                     <padding>
+                        <Insets left="10.0" top="30.0" />
+                     </padding>
+                  </JFXSlider>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

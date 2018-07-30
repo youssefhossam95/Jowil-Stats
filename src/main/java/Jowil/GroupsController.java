@@ -15,7 +15,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
@@ -53,6 +55,7 @@ public class GroupsController  extends Controller{
     private static TreeView choicesTreeView=new TreeView();
     final Label treeLabel= new Label("Groups Choices");
 
+    Separator separator=new Separator();
     private static HashMap<String,Integer> groupsIndices=new HashMap<String,Integer>();
 
 
@@ -77,6 +80,13 @@ public class GroupsController  extends Controller{
         initManualButton();
         initTreeView();
         initChoicesTreeVBox();
+//        separator.setOrientation(Orientation.VERTICAL);
+//        separator.setLayoutX(500);
+//        separator.setLayoutY(50);
+//        separator.setPrefHeight(400);
+//        separator.setStyle("-fx-border-width: 10px");
+//
+//        tablesAnchoPane.getChildren().add(separator);
     }
 
     @Override
@@ -271,9 +281,10 @@ public class GroupsController  extends Controller{
         //groupsTable.setSelectionModel(null);
         //groupsTable.setStyle("-fx-border-color:#1E90FF");
         groupNamesCol.setSortable(false);
+
         groupsTable.setOnMousePressed(t->{
-            for(Object pos:groupsTable.getSelectionModel().getSelectedIndices())
-                groupsTable.getSelectionModel().clearSelection((Integer)pos);
+//            for(Object pos:groupsTable.getSelectionModel().getSelectedIndices())
+//                groupsTable.getSelectionModel().clearSelection((Integer)pos);
 
             });
         qCountCol.setSortable(false);

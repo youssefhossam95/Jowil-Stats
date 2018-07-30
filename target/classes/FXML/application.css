@@ -1,6 +1,6 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 AnchorPane{
-/*-fx-background-color:white;*/
+-fx-background-color:white;
 
 }
 JFXButton{
@@ -17,7 +17,6 @@ JFXButton:hover {
 JFXTextField{
     -fx-prompt-text-fill: #989898;
     -fx-font-size:14;
-
 }
 
 TableView:focused{
@@ -72,7 +71,7 @@ DialogPane{
 
 
 TreeView:focused{
--fx-background-color:#3184c9,#3184c9;
+-fx-background-color:#3184c9,white;
 }
 
 .groupPlusIcon{
@@ -109,18 +108,17 @@ JFXCheckBox {
 
 
 
-
 .jfx-tree-table-view .column-header {
-    -fx-border-width: 0 0 2 0;
-     -fx-border-color: #A9A9A9;
-     -fx-border-color: #3184c9;
+    -fx-border-width: 0 0 1 0;
+     -fx-border-color: #A9A9A9;;
+     /*-fx-border-color: #3184c9;*/
     -fx-background-color:white;
 
 }
 
 .jfx-tree-table-view .column-header .label {
     -fx-font-weight: bold;
-    -fx-font-size:14;
+    -fx-font-size:15;
     -fx-text-fill:black;
     -fx-pref-height: 45px;
     -fx-padding: 0 0 0 0;
@@ -129,24 +127,88 @@ JFXCheckBox {
 
 .jfx-tree-table-view .tree-table-cell {
     -fx-border-width: 0 0 0 0;
-    -fx-border-color:transparent;
-    -fx-pref-height: 30px;
+    -fx-border-color:#A9A9A9;
+    -fx-pref-height: 35px;
     -fx-alignment: center;
-    -fx-font-size:13;
+    -fx-font-size:14;
 }
 
 
 
 .jfx-tree-table-view:focused {
-    -fx-background-color: #3184c9, #3184c9,white;
+    -fx-background-color: #3184c9, transparent,white;
     -fx-background-insets: -1.4, 0, 1;
     -fx-background-radius: 1.4, 0, 0;
     -fx-padding: 1; /* 0.083333em; */
 }
 
 .jfx-tree-table-view:focused .tree-table-cell {
-    -fx-background-color: white;
+    /*-fx-background-color: white;*/
     -fx-background-insets: 0, 0, 0;
     -fx-background-radius: 0, 0, 0;
 
 }
+
+
+.jfx-tree-table-view .tree-table-cell:focused  {
+    -fx-background-color: #3184c9;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0, 0, 0;
+
+}
+
+.scroll-pane {
+   -fx-background: #FFFFFF;
+   -fx-border-color:  #A9A9A9;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: 	transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #989898;
+    -fx-background-radius: 5em;
+}
+
+
+
+/* Styling the slider track */
+.jfx-slider > .track {
+     -fx-background-color: #989898;
+}
+
+/* Styling the slider thumb */
+.jfx-slider > .thumb {
+     -fx-background-color: #3184c9;
+}
+
+/* Styling the filled track */
+.jfx-slider > .colored-track {
+     -fx-background-color: #3184c9;
+}
+
+/* Styling the animated thumb */
+.jfx-slider > .animated-thumb {
+     -fx-background-color: #3184c9;
+}
+
+/* Styling the slider value text inside animated thumb */
+.jfx-slider .slider-value {
+     -fx-fill: white;
+     -fx-stroke: white;
+}
+

@@ -166,7 +166,7 @@ public class WeightsController extends Controller{
     @Override
     protected Controller getNextController() {
 
-        return null;
+        return new GradeBoundariesController(this);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class WeightsController extends Controller{
         {
             objWeights.add(new ArrayList<Double>());
             for (int j = 0; j < objQuestions.size(); j++)
-                objWeights.get(objWeights.size() - 1).add(Double.parseDouble(objQuestions.get(j).get(i).toString()));
+                objWeights.get(objWeights.size() - 1).add(Double.parseDouble(objQuestions.get(j).get(i).get()));
 
         }
 
