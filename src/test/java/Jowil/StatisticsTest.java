@@ -1,5 +1,8 @@
 package Jowil;
 
+import Jowil.Reports.Report1;
+import Jowil.Reports.Report2;
+import Jowil.Reports.Report5;
 import com.lowagie.text.DocumentException;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import junit.framework.TestCase;
@@ -117,14 +120,9 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
-//        Jowil.Statistics.report2TableStats(0) ;
 
-//        Jowil.Statistics.report5stats(0) ;
-        ReportsHandler reportsHandler = new ReportsHandler() ;
-        reportsHandler.generateReport5();
-////        reportsHandler.generateReport4();
-//        reportsHandler.generateReport3();
-
+        Report5 report5 = new Report5() ;
+        report5.generatePdfReport();
 
     }
 

@@ -35,8 +35,6 @@ public class ReportsHandler {
 
     public final static int HTML=0,PDF=1,TXT=2,WORD=3,XLS=4 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
-    private final String gradeDistTemplatePath = reportsPath + "gradesDistributionReport\\gradesDistribution.html";
-    private final String condensedTestTemplatePath = reportsPath+"condensedTestReport\\condensedTestTemplate.html";
 
     private final String report1TemplatePath = reportsPath + "report1\\report1Template.html";
     private final String report2TemplatePath = reportsPath + "report2\\report2Template.html";
@@ -136,19 +134,6 @@ public class ReportsHandler {
         out.write(doc.outerHtml());
         out.close();
     }
-    public void createGradeDist () throws IOException, DocumentException {
-        System.out.println(gradeDistTemplatePath);
-
-        File file = new File(gradeDistTemplatePath);
-        Document doc = Jsoup.parse(file, "UTF-8");
-        System.out.println(doc.body().html());
-//        String tableRows = createRowsHtml(tableDataAdapter(), "", "tg-l711");
-//        doc.select("tr").last().after(tableRows);
-//        doc.select("img").attr("src" , gradeDistHistogramChartPaht);
-
-        writeHtmlFile(reportsPath + "gradesDistributionReport\\test.html", doc);
-        generatePDF(reportsPath + "gradesDistributionReport\\test.html", reportsPath + "gradesDistributionReport\\test.pdf");
-    }
 
     private void generateReport1Chart(Stage stage ,ArrayList<String> grades , double[] numberOfStudents) throws IOException {
         stage.setTitle("Student Grades");
@@ -162,7 +147,6 @@ public class ReportsHandler {
 
         XYChart.Series series1 = new XYChart.Series();
         bc.setLegendVisible(false);
-//        series1.setName("2003");
         int maxIndex = 0 ;
         int max = 0  ;
         for(int gradeIndex = 0 ;  gradeIndex<grades.size() ; gradeIndex++) {
@@ -197,7 +181,6 @@ public class ReportsHandler {
         stage.show();
 
         WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
-        ImageView imageView = new ImageView(snapShot);
         ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(reportsPath+"report1\\GradesDistributionHistogram.png"));
     }
 
@@ -273,7 +256,6 @@ public class ReportsHandler {
         String templateBodyHtml = doc.select("div#template").html() ;
         System.out.println(templateBodyHtml);
 
-//        doc.select("table.t2").remove() ;
         for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
             if(formIndex>0) {
                 doc.select("table").last().after(pageBreakHtml);
@@ -283,9 +265,6 @@ public class ReportsHandler {
             }
             fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
             ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
-//        ArrayList<ArrayList<ArrayList<String>>> statsTables = new ArrayList<ArrayList<ArrayList<String>>>() ;
-//        statsTables.add( generateFakeTable(10 , 11) );
-//        statsTables.add(generateFakeTable(40 , 11)) ;
             int questionIndex = 0;
             int remainingRows = ROWS_IN_FIRST_PAGE;
             for (ArrayList<ArrayList<String>> table : statsTables) {
@@ -319,7 +298,6 @@ public class ReportsHandler {
                     int numberOfInsertedRows = endIndex - startIndex;
                     remainingRows -= numberOfInsertedRows;
                     if (remainingRows < MINIMUM_REMAINING_ROWS && endIndex != table.size()) {
-                        //TODO insert page break
                         doc.select("table").last().after(pageBreakHtml);
                         //insert a new table in the new page
                         doc.select("div.page-break").last().after(tableHtml);
@@ -330,7 +308,6 @@ public class ReportsHandler {
                     endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, endIndex + remainingRows);
                 } while (startIndex != endIndex);
                 questionIndex += table.size();
-//            break;
             }
         }
         writeHtmlFile(reportsPath+"report2\\test.html" , doc);
@@ -340,7 +317,6 @@ public class ReportsHandler {
    public void generateReport3() throws IOException {
        File file = new File(report3TemplatePath);
        Document doc = Jsoup.parse(file, "UTF-8");
-//       System.out.println(doc.body().html());
 
        Map<String, String > report3Stats = Statistics.report3Stats() ;
 
@@ -467,7 +443,6 @@ public class ReportsHandler {
 
        for(int choiceIndex =0 ; choiceIndex<questionChoices.size() ; choiceIndex++) {
            String responseClass = responsePercentagesWithClasses.get(choiceIndex).split(";")[1] ;
-//           ".data"+choiceIndex+".chart-bar"
            Node n = bc.lookup(".data"+choiceIndex+".chart-bar");
            if(responseClass.length()<2)
                responseClass = "normal";
@@ -485,9 +460,7 @@ public class ReportsHandler {
        stage.show();
 
        WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
-       ImageView imageView = new ImageView(snapShot);
        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(reportsPath+"report5\\Q1stats.png"));
-
 
    }
 
@@ -503,6 +476,9 @@ public class ReportsHandler {
        final int  ROWS_OF_MAIN_HEADER = 8 ;
        final int  ROWS_OF_TABLE_HEADER = 6 ;
 
+       ArrayList<Group> groups = CSVHandler.getDetectedGroups();
+       int groupIndex = 0 ;
+       int nextGroupTableIndex = groups.get(groupIndex).getqCount()-1 ;
        for (int formIndex = 0 ; formIndex <Statistics.getNumberOfForms() ; formIndex++) {
            ArrayList<ArrayList<ArrayList<String>>> tables = Statistics.report5stats(formIndex);
 
@@ -546,8 +522,6 @@ public class ReportsHandler {
 
        writeHtmlFile(reportsPath+"report5\\test.html" , doc);
        generatePDF(reportsPath + "report5\\test.html", reportsPath + "report5\\test.pdf");
-
-
 
    }
 

@@ -205,12 +205,6 @@ public class Statistics {
             System.out.println(entry.getKey() + " : " + entry.getValue());
         }
     }
-//    private static void printMap (Map<String , Integer> map ) {
-//        System.out.println("Map Data");
-//        for(Map.Entry<String , Integer> entry : map.entrySet()) {
-//            System.out.println(entry.getKey() + " : " + entry.getValue());
-//        }
-//    }
 
     private static void printTable (ArrayList<ArrayList<String>> table) {
         System.out.println("Table Data: ");
@@ -310,78 +304,6 @@ public class Statistics {
     }
 
 
-
-    public static void simulateUI(){
-
-        //fill student names
-        studentNames = new ArrayList<String>() ;
-        studentNames.add("Walid");
-        studentNames.add("youssef");
-        studentNames.add("ahemd") ;
-
-        //fill student ids
-        studentIDs = new ArrayList<String>() ;
-        studentIDs.add("1234") ;
-        studentIDs.add("5678") ;
-        studentIDs.add("9999") ;
-
-        //fill questionNames
-        questionNames = new ArrayList<String>() ;
-        questionNames.add("Question1") ;
-        questionNames.add("Question2") ;
-        questionNames.add("Question3") ;
-        questionNames.add("Question4") ;
-        questionNames.add("Question5") ;
-
-        //fill question Weights
-        questionWeights = new ArrayList<ArrayList<Double>>() ;
-        ArrayList<Double> form1Wieghts = new ArrayList<Double>() ;
-        form1Wieghts.add(1.0) ; form1Wieghts.add(1.0) ;form1Wieghts.add(2.0) ;form1Wieghts.add(2.0) ;form1Wieghts.add(0.5) ;
-
-        ArrayList<Double> form2Wieghts = new ArrayList<Double>() ;
-        form2Wieghts.add(1.0) ; form2Wieghts.add(1.0) ;form2Wieghts.add(2.0) ;form2Wieghts.add(1.0) ;form2Wieghts.add(2.0) ;
-
-        questionWeights.add(form1Wieghts);
-        questionWeights.add(form2Wieghts) ;
-
-
-        //fill correctAnswers
-        correctAnswers = new ArrayList<ArrayList<String>>();
-        ArrayList<String> form1Answers = new ArrayList<String>( );
-        form1Answers.add("A");form1Answers.add("B");form1Answers.add("A");form1Answers.add("C");form1Answers.add("A");
-
-        ArrayList<String> form2Answers = new ArrayList<String>( );
-        form2Answers.add("A");form2Answers.add("B");form2Answers.add("A");form2Answers.add("C");form2Answers.add("D");
-
-        correctAnswers.add(form1Answers);
-        correctAnswers.add(form2Answers) ;
-
-        //fill student forms
-        studentForms = new ArrayList<Integer>() ;
-        studentForms.add(0) ;
-        studentForms.add(1) ;
-        studentForms.add(0) ;
-
-        //fill student answers
-        studentAnswers = new ArrayList<ArrayList<String>>() ;
-        ArrayList<String>answer1 = new ArrayList<String>() ;
-        answer1.add("A") ; answer1.add("B") ; answer1.add("C") ; answer1.add("C") ; answer1.add("A") ;
-
-        ArrayList<String>answer2= new ArrayList<String>() ;
-        answer2.add("A") ; answer2.add("B") ; answer2.add("C") ; answer2.add("C") ; answer2.add("D") ;
-
-        ArrayList<String>answer3= new ArrayList<String>() ;
-        answer3.add("D") ; answer3.add("B") ; answer3.add("C") ; answer3.add("C") ; answer3.add("D") ;
-
-        studentAnswers.add(answer1)  ;
-        studentAnswers.add(answer2) ;
-        studentAnswers.add(answer3) ;
-
-
-
-    }
-
-
     //helper functions
     private static void calcformAnswerStats(ArrayList<ArrayList<Double>> formAnswerStats , int formIndex){
 
@@ -458,7 +380,6 @@ public class Statistics {
 
     public static double calcKr21 (double mean , double var , int n) {
 
-//         [n/(n-1) * [1-(M*(n-M)/(n*Var))]
         return  n/(n-1) * ( 1 - (mean * (n - mean) / (n * var))) ;
     }
 
@@ -527,8 +448,6 @@ public class Statistics {
         return calcGeneralStats(studentScores , sum(wieghts), questionsChoices.size() )  ;
 
     }
-
-
     private static void  initPointBiserialTables ()  {
 
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
@@ -575,8 +494,6 @@ public class Statistics {
         double pointBiserial =  pearsonsCorrelation.correlation(totalVector , questionVector) ;
         return Double.isNaN(pointBiserial)?0:pointBiserial;
     }
-
-    
 
     private static double calcPrecentOfSolvers(double startPercent , double endPercent , int formIndex , int questionIndex ) {
         int totalNumberOfStudents = formsScors.get(formIndex).size();
@@ -646,7 +563,6 @@ public class Statistics {
             tableRow.add(format.format(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex) *100) +"%");
             tableRow.add(format.format(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)*100) +"%");
             table.add(tableRow);
-//            tableRow.add()
         }
         tables.add(table) ;
 
@@ -657,7 +573,6 @@ public class Statistics {
     public static ArrayList<ArrayList<ArrayList<String>>> report5stats (int formIndex ){
 
         DecimalFormat format = new DecimalFormat("0.#");
-        DecimalFormat format2 = new DecimalFormat("0.##") ;
         int numberOfStudents = studentScores.size();
 
 
@@ -694,19 +609,6 @@ public class Statistics {
         return tables ;
     }
 
-//    private static ArrayList<String> getIdentifierArray() {
-//        ArrayList<String> autoIdentifierArray = new ArrayList<String>() ;
-//        for(int i = 0 ; i < studentScores.size() ; i++) {
-//            autoIdentifierArray.add(String.valueOf(i) );
-//        }
-//        if(identifierMode == IDMODE)
-//            return studentIDs ;
-//        else if (identifierMode == NAMEMODE)
-//            return studentNames ;
-//        else
-//            return autoIdentifierArray ;
-//    }
-
 
     private static String getGrade(double scorePrecentage) {
         for (int gradeIndex = 0 ; gradeIndex < grades.size() ; gradeIndex ++) {
@@ -718,7 +620,6 @@ public class Statistics {
     public static ArrayList<ArrayList<String>> report4Stats( ){
         DecimalFormat format = new DecimalFormat("0.#");
 
-//        ArrayList<String> identifierArray = getIdentifierArray() ;
         ArrayList<ArrayList<String>> statsTable = new ArrayList<ArrayList<String>>();
 
         double[] weights = questionWeights.get(0).stream().mapToDouble(d -> d).toArray() ;
@@ -746,7 +647,6 @@ public class Statistics {
         meanRow.add(format.format(meanScorePercentage*100) +"%") ;
 
         statsTable.add(meanRow);
-//        printTable(statsTable);
         return statsTable ;
     }
 
@@ -787,17 +687,6 @@ public class Statistics {
             tableRow.add(format.format( (double) gradeCount/(double)numberOfStudents *100) + "%");
             statsTable.add(tableRow);
         }
-//
-//        for(Map.Entry<String , Integer> entry : gradesCount.entrySet()) {
-//            ArrayList<String>tableRow  = new ArrayList<>() ;
-//            tableRow.add(entry.getKey());
-//            tableRow.add()
-////            System.out.println(entry.getKey() + " : " + entry.getValue());
-//        }
-
-
-
-        printTable(statsTable);
         return statsTable ;
     }
 

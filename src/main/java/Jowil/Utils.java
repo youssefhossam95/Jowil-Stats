@@ -46,4 +46,13 @@ public class Utils {
         return matrixOut;
     }
 
+    public static ArrayList<ArrayList<String>> cloneTable (ArrayList<ArrayList<String>> table ) {
+        ArrayList<ArrayList<String>> clonedTable = new ArrayList<>() ;
+        for(ArrayList<String>tableRow:table) {
+            ArrayList<String> clonedRow = (ArrayList<String>)tableRow.clone();
+            clonedTable.add(clonedRow) ;
+        }
+        return clonedTable ;
+    }
+
 }
