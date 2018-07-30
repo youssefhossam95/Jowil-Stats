@@ -9,7 +9,9 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation ;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -23,20 +25,34 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
-        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//
+//
+//        final String report2TemplatePath = reportsPath + "report5\\test.html";
+//
+//        File file = new File(report2TemplatePath);
+//        Document doc = Jsoup.parse(file, "UTF-8");
+//
+////        doc.select("div#footer").remove();
+//        doc.select("p.group-name").last().select("span").last().text("hi");
+//        String templateBodyHtml = doc.select("p.group-name").last().select("span").last().text();
+//
+//        System.out.println(templateBodyHtml);
 
 
-        final String report2TemplatePath = reportsPath + "report5\\test.html";
+        String filePath = ".\\src\\test\\TestCSVs\\welloAnswerKeys.csv" ;
+        BufferedReader input = new BufferedReader(new FileReader(filePath));
+        String line ;
+        ArrayList<ArrayList<String>> csvRows = new ArrayList<>();
 
-        File file = new File(report2TemplatePath);
-        Document doc = Jsoup.parse(file, "UTF-8");
-
-//        doc.select("div#footer").remove();
-        doc.select("p.group-name").last().select("span").last().text("hi");
-        String templateBodyHtml = doc.select("p.group-name").last().select("span").last().text();
-
-        System.out.println(templateBodyHtml);
-
+        while( (line = input.readLine()) != null ) {
+            String[] row = line.split(",") ;
+            ArrayList<String> rowList = new ArrayList<String>() ;
+            for(int i = 0 ; i < row.length ; i++)
+                rowList.add(row[i]);
+            csvRows.add(rowList);
+        }
+        System.out.println(csvRows);
 
 
 //        DecimalFormat format = new DecimalFormat("0.##");

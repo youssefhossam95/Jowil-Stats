@@ -19,7 +19,7 @@ public class Report5 extends Report {
     public Report5(){
         workSpacePath = reportsPath + "report5\\" ;
         templatePath = workSpacePath + "report5Template.html";
-        outputFileName = "test" ;
+        outputFileName = "Report5" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
 
@@ -118,7 +118,7 @@ public class Report5 extends Report {
         }
 
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath, workSpacePath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath, outputPdfFolderPath+outputFileName+".pdf");
 
     }
 

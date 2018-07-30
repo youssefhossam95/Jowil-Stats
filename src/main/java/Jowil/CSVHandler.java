@@ -541,6 +541,21 @@ public class CSVHandler {
         return s.toLowerCase().equals(s);
     }
 
+    public static ArrayList<ArrayList<String>> readCsvFile (String filePath) throws IOException {
+        BufferedReader input = new BufferedReader(new FileReader(filePath));
+        String line ;
+        ArrayList<ArrayList<String>> csvRows = new ArrayList<>();
+
+        while( (line = input.readLine()) != null ) {
+            String[] row = line.split(",") ;
+            ArrayList<String> rowList = new ArrayList<String>() ;
+            for(int i = 0 ; i < row.length ; i++)
+                rowList.add(row[i]);
+            csvRows.add(rowList);
+        }
+        return csvRows ;
+    }
+
 
 
 

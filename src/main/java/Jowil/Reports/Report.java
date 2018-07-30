@@ -15,6 +15,7 @@ abstract public class Report {
 
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
+    protected final String outputPdfFolderPath  = ".\\src\\main\\resources\\pdfReports\\" ;
     protected String workSpacePath;
     protected String outputFileName ;
     protected String pdfHtmlPath ;
