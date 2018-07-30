@@ -49,6 +49,41 @@
             /* padding-right: 50px ;   */
         }
 
+        .group-name {
+            line-height: 0.5;
+            text-align: center;
+        }
+
+        .group-name span {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 50px;
+
+        }
+
+        .group-name span:before,
+        .group-name span:after {
+            content: "";
+            position: absolute;
+            height: 1px;
+            border-bottom: 2px solid #08436b;
+            /* border-top: 1px solid white; */
+            top: 0;
+            width: 575px;
+            padding-top: 4px;
+
+        }
+
+        .group-name span:before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        .group-name span:after {
+            left: 100%;
+            margin-left: 15px;
+        }
+
         .divTitle {
             top: 28px;
             margin-left: 5%;
@@ -67,7 +102,7 @@
 
         th {
             border-width: 0px;
-            background-color: #dfdfdf;
+            background-color: #efefef;
             border-style: solid;
             border-top-width: 2px;
             border-top-color: #08436b;
@@ -175,6 +210,22 @@
         .gray-row{ 
             background-color: #efefef;
         }
+
+
+        .line {
+            width: 90%;
+            height: 12px;
+            border-bottom: 2px solid #08436b;;
+            text-align: center;
+            margin: auto;
+            margin-bottom: 50px
+        }
+
+        .group-title {
+            background-color: white;
+            padding: 0 15px; 
+            font-weight: bold;
+        }
     </style> 
  </head> 
  <body> 
@@ -202,8 +253,11 @@
     <span class=" right"> Wrong Answer</span> 
    </div> 
    <div class="wrapperSmall"> 
-    <span class="left" style="background-color: #64686b;margin-bottom:50px"></span> 
+    <span class="left" style="background-color: #64686b;margin-bottom:100px"></span> 
     <span class=" right"> Distractor</span> 
+   </div> 
+   <div class="line"> 
+    <span class="group-title">Q</span> 
    </div> 
    <div class="wrapper"> 
     <span class="first"> 
@@ -384,15 +438,22 @@
          </div></td> 
        </tr> 
       </tbody> 
-     </table> </span> 
-    <span class="second"> 
+     </table> </span>  
+   </div>
+   <div class="page-break"> 
+   </div>
+   <div class="line"> 
+    <span class="group-title">TF</span> 
+   </div>
+   <div class="wrapper"> 
+    <span class="first"> 
      <div class="tableTitle">
       TF1
      </div> 
      <table class="t"> 
       <tbody> 
        <tr class="header-row"> 
-        <th>Response2</th> 
+        <th>Response</th> 
         <th>Count</th> 
         <th>Percent</th> 
         <th width="30%"></th> 
@@ -480,16 +541,14 @@
        </tr> 
       </tbody> 
      </table> </span> 
-   </div>
-   <div class="wrapper"> 
-    <span class="first"> 
+    <span class="second"> 
      <div class="tableTitle">
       TF2
      </div> 
      <table class="t"> 
       <tbody> 
        <tr class="header-row"> 
-        <th>Response</th> 
+        <th>Response2</th> 
         <th>Count</th> 
         <th>Percent</th> 
         <th width="30%"></th> 
@@ -577,14 +636,16 @@
        </tr> 
       </tbody> 
      </table> </span> 
-    <span class="second"> 
+   </div>
+   <div class="wrapper"> 
+    <span class="first"> 
      <div class="tableTitle">
       TF3
      </div> 
      <table class="t"> 
       <tbody> 
        <tr class="header-row"> 
-        <th>Response2</th> 
+        <th>Response</th> 
         <th>Count</th> 
         <th>Percent</th> 
         <th width="30%"></th> 
@@ -671,7 +732,7 @@
          </div></td> 
        </tr> 
       </tbody> 
-     </table> </span> 
+     </table> </span>  
    </div>
    <div class="page-break"> 
    </div>
@@ -687,8 +748,11 @@
     <span class=" right"> Wrong Answer</span> 
    </div> 
    <div class="wrapperSmall"> 
-    <span class="left" style="background-color: #64686b;margin-bottom:50px"></span> 
+    <span class="left" style="background-color: #64686b;margin-bottom:100px"></span> 
     <span class=" right"> Distractor</span> 
+   </div> 
+   <div class="line"> 
+    <span class="group-title">Q</span> 
    </div> 
    <div class="wrapper"> 
     <span class="first"> 
@@ -869,15 +933,22 @@
          </div></td> 
        </tr> 
       </tbody> 
-     </table> </span> 
-    <span class="second"> 
+     </table> </span>  
+   </div>
+   <div class="page-break"> 
+   </div>
+   <div class="line"> 
+    <span class="group-title">TF</span> 
+   </div>
+   <div class="wrapper"> 
+    <span class="first"> 
      <div class="tableTitle">
       TF1
      </div> 
      <table class="t"> 
       <tbody> 
        <tr class="header-row"> 
-        <th>Response2</th> 
+        <th>Response</th> 
         <th>Count</th> 
         <th>Percent</th> 
         <th width="30%"></th> 
@@ -965,16 +1036,14 @@
        </tr> 
       </tbody> 
      </table> </span> 
-   </div>
-   <div class="wrapper"> 
-    <span class="first"> 
+    <span class="second"> 
      <div class="tableTitle">
       TF2
      </div> 
      <table class="t"> 
       <tbody> 
        <tr class="header-row"> 
-        <th>Response</th> 
+        <th>Response2</th> 
         <th>Count</th> 
         <th>Percent</th> 
         <th width="30%"></th> 
@@ -1062,14 +1131,16 @@
        </tr> 
       </tbody> 
      </table> </span> 
-    <span class="second"> 
+   </div>
+   <div class="wrapper"> 
+    <span class="first"> 
      <div class="tableTitle">
       TF3
      </div> 
      <table class="t"> 
       <tbody> 
        <tr class="header-row"> 
-        <th>Response2</th> 
+        <th>Response</th> 
         <th>Count</th> 
         <th>Percent</th> 
         <th width="30%"></th> 
@@ -1156,7 +1227,7 @@
          </div></td> 
        </tr> 
       </tbody> 
-     </table> </span> 
+     </table> </span>  
    </div> 
   </div>  
  </body>
