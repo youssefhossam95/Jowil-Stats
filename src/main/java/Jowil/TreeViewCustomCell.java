@@ -62,7 +62,6 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 label.prefHeightProperty().bind(checkBox.heightProperty());
                 cellBox.getChildren().addAll(checkBox, label);
 
-                // We set the cellBox as the graphic of the cell.
                 setGraphic(cellBox);
                 setText(null);
 
@@ -73,8 +72,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 cellBox.setAlignment(Pos.CENTER_LEFT);
                 Label label = new Label(item);
                 this.setStyle("-fx-font-size:15;-fx-font-weight: bold;-fx-text-fill:#5e5c5c");
-                Node plusIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size("1.1em").styleClass("error").build();
-                plusIcon.getStyleClass().add("groupPlusIcon");
+                Node plusIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size("1.1em").styleClass("groupPlusIcon").build();
                 StackPane iconPane=new StackPane();
                 iconPane.getChildren().add(plusIcon);
 

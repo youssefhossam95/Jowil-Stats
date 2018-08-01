@@ -1,0 +1,22 @@
+/* .default-color0.chart-bar { -fx-bar-fill: #08436B }
+.data11.chart-bar {-fx-bar-fill: #2bdb34} */
+.axis-label { -fx-font-size: 1.9em ; }
+.chart-title {
+    -fx-font-size: 2em;
+  }
+
+  .axis{
+    -fx-tick-label-font-size: 1.3em;
+  }
+
+  .normal { 
+    -fx-bar-fill:#08436B 
+  }
+
+  .largest { 
+      -fx-bar-fill:#2bdb34 ; 
+  }
+  .lowest { 
+    -fx-bar-fill:red ; 
+  }
+  

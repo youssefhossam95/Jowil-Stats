@@ -1,0 +1,577 @@
+<html>
+ <head> 
+  <style type="text/css">
+        @page {
+
+            margin: 25px 25px 40px 25px;
+            /* size: letter portrait; */
+            size: A4 landscape;
+            /* @top-left {
+content: element(pageHeader);
+} */
+            @bottom-left {
+                content: element(footerLeft);
+            }
+            @bottom-right {
+                content: element(footerRight);
+            }
+            @bottom-center {
+                content: element(footerCenter);
+            }
+        }
+
+        /* #pageHeader{
+position: running(pageHeader);
+} */
+
+        #pagenumber:before {
+            content: counter(page);
+        }
+
+        #pagecount:before {
+            content: counter(pages);
+        }
+
+        #footerCenter {
+            position: running(footerCenter);
+            text-align: center;
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+
+        }
+
+        #footerLeft {
+            position: running(footerLeft);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: left;
+        }
+
+        #footerRight {
+            position: running(footerRight);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: right;
+            /* padding-right: 50px ;   */
+        }
+
+
+        .divTitle {
+            top: 28px;
+            margin-left: 5%;
+            margin-right: 5%;
+            height: 30px;
+            background-color: #2e6a92;
+            margin-bottom: 100px;
+            text-align: center;
+
+        }
+
+        .t {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-left: 5%;
+            width: 90%;
+            margin-bottom: 50px;
+        }
+
+        .t2 {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-left: 5%;
+            width: 90%;
+            margin-bottom: 50px;
+        }
+
+        .t2 tr {
+            line-height: 16px;
+        }
+
+        th {
+            border-width: 1px;
+            border-color: #08436b;
+            border-style: solid;
+            text-align: center;
+        }
+
+        td {
+            border-width: 1px;
+            border-color: #08436b;
+            border-style: solid;
+            text-align: center;
+        }
+
+        .t td {
+            text-align: left;
+        }
+
+        .grayRow {
+            background-color: #efefef;
+        }
+        .gold {
+            background-color:  #ffe44d;
+        }
+
+
+        .testawy {
+            color: red;
+        }
+
+        .noBorder {
+            border-width: 0px;
+            text-align: left;
+            width: 22%;
+        }
+
+        .tdSpecial {
+            border-width: 0px;
+            text-align: center;
+            width: 8%;
+        }
+
+        .wrapper {
+            width: 500px;
+            margin-left: 5%;
+            overflow: hidden;
+            /* will contain if #first is longer than #second */
+        }
+
+        .first {
+            width: 12px;
+            height: 12px;
+            float: left;
+            /* add this */
+            margin-right: 8px;
+            margin-top: 2px;
+            background-color: #f87878;
+        }
+
+        .second {
+            width: 300px;
+            overflow: hidden;
+            /* if you don't want #second to wrap below #first */
+            vertical-align: top;
+            font-weight: bold;
+        }
+
+        .firstRow {
+            border-top-width: 2px;
+            border-top-color: #08436b;
+        }
+
+        .green {
+            font-weight: bold;
+            background-color: #71e08d;
+        }
+
+        .red {
+            font-weight: bold;
+            background-color: #f87878;
+        }
+
+        .grey {}
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .second-page-header {
+            margin-top: 20px;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div id="footerLeft">
+    25/7/2018 
+  </div> 
+  <div id="footerRight">
+   Page 
+   <span id="pagenumber"></span> of 
+   <span id="pagecount"></span> 
+  </div> 
+  <div id="footerCenter">
+   Condensed Test Report
+  </div> 
+  <div id="template"> 
+   <div class="divTitle second-page-header"> 
+    <h2 style="color:white"> Form 1 Condensed Test Report </h2> 
+   </div> 
+   <table class="t"> 
+    <tbody>
+     <tr> 
+      <th class="noBorder firstRow"> Number of Students </th> 
+      <td class="tdSpecial firstRow NumberOfStudents">10</td> 
+      <th class="noBorder firstRow "> Mean </th> 
+      <td class="tdSpecial firstRow Mean">5.1</td> 
+      <th class="noBorder firstRow "> Lowest Score </th> 
+      <td class="tdSpecial firstRow LowestScore">4</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Max Possible Score </th> 
+      <td class="tdSpecial MaxPossibleScore">6</td> 
+      <th class="noBorder"> Median </th> 
+      <td class="tdSpecial Median">5</td> 
+      <th class="noBorder "> Highest Score </th> 
+      <td class="tdSpecial HighestScore">6</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Score Range </th> 
+      <td class="tdSpecial ScoreRange">2</td> 
+      <th class="noBorder"> Standard Deviation </th> 
+      <td class="tdSpecial StandardDeviation">0.9</td> 
+      <th class="noBorder"> KR 20 </th> 
+      <td class="tdSpecial Kuder-RichardsonFormula20">0.1</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <div class="wrapper"> 
+    <span class="first"></span> 
+    <span class=" second"> Distractor</span> 
+   </div> 
+   <div class="wrapper"> 
+    <span class="first" style="background-color: #ffe44d"></span> 
+    <span class=" second"> Non Distractor </span> 
+   </div> 
+   <div class="wrapper" style="margin-bottom: 10px"> 
+    <span class="first" style="background-color: #71e08d"></span> 
+    <span class=" second"> Correct Answer</span> 
+   </div> 
+   <table class="t2"> 
+    <tbody>
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="5" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>a</th> 
+      <th>b</th> 
+      <th>c</th> 
+      <th>d</th> 
+      <th>e</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">1</td> 
+      <td class=" ">Q1</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">90</td> 
+      <td class=" ">10</td> 
+      <td class=" ">0.44</td> 
+      <td class=" ">90%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">2</td> 
+      <td class=" ">Q2</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">3</td> 
+      <td class=" ">Q3</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" ">10</td> 
+      <td class=" green">80</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.66</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr> 
+    </tbody>
+   </table>
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="9" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>1</th> 
+      <th>2</th> 
+      <th>3</th> 
+      <th>4</th> 
+      <th>5</th> 
+      <th>6</th> 
+      <th>7</th> 
+      <th>8</th> 
+      <th>9</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">4</td> 
+      <td class=" ">TF1</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">90</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.04</td> 
+      <td class=" ">90%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">5</td> 
+      <td class=" ">TF2</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">70</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.6</td> 
+      <td class=" ">70%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">6</td> 
+      <td class=" ">TF3</td> 
+      <td class=" green">80</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.36</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr> 
+    </tbody> 
+   </table>
+   <div class="page-break"></div>
+   <div class="divTitle second-page-header"> 
+    <h2 style="color:white">Form 2 Condensed Test Report</h2> 
+   </div> 
+   <table class="t"> 
+    <tbody> 
+     <tr> 
+      <th class="noBorder firstRow"> Number of Students </th> 
+      <td class="tdSpecial firstRow NumberOfStudents">10</td> 
+      <th class="noBorder firstRow "> Mean </th> 
+      <td class="tdSpecial firstRow Mean">5.4</td> 
+      <th class="noBorder firstRow "> Lowest Score </th> 
+      <td class="tdSpecial firstRow LowestScore">4</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Max Possible Score </th> 
+      <td class="tdSpecial MaxPossibleScore">6</td> 
+      <th class="noBorder"> Median </th> 
+      <td class="tdSpecial Median">5.5</td> 
+      <th class="noBorder "> Highest Score </th> 
+      <td class="tdSpecial HighestScore">6</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Score Range </th> 
+      <td class="tdSpecial ScoreRange">2</td> 
+      <th class="noBorder"> Standard Deviation </th> 
+      <td class="tdSpecial StandardDeviation">0.7</td> 
+      <th class="noBorder"> KR 20 </th> 
+      <td class="tdSpecial Kuder-RichardsonFormula20">-0.5</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <div class="wrapper"> 
+    <span class="first"></span> 
+    <span class=" second"> Distractor</span> 
+   </div> 
+   <div class="wrapper"> 
+    <span class="first" style="background-color: #ffe44d"></span> 
+    <span class=" second"> Non Distractor </span> 
+   </div> 
+   <div class="wrapper" style="margin-bottom: 10px"> 
+    <span class="first" style="background-color: #71e08d"></span> 
+    <span class=" second"> Correct Answer</span> 
+   </div> 
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="5" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>a</th> 
+      <th>b</th> 
+      <th>c</th> 
+      <th>d</th> 
+      <th>e</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">1</td> 
+      <td class=" ">Q1</td> 
+      <td class=" ">10</td> 
+      <td class=" green">80</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" ">0.3</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">2</td> 
+      <td class=" ">Q2</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">3</td> 
+      <td class=" ">Q3</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">90</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.7</td> 
+      <td class=" ">90%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr> 
+    </tbody> 
+   </table>
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="9" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>1</th> 
+      <th>2</th> 
+      <th>3</th> 
+      <th>4</th> 
+      <th>5</th> 
+      <th>6</th> 
+      <th>7</th> 
+      <th>8</th> 
+      <th>9</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">4</td> 
+      <td class=" ">TF1</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">80</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.3</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">5</td> 
+      <td class=" ">TF2</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">90</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">10</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.7</td> 
+      <td class=" ">90%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">6</td> 
+      <td class=" ">TF3</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr> 
+    </tbody> 
+   </table>  
+  </div>  
+ </body>
+</html>
