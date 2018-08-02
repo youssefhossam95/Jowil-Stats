@@ -161,6 +161,7 @@ public class CSVHandler {
         Statistics.setStudentAnswers(new ArrayList<ArrayList<String>>());
         Statistics.setStudentForms(new ArrayList<Integer>());
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
+        Statistics.setSubjMaxScores(new ArrayList<Double>());
 
 
         if (isHeadersExist) {//ignore headers

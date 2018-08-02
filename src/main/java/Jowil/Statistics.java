@@ -172,6 +172,8 @@ public class Statistics {
     public static Double getPassingPercent() {
         return  gradesLowerRange.get(1) ;
     }
+
+    public static Double getMaxScore(){ return maxScore ; }
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");
@@ -238,9 +240,15 @@ public class Statistics {
                     studentScore+= questionWeights.get(studentForms.get(i)).get(j) ;
                 }
             }
+            if(subjScores.size()!=0) {
+                ArrayList<Double> studentSubjScores = subjScores.get(i);
+                Double subjScore = sum(studentSubjScores.stream().mapToDouble(d -> d).toArray());
+                studentScore+=subjScore ;
+            }
             studentScores.add(studentScore) ;
         }
         printStudentScores();
+        initMaxScore();
     }
 
     public static void initFormsScores(){
@@ -304,8 +312,11 @@ public class Statistics {
 
     private static void initMaxScore() {
         double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
-        double[] subj = subjMaxScores.stream().mapToDouble(d -> d).toArray() ;
-        maxScore = sum(wieghts) + sum(subj) ;
+        maxScore = sum(wieghts) ;
+        if(subjMaxScores.size()!=0) {
+            double[] subj = subjMaxScores.stream().mapToDouble(d -> d).toArray();
+            maxScore += sum(subj) ;
+        }
 
     }
 
@@ -398,7 +409,7 @@ public class Statistics {
         return  n/(n-1) * ( 1 - (mean * (n - mean) / (n * var))) ;
     }
 
-    public static Map<String,String> calcGeneralStats (ArrayList<Double> studentScores , Double maxScore , int numberOfQuestions) {
+    public static Map<String,String> calcGeneralStats (ArrayList<Double> studentScores ,  int numberOfQuestions) {
         DecimalFormat format = new DecimalFormat("0.#");
         Map<String , String>  statsMap = new HashMap<String, String>() ;
 
@@ -460,7 +471,7 @@ public class Statistics {
     public static  Map<String ,String> report3Stats() {
 
         double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
-        return calcGeneralStats(studentScores , sum(wieghts), questionsChoices.size() )  ;
+        return calcGeneralStats(studentScores , questionsChoices.size() )  ;
 
     }
     private static void  initPointBiserialTables ()  {
@@ -529,7 +540,7 @@ public class Statistics {
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
         double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
-        return calcGeneralStats (formsScors.get(formIndex) , sum(wieghts),questionsChoices.size());
+        return calcGeneralStats (formsScors.get(formIndex) , questionsChoices.size());
     }
 
     public static ArrayList<ArrayList<ArrayList<String>>> report2TableStats (int formIndex) {
@@ -637,10 +648,8 @@ public class Statistics {
 
         ArrayList<ArrayList<String>> statsTable = new ArrayList<ArrayList<String>>();
 
-        double[] weights = questionWeights.get(0).stream().mapToDouble(d -> d).toArray() ;
         double[] scores = studentScores.stream().mapToDouble(d -> d).toArray();
 
-        double maxScore = sum(weights);
 
 
         for(int studentIndex  = 0 ; studentIndex < studentScores.size() ; studentIndex++ ) {
@@ -673,9 +682,6 @@ public class Statistics {
 
         ArrayList<ArrayList<String>> statsTable = new ArrayList<ArrayList<String>>();
 
-        double[] weights = questionWeights.get(0).stream().mapToDouble(d -> d).toArray() ;
-
-        Double maxScore = sum(weights) ;
         int numberOfStudents = studentScores.size();
 
         Map<String, Integer> gradesCount = new HashMap<>();
