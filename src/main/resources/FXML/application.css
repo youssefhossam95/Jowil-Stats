@@ -212,3 +212,26 @@ JFXCheckBox {
      -fx-stroke: white;
 }
 
+.gradesPlusIcon{
+-fx-fill:green
+}
+
+.gradesPlusIcon:hover{
+-fx-fill:#87CEEB;
+}
+
+.gradesMinusIcon{
+-fx-fill:red;
+}
+
+.gradesMinusIcon:hover{
+-fx-fill: #ff4d4d;
+}
+
+.trashIcon{
+-fx-fill:#989898;
+}
+
+.trashIcon:hover{
+-fx-fill:#87CEEB;
+}
