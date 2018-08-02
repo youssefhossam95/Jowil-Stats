@@ -2,19 +2,22 @@ package Jowil;
 
 import com.jfoenix.controls.JFXComboBox;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
+
+import java.io.*;
+import java.util.ArrayList;
 
 
 public class GradeBoundariesController extends Controller{
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml","Grade Boundaries and Report Generation",1.25,1.25,true,back);
+        super("gradeBoundaries.fxml","Grading Scale and Report Generation",1.25,1.25,true,back);
     }
 
     @FXML
@@ -45,6 +48,11 @@ public class GradeBoundariesController extends Controller{
 
 
     int gradesConfigComboSelectedIndex;
+    private static ArrayList<Node> gradesHBoxes;
+    private  final String standardLettersGradingFile="Standard Letters Scale.jgc",
+            allLettersGradingFile="All Letters Scale.jgc",egyptianGradingFile1="Egyptian Scale 1.jgc"
+            ,egyptianGradingFile2="Egyptian Scale 2.jgc",gradesConfigDirPath=getClass().getResource("/GradeConfigs").toExternalForm();
+
 
 
 
@@ -129,6 +137,8 @@ public class GradeBoundariesController extends Controller{
                         };
                         return cell;
                     });
+
+
     }
 
     private void initDeleteConfigButton(){
@@ -141,9 +151,64 @@ public class GradeBoundariesController extends Controller{
         reportsConfigTitle.setFont(new Font("Arial", headersFontSize));
     }
 
-    private void deleteCurrentConfig(){
+
+    private static void initGradesVBox(){
+        gradesHBoxes=new ArrayList<Node>();
 
     }
 
+
+    private void deleteCurrentConfig(){
+
+
+    }
+
+    public static void addNextGrade(int callingIndex){
+        int newIndex=callingIndex+1;
+        gradesHBoxes.add(newIndex,new gradeHBox(newIndex,"Grade "+Integer.toString(newIndex+1),"50.0"));
+    }
+
+    public static void deleteGrade(int callingIndex){
+        gradesHBoxes.remove(callingIndex);
+    }
+
+    private void loadGradeConfigs(){
+
+        File configsDir = new File(gradesConfigDirPath);
+        File[] directoryListing = configsDir.listFiles();
+        if (directoryListing != null) {
+            for (File file : directoryListing) {
+                String fileName=file.getName().substring(0,file.getName().indexOf(".jgc"));
+                gradesConfigCombo.getItems().add(fileName);
+                loadGradeConfigFile(file.getPath(),fileName);
+
+            }
+            return;
+        } else {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Configurations Error",
+                    "Error in loading Grade Boundaries Configurations");
+            return;
+        }
+    }
+
+
+    private void loadGradeConfigFile(String filePath,String fileName){
+
+        BufferedReader input;
+        try {
+             input= new BufferedReader(new FileReader(filePath));
+
+            String line;
+            while ((line = input.readLine()) != null) {
+                String[] row = line.split(",",-1);
+
+            }
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Configuration loading Error",
+                    "Error in loading \""+fileName+"\" grade configuration.");
+            return;
+        }
+
+    }
 
 }
