@@ -1,6 +1,6 @@
 package Jowil;
 
-import Jowil.Reports.Report1;
+import Jowil.Reports.*;
 import com.lowagie.text.DocumentException;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
@@ -25,8 +25,8 @@ public class ReportChartsTest extends Application {
         String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
 
 
-        CSVHandler.setFilePath(inputFilesFolderPath+"wello.csv");
-        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"welloAnswerKeys.csv");
+        CSVHandler.setFilePath(inputFilesFolderPath+"StudentAnswers.csv");
+        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv");
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
@@ -43,8 +43,18 @@ public class ReportChartsTest extends Application {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
-        Report1 report1 = new Report1() ;
-        report1.generatePdfReport();
+        ArrayList<Report> reports = new ArrayList<>();
+        reports.add(new Report1()) ;
+        reports.add(new Report2()) ;
+        reports.add(new Report3());
+        reports.add(new Report4()) ;
+        reports.add(new Report5()) ;
+        ArrayList<Integer> formats = new ArrayList<>() ;
+        formats.add(ReportsHandler.HTML) ;
+        formats.add(ReportsHandler.PDF);
+
+        ReportsHandler reportsHandler = new ReportsHandler();
+        reportsHandler.generateReports(reports , formats);
 
     }
 

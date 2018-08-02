@@ -44,6 +44,7 @@ public class Statistics {
     private static ArrayList<Double> gradesLowerRange; // list of the lower range of the grades assuming that the upper range is the lower range of the next grade
     private static ArrayList<String> studentIdentifier;
     private static String identifierName ="ID";
+
     private static ArrayList<Double> subjMaxScores;
     private static ArrayList<ArrayList<Double>> formsScors ;
     private static ArrayList<ArrayList<ArrayList<Integer>>> pointBiserialTables;
@@ -163,7 +164,13 @@ public class Statistics {
         return questionsChoices;
     }
 
+    public static int getNumberOfStudents (){
+        return studentScores.size() ;
+    }
 
+    public static Double getPassingPercent() {
+        return  gradesLowerRange.get(1) ;
+    }
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");

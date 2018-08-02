@@ -23,22 +23,19 @@ public class Report5 extends Report {
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
 
-    @Override
-    public void generateHtmlReport() throws IOException {
-
-    }
-
-    @Override
-    public void generatePdfReport() throws IOException, DocumentException {
+    private Document generatePdfHtml () throws IOException {
         File file = new File(templatePath);
         Document doc =  Jsoup.parse(file , "UTF-8") ;
+
+        updateTemplateDate(doc); // updates the date of the footer to the current date
+
         String wrapperHtml = doc.select("div.wrapper").outerHtml() ;
         String pageBreakHtml = "<div class='page-break'> </div>" ;
         String templateHtml = doc.select("div#template").html() ;
         String groupNameHtml = doc.select("div.line").outerHtml() ;
 //        doc.select("div.line").last().remove(); // remove the first line as it will be put by the function below
 
-        final int  NUMBER_OF_ROWS_IN_PAGE = 42 ;
+        final int  NUMBER_OF_ROWS_IN_PAGE = 41 ;
         final int  ROWS_OF_MAIN_HEADER = 12 ;
         final int  ROWS_OF_TABLE_HEADER = 6 ;
         final int  ROWS_OF_GROUP_NAME  = 6;
@@ -117,6 +114,21 @@ public class Report5 extends Report {
                 doc.select("span.second").last().remove() ;
         }
 
+        return doc ;
+//        writeHtmlFile(pdfHtmlPath , doc);
+    }
+
+    @Override
+    public void generateHtmlReport() throws IOException {
+        Document doc = generatePdfHtml() ;
+        doc.select("div#footer").remove() ;
+        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html" , doc);
+    }
+
+    @Override
+    public void generatePdfReport() throws IOException, DocumentException {
+
+        Document doc  = generatePdfHtml();
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath, outputPdfFolderPath+outputFileName+".pdf");
 

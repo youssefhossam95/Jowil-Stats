@@ -1,0 +1,261 @@
+<html>
+ <head> 
+  <style type="text/css">
+    @page {
+
+      margin: 50px 25px 40px 25px;
+      /* margin:0px ;  */
+      /* size: A4 landscape; */
+      @bottom-left {
+        content: element(footerLeft);
+      }
+      @bottom-right {
+        content: element(footerRight);
+      }
+      @bottom-center {
+        content: element(footerCenter);
+      }
+    }
+
+
+
+    #pagenumber:before {
+      content: counter(page);
+    }
+
+    #pagecount:before {
+      content: counter(pages);
+    }
+
+    #footerCenter {
+      position: running(footerCenter);
+      text-align: center;
+      border-top: 1px solid #08436b;
+      padding-top: 5px;
+
+    }
+
+    #footerLeft {
+      position: running(footerLeft);
+      border-top: 1px solid #08436b;
+      padding-top: 5px;
+      text-align: left;
+    }
+
+    #footerRight {
+      position: running(footerRight);
+      border-top: 1px solid #08436b;
+      padding-top: 5px;
+      text-align: right;
+      /* padding-right: 50px ;   */
+    }
+
+    .divTitle {
+      top: 28px;
+      margin-left: 5%;
+      margin-right: 5%;
+      height: 30px;
+      background-color: #08436b;
+      margin-bottom: 100px;
+
+
+    }
+
+    .tg {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-left: 5%;
+      width: 90%;
+      margin-bottom: 30px
+    }
+
+    .rightTable {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-left: 55%;
+      width: 40%;
+      margin-bottom: 0;
+    }
+
+    td {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      padding-bottom: 0.5%;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black;
+    }
+
+    th {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      padding: 0.1%;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black;
+      color: #7a807f
+    }
+
+    .tg-l711 {
+      border-width: 0px;
+      padding-right: 5%
+    }
+
+    .tg-i13m {
+      font-weight: bold;
+      border-width: 0;
+      border-bottom-width: 3px;
+      border-bottom-color: #08436b;
+      text-align: left
+    }
+  </style> 
+ </head> 
+ <body> 
+  <div id="footer"> 
+   <div id="footerLeft">
+    01/08/2018
+   </div> 
+   <div id="footerRight">
+    Page 
+    <span id="pagenumber"></span> of 
+    <span id="pagecount"></span> 
+   </div> 
+   <div id="footerCenter">
+     Test Statistics Report 
+   </div> 
+  </div> 
+  <div class="divTitle" style="text-align:center"> 
+   <h2 style="color:white"> Test Statistics Report </h2> 
+  </div> 
+  <table class="tg"> 
+   <tbody>
+    <tr> 
+     <th class="tg-i13m">Test Data</th> 
+     <th class="tg-i13m"></th> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711" style="padding-top:0.8%">Number Of Graded Questions</td> 
+     <td class="tg-l711" id="NumberOfGradedQuestions" style="text-align:right">20</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Maximum Possible Score</td> 
+     <td class="tg-l711" id="MaximumPossibleScore" style="text-align:right">20</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Benchmark</td> 
+     <td class="tg-l711" id="Benchmark" style="text-align:right">75</td> 
+    </tr> 
+   </tbody>
+  </table> 
+  <table class="tg"> 
+   <tbody>
+    <tr> 
+     <th class="tg-i13m">Basic Statistics</th> 
+     <th class="tg-i13m"></th> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711" style="padding-top:0.8%">Mean</td> 
+     <td class="tg-l711" id="Mean" style="text-align:right">17.3</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Mean Percent Score</td> 
+     <td class="tg-l711" id="MeanPercentScore" style="text-align:right">0.9</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Highest Score</td> 
+     <td class="tg-l711" id="HighestScore" style="text-align:right">20</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Lowest Score</td> 
+     <td class="tg-l711" id="LowestScore" style="text-align:right">14</td> 
+    </tr> 
+   </tbody>
+  </table> 
+  <table class="tg"> 
+   <tbody>
+    <tr> 
+     <th class="tg-i13m">Dispersion</th> 
+     <th class="tg-i13m"></th> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711" style="padding-top:0.8%">Standard Deviation</td> 
+     <td class="tg-l711" id="StandardDeviation" style="text-align:right">1.4</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Variance</td> 
+     <td class="tg-l711" id="Variance" style="text-align:right">1.9</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Range</td> 
+     <td class="tg-l711" id="Range" style="text-align:right">6</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Median</td> 
+     <td class="tg-l711" id="Median" style="text-align:right">17</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">25th Percentile</td> 
+     <td class="tg-l711" id="25thPercentile" style="text-align:right">16</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">75th Percentile</td> 
+     <td class="tg-l711" id="75thPercentile" style="text-align:right">18</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Interquartile Range</td> 
+     <td class="tg-l711" id="InterquartileRange" style="text-align:right">2</td> 
+    </tr> 
+   </tbody>
+  </table> 
+  <table class="tg"> 
+   <tbody>
+    <tr> 
+     <th class="tg-i13m">Confidence Intervals</th> 
+     <th class="tg-i13m"></th> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711" style="padding-top:0.8%">90%</td> 
+     <td class="tg-l711" id="90" style="text-align:right">16.9 - 17.6</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">95%</td> 
+     <td class="tg-l711" id="95" style="text-align:right">16.9 - 17.6</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">99%</td> 
+     <td class="tg-l711" id="99" style="text-align:right">16.7 - 17.8</td> 
+    </tr> 
+   </tbody>
+  </table> 
+  <table class="tg"> 
+   <tbody>
+    <tr> 
+     <th class="tg-i13m">Test Reliability</th> 
+     <th class="tg-i13m"></th> 
+    </tr> 
+    <!-- <tr>
+      <td class="tg-l711" style="padding-top:0.8%">Standard Error of Measurement
+      </td>
+      <td class="tg-l711" style="text-align:right">14.3</td>
+    </tr> --> 
+    <!-- <tr>
+      <td class="tg-l711">Cronbach's Alpha</td>
+      <td class="tg-l711" id="CronbachsAlpha" style="text-align:right">71.7%</td>
+    </tr> --> 
+    <tr> 
+     <td class="tg-l711">Kuder-Richardson Formula 20</td> 
+     <td class="tg-l711" id="Kuder-RichardsonFormula20" style="text-align:right">-0.1</td> 
+    </tr> 
+    <tr> 
+     <td class="tg-l711">Kuder-Richardson Formula 21</td> 
+     <td class="tg-l711" id="Kuder-RichardsonFormula21" style="text-align:right">-5</td> 
+    </tr> 
+   </tbody>
+  </table>  
+ </body>
+</html>

@@ -1,8 +1,6 @@
 package Jowil;
 
-import Jowil.Reports.Report1;
-import Jowil.Reports.Report2;
-import Jowil.Reports.Report5;
+import Jowil.Reports.*;
 import com.lowagie.text.DocumentException;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import junit.framework.TestCase;
@@ -38,16 +36,21 @@ public class StatisticsTest extends TestCase {
         TestUtils.setQuestionsWeights(Statistics.getQuestionNames().size() , Statistics.getNumberOfForms());
 
         TestUtils.fillGradeRanges() ;
-        Statistics.setStudentIdentifier(Statistics.getStudentIDs()) ;
+//        Statistics.setStudentIdentifier(TestUtils.generateAutoIds(Statistics.getNumberOfStudents())) ;
 //        Statistics.printBasicInfo();
         Statistics.initFormsScores();
         Jowil.Statistics.init();
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
-        Report5 report5 = new Report5() ;
-        report5.generatePdfReport();
+        ArrayList<Report> reports = new ArrayList<>();
+        reports.add(new Report1()) ;
+        ArrayList<Integer> formats = new ArrayList<>() ;
+        formats.add(ReportsHandler.HTML) ;
+        formats.add(ReportsHandler.PDF);
 
+        ReportsHandler reportsHandler = new ReportsHandler();
+        reportsHandler.generateReports(reports , formats);
     }
 
     public void tearDown() throws Exception {

@@ -15,14 +15,16 @@ public class Report3 extends Report {
     public Report3(){
         workSpacePath = reportsPath + "report3\\" ;
         templatePath = workSpacePath + "report3Template.html";
-        outputFileName = "test" ;
+        outputFileName = "Report3" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
 
-    @Override
-    public void generateHtmlReport() throws IOException {
+    public Document generatePdfHtml() throws IOException {
         File file = new File(templatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
+
+        updateTemplateDate(doc); // updates the date of the footer to the current date
+
 
         Map<String, String > report3Stats = Statistics.report3Stats() ;
 
@@ -54,16 +56,22 @@ public class Report3 extends Report {
         //Test Reliability
         doc.select("td#Kuder-RichardsonFormula20").first().text(report3Stats.get("Kuder-Richardson Formula 20")) ;
         doc.select("td#Kuder-RichardsonFormula21").first().text(report3Stats.get("Kuder-Richardson Formula 21")) ;
-
-        writeHtmlFile(pdfHtmlPath, doc);
+        return doc ;
+    }
+    @Override
+    public void generateHtmlReport() throws IOException {
+        Document doc = generatePdfHtml() ;
+        doc .select("div#footer").remove();
+        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html", doc);
 
     }
 
     @Override
     public void generatePdfReport() throws IOException, DocumentException {
 
-        generateHtmlReport();
-        generatePDF(pdfHtmlPath , workSpacePath+outputFileName+".pdf");
+        Document doc = generatePdfHtml();
+        writeHtmlFile(pdfHtmlPath , doc);
+        generatePDF(pdfHtmlPath , outputPdfFolderPath+outputFileName+".pdf");
 
     }
 

@@ -17,7 +17,7 @@ public class Report2 extends Report {
     public Report2(){
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
-        outputFileName = "test" ;
+        outputFileName = "Report2" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 
@@ -51,7 +51,36 @@ public class Report2 extends Report {
 
 
     @Override
-    public void generateHtmlReport() {
+    public void generateHtmlReport() throws IOException {
+
+        File file = new File(templatePath);
+        Document doc = Jsoup.parse(file, "UTF-8");
+        doc.select("div#footer").remove() ;
+
+        String tableHtml = doc.select("table.t2").last().outerHtml() ;
+        String templateBodyHtml = doc.select("div#template").html() ;
+
+        for (int formIndex = 0; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            if(formIndex>0) {
+                doc.select("table").last().after(templateBodyHtml);
+                doc.select("div.divTitle").addClass("second-page-header") ;
+                doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+            }
+            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
+
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
+            int questionIndex = 0;
+
+            for (ArrayList<ArrayList<String>> table : statsTables) {
+                if(questionIndex!=0)
+                   doc.select("table").last().after(tableHtml);
+                fillResponseFreqHeaders(doc, questionIndex);
+                String rowsHtml = createRowsHtml(table, ";grayRow", "");
+                doc.select("tr.bottom-header-row").last().after(rowsHtml);
+                questionIndex += table.size();
+            }
+        }
+        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html" , doc);
 
     }
 
@@ -60,6 +89,7 @@ public class Report2 extends Report {
         File file = new File(templatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
+        updateTemplateDate(doc); // updates the date of the footer to the current date
 
         final int ROWS_IN_BLANK_PAGE = 37 ;
         final int ROWS_IN_FIRST_PAGE = 18 ;
@@ -127,7 +157,7 @@ public class Report2 extends Report {
             }
         }
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath , workSpacePath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath , outputPdfFolderPath+outputFileName+".pdf");
 
     }
 

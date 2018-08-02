@@ -1,0 +1,864 @@
+<html>
+ <head> 
+  <style type="text/css">
+    @page {
+
+      margin: 50px 25px 40px 25px;
+      /* margin:0px ;  */
+      /* size: A4 landscape; */
+      @bottom-left {
+        content: element(footerLeft);
+      }
+      @bottom-right {
+        content: element(footerRight);
+      }
+      @bottom-center {
+        content: element(footerCenter);
+      }
+    }
+
+
+
+    #pagenumber:before {
+      content: counter(page);
+    }
+
+    #pagecount:before {
+      content: counter(pages);
+    }
+
+    #footerCenter {
+      position: running(footerCenter);
+      text-align: center;
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+
+    }
+
+    #footerLeft {
+      position: running(footerLeft);
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+      text-align: left;
+    }
+
+    #footerRight {
+      position: running(footerRight);
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+      text-align: right;
+      /* padding-right: 50px ;   */
+    }
+
+    .divTitle {
+      top: 28px;
+      margin-left: 5%;
+      margin-right: 5%;
+      height: 30px;
+      background-color: #157880;
+      margin-bottom: 105px;
+
+
+    }
+
+    .tg {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-left: 5%;
+      width: 90%
+    }
+
+    .tg td {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      ;
+      padding: 10px 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black;
+    }
+
+    .tg th {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      padding: 10px 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black
+    }
+
+    .tg .tg-l711 {
+      border-width: 0px;
+      text-align: center
+    }
+
+    .tg .tg-i13m {
+      font-weight: bold;
+      background-color: #efefef;
+      border-width: 0;
+      border-top-width: 3px;
+      border-top-color: #157880;
+      text-align: center
+    }
+
+    .tg .MeanRow {
+      border-width: 0px;
+      border-top-width: 2px;
+      border-color: #157880;
+      text-align: center
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .headerRow {
+      page-break-before: always;
+    }
+
+    .emptyBar {
+      width: 98%;
+      border-width: 2px;
+      border-style: solid;
+      border-color: #08436b;
+      background-color: white;
+      height: 10px;
+      position: relative;
+      border-radius: 10px ;
+      /* z-index: 900;  */
+    }
+
+    .greenBar {
+      background-color: #157880;
+      height: 10px;
+      position: absolute;
+      /* border-radius: 20px ;  */
+      /* z-index: 1000; */
+    }
+
+    .benchmark {
+      border-right: 2px solid #e62e00;
+      height: 10px;
+      position: absolute;
+      top: 0px;
+    }
+  </style> 
+ </head> 
+ <body> 
+  <div id="footer"> 
+   <div id="footerLeft">
+    01/08/2018
+   </div> 
+   <div id="footerRight">
+    Page 
+    <span id="pagenumber"></span> of 
+    <span id="pagecount"></span> 
+   </div> 
+   <div id="footerCenter">
+     Students Grades Report
+   </div> 
+  </div> 
+  <div class="divTitle" style="text-align:center"> 
+   <h2 style="color:white"> Students Grades Report </h2> 
+  </div> 
+  <table class="tg"> 
+   <tbody>
+    <tr class=""> 
+     <th class="tg-i13m" colspan="2">Student</th> 
+     <th class="tg-i13m">Grade</th> 
+     <th class="tg-i13m">Score</th> 
+     <th class="tg-i13m">Percentage</th> 
+     <th class="tg-i13m" width="25%"></th> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">1</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">19/20</td> 
+     <td class="tg-l711 ">95%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:95%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">2</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">3</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">4</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">5</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">6</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">7</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">8</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">9</td> 
+     <td class="tg-l711 ">C</td> 
+     <td class="tg-l711 ">14/20</td> 
+     <td class="tg-l711 ">70%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:70%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">10</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">19/20</td> 
+     <td class="tg-l711 ">95%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:95%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">11</td> 
+     <td class="tg-l711 ">C</td> 
+     <td class="tg-l711 ">15/20</td> 
+     <td class="tg-l711 ">75%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:75%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">12</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">13</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">14</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">15</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">16</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">17</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">20/20</td> 
+     <td class="tg-l711 ">100%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:100%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">18</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">19</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">20</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="headerRow"> 
+     <th class="tg-i13m" colspan="2">Student</th> 
+     <th class="tg-i13m">Grade</th> 
+     <th class="tg-i13m">Score</th> 
+     <th class="tg-i13m">Percentage</th> 
+     <th class="tg-i13m" width="25%"></th> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">21</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">22</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">20/20</td> 
+     <td class="tg-l711 ">100%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:100%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">23</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">24</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">25</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">26</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">19/20</td> 
+     <td class="tg-l711 ">95%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:95%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">27</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">28</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">20/20</td> 
+     <td class="tg-l711 ">100%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:100%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">29</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">30</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">31</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">32</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">33</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">34</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">35</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">19/20</td> 
+     <td class="tg-l711 ">95%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:95%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">36</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">37</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">38</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">19/20</td> 
+     <td class="tg-l711 ">95%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:95%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">39</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">40</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">41</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">42</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">18/20</td> 
+     <td class="tg-l711 ">90%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:90%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">43</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">17/20</td> 
+     <td class="tg-l711 ">85%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:85%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="tg-l711 ">44</td> 
+     <td class="tg-l711 ">C</td> 
+     <td class="tg-l711 ">15/20</td> 
+     <td class="tg-l711 ">75%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:75%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="headerRow"> 
+     <th class="tg-i13m" colspan="2">Student</th> 
+     <th class="tg-i13m">Grade</th> 
+     <th class="tg-i13m">Score</th> 
+     <th class="tg-i13m">Percentage</th> 
+     <th class="tg-i13m" width="25%"></th> 
+    </tr>
+    <tr class="grayRow "> 
+     <td colspan="2" class="tg-l711 ">45</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="grayRow "> 
+     <td colspan="2" class="tg-l711 ">46</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="grayRow "> 
+     <td colspan="2" class="tg-l711 ">47</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="grayRow "> 
+     <td colspan="2" class="tg-l711 ">48</td> 
+     <td class="tg-l711 ">A</td> 
+     <td class="tg-l711 ">19/20</td> 
+     <td class="tg-l711 ">95%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:95%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="grayRow "> 
+     <td colspan="2" class="tg-l711 ">49</td> 
+     <td class="tg-l711 ">B</td> 
+     <td class="tg-l711 ">16/20</td> 
+     <td class="tg-l711 ">80%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:80%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class="grayRow "> 
+     <td colspan="2" class="tg-l711 ">50</td> 
+     <td class="tg-l711 ">C</td> 
+     <td class="tg-l711 ">15/20</td> 
+     <td class="tg-l711 ">75%</td> 
+     <td class="tg-l711 ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:75%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr>
+    <tr class=" "> 
+     <td colspan="2" class="MeanRow bold">mean</td> 
+     <td class="MeanRow ">B</td> 
+     <td class="MeanRow ">17.3/20</td> 
+     <td class="MeanRow ">86.3%</td> 
+     <td class="MeanRow ">
+      <div class="emptyBar"> 
+       <div class="greenBar" style="width:86.3%"> 
+       </div> 
+       <div class="benchmark" style="width:60%"> 
+       </div>
+      </div></td> 
+    </tr> 
+    <!-- <tr >
+      <td class="MeanRow" colspan="2" style="font-weight: bold">Mean</td>
+      <td class="MeanRow">A-</td>
+      <td class="MeanRow">42/50</td>
+      <td class="MeanRow">84.3%</td>
+    </tr> --> 
+   </tbody>
+  </table>  
+ </body>
+</html>

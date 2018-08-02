@@ -38,6 +38,18 @@ public class ReportsHandler {
     public final static int HTML=0,PDF=1,TXT=2,WORD=3,XLS=4 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
 
+    public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
+
+        for(Report report:Reports) {
+            if (formats.indexOf(PDF)!=-1)
+                report.generatePdfReport();
+            if(formats.indexOf(HTML) !=0 );
+                report.generateHtmlReport();
+        }
+
+
+    }
+
 
    public  void generateReport5Chart(Stage stage , ArrayList<String> responsePercentagesWithClasses  , ArrayList<String> questionChoices ) throws IOException {
 
