@@ -23,11 +23,13 @@ import java.util.ArrayList;
 
 public class Report1 extends Report{
 
+    String report1ImgFullPath  ;
     public Report1(){
         workSpacePath = reportsPath + "report1\\" ;
         templatePath = workSpacePath + "report1Template.html";
-        outputFileName = "test" ;
+        outputFileName = "Report1" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
+        report1ImgFullPath = "file://"+System.getProperty("user.dir") + workSpacePath + "GradesDistributionHistogram.png" ;
     }
 
 
@@ -59,8 +61,8 @@ public class Report1 extends Report{
 
         for(int gradeIndex = 0 ;  gradeIndex<grades.size() ; gradeIndex++) {
             String addedClass = "normal" ;
-            if(gradeIndex == maxIndex)
-                addedClass = "largest" ;
+//            if(gradeIndex == maxIndex)
+//                addedClass = "largest" ;
             Node n = bc.lookup(".data"+gradeIndex+".chart-bar");
             n.getStyleClass().add(addedClass);
         }
@@ -74,23 +76,18 @@ public class Report1 extends Report{
         bc.applyCss();
         bc.layout();
         stage.setScene(scene);
-        stage.show();
+//        stage.show();
 
         WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
         ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath+"GradesDistributionHistogram.png"));
     }
 
-    @Override
-    public void generateHtmlReport() {
-
-    }
-
-    @Override
-    public void generatePdfReport() throws IOException, DocumentException {
+    private Document generatePdfHtml() throws IOException {
         final int MAX_NUMBER_OF_1PAGE_ROWS = 7;
         File file = new File(templatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
+        updateTemplateDate(doc); // updates the date of the footer to the current date
 
         Stage stage = new Stage() ;
 
@@ -110,8 +107,24 @@ public class Report1 extends Report{
         if(statsTable.size()>MAX_NUMBER_OF_1PAGE_ROWS)
             doc.select("img").addClass("new-page-img");
 
+        return doc  ;
+    }
+
+    @Override
+    public void generateHtmlReport() throws IOException {
+        Document doc = generatePdfHtml() ;
+        doc.select("div#footer").remove() ;
+//        String report1ImgPath = "file://"+workSpacePath+"GradesDistributionHistogram.png";
+        doc.select("img").attr("src" , report1ImgFullPath);
+        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html" , doc);
+    }
+
+    @Override
+    public void generatePdfReport() throws IOException, DocumentException {
+
+        Document doc = generatePdfHtml() ;
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath, workSpacePath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath,outputPdfFolderPath+outputFileName+".pdf");
 
     }
 

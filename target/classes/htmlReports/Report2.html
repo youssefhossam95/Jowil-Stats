@@ -1,0 +1,1676 @@
+<html>
+ <head> 
+  <style type="text/css">
+        @page {
+
+            margin: 25px 25px 40px 25px;
+            /* size: letter portrait; */
+            size: A4 landscape;
+            /* @top-left {
+content: element(pageHeader);
+} */
+            @bottom-left {
+                content: element(footerLeft);
+            }
+            @bottom-right {
+                content: element(footerRight);
+            }
+            @bottom-center {
+                content: element(footerCenter);
+            }
+        }
+
+        /* #pageHeader{
+position: running(pageHeader);
+} */
+
+        #pagenumber:before {
+            content: counter(page);
+        }
+
+        #pagecount:before {
+            content: counter(pages);
+        }
+
+        #footerCenter {
+            position: running(footerCenter);
+            text-align: center;
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+
+        }
+
+        #footerLeft {
+            position: running(footerLeft);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: left;
+        }
+
+        #footerRight {
+            position: running(footerRight);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: right;
+            /* padding-right: 50px ;   */
+        }
+
+
+        .divTitle {
+            top: 28px;
+            margin-left: 5%;
+            margin-right: 5%;
+            height: 30px;
+            background-color: #2e6a92;
+            margin-bottom: 100px;
+            text-align: center;
+
+        }
+
+        .t {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-left: 5%;
+            width: 90%;
+            margin-bottom: 50px;
+        }
+
+        .t2 {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-left: 5%;
+            width: 90%;
+            margin-bottom: 50px;
+        }
+
+        .t2 tr {
+            line-height: 16px;
+        }
+
+        th {
+            border-width: 1px;
+            border-color: #08436b;
+            border-style: solid;
+            text-align: center;
+        }
+
+        td {
+            border-width: 1px;
+            border-color: #08436b;
+            border-style: solid;
+            text-align: center;
+        }
+
+        .t td {
+            text-align: left;
+        }
+
+        .grayRow {
+            background-color: #efefef;
+        }
+
+        .gold {
+            background-color: #ffe44d;
+        }
+
+
+        .testawy {
+            color: red;
+        }
+
+        .noBorder {
+            border-width: 0px;
+            text-align: left;
+            width: 22%;
+        }
+
+        .tdSpecial {
+            border-width: 0px;
+            text-align: center;
+            width: 8%;
+        }
+
+        .wrapper {
+            width: 500px;
+            margin-left: 5%;
+            overflow: hidden;
+            /* will contain if #first is longer than #second */
+        }
+
+        .first {
+            width: 12px;
+            height: 12px;
+            float: left;
+            /* add this */
+            margin-right: 8px;
+            margin-top: 2px;
+            background-color: #f87878;
+        }
+
+        .second {
+            width: 300px;
+            overflow: hidden;
+            /* if you don't want #second to wrap below #first */
+            vertical-align: top;
+            font-weight: bold;
+        }
+
+        .firstRow {
+            border-top-width: 2px;
+            border-top-color: #08436b;
+        }
+
+        .green {
+            font-weight: bold;
+            background-color: #71e08d;
+        }
+
+        .red {
+            font-weight: bold;
+            background-color: #f87878;
+        }
+
+        .grey {}
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .second-page-header {
+            margin-top: 20px;
+        }
+    </style> 
+ </head> 
+ <body>  
+  <div id="template"> 
+   <div class="divTitle second-page-header"> 
+    <h2 style="color:white"> Form 1 Condensed Test Report </h2> 
+   </div> 
+   <table class="t"> 
+    <tbody>
+     <tr> 
+      <th class="noBorder firstRow"> Number of Students </th> 
+      <td class="tdSpecial firstRow NumberOfStudents">25</td> 
+      <th class="noBorder firstRow "> Mean </th> 
+      <td class="tdSpecial firstRow Mean">17.1</td> 
+      <th class="noBorder firstRow "> Lowest Score </th> 
+      <td class="tdSpecial firstRow LowestScore">14</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Max Possible Score </th> 
+      <td class="tdSpecial MaxPossibleScore">20</td> 
+      <th class="noBorder"> Median </th> 
+      <td class="tdSpecial Median">17</td> 
+      <th class="noBorder "> Highest Score </th> 
+      <td class="tdSpecial HighestScore">20</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Score Range </th> 
+      <td class="tdSpecial ScoreRange">6</td> 
+      <th class="noBorder"> Standard Deviation </th> 
+      <td class="tdSpecial StandardDeviation">1.4</td> 
+      <th class="noBorder"> KR 20 </th> 
+      <td class="tdSpecial Kuder-RichardsonFormula20">-0</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <div class="wrapper"> 
+    <span class="first"></span> 
+    <span class=" second"> Distractor</span> 
+   </div> 
+   <div class="wrapper"> 
+    <span class="first" style="background-color: #ffe44d"></span> 
+    <span class=" second"> Non Distractor </span> 
+   </div> 
+   <div class="wrapper" style="margin-bottom: 10px"> 
+    <span class="first" style="background-color: #71e08d"></span> 
+    <span class=" second"> Correct Answer</span> 
+   </div> 
+   <table class="t2"> 
+    <tbody>
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="5" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>a</th> 
+      <th>b</th> 
+      <th>c</th> 
+      <th>d</th> 
+      <th>e</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">1</td> 
+      <td class=" ">Q1</td> 
+      <td class=" ">4</td> 
+      <td class=" ">4</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">92</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.02</td> 
+      <td class=" ">92%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">2</td> 
+      <td class=" ">Q2</td> 
+      <td class=" ">8</td> 
+      <td class=" ">4</td> 
+      <td class=" ">12</td> 
+      <td class=" green">72</td> 
+      <td class=" ">4</td> 
+      <td class=" ">0.35</td> 
+      <td class=" ">72%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">3</td> 
+      <td class=" ">Q3</td> 
+      <td class=" green">68</td> 
+      <td class=" ">12</td> 
+      <td class=" ">4</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">16</td> 
+      <td class=" ">0.16</td> 
+      <td class=" ">68%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">66.7%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">4</td> 
+      <td class=" ">Q4</td> 
+      <td class=" green">84</td> 
+      <td class=" ">12</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">4</td> 
+      <td class=" ">0.41</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">33.3%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">5</td> 
+      <td class=" ">Q5</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">12</td> 
+      <td class=" ">8</td> 
+      <td class=" green">80</td> 
+      <td class=" ">0.38</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">6</td> 
+      <td class=" ">Q6</td> 
+      <td class=" ">4</td> 
+      <td class=" ">16</td> 
+      <td class=" ">4</td> 
+      <td class=" ">8</td> 
+      <td class=" green">68</td> 
+      <td class=" ">0.28</td> 
+      <td class=" ">68%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">7</td> 
+      <td class=" ">Q7</td> 
+      <td class=" ">4</td> 
+      <td class=" ">4</td> 
+      <td class=" green">72</td> 
+      <td class=" ">12</td> 
+      <td class=" ">8</td> 
+      <td class=" ">0.1</td> 
+      <td class=" ">72%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">8</td> 
+      <td class=" ">Q8</td> 
+      <td class=" ">4</td> 
+      <td class=" green">76</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">8</td> 
+      <td class=" ">12</td> 
+      <td class=" ">0.23</td> 
+      <td class=" ">76%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">83.3%</td> 
+     </tr> 
+    </tbody>
+   </table>
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="47" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>1</th> 
+      <th>2</th> 
+      <th>3</th> 
+      <th>4</th> 
+      <th>5</th> 
+      <th>6</th> 
+      <th>7</th> 
+      <th>8</th> 
+      <th>9</th> 
+      <th>10</th> 
+      <th>11</th> 
+      <th>12</th> 
+      <th>13</th> 
+      <th>14</th> 
+      <th>15</th> 
+      <th>16</th> 
+      <th>17</th> 
+      <th>18</th> 
+      <th>19</th> 
+      <th>20</th> 
+      <th>21</th> 
+      <th>22</th> 
+      <th>23</th> 
+      <th>24</th> 
+      <th>25</th> 
+      <th>26</th> 
+      <th>27</th> 
+      <th>28</th> 
+      <th>29</th> 
+      <th>30</th> 
+      <th>31</th> 
+      <th>32</th> 
+      <th>33</th> 
+      <th>34</th> 
+      <th>35</th> 
+      <th>36</th> 
+      <th>37</th> 
+      <th>38</th> 
+      <th>39</th> 
+      <th>40</th> 
+      <th>41</th> 
+      <th>42</th> 
+      <th>43</th> 
+      <th>44</th> 
+      <th>45</th> 
+      <th>46</th> 
+      <th>47</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">9</td> 
+      <td class=" ">TF1</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">10</td> 
+      <td class=" ">TF2</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">11</td> 
+      <td class=" ">TF3</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">12</td> 
+      <td class=" ">TF4</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">13</td> 
+      <td class=" ">TF5</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">14</td> 
+      <td class=" ">TF6</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">15</td> 
+      <td class=" ">TF7</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">16</td> 
+      <td class=" ">TF8</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr> 
+    </tbody> 
+   </table>
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="2" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>fuck</th> 
+      <th>ass</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">17</td> 
+      <td class=" ">fuck1</td> 
+      <td class=" ">40</td> 
+      <td class=" green">60</td> 
+      <td class=" ">0.51</td> 
+      <td class=" ">60%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">16.7%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">18</td> 
+      <td class=" ">fuck2</td> 
+      <td class=" green">80</td> 
+      <td class=" ">20</td> 
+      <td class=" ">0.17</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">83.3%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">19</td> 
+      <td class=" ">fuck3</td> 
+      <td class=" green">84</td> 
+      <td class=" ">16</td> 
+      <td class=" ">0.18</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">66.7%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">20</td> 
+      <td class=" ">fuck4</td> 
+      <td class=" ">28</td> 
+      <td class=" green">72</td> 
+      <td class=" ">0.48</td> 
+      <td class=" ">72%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr> 
+    </tbody> 
+   </table>
+   <div class="divTitle second-page-header"> 
+    <h2 style="color:white">Form 2 Condensed Test Report</h2> 
+   </div> 
+   <table class="t"> 
+    <tbody> 
+     <tr> 
+      <th class="noBorder firstRow"> Number of Students </th> 
+      <td class="tdSpecial firstRow NumberOfStudents">25</td> 
+      <th class="noBorder firstRow "> Mean </th> 
+      <td class="tdSpecial firstRow Mean">17.4</td> 
+      <th class="noBorder firstRow "> Lowest Score </th> 
+      <td class="tdSpecial firstRow LowestScore">15</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Max Possible Score </th> 
+      <td class="tdSpecial MaxPossibleScore">20</td> 
+      <th class="noBorder"> Median </th> 
+      <td class="tdSpecial Median">18</td> 
+      <th class="noBorder "> Highest Score </th> 
+      <td class="tdSpecial HighestScore">20</td> 
+     </tr> 
+     <tr> 
+      <th class="noBorder"> Score Range </th> 
+      <td class="tdSpecial ScoreRange">5</td> 
+      <th class="noBorder"> Standard Deviation </th> 
+      <td class="tdSpecial StandardDeviation">1.3</td> 
+      <th class="noBorder"> KR 20 </th> 
+      <td class="tdSpecial Kuder-RichardsonFormula20">-0.3</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <div class="wrapper"> 
+    <span class="first"></span> 
+    <span class=" second"> Distractor</span> 
+   </div> 
+   <div class="wrapper"> 
+    <span class="first" style="background-color: #ffe44d"></span> 
+    <span class=" second"> Non Distractor </span> 
+   </div> 
+   <div class="wrapper" style="margin-bottom: 10px"> 
+    <span class="first" style="background-color: #71e08d"></span> 
+    <span class=" second"> Correct Answer</span> 
+   </div> 
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="5" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>a</th> 
+      <th>b</th> 
+      <th>c</th> 
+      <th>d</th> 
+      <th>e</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">1</td> 
+      <td class=" ">Q1</td> 
+      <td class=" ">8</td> 
+      <td class=" ">8</td> 
+      <td class=" green">84</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.15</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">83.3%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">2</td> 
+      <td class=" ">Q2</td> 
+      <td class=" ">8</td> 
+      <td class=" ">12</td> 
+      <td class=" green">52</td> 
+      <td class=" ">20</td> 
+      <td class=" ">8</td> 
+      <td class=" ">0.46</td> 
+      <td class=" ">52%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">33.3%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">3</td> 
+      <td class=" ">Q3</td> 
+      <td class=" ">8</td> 
+      <td class=" ">8</td> 
+      <td class=" ">8</td> 
+      <td class=" green">68</td> 
+      <td class=" ">8</td> 
+      <td class=" ">0.31</td> 
+      <td class=" ">68%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">4</td> 
+      <td class=" ">Q4</td> 
+      <td class=" ">8</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">4</td> 
+      <td class=" green">84</td> 
+      <td class=" ">4</td> 
+      <td class=" ">0.58</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">5</td> 
+      <td class=" ">Q5</td> 
+      <td class=" ">8</td> 
+      <td class=" ">4</td> 
+      <td class=" green">80</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">8</td> 
+      <td class=" ">-0.38</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">57.1%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">6</td> 
+      <td class=" ">Q6</td> 
+      <td class=" ">12</td> 
+      <td class=" ">4</td> 
+      <td class=" ">4</td> 
+      <td class=" ">4</td> 
+      <td class=" green">76</td> 
+      <td class=" ">0.2</td> 
+      <td class=" ">76%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">66.7%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">7</td> 
+      <td class=" ">Q7</td> 
+      <td class=" green">80</td> 
+      <td class=" ">4</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">12</td> 
+      <td class=" ">4</td> 
+      <td class=" ">0.49</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">50%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">8</td> 
+      <td class=" ">Q8</td> 
+      <td class=" ">4</td> 
+      <td class=" ">4</td> 
+      <td class=" green">84</td> 
+      <td class=" ">8</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0.32</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">50%</td> 
+     </tr> 
+    </tbody> 
+   </table>
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="47" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>1</th> 
+      <th>2</th> 
+      <th>3</th> 
+      <th>4</th> 
+      <th>5</th> 
+      <th>6</th> 
+      <th>7</th> 
+      <th>8</th> 
+      <th>9</th> 
+      <th>10</th> 
+      <th>11</th> 
+      <th>12</th> 
+      <th>13</th> 
+      <th>14</th> 
+      <th>15</th> 
+      <th>16</th> 
+      <th>17</th> 
+      <th>18</th> 
+      <th>19</th> 
+      <th>20</th> 
+      <th>21</th> 
+      <th>22</th> 
+      <th>23</th> 
+      <th>24</th> 
+      <th>25</th> 
+      <th>26</th> 
+      <th>27</th> 
+      <th>28</th> 
+      <th>29</th> 
+      <th>30</th> 
+      <th>31</th> 
+      <th>32</th> 
+      <th>33</th> 
+      <th>34</th> 
+      <th>35</th> 
+      <th>36</th> 
+      <th>37</th> 
+      <th>38</th> 
+      <th>39</th> 
+      <th>40</th> 
+      <th>41</th> 
+      <th>42</th> 
+      <th>43</th> 
+      <th>44</th> 
+      <th>45</th> 
+      <th>46</th> 
+      <th>47</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">9</td> 
+      <td class=" ">TF1</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">10</td> 
+      <td class=" ">TF2</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">11</td> 
+      <td class=" ">TF3</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">12</td> 
+      <td class=" ">TF4</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">13</td> 
+      <td class=" ">TF5</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">14</td> 
+      <td class=" ">TF6</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">15</td> 
+      <td class=" ">TF7</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">16</td> 
+      <td class=" ">TF8</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" green">100</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" gold">0</td> 
+      <td class=" ">0</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">100%</td> 
+     </tr> 
+    </tbody> 
+   </table>
+   <table class="t2"> 
+    <tbody> 
+     <tr> 
+      <th rowspan="2">No.</th> 
+      <th rowspan="2">Question</th> 
+      <th colspan="2" class="responseFreq">Response Frequencies</th> 
+      <th rowspan="2">Point <br /> Biserial</th> 
+      <th colspan="3">Correct Group Responses</th> 
+     </tr> 
+     <tr class="bottom-header-row"> 
+      <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> --> 
+      <th>fuck</th> 
+      <th>ass</th> 
+      <th class="total">Total %</th> 
+      <th>Upper 27%</th> 
+      <th>Lower 27%</th> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">17</td> 
+      <td class=" ">fuck1</td> 
+      <td class=" ">16</td> 
+      <td class=" green">84</td> 
+      <td class=" ">0.24</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">66.7%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">18</td> 
+      <td class=" ">fuck2</td> 
+      <td class=" green">84</td> 
+      <td class=" ">16</td> 
+      <td class=" ">0.32</td> 
+      <td class=" ">84%</td> 
+      <td class=" ">85.7%</td> 
+      <td class=" ">66.7%</td> 
+     </tr>
+     <tr class=" "> 
+      <td class=" ">19</td> 
+      <td class=" ">fuck3</td> 
+      <td class=" green">88</td> 
+      <td class=" ">12</td> 
+      <td class=" ">0.03</td> 
+      <td class=" ">88%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">83.3%</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class=" ">20</td> 
+      <td class=" ">fuck4</td> 
+      <td class=" green">80</td> 
+      <td class=" ">20</td> 
+      <td class=" ">0.41</td> 
+      <td class=" ">80%</td> 
+      <td class=" ">100%</td> 
+      <td class=" ">66.7%</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+  </div>  
+ </body>
+</html>

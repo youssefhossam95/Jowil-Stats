@@ -5,6 +5,8 @@ import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +18,17 @@ abstract public class Report {
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
     protected final String outputPdfFolderPath  = ".\\src\\main\\resources\\pdfReports\\" ;
+    protected final String outputHtmlFolderPath =".\\src\\main\\resources\\htmlReports\\" ;
     protected String workSpacePath;
     protected String outputFileName ;
     protected String pdfHtmlPath ;
+
+    public void updateTemplateDate(Document doc) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDateTime now = LocalDateTime.now();
+//        System.out.println();
+            doc.select("div#footerLeft").last().text(dtf.format(now));
+    }
 
 
     protected void generatePDF(String inputHtmlPath, String outputPdfPath) throws IOException, com.lowagie.text.DocumentException {

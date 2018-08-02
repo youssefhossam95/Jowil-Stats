@@ -2,6 +2,55 @@
 
 <head>
   <style type="text/css">
+    @page {
+
+      margin: 50px 25px 40px 25px;
+      /* margin:0px ;  */
+      /* size: A4 landscape; */
+      @bottom-left {
+        content: element(footerLeft);
+      }
+      @bottom-right {
+        content: element(footerRight);
+      }
+      @bottom-center {
+        content: element(footerCenter);
+      }
+    }
+
+
+
+    #pagenumber:before {
+      content: counter(page);
+    }
+
+    #pagecount:before {
+      content: counter(pages);
+    }
+
+    #footerCenter {
+      position: running(footerCenter);
+      text-align: center;
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+
+    }
+
+    #footerLeft {
+      position: running(footerLeft);
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+      text-align: left;
+    }
+
+    #footerRight {
+      position: running(footerRight);
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+      text-align: right;
+      /* padding-right: 50px ;   */
+    }
+
     .divTitle {
       top: 28px;
       margin-left: 5%;
@@ -62,23 +111,34 @@
       border-top-color: #157880;
       text-align: center
     }
-    img {  
+
+    img {
       display: block;
       margin-left: auto;
       margin-right: auto;
     }
-    .new-page-img { 
-      page-break-before: always;   
-      margin-top:200px ;
-    }
-    .grayRow {
-            background-color: #efefef;
-        }
 
+    .new-page-img {
+      page-break-before: always;
+      margin-top: 200px;
+    }
+
+    .grayRow {
+      background-color: #efefef;
+    }
   </style>
 </head>
 
 <body>
+    <div id ='footer'>
+        <div id="footerLeft"> 25/7/2018 </div>
+        <div id="footerRight">Page
+            <span id="pagenumber"></span> of
+            <span id="pagecount"></span>
+        </div>
+
+        <div id="footerCenter">Grades Distribution Report</div>
+    </div>
   <div class="divTitle" style="text-align:center">
     <h2 style="color:white">
       Grades Distribution Report
@@ -93,7 +153,7 @@
       <th class="tg-i13m">Percentage</th>
     </tr>
   </table>
-  <img src="GradesDistributionHistogram.png" width="90%" height="auto" > </img>
+  <img src="GradesDistributionHistogram.png" width="90%" height="auto"> </img>
 </body>
 
 </html>

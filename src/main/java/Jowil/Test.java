@@ -1,5 +1,7 @@
 package Jowil;
 
+import Jowil.Reports.Report;
+import Jowil.Reports.Report1;
 import com.lowagie.text.DocumentException;
 
 
@@ -24,6 +26,7 @@ public class Test {
 
     public static void main(String [] args) throws IOException, DocumentException {
 
+        System.out.println(System.getProperty("user.dir"));
 
 //        final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
 //
@@ -40,19 +43,19 @@ public class Test {
 //        System.out.println(templateBodyHtml);
 
 
-        String filePath = ".\\src\\test\\TestCSVs\\welloAnswerKeys.csv" ;
-        BufferedReader input = new BufferedReader(new FileReader(filePath));
-        String line ;
-        ArrayList<ArrayList<String>> csvRows = new ArrayList<>();
-
-        while( (line = input.readLine()) != null ) {
-            String[] row = line.split(",") ;
-            ArrayList<String> rowList = new ArrayList<String>() ;
-            for(int i = 0 ; i < row.length ; i++)
-                rowList.add(row[i]);
-            csvRows.add(rowList);
-        }
-        System.out.println(csvRows);
+//        String filePath = ".\\src\\test\\TestCSVs\\welloAnswerKeys.csv" ;
+//        BufferedReader input = new BufferedReader(new FileReader(filePath));
+//        String line ;
+//        ArrayList<ArrayList<String>> csvRows = new ArrayList<>();
+//
+//        while( (line = input.readLine()) != null ) {
+//            String[] row = line.split(",") ;
+//            ArrayList<String> rowList = new ArrayList<String>() ;
+//            for(int i = 0 ; i < row.length ; i++)
+//                rowList.add(row[i]);
+//            csvRows.add(rowList);
+//        }
+//        System.out.println(csvRows);
 
 
 //        DecimalFormat format = new DecimalFormat("0.##");

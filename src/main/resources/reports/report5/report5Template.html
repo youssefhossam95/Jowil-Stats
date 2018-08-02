@@ -4,7 +4,8 @@
     <style type="text/css">
         @page {
 
-            /* margin: 25px 25px 40px 25px; */
+            margin: 50px 25px 40px 25px;
+            /* margin:0px ;  */
             /* size: A4 landscape; */
             @bottom-left {
                 content: element(footerLeft);
@@ -208,7 +209,8 @@
         .second-page-header {
             margin-top: 20px;
         }
-        .gray-row{ 
+
+        .gray-row {
             background-color: #efefef;
         }
 
@@ -216,7 +218,8 @@
         .line {
             width: 90%;
             height: 12px;
-            border-bottom: 1px solid #08436b;;
+            border-bottom: 1px solid #08436b;
+            ;
             text-align: center;
             margin: auto;
             margin-bottom: 50px
@@ -224,7 +227,7 @@
 
         .group-title {
             background-color: white;
-            padding: 0 15px; 
+            padding: 0 15px;
             font-weight: bold;
         }
     </style>
@@ -232,17 +235,19 @@
 
 <body>
 
-    <div id="footerLeft"> 25/7/2018 </div>
-    <div id="footerRight">Page
-        <span id="pagenumber"></span> of
-        <span id="pagecount"></span>
-    </div>
-    <div id="footerCenter">Condensed Test Report</div>
+    <div id ='footer'>
+        <div id="footerLeft"> 25/7/2018 </div>
+        <div id="footerRight">Page
+            <span id="pagenumber"></span> of
+            <span id="pagecount"></span>
+        </div>
 
+        <div id="footerCenter">Detailed Item Analysis Report</div>
+    </div>
     <div id='template'>
         <div class="divTitle" style="text-align:center">
             <h2 style="color:white">
-                Condensed Test Report
+                Detailed Item Analysis Report
             </h2>
         </div>
         <div class="wrapperSmall">
