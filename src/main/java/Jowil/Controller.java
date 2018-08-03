@@ -165,6 +165,17 @@ public abstract class Controller {
         alert.show();
     }
 
+    protected  void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.showAndWait();
+    }
+
 
     /**
      *

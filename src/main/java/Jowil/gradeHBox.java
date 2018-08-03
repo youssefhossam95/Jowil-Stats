@@ -8,12 +8,14 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 
 
-public class gradeHBox extends HBox {
+public class GradeHBox extends HBox {
 
     private int index;
 
@@ -25,88 +27,45 @@ public class gradeHBox extends HBox {
     private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.MINUS_CIRCLE).size(Double.toString(Controller.resX/80)).styleClass("gradesMinusIcon").build();
     StackPane addButton=new StackPane();
     StackPane removeButton=new StackPane();
+    boolean isIgnorePercentScoreLosingFocus=false;
+
+    Controller parentController;
 
 
 
 
-
-
-    gradeHBox(int index,String name,String percentScore,GradeBoundariesController parentController){
+    GradeHBox(int index,String name,String percentScore,GradeBoundariesController parentController){
 
         this.index=index;
+        this.parentController=parentController;
+
+
 
         this.nameTextField.setText(name);
         nameTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
         nameTextField.setAlignment(Pos.CENTER);
 
 
-        this.percentScoreTextField.setText(percentScore);
-        percentScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
-        percentScoreTextField.setAlignment(Pos.CENTER);
-        percentScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-            if(Controller.tryDouble(newValue)==null)
-                return;
-            if(!newValue.equals(oldValue)) {
-                this.rawScoreTextField.setText(Double.toString(Double.parseDouble(newValue) / 100 * Statistics.getMaxScore()));
-                this.scoreSlider.setValue(Double.parseDouble(newValue));
-            }
-
-        });
-
-        percentScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
-
-            if(!newValue){
-                this.rawScoreTextField.setText(String.format(".1f",Double.parseDouble(this.rawScoreTextField.getText())));
-            }
-
-        });
-
-
-
-
-
-        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
-        this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
-        rawScoreTextField.setAlignment(Pos.CENTER);
-        rawScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-            if(Controller.tryDouble(newValue)==null)
-                return;
-            if(!newValue.equals(oldValue)){
-                this.percentScoreTextField.setText(Double.toString(Double.parseDouble(newValue) / Statistics.getMaxScore()*100));
-
-            }
-
-
-        });
-
-        rawScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
-
-            if(!newValue){
-                this.percentScoreTextField.setText(String.format(".1f",Double.parseDouble(this.percentScoreTextField.getText())));
-            }
-
-        });
-
-
+        initPercentScoreTextField(percentScore);
+        initRawScoreTextField(percentScore);
 
 
         this.scoreSlider.setValue(Double.parseDouble(percentScore));
         scoreSlider.valueProperty().addListener((observable,oldValue,newValue)-> {
-            if(!newValue.equals(oldValue)) {
-                double d=(Double)newValue;
-                this.percentScoreTextField.setText(String.format("%.1f",d));
-            }
+
+            double d=(Double)newValue;
+            this.percentScoreTextField.setText(String.format("%.1f",d));
+            this.rawScoreTextField.setText(String.format("%.1f",d/ 100 * Statistics.getMaxScore()));
+
         });
 
 
 
         addButton.getChildren().add(addIcon);
-        addButton.setOnMouseClicked(t->
-                parentController.addNextGrade(this.index));
+        addButton.setOnMouseClicked(t-> parentController.addNextGrade(this.index));
 
         removeButton.getChildren().add(removeIcon);
-        removeButton.setOnMouseClicked(t->
-                parentController.deleteGrade(this.index));
+        removeButton.setOnMouseClicked(t-> parentController.deleteGrade(this.index));
 
         this.getChildren().addAll(nameTextField,percentScoreTextField,rawScoreTextField,scoreSlider,addButton,removeButton);
 
@@ -125,10 +84,6 @@ public class gradeHBox extends HBox {
         scoreSlider.setPrefWidth(scrollPaneWidth*0.3);
         scoreSlider.setPadding(new Insets(rawScoreTextField.getPrefHeight()/2,0,0,0));
         this.setSpacing(scrollPaneWidth*0.03);
-        System.out.println(nameTextField.getPrefWidth());
-        System.out.println(rawScoreTextField.getPrefWidth());
-        System.out.println(percentScoreTextField.getPrefWidth());
-
 
     }
 
@@ -141,5 +96,82 @@ public class gradeHBox extends HBox {
     public void decrementIndex() {
         index--;
     }
+
+    private void initPercentScoreTextField(String percentScore){
+
+        this.percentScoreTextField.setText(percentScore);
+        percentScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
+        percentScoreTextField.setAlignment(Pos.CENTER);
+
+
+        percentScoreTextField.setOnKeyPressed(event -> {
+
+            if(event.getCode()==KeyCode.ENTER){
+
+                if(isPercentScoreTextFieldInValid()){
+                    isIgnorePercentScoreLosingFocus=true;
+                    parentController.showAlertAndWait(Alert.AlertType.ERROR, parentController.stage.getOwner(), "Grade Scale Value Error",
+                            "Grade scale value \""+percentScoreTextField.getText()+"\" is invalid.");
+                    percentScoreTextField.setText(String.format("%.1f",scoreSlider.getValue()));
+                }
+                else {
+                    parentController.rootPane.requestFocus();
+                    scoreSlider.setValue(Double.parseDouble(percentScoreTextField.getText()));
+                    rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(percentScoreTextField.getText()) / 100 * Statistics.getMaxScore()));
+                }
+
+            }
+        });
+
+        percentScoreTextField.setOnKeyTyped(event-> {
+            if(Character.isDigit(event.getCharacter().charAt(0)) || (event.getCharacter().equals(".") && !percentScoreTextField.getText().contains("."))) //invalid character
+                return;
+
+            event.consume();
+        });
+
+        percentScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
+
+            if(isIgnorePercentScoreLosingFocus){
+                isIgnorePercentScoreLosingFocus=false;
+                return;
+            }
+
+            if(newValue)
+                return;
+
+            if(isPercentScoreTextFieldInValid()){
+                parentController.showAlertAndWait(Alert.AlertType.ERROR, parentController.stage.getOwner(), "Grade Scale Value Error",
+                        "Grade scale value \""+percentScoreTextField.getText()+"\" is invalid.");
+                percentScoreTextField.setText(String.format("%.1f",scoreSlider.getValue()));
+            }
+            else {
+                scoreSlider.setValue(Double.parseDouble(percentScoreTextField.getText()));
+                rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(percentScoreTextField.getText()) / 100 * Statistics.getMaxScore()));
+            }
+
+        });
+    }
+
+
+
+    private void initRawScoreTextField(String percentScore){
+
+        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
+        this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
+        rawScoreTextField.setAlignment(Pos.CENTER);
+        rawScoreTextField.setEditable(false);
+        rawScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)->{
+            if(newValue)
+                parentController.rootPane.requestFocus();
+        });
+    }
+
+
+    private boolean isPercentScoreTextFieldInValid(){
+        String s=percentScoreTextField.getText();
+        return s.length()==0 ||  s.equals(".")||Double.parseDouble(s)>100;
+    }
+
 
 }

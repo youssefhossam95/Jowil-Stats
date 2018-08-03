@@ -24,7 +24,32 @@
         <StackPane fx:id="deleteConfigButton">
             <FontAwesomeIconView styleClass="trashIcon" glyphName="TRASH" size="27.0"></FontAwesomeIconView>
         </StackPane>
-
     </HBox>
 
+    <HBox fx:id="reportsDirHBox">
+    <JFXTextField fx:id="reportsDirTextField" promptText="Reports Directory Path" labelFloat="true" focusColor="#3184c9"></JFXTextField>
+    <StackPane fx:id="reportsDirChooser">
+        <FontAwesomeIconView styleClass="FolderIcon" fill="#3184c9" glyphName="FOLDER" size="27.0"></FontAwesomeIconView>
+    </StackPane>
+    </HBox>
+
+    <VBox fx:id="reportsOuterVBox">
+    <Label fx:id="reportsPaneLabel" text="Reports">
+    </Label>
+    <Pane fx:id="reportsPane">
+        <VBox fx:id="reportsVBox">
+
+        </VBox>
+    </Pane>
+    </VBox>
+
+    <VBox fx:id="formatsOuterVBox">
+    <Label fx:id="formatsPaneLabel" text="File Formats">
+    </Label>
+    <Pane fx:id="formatsPane">
+        <VBox fx:id="formatsVBox">
+
+        </VBox>
+    </Pane>
+    </VBox>
 </AnchorPane>
