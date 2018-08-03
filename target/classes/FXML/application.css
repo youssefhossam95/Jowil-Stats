@@ -225,7 +225,7 @@ JFXCheckBox {
 }
 
 .gradesMinusIcon:hover{
--fx-fill: #ff4d4d;
+-fx-fill: #ffe6e6;
 }
 
 .trashIcon{
@@ -235,3 +235,4 @@ JFXCheckBox {
 .trashIcon:hover{
 -fx-fill:#87CEEB;
 }
+

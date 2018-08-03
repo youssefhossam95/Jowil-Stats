@@ -195,6 +195,8 @@ public class WeightsController extends Controller{
 
         Statistics.setSubjMaxScores(maxSubjScores);
 
+        Statistics.init();
+
     }
 
     @Override

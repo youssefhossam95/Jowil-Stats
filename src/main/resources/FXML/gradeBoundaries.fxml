@@ -20,10 +20,11 @@
       </VBox>
    </children>
     <HBox fx:id="comboHBox">
-        <JFXComboBox fx:id="gradesConfigCombo" labelFloat="true" promptText="Grade Boundaries Configuration"></JFXComboBox>
+        <JFXComboBox fx:id="gradesConfigCombo" labelFloat="true" promptText="Grade Boundaries Configuration" focusColor="#3184c9"></JFXComboBox>
         <StackPane fx:id="deleteConfigButton">
             <FontAwesomeIconView styleClass="trashIcon" glyphName="TRASH" size="27.0"></FontAwesomeIconView>
         </StackPane>
+
     </HBox>
 
 </AnchorPane>

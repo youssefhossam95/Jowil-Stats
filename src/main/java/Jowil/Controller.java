@@ -171,7 +171,7 @@ public abstract class Controller {
      * @param s
      * @return null if the value is less than zero or is not Parsable to Double , otherwise returns a new string in a non-integer representation
      */
-    protected String tryDouble(String s){
+    public static String tryDouble(String s){
 
         s=s.trim();
         try

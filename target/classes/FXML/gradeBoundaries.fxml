@@ -10,7 +10,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="742.0" prefWidth="1068.0" style="ukgjh: kjhkj; ds: dsfs; fdsfdsf: fdsfs; dsfsdf: fsdfds;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-       <Label text="Grade Boundaries" fx:id="gradeBoundariesTitle"></Label>
+       <Label text="Grading Scale" fx:id="gradeBoundariesTitle"></Label>
        <Label text="Reports Preferences" fx:id="reportsConfigTitle"></Label>
        <Separator fx:id="midSeparator" orientation="VERTICAL"/>
       <ScrollPane fx:id="scrollPane"/>
@@ -20,10 +20,11 @@
       </VBox>
    </children>
     <HBox fx:id="comboHBox">
-        <JFXComboBox fx:id="gradesConfigCombo" labelFloat="true" promptText="Grade Boundaries Configuration"></JFXComboBox>
+        <JFXComboBox fx:id="gradesConfigCombo" labelFloat="true" promptText="Grade Boundaries Configuration" focusColor="#3184c9"></JFXComboBox>
         <StackPane fx:id="deleteConfigButton">
             <FontAwesomeIconView styleClass="trashIcon" glyphName="TRASH" size="27.0"></FontAwesomeIconView>
         </StackPane>
+
     </HBox>
 
 </AnchorPane>
