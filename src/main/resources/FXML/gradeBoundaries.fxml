@@ -33,23 +33,19 @@
     </StackPane>
     </HBox>
 
-    <VBox fx:id="reportsOuterVBox">
-    <Label fx:id="reportsPaneLabel" text="Reports">
-    </Label>
-    <Pane fx:id="reportsPane">
-        <VBox fx:id="reportsVBox">
 
-        </VBox>
-    </Pane>
+
+
+    <HBox fx:id="reportsConfigHBox">
+    <VBox fx:id="reportsVBox">
+
     </VBox>
+    <VBox fx:id="formatsVBox">
 
-    <VBox fx:id="formatsOuterVBox">
-    <Label fx:id="formatsPaneLabel" text="File Formats">
-    </Label>
-    <Pane fx:id="formatsPane">
-        <VBox fx:id="formatsVBox">
-
-        </VBox>
-    </Pane>
     </VBox>
+    </HBox>
+
+
+
+
 </AnchorPane>

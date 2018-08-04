@@ -1,4 +1,5 @@
 {
-  "reportsOutputDir":""
-
+  "reportsOutputDir":"",
+  "reportsChosen":[true,true,true,true,true],
+  "formatsChosen":[true,true,false]
 }

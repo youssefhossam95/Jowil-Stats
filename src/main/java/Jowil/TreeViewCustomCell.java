@@ -34,10 +34,10 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
                 this.setStyle("-fx-font-size:12");
 
-                HBox cellBox = new HBox(0);
-                JFXCheckBox checkBox = new JFXCheckBox();
-                Label label = new Label(item);
-                label.setPadding(new Insets(0,0,0,0));
+                //HBox cellBox = new HBox(0);
+                JFXCheckBox checkBox = new JFXCheckBox(item);
+//                Label label = new Label(item);
+//                label.setPadding(new Insets(0,0,0,0));
                 checkBox.setPadding(new Insets(0,0,0,0));
                 checkBox.getStyleClass().add("smallCheckBox");
                 checkBox.setSelected(GroupsController.isChoicePossible(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue()));
@@ -59,10 +59,10 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 });
 
 
-                label.prefHeightProperty().bind(checkBox.heightProperty());
-                cellBox.getChildren().addAll(checkBox, label);
+//                label.prefHeightProperty().bind(checkBox.heightProperty());
+                //cellBox.getChildren().addAll(checkBox,label);
 
-                setGraphic(cellBox);
+                setGraphic(checkBox);
                 setText(null);
 
             } else if(isGroupNameNode()) {

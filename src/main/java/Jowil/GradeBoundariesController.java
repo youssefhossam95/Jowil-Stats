@@ -1,5 +1,6 @@
 package Jowil;
 
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.EventHandler;
@@ -13,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -28,6 +30,8 @@ public class GradeBoundariesController extends Controller{
 
     GradeBoundariesController(Controller back) {
         super("gradeBoundaries.fxml","Grading Scale and Report Generation",1.25,1.25,true,back);
+
+
     }
 
     @FXML
@@ -67,28 +71,10 @@ public class GradeBoundariesController extends Controller{
 
 
     @FXML
-    VBox reportsOuterVBox;
-
-    @FXML
-    Label reportsPaneLabel;
-
-
-    @FXML
-    Pane reportsPane;
+    HBox reportsConfigHBox;
 
     @FXML
     VBox reportsVBox;
-
-
-
-    @FXML
-    VBox formatsOuterVBox;
-
-    @FXML
-    Label formatsPaneLabel;
-
-    @FXML
-    Pane formatsPane;
 
     @FXML
     VBox formatsVBox;
@@ -101,27 +87,31 @@ public class GradeBoundariesController extends Controller{
     Label gradeName=new Label("Name");
     Label gradePercent=new Label("Score %");
     Label gradeRaw=new Label("Score");
-
+    Label reportsLabel=new Label("Reports");
+    Label formatsLabel=new Label("File Formats");
 
 
 
 
     int gradesConfigComboSelectedIndex;
-    int gradesCreatedIndex=1;
     private  ArrayList<GradeHBox> gradesHBoxes;
-    private  final String standardLettersGradingFile="Standard Letters Scale.jgc",
+    private  final static String standardLettersGradingFile="Standard Letters Scale.jgc",
             allLettersGradingFile="All Letters Scale.jgc",egyptianGradingFile1="Egyptian Scale 1.jgc"
-            ,egyptianGradingFile2="Egyptian Scale 2.jgc";
+            ,egyptianGradingFile2="Egyptian Scale 2.jgc",labelsColor="black";
 
+    JSONObject jsonObj=new JSONObject();
 
     ArrayList<ArrayList<GradeHBox>> configs=new ArrayList<>();
 
+    ArrayList<CheckBox> reportsCheckBoxes=new ArrayList<>();
+    ArrayList<CheckBox> formatsCheckBoxes=new ArrayList<>();
 
 
 
     @Override
     protected void initComponents() {
-        
+
+
         initScrollPane();
         initGradesLabelsHBox();
         initGradesConfigCombo();
@@ -129,8 +119,9 @@ public class GradeBoundariesController extends Controller{
         initGradesVBox();
         initDeleteConfigButton();
         initReportsDirChooser();
-        initReportsPane();
-        initFormatsPane();
+        initReportsConfigHBox();
+        initReportsVBox();
+        initFormatsVbox();
 
         
     }
@@ -158,7 +149,7 @@ public class GradeBoundariesController extends Controller{
         gradeBoundariesTitle.setLayoutY(rootHeightToPixels(0.05));
         gradesVBox.setSpacing(resYToPixels(0.025));
         gradesLabelsHBox.setSpacing(scrollPaneWidth*0.03);
-        gradesLabelsHBox.setPadding(new Insets(scrollPaneWidth*0.05,0,0,0));
+        gradesLabelsHBox.setPadding(new Insets(scrollPaneHeight*0.05,0,0,0));
         gradesVBox.setPadding(new Insets(0,0,0,scrollPaneWidth*0.02));
 
         gradeName.setPrefWidth(scrollPaneWidth*0.15);
@@ -185,24 +176,20 @@ public class GradeBoundariesController extends Controller{
         HBox.setHgrow(reportsDirTextField,Priority.ALWAYS);
 
 
-        reportsPaneLabel.setPrefHeight(rootHeightToPixels(0.05));
 
-        reportsOuterVBox.setLayoutX(reportsConfigTitle.getLayoutX());
-        reportsOuterVBox.setLayoutY(scrollPane.getLayoutY()-reportsPaneLabel.getPrefHeight());
-        reportsPane.setPrefWidth(reportsDirHBox.getPrefWidth()*0.4);
-        reportsPane.setPrefHeight(scrollPane.getPrefHeight()*0.4);
-//        reportsPane.setPrefWidth(reportsDirHBox.getPrefWidth()*0.5);
-//        reportsPane.setPrefHeight(scrollPane.getPrefHeight()*0.7);
+        reportsConfigHBox.setLayoutX(reportsConfigTitle.getLayoutX());
+        reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
+        reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
+        reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight()*0.8);
+        reportsConfigHBox.setSpacing(resXToPixels(0.04));
 
-
-
-        formatsOuterVBox.setLayoutX(reportsConfigTitle.getLayoutX());
-        formatsOuterVBox.setLayoutY(scrollPane.getLayoutY()+reportsPane.getPrefHeight()+rootHeightToPixels(0.05));
-//        formatsOuterVBox.setLayoutX(reportsOuterVBox.getLayoutX()+reportsPane.getPrefWidth()+reportsDirHBox.getPrefWidth()*0.1);
-//        formatsOuterVBox.setLayoutY(reportsOuterVBox.getLayoutY());
-        formatsPane.setPrefWidth(reportsPane.getPrefWidth());
-        formatsPane.setPrefHeight(reportsPane.getPrefHeight());
-
+        reportsLabel.setFont(gradesLabelsFonts);
+        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight()*0.05,0,reportsConfigHBox.getPrefHeight()*0.05,0));
+        formatsLabel.setFont(gradesLabelsFonts);
+        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight()*0.05,0,reportsConfigHBox.getPrefHeight()*0.05,0));
+        reportsVBox.setSpacing(resYToPixels(0.02));
+        reportsVBox.setPadding(new Insets(0,0,0,reportsConfigHBox.getPrefWidth()*0.02));
+        formatsVBox.setSpacing(resYToPixels(0.02));
 
 
         for(GradeHBox hbox:gradesHBoxes)
@@ -231,7 +218,6 @@ public class GradeBoundariesController extends Controller{
             gradesHBoxes.get(i).incrementIndex();
 
         gradesHBoxes.add(newIndex,new GradeHBox(newIndex,"New Grade","50.0",this));
-        gradesCreatedIndex++;
         updateGradesVBox();
     }
 
@@ -250,6 +236,45 @@ public class GradeBoundariesController extends Controller{
 
 
     //////helper methods
+
+    private void loadJsonObj(){
+        String userPrefsFile= "";
+        try {
+            userPrefsFile = URLDecoder.decode(getClass().getResource("/UserPrefs.json").getFile(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            jsonObj= (JSONObject)new JSONParser().parse(new FileReader(userPrefsFile));
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveJsonObj(){
+
+        PrintWriter pw = null;
+        String userPrefsFile= "";
+        try {
+            userPrefsFile = URLDecoder.decode(getClass().getResource("/UserPrefs.json").getFile(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            pw = new PrintWriter(userPrefsFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        pw.write(jsonObj.toJSONString());
+        pw.flush();
+        pw.close();
+    }
+
     private void initScrollPane(){
         scrollPane.setContent(gradesVBox);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -316,7 +341,7 @@ public class GradeBoundariesController extends Controller{
 
     private void initGradesLabelsHBox(){
 
-        String labelsColor="black";
+
         gradesLabelsHBox.getChildren().addAll(gradeName,gradePercent,gradeRaw);
         gradeName.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
         gradeName.setAlignment(Pos.CENTER);
@@ -325,6 +350,7 @@ public class GradeBoundariesController extends Controller{
         gradePercent.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
         gradePercent.setAlignment(Pos.CENTER);
     }
+
 
     private void initReportsDirChooser(){
 
@@ -335,26 +361,11 @@ public class GradeBoundariesController extends Controller{
                 () {
             public void handle(MouseEvent t) {
 
-                JSONObject obj=new JSONObject();
-                String userPrefsFile= "";
-                try {
-                    userPrefsFile = URLDecoder.decode(getClass().getResource("/UserPrefs.json").getFile(),"utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    obj= (JSONObject)new JSONParser().parse(new FileReader(userPrefsFile));
-                } catch (IOException e) {
 
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-
+                loadJsonObj();
                 DirectoryChooser dirChooser = new DirectoryChooser();
                 dirChooser.setTitle("Choose Reports Output Directory");
-                String lastDir=(String)obj.get("reportsOutputDir");
+                String lastDir=(String)jsonObj.get("reportsOutputDir");
 
                 if(lastDir!=null) { //not coming from catch
                     lastDir = lastDir.isEmpty() ? System.getProperty("user.home") : lastDir;
@@ -368,18 +379,9 @@ public class GradeBoundariesController extends Controller{
                     reportsDirTextField.requestFocus();
                     reportsDirTextField.deselect();
                     if(lastDir!=null && !newDir.getPath().equals(lastDir)){
-                        obj.put("reportsOutputDir",newDir.getPath());
-                        PrintWriter pw = null;
+                        jsonObj.put("reportsOutputDir",newDir.getPath());
+                        saveJsonObj();
 
-                        try {
-                            pw = new PrintWriter(userPrefsFile);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        
-                        pw.write(obj.toJSONString());
-                        pw.flush();
-                        pw.close();
                     }
                 }
             }
@@ -387,13 +389,59 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-    private void initReportsPane() {
-        //reportsPane.getStyleClass().add("scroll-pane");
-        reportsPane.setStyle("-fx-border-color:  #A9A9A9;");
+    private void initReportsConfigHBox(){
+        reportsConfigHBox.setStyle("-fx-border-color: #A9A9A9;");
     }
 
-    private void initFormatsPane() {
-        formatsPane.setStyle("-fx-border-color:  #A9A9A9;");
+    private void initReportsVBox(){
+
+        reportsLabel.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        reportsVBox.getChildren().add(reportsLabel);
+
+        //add checkboxes
+        reportsCheckBoxes.add(new JFXCheckBox("Report 1: Grades Distribution Report"));
+        reportsCheckBoxes.add(new JFXCheckBox("Report 2: Condensed Test Report"));
+        reportsCheckBoxes.add(new JFXCheckBox("Report 3: Test Statistics Report"));
+        reportsCheckBoxes.add(new JFXCheckBox("Report 4: Students Grades Report"));
+        reportsCheckBoxes.add(new JFXCheckBox("Report 5: Questions Statistics Report"));
+
+        //load json array
+        loadJsonObj();
+        JSONArray reportsChosen=(JSONArray)jsonObj.get("reportsChosen");
+
+        //initialize checkboxes
+        for(int i=0;i<reportsChosen.size();i++) {
+            Boolean value=(Boolean) reportsChosen.get(i);
+            reportsCheckBoxes.get(i).setSelected(value);
+            reportsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
+        }
+
+        reportsVBox.getChildren().addAll(reportsCheckBoxes);
+    }
+
+
+    private void initFormatsVbox(){
+
+        formatsLabel.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        formatsVBox.getChildren().add(formatsLabel);
+
+        formatsCheckBoxes.add(new JFXCheckBox("PDF"));
+        formatsCheckBoxes.add(new JFXCheckBox("HTML"));
+        formatsCheckBoxes.add(new JFXCheckBox("TXT"));
+
+        //load json array
+        loadJsonObj();
+        JSONArray formatsChosen=(JSONArray)jsonObj.get("formatsChosen");
+
+        //initialize checkboxes
+        for(int i=0;i<formatsChosen.size();i++) {
+            Boolean value=(Boolean) formatsChosen.get(i);
+            formatsCheckBoxes.get(i).setSelected(value);
+            formatsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
+        }
+
+        formatsVBox.getChildren().addAll(formatsCheckBoxes);
+
     }
 
 
