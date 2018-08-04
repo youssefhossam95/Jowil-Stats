@@ -3,11 +3,12 @@ package Jowil;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -98,12 +99,17 @@ public class GradeBoundariesController extends Controller{
             allLettersGradingFile="All Letters Scale.jgc",egyptianGradingFile1="Egyptian Scale 1.jgc"
             ,egyptianGradingFile2="Egyptian Scale 2.jgc",labelsColor="black";
 
-    JSONObject jsonObj=new JSONObject();
+    JSONObject prefsJsonObj;
+    JSONObject gradeScalesJsonObj;
 
     ArrayList<ArrayList<GradeHBox>> configs=new ArrayList<>();
+    ArrayList<ArrayList<GradeHBox>> origConfigs=new ArrayList<>();
+
 
     ArrayList<CheckBox> reportsCheckBoxes=new ArrayList<>();
     ArrayList<CheckBox> formatsCheckBoxes=new ArrayList<>();
+
+    ObservableList<String> comboItems=FXCollections.observableArrayList();
 
 
 
@@ -236,44 +242,7 @@ public class GradeBoundariesController extends Controller{
 
     //////helper methods
 
-    private void loadJsonObj(){
-        String userPrefsFile= "";
-        try {
-            userPrefsFile = URLDecoder.decode(getClass().getResource("/UserPrefs.json").getFile(),"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsonObj= (JSONObject)new JSONParser().parse(new FileReader(userPrefsFile));
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveJsonObj(){
-
-        PrintWriter pw = null;
-        String userPrefsFile= "";
-        try {
-            userPrefsFile = URLDecoder.decode(getClass().getResource("/UserPrefs.json").getFile(),"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            pw = new PrintWriter(userPrefsFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        pw.write(jsonObj.toJSONString());
-        pw.flush();
-        pw.close();
-    }
-
+    
     private void initScrollPane(){
         scrollPane.setContent(gradesVBox);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -288,7 +257,9 @@ public class GradeBoundariesController extends Controller{
     private void initGradesConfigCombo(){
 
         loadGradeConfigs();
+        gradesConfigCombo.setItems(comboItems);
 
+        
         gradesConfigCombo.setVisibleRowCount(3);
         gradesConfigCombo.setOnShown(t->gradesConfigCombo.getSelectionModel().clearSelection());
         gradesConfigCombo.setOnHidden(t->{gradesConfigCombo.getSelectionModel().select(gradesConfigComboSelectedIndex); System.out.println("easy"+gradesConfigComboSelectedIndex);});
@@ -361,25 +332,25 @@ public class GradeBoundariesController extends Controller{
             public void handle(MouseEvent t) {
 
 
-                loadJsonObj();
+                boolean isJsonSuccess=loadPrefsJsonObj();
                 DirectoryChooser dirChooser = new DirectoryChooser();
                 dirChooser.setTitle("Choose Reports Output Directory");
-                String lastDir=(String)jsonObj.get("reportsOutputDir");
+                String lastDir=(String)prefsJsonObj.get("reportsOutputDir");
 
-                if(lastDir!=null) { //not coming from catch
+                if(isJsonSuccess) {
                     lastDir = lastDir.isEmpty() ? System.getProperty("user.home") : lastDir;
                     dirChooser.setInitialDirectory(new File((lastDir)));
                 }
 
                 File newDir =dirChooser.showDialog(stage);
 
-                if(newDir!=null) {
+                if(isJsonSuccess) {
                     reportsDirTextField.setText(newDir.getPath());
                     reportsDirTextField.requestFocus();
                     reportsDirTextField.deselect();
-                    if(lastDir!=null && !newDir.getPath().equals(lastDir)){
-                        jsonObj.put("reportsOutputDir",newDir.getPath());
-                        saveJsonObj();
+                    if(isJsonSuccess && !newDir.getPath().equals(lastDir)){
+                        prefsJsonObj.put("reportsOutputDir",newDir.getPath());
+                        savePrefsJsonObj();
 
                     }
                 }
@@ -405,12 +376,15 @@ public class GradeBoundariesController extends Controller{
         reportsCheckBoxes.add(new JFXCheckBox("Report 5: Questions Statistics Report"));
 
         //load json array
-        loadJsonObj();
-        JSONArray reportsChosen=(JSONArray)jsonObj.get("reportsChosen");
+        boolean isJsonSuccess=loadPrefsJsonObj();
+
+        JSONArray reportsChosen=(JSONArray)prefsJsonObj.get("reportsChosen");
 
         //initialize checkboxes
-        for(int i=0;i<reportsChosen.size();i++) {
-            Boolean value=(Boolean) reportsChosen.get(i);
+        for(int i=0;i<reportsCheckBoxes.size();i++) {
+            Boolean value=true;
+            if(isJsonSuccess)
+                value=(Boolean) reportsChosen.get(i);
             reportsCheckBoxes.get(i).setSelected(value);
             reportsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
         }
@@ -429,12 +403,14 @@ public class GradeBoundariesController extends Controller{
         formatsCheckBoxes.add(new JFXCheckBox("TXT"));
 
         //load json array
-        loadJsonObj();
-        JSONArray formatsChosen=(JSONArray)jsonObj.get("formatsChosen");
+        boolean isJsonSuccess=loadPrefsJsonObj();
+        JSONArray formatsChosen=(JSONArray)prefsJsonObj.get("formatsChosen");
 
         //initialize checkboxes
-        for(int i=0;i<formatsChosen.size();i++) {
-            Boolean value=(Boolean) formatsChosen.get(i);
+        for(int i=0;i<formatsCheckBoxes.size();i++) {
+            Boolean value=true;
+            if(isJsonSuccess)
+                value=(Boolean) formatsChosen.get(i);
             formatsCheckBoxes.get(i).setSelected(value);
             formatsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
         }
@@ -443,6 +419,59 @@ public class GradeBoundariesController extends Controller{
 
     }
 
+    private JSONObject loadJsonObj(String name){
+
+        String file= "";
+        JSONObject jsonObj=null;
+        try {
+            file = URLDecoder.decode(getClass().getResource("/"+name).getFile(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            jsonObj= (JSONObject)new JSONParser().parse(new FileReader(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObj;
+        
+    }
+    
+    private void saveJsonObj(String name,JSONObject jsonObj){
+
+        PrintWriter pw = null;
+        String file= "";
+        try {
+            file = URLDecoder.decode(getClass().getResource("/"+name).getFile(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            pw = new PrintWriter(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        pw.write(jsonObj.toJSONString());
+        pw.flush();
+        pw.close();
+    }
+
+    
+    private boolean loadPrefsJsonObj(){
+
+        return (prefsJsonObj=loadJsonObj("UserPrefs.json"))!=null;
+    }
+
+    
+    private void savePrefsJsonObj(){
+        saveJsonObj("UserPrefs.json",prefsJsonObj);
+    }
 
     private void deleteCurrentConfig(){
 
@@ -451,53 +480,41 @@ public class GradeBoundariesController extends Controller{
 
     private void loadGradeConfigs(){
 
-        File configsDir = null;
-        try {
-            configsDir = new File(URLDecoder.decode(getClass().getResource("/GradeConfigs").getFile(),"utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Configurations Error",
-                    "Error in loading Grade Boundaries Configurations: Unsupported Path Encoding");
-            return;
-        }
 
-
-        File[] directoryListing = configsDir.listFiles();
-        if (directoryListing != null) {
-            for (File file : directoryListing) {
-                String configName=file.getName().substring(0,file.getName().indexOf(".jgc"));
-                loadGradeConfigFile(file.getPath(),configName);
-            }
-            return;
-        } else {
+        if((gradeScalesJsonObj=loadJsonObj("GradeScales.json"))==null){
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Configurations Error",
                     "Error in loading Grade Boundaries Configurations");
             return;
         }
-    }
+
+        JSONArray scales=(JSONArray)gradeScalesJsonObj.get("scales");
 
 
-    private void loadGradeConfigFile(String filePath,String configName){
+        for(int i=0;i<scales.size();i++){
+            ArrayList<GradeHBox> origGrades=new ArrayList<>();
+            ArrayList<GradeHBox> vBoxGrades=new ArrayList<>();
 
-        BufferedReader input;
-        try {
-             input= new BufferedReader(new FileReader(filePath));
+            JSONObject scale=(JSONObject)scales.get(i);
+            comboItems.add((String)scale.keySet().iterator().next());
+            JSONArray grades=(JSONArray)scale.values().iterator().next();
 
-            String line;
-            ArrayList<GradeHBox> fileGrades=new ArrayList<>();
-            gradesConfigCombo.getItems().add(configName);
-            configs.add(fileGrades);
-            int i=0;
-            while ((line = input.readLine()) != null) {
-                String[] row = line.split(",",-1);
-                fileGrades.add(new GradeHBox(i,row[0],row[1],this));
-                i++;
+            for(int j=0;j<grades.size();j++){
+
+                JSONObject grade=(JSONObject)grades.get(j);
+                origGrades.add(new GradeHBox(j,(String)grade.keySet().iterator().next(),(String)grade.values().iterator().next(),this));
+                vBoxGrades.add(new GradeHBox(j,(String)grade.keySet().iterator().next(),(String)grade.values().iterator().next(),this));
+
             }
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Configuration loading Error",
-                    "Error in loading \""+configName+"\" grade configuration.");
+
+            configs.add(vBoxGrades);
+            origConfigs.add(origGrades);
+
         }
 
+
+        
     }
+
 
     private void updateGradesVBox(){
         gradesVBox.getChildren().clear();

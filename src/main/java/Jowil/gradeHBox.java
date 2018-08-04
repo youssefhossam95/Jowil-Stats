@@ -12,7 +12,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
+import static Jowil.Controller.resX;
 
 
 public class GradeHBox extends HBox {
@@ -23,8 +25,8 @@ public class GradeHBox extends HBox {
     JFXTextField percentScoreTextField=new JFXTextField();
     JFXTextField rawScoreTextField=new JFXTextField();
     JFXSlider scoreSlider=new JFXSlider();
-    private final  Node addIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size(Double.toString(Controller.resX/80)).styleClass("gradesPlusIcon").build();
-    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.MINUS_CIRCLE).size(Double.toString(Controller.resX/80)).styleClass("gradesMinusIcon").build();
+    private final  Node addIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size(Double.toString(resX/80)).styleClass("gradesPlusIcon").build();
+    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.MINUS_CIRCLE).size(Double.toString(resX/80)).styleClass("gradesMinusIcon").build();
     StackPane addButton=new StackPane();
     StackPane removeButton=new StackPane();
     boolean isIgnorePercentScoreLosingFocus=false;
@@ -42,7 +44,7 @@ public class GradeHBox extends HBox {
 
 
         this.nameTextField.setText(name);
-        nameTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
+        nameTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         nameTextField.setAlignment(Pos.CENTER);
 
 
@@ -74,6 +76,7 @@ public class GradeHBox extends HBox {
 
     public void updateSizes(double scrollPaneWidth,double scrollPaneHeight){
 
+        
 
         nameTextField.setPrefWidth(scrollPaneWidth*0.15);
         nameTextField.setPrefHeight(scrollPaneHeight/20);
@@ -100,7 +103,7 @@ public class GradeHBox extends HBox {
     private void initPercentScoreTextField(String percentScore){
 
         this.percentScoreTextField.setText(percentScore);
-        percentScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
+        percentScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         percentScoreTextField.setAlignment(Pos.CENTER);
 
 
@@ -158,7 +161,7 @@ public class GradeHBox extends HBox {
     private void initRawScoreTextField(String percentScore){
 
         this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
-        this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(Controller.resX/100));
+        this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         rawScoreTextField.setAlignment(Pos.CENTER);
         rawScoreTextField.setEditable(false);
         rawScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)->{

@@ -33,9 +33,6 @@
     </StackPane>
     </HBox>
 
-
-
-
     <HBox fx:id="reportsConfigHBox">
     <VBox fx:id="reportsVBox">
 
