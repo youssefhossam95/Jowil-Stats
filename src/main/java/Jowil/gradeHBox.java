@@ -31,7 +31,7 @@ public class GradeHBox extends HBox {
     StackPane removeButton=new StackPane();
     boolean isIgnorePercentScoreLosingFocus=false;
 
-    Controller parentController;
+    GradeBoundariesController parentController;
 
 
 
@@ -74,9 +74,15 @@ public class GradeHBox extends HBox {
 
     }
 
+
+    GradeHBox(GradeHBox orig){
+
+        this(orig.index,orig.nameTextField.getText(),orig.percentScoreTextField.getText(),orig.parentController);
+    }
+
     public void updateSizes(double scrollPaneWidth,double scrollPaneHeight){
 
-        
+
 
         nameTextField.setPrefWidth(scrollPaneWidth*0.15);
         nameTextField.setPrefHeight(scrollPaneHeight/20);

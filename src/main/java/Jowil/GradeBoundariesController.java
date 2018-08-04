@@ -103,11 +103,11 @@ public class GradeBoundariesController extends Controller{
     JSONObject gradeScalesJsonObj;
 
     ArrayList<ArrayList<GradeHBox>> configs=new ArrayList<>();
-    ArrayList<ArrayList<GradeHBox>> origConfigs=new ArrayList<>();
 
 
     ArrayList<CheckBox> reportsCheckBoxes=new ArrayList<>();
     ArrayList<CheckBox> formatsCheckBoxes=new ArrayList<>();
+
 
     ObservableList<String> comboItems=FXCollections.observableArrayList();
 
@@ -259,15 +259,18 @@ public class GradeBoundariesController extends Controller{
         loadGradeConfigs();
         gradesConfigCombo.setItems(comboItems);
 
-        
+
         gradesConfigCombo.setVisibleRowCount(3);
         gradesConfigCombo.setOnShown(t->gradesConfigCombo.getSelectionModel().clearSelection());
         gradesConfigCombo.setOnHidden(t->{gradesConfigCombo.getSelectionModel().select(gradesConfigComboSelectedIndex); System.out.println("easy"+gradesConfigComboSelectedIndex);});
         gradesConfigCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
-            if((Integer)newValue!=-1)
-                gradesConfigComboSelectedIndex=(Integer)newValue;
-            gradesHBoxes=configs.get(gradesConfigComboSelectedIndex);
-            updateGradesVBox();
+
+            if((Integer)newValue==gradesConfigComboSelectedIndex || (Integer)newValue==-1 )
+                return;
+
+            gradesConfigComboSelectedIndex=(Integer)newValue;
+
+            initGradesVBox();
 
         });
 
@@ -284,7 +287,6 @@ public class GradeBoundariesController extends Controller{
                         };
                         return cell;
                     });
-
 
 
         gradesConfigCombo.getSelectionModel().select(0);
@@ -305,7 +307,8 @@ public class GradeBoundariesController extends Controller{
 
 
     private  void initGradesVBox(){
-        gradesHBoxes=configs.get(gradesConfigComboSelectedIndex);
+        cloneGradesHBoxes(gradesConfigComboSelectedIndex);
+        updateGradesVBox();
 
     }
 
@@ -491,7 +494,6 @@ public class GradeBoundariesController extends Controller{
 
 
         for(int i=0;i<scales.size();i++){
-            ArrayList<GradeHBox> origGrades=new ArrayList<>();
             ArrayList<GradeHBox> vBoxGrades=new ArrayList<>();
 
             JSONObject scale=(JSONObject)scales.get(i);
@@ -501,18 +503,15 @@ public class GradeBoundariesController extends Controller{
             for(int j=0;j<grades.size();j++){
 
                 JSONObject grade=(JSONObject)grades.get(j);
-                origGrades.add(new GradeHBox(j,(String)grade.keySet().iterator().next(),(String)grade.values().iterator().next(),this));
                 vBoxGrades.add(new GradeHBox(j,(String)grade.keySet().iterator().next(),(String)grade.values().iterator().next(),this));
 
             }
 
             configs.add(vBoxGrades);
-            origConfigs.add(origGrades);
 
         }
 
 
-        
     }
 
 
@@ -523,6 +522,16 @@ public class GradeBoundariesController extends Controller{
         updateSizes();
     }
 
+    private void cloneGradesHBoxes(int index){
+
+        gradesHBoxes=new ArrayList<>();
+        ArrayList<GradeHBox> currentConfig=configs.get(index);
+
+        for(GradeHBox hbox : currentConfig)
+            gradesHBoxes.add(new GradeHBox(hbox));
+
+
+    }
 
 
 }
