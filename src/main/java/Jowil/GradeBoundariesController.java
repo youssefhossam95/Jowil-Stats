@@ -13,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,7 +21,7 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 
 public class GradeBoundariesController extends Controller{
