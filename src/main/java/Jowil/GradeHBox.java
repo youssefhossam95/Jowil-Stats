@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.GlyphsBuilder;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,6 +14,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
 
 import static Jowil.Controller.resX;
 
@@ -49,18 +53,6 @@ public class GradeHBox extends HBox {
         this.nameTextField.textProperty().addListener(t->parentController.setContentEdited(true));
 
 
-<<<<<<< HEAD
-        this.percentScoreTextField.setText(percentScore);
-        this.percentScoreTextField.setPromptText("Percent Score");
-        this.percentScoreTextField.setLabelFloat(true);
-        percentScoreTextField.setStyle("focusColor:#3184c9");
-        percentScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-
-            if(!newValue.equals(oldValue)) {
-                this.rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / 100 * Statistics.getMaxScore()));
-                this.scoreSlider.setValue(Double.parseDouble(newValue));
-            }
-=======
         initPercentScoreTextField(percentScore);
         initRawScoreTextField(percentScore);
 
@@ -71,32 +63,16 @@ public class GradeHBox extends HBox {
             double d=(Double)newValue;
             this.percentScoreTextField.setText(String.format("%.1f",d));
             this.rawScoreTextField.setText(String.format("%.1f",d/ 100 * Statistics.getMaxScore()));
->>>>>>> c82be3483172781a98b0c34f38485d8a8049452f
 
         });
 
 
-<<<<<<< HEAD
-        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
-        this.rawScoreTextField.setPromptText("Raw Score");
-        this.rawScoreTextField.setLabelFloat(true);
-        this.rawScoreTextField.setStyle("focusColor:#3184c9");
-        rawScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-=======
->>>>>>> c82be3483172781a98b0c34f38485d8a8049452f
 
         addButton.getChildren().add(addIcon);
         addButton.setOnMouseClicked(t-> parentController.addNextGrade(this.index));
 
-<<<<<<< HEAD
-            if(!newValue.equals(oldValue)) {
-                this.percentScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / Statistics.getMaxScore()*100));
-                this.scoreSlider.setValue(Double.parseDouble(newValue));
-            }
-=======
         removeButton.getChildren().add(removeIcon);
         removeButton.setOnMouseClicked(t-> parentController.deleteGrade(this.index));
->>>>>>> c82be3483172781a98b0c34f38485d8a8049452f
 
         this.getChildren().addAll(nameTextField,percentScoreTextField,rawScoreTextField,scoreSlider,addButton,removeButton);
 
@@ -212,6 +188,10 @@ public class GradeHBox extends HBox {
     private boolean isPercentScoreTextFieldInValid(){
         String s=percentScoreTextField.getText();
         return s.length()==0 ||  s.equals(".")||Double.parseDouble(s)>100;
+    }
+
+    Pair<String,Double> getGrade(){
+        return new Pair(nameTextField.getText(),Double.parseDouble(percentScoreTextField.getText()));
     }
 
 

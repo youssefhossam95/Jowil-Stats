@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -15,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
+import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,7 +25,9 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Optional;
+import java.util.Stack;
 
 
 public class GradeBoundariesController extends Controller{
@@ -99,6 +103,7 @@ public class GradeBoundariesController extends Controller{
 
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT=3;
+    private final static String USER_PREFS_FILE_NAME="UserPrefs.json",GRADE_SCALE_FILE_NAME="GradeScales.json";
     int gradesConfigComboSelectedIndex;
     private  ArrayList<GradeHBox> gradesHBoxes;
     private  final static String standardLettersGradingFile="Standard Letters Scale.jgc",
@@ -136,7 +141,7 @@ public class GradeBoundariesController extends Controller{
         initReportsConfigHBox();
         initReportsVBox();
         initFormatsVbox();
-
+        initFinishButton();
         
     }
 
@@ -216,12 +221,49 @@ public class GradeBoundariesController extends Controller{
 
     @Override
     protected void saveChanges() {
-
     }
+
+
+    @Override
+    protected void goToNextWindow(){
+
+        ArrayList<Pair<String,Double>> scale=new ArrayList<>();
+        ArrayList<String> gradeNames=new ArrayList<>();
+        ArrayList<Double> gradeMins=new ArrayList<>();
+
+        int counter=1;
+        for(GradeHBox hbox: gradesHBoxes){
+            Pair<String,Double> grade=hbox.getGrade();
+            if(grade.getKey().trim().isEmpty()){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Grade Scale Error",
+                        "Error in Grade number "+counter+": Grade name cannot be empty.");
+                return;
+            }
+            scale.add(grade);
+            gradeNames.add(grade.getKey());
+            gradeMins.add(grade.getValue());
+            counter++;
+        }
+
+        Statistics.setGrades(gradeNames);
+        Statistics.setGradesLowerRange(gradeMins);
+
+        //save new changes if user wants to
+
+        if(isContentEdited){
+            String result=showSaveChangesDialog();
+            if(result!=null){
+                saveNewConfig(result,scale);
+                saveJsonObj(GRADE_SCALE_FILE_NAME,gradeScalesJsonObj);
+            }
+        }
+    }
+
+
 
     @Override
     protected Controller getNextController() {
-        return null;
+        return new HeadersCreateController(this);
     }
 
 
@@ -451,6 +493,9 @@ public class GradeBoundariesController extends Controller{
         trashIcon.setOnMouseExited(t->trashIcon.setStyle("-fx-fill:#3184c9"));
     }
 
+    private void initFinishButton(){
+        this.nextButton.setText("Finish");
+    }
     private JSONObject loadJsonObj(String name){
 
         String file= "";
@@ -502,7 +547,7 @@ public class GradeBoundariesController extends Controller{
 
     
     private void savePrefsJsonObj(){
-        saveJsonObj("UserPrefs.json",prefsJsonObj);
+        saveJsonObj(USER_PREFS_FILE_NAME,prefsJsonObj);
     }
 
     private void deleteCurrentConfig(){
@@ -514,7 +559,33 @@ public class GradeBoundariesController extends Controller{
             JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
             scales.remove(gradesConfigComboSelectedIndex);
             gradeScalesJsonObj.put("scales", scales);
+            comboItems.remove(gradesConfigComboSelectedIndex);
+            
         }
+    }
+
+    private void saveNewConfig(String scaleName,ArrayList<Pair<String,Double>> scale) {
+
+        if(gradeScalesJsonObj==null)
+            return;
+
+        JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+        JSONArray grades=new JSONArray();
+
+        for(Pair<String,Double> grade: scale){
+
+            LinkedHashMap<String,Double> map=new LinkedHashMap<>();
+            map.put(grade.getKey(),grade.getValue());
+            grades.add(map);
+        }
+
+        LinkedHashMap<String,JSONArray> newScale= new LinkedHashMap<String,JSONArray>();
+        newScale.put(scaleName,grades);
+        scales.add(newScale);
+
+        gradeScalesJsonObj.put("scales", scales);
+
+
     }
 
 
@@ -582,5 +653,77 @@ public class GradeBoundariesController extends Controller{
         return option.get() == ButtonType.OK;
     }
 
+    private String showSaveChangesDialog(){
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Save Changes");
+        dialog.setHeaderText("Do you want to save your changes as a new grade scale configuration?");
+        dialog.setGraphic(new Alert(Alert.AlertType.CONFIRMATION).getGraphic());
+        ButtonType saveButton = new ButtonType("Save New Configuration", ButtonBar.ButtonData.OK_DONE);
+        ButtonType continueButton = new ButtonType("Ignore Changes", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButton,continueButton);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
+
+        TextField configNameTextField = new TextField();
+        configNameTextField.setPromptText("Configuration Name");
+
+        HBox box=new HBox();
+        Label label=new Label("Configuration Name:");
+        label.prefHeightProperty().bind(configNameTextField.heightProperty());
+        label.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(label,configNameTextField);
+        box.setSpacing(7);
+
+        dialog.getDialogPane().setContent(box);
+
+        Node saveButt = dialog.getDialogPane().lookupButton(saveButton);
+
+        dialog.setResultConverter(dialogButton -> {
+
+            if(dialogButton==saveButton)
+                return configNameTextField.getText();
+
+            return null;
+
+        });
+
+
+        saveButt.addEventFilter( ActionEvent.ACTION, event->{
+
+
+            if(configNameTextField.getText().trim().isEmpty()){
+                event.consume();
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
+                        "Configuration name cannot be empty");
+            }
+            else if(isScaleExists(configNameTextField.getText().trim())){
+                event.consume();
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
+                        "\""+configNameTextField.getText().trim()+"\" already exists.");
+            }
+
+        });
+
+        Optional<String> result = dialog.showAndWait();
+
+        if(result==null || !result.isPresent())
+            return null;
+
+        return result.get().trim();
+    }
+
+
+    private boolean isScaleExists(String targetScale){
+
+        JSONArray scales=((JSONArray)gradeScalesJsonObj.get("scales"));
+
+        for(Object scale:scales){
+            if(((JSONObject)scale).keySet().iterator().next().equals(targetScale))
+                return true;
+        }
+
+        return false;
+
+    }
 
 }
