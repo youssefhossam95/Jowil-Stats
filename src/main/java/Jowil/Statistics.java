@@ -45,6 +45,7 @@ public class Statistics {
     private static ArrayList<String> studentIdentifier;
     private static String identifierName ="ID";
     private static double maxScore ;
+    private static double epslon = 0.0000001 ;
 
     private static ArrayList<Double> subjMaxScores;
     private static ArrayList<ArrayList<Double>> formsScors ;
@@ -379,6 +380,8 @@ public class Statistics {
     }
 
     private static double calcKr20 (double var){
+
+        var += epslon ;
         double pqsum = 0 ;
         for ( int formIndex = 0 ; formIndex < answersStats.size() ; formIndex ++ ) {
             ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex);
@@ -398,6 +401,8 @@ public class Statistics {
             }
 
             int k  = studentScores.size();
+            if(k == 1)
+                return 1 ;
             return k/(k-1) * (1-pqsum/var) ;
         }
         return 0 ;
@@ -521,13 +526,20 @@ public class Statistics {
         return Double.isNaN(pointBiserial)?0:pointBiserial;
     }
 
-    private static double calcPrecentOfSolvers(double startPercent , double endPercent , int formIndex , int questionIndex ) {
+    private static String calcPrecentOfSolvers(double startPercent , double endPercent , int formIndex , int questionIndex ) {
+
+        DecimalFormat format = new DecimalFormat("0.#");
+
         int totalNumberOfStudents = formsScors.get(formIndex).size();
+
+        if(totalNumberOfStudents<3)
+            return "-" ;
+
         ArrayList<ArrayList<String> > formSortedStudentAnswers = sortedStudentAnswers.get(formIndex);
         String correctAnswer = correctAnswers.get(formIndex).get(questionIndex);
         double count = 0  ;
-        int studentStartIndex = (int)(startPercent*totalNumberOfStudents) ;
-        int studentEndIndex = (int) (endPercent * totalNumberOfStudents) ;
+        int studentStartIndex = (int)Math.round(startPercent*totalNumberOfStudents) ;
+        int studentEndIndex = (int) Math.round(endPercent * totalNumberOfStudents) ;
 
         for (int studentIndex =  studentStartIndex ; studentIndex<  studentEndIndex  ; studentIndex++) {
            if(formSortedStudentAnswers.get(studentIndex).get(questionIndex).equals(correctAnswer))
@@ -535,7 +547,7 @@ public class Statistics {
         }
         int numberOfStudents  = studentEndIndex - studentStartIndex ;
 
-        return (double)count/(double)numberOfStudents ;
+        return format.format((double)count/(double)numberOfStudents *100)+"%" ;
     }
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
@@ -586,8 +598,8 @@ public class Statistics {
 
             tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ;
             tableRow.add(format.format(correctAnswerPrecentage * 100)+"%") ;
-            tableRow.add(format.format(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex) *100) +"%");
-            tableRow.add(format.format(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)*100) +"%");
+            tableRow.add(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex));
+            tableRow.add(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex));
             table.add(tableRow);
         }
         tables.add(table) ;

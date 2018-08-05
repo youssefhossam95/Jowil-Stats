@@ -46,14 +46,14 @@ public class gradeHBox extends HBox {
         percentScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
 
             if(!newValue.equals(oldValue)) {
-                this.rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / 100 * Statisitics.getExamMaxScore()));
+                this.rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / 100 * Statistics.getMaxScore()));
                 this.scoreSlider.setValue(Double.parseDouble(newValue));
             }
 
         });
 
 
-        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statisitics.getExamMaxScore()));
+        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
         this.rawScoreTextField.setPromptText("Raw Score");
         this.rawScoreTextField.setLabelFloat(true);
         this.rawScoreTextField.setStyle("focusColor:#3184c9");
@@ -61,7 +61,7 @@ public class gradeHBox extends HBox {
 
 
             if(!newValue.equals(oldValue)) {
-                this.percentScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / Statisitics.getExamMaxScore()*100));
+                this.percentScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / Statistics.getMaxScore()*100));
                 this.scoreSlider.setValue(Double.parseDouble(newValue));
             }
 
