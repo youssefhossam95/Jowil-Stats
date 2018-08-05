@@ -49,6 +49,18 @@ public class GradeHBox extends HBox {
         this.nameTextField.textProperty().addListener(t->parentController.setContentEdited(true));
 
 
+<<<<<<< HEAD
+        this.percentScoreTextField.setText(percentScore);
+        this.percentScoreTextField.setPromptText("Percent Score");
+        this.percentScoreTextField.setLabelFloat(true);
+        percentScoreTextField.setStyle("focusColor:#3184c9");
+        percentScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
+
+            if(!newValue.equals(oldValue)) {
+                this.rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / 100 * Statistics.getMaxScore()));
+                this.scoreSlider.setValue(Double.parseDouble(newValue));
+            }
+=======
         initPercentScoreTextField(percentScore);
         initRawScoreTextField(percentScore);
 
@@ -59,16 +71,32 @@ public class GradeHBox extends HBox {
             double d=(Double)newValue;
             this.percentScoreTextField.setText(String.format("%.1f",d));
             this.rawScoreTextField.setText(String.format("%.1f",d/ 100 * Statistics.getMaxScore()));
+>>>>>>> c82be3483172781a98b0c34f38485d8a8049452f
 
         });
 
 
+<<<<<<< HEAD
+        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
+        this.rawScoreTextField.setPromptText("Raw Score");
+        this.rawScoreTextField.setLabelFloat(true);
+        this.rawScoreTextField.setStyle("focusColor:#3184c9");
+        rawScoreTextField.textProperty().addListener((observable,oldValue,newValue)-> {
+=======
+>>>>>>> c82be3483172781a98b0c34f38485d8a8049452f
 
         addButton.getChildren().add(addIcon);
         addButton.setOnMouseClicked(t-> parentController.addNextGrade(this.index));
 
+<<<<<<< HEAD
+            if(!newValue.equals(oldValue)) {
+                this.percentScoreTextField.setText(String.format("%.1f", Double.parseDouble(newValue) / Statistics.getMaxScore()*100));
+                this.scoreSlider.setValue(Double.parseDouble(newValue));
+            }
+=======
         removeButton.getChildren().add(removeIcon);
         removeButton.setOnMouseClicked(t-> parentController.deleteGrade(this.index));
+>>>>>>> c82be3483172781a98b0c34f38485d8a8049452f
 
         this.getChildren().addAll(nameTextField,percentScoreTextField,rawScoreTextField,scoreSlider,addButton,removeButton);
 
