@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -22,7 +23,7 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-
+import java.util.Optional;
 
 
 public class GradeBoundariesController extends Controller{
@@ -79,6 +80,9 @@ public class GradeBoundariesController extends Controller{
     @FXML
     VBox formatsVBox;
 
+    @FXML
+    Node trashIcon;
+
 
 
 
@@ -93,6 +97,8 @@ public class GradeBoundariesController extends Controller{
 
 
 
+
+    private final static int DEFAULT_GRADE_CONFIGS_COUNT=3;
     int gradesConfigComboSelectedIndex;
     private  ArrayList<GradeHBox> gradesHBoxes;
     private  final static String standardLettersGradingFile="Standard Letters Scale.jgc",
@@ -113,10 +119,13 @@ public class GradeBoundariesController extends Controller{
 
 
 
+
+
     @Override
     protected void initComponents() {
 
 
+        initTrashIcon();
         initScrollPane();
         initGradesLabelsHBox();
         initGradesConfigCombo();
@@ -230,6 +239,9 @@ public class GradeBoundariesController extends Controller{
 
     public void deleteGrade(int callingIndex){
 
+        if(gradesHBoxes.size()==1) //never delete last hbox
+            return;
+
         for(int i=callingIndex+1;i<gradesHBoxes.size();i++)
             gradesHBoxes.get(i).decrementIndex();
 
@@ -269,8 +281,14 @@ public class GradeBoundariesController extends Controller{
                 return;
 
             gradesConfigComboSelectedIndex=(Integer)newValue;
-
             initGradesVBox();
+            isContentEdited=false;
+
+            if(gradesConfigComboSelectedIndex<DEFAULT_GRADE_CONFIGS_COUNT)
+                trashIcon.setOpacity(0.3);
+            else
+                trashIcon.setOpacity(1);
+
 
         });
 
@@ -422,6 +440,17 @@ public class GradeBoundariesController extends Controller{
 
     }
 
+    private void initTrashIcon(){
+        trashIcon.setOpacity(0.25);
+        trashIcon.setOnMouseEntered(t->{
+                if(gradesConfigComboSelectedIndex<DEFAULT_GRADE_CONFIGS_COUNT)
+                    return;
+                trashIcon.setStyle("-fx-fill:#87CEEB");
+        });
+
+        trashIcon.setOnMouseExited(t->trashIcon.setStyle("-fx-fill:#3184c9"));
+    }
+
     private JSONObject loadJsonObj(String name){
 
         String file= "";
@@ -478,6 +507,14 @@ public class GradeBoundariesController extends Controller{
 
     private void deleteCurrentConfig(){
 
+        if(gradeScalesJsonObj==null || gradesConfigComboSelectedIndex<DEFAULT_GRADE_CONFIGS_COUNT)
+            return;
+
+        if(showGradeScaleDeleteConfirmation()) {
+            JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+            scales.remove(gradesConfigComboSelectedIndex);
+            gradeScalesJsonObj.put("scales", scales);
+        }
     }
 
 
@@ -485,8 +522,8 @@ public class GradeBoundariesController extends Controller{
 
 
         if((gradeScalesJsonObj=loadJsonObj("GradeScales.json"))==null){
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Configurations Error",
-                    "Error in loading Grade Boundaries Configurations");
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
+                    "Error in loading Grade Scale Configurations");
             return;
         }
 
@@ -531,6 +568,18 @@ public class GradeBoundariesController extends Controller{
             gradesHBoxes.add(new GradeHBox(hbox));
 
 
+    }
+
+
+    private boolean showGradeScaleDeleteConfirmation() {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete File");
+        alert.setHeaderText("Are you sure want to delete this Grade Scale Configuration?");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.get() == ButtonType.OK;
     }
 
 

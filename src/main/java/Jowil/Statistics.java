@@ -643,6 +643,8 @@ public class Statistics {
         }
         return grades.get(grades.size()-1);
     }
+
+
     public static ArrayList<ArrayList<String>> report4Stats( ){
         DecimalFormat format = new DecimalFormat("0.#");
 

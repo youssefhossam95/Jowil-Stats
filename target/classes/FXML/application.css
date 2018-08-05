@@ -230,10 +230,7 @@ JFXCheckBox {
 }
 
 .trashIcon{
--fx-fill:#989898;
+-fx-fill:#3184c9;
 }
 
-.trashIcon:hover{
--fx-fill:#87CEEB;
-}
 

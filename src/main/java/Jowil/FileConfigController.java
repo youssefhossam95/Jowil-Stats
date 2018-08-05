@@ -704,10 +704,13 @@ public class FileConfigController extends Controller{
         alert.setTitle("No Headers Detected");
         alert.setHeaderText("Students Responses file doesn't contain headers");
         alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\". Both of these options will direct you to the manual mode.");
+        //alert.setOnCloseRequest(t->alert.hide());
         ButtonType skipRowButton = new ButtonType("Skip First Row");
         ButtonType continueButton = new ButtonType("Continue Anyway");
-        ButtonType cancelButton= new ButtonType("Cancel");
-        alert.getButtonTypes().setAll(skipRowButton,continueButton,cancelButton);
+        ButtonType close =ButtonType.CLOSE;
+
+
+        alert.getButtonTypes().setAll(skipRowButton,continueButton,close);
         Optional<ButtonType> result = alert.showAndWait();
 
         int selected;
@@ -729,14 +732,16 @@ public class FileConfigController extends Controller{
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("Questions Count");
         alert.setHeaderText("Questions count mismatch");
+        alert.setOnCloseRequest(t->alert.hide());
         alert.setContentText(responsesQcount+" questions were detected in student responses file, while the answer key file contains "+ answersQCount+" answers.");
         ButtonType declareSubjButton= new ButtonType("Declare The Extra "+(responsesQcount-answersQCount)+" Questions As Subjective");
         ButtonType continueButton = new ButtonType("Continue To Manual Mode");
-        ButtonType cancelButton= new ButtonType("Cancel");
+        ButtonType close =ButtonType.CLOSE;
+
         if(responsesQcount>answersQCount)
-            alert.getButtonTypes().setAll(declareSubjButton,continueButton,cancelButton);
+            alert.getButtonTypes().setAll(declareSubjButton,continueButton,close);
         else
-            alert.getButtonTypes().setAll(continueButton,cancelButton);
+            alert.getButtonTypes().setAll(continueButton,close);
 
         Optional<ButtonType> result = alert.showAndWait();
 

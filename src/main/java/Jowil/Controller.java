@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -169,6 +170,7 @@ public abstract class Controller {
         Alert alert = new Alert(alertType);
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 
+        alert.getButtonTypes().setAll(ButtonType.CLOSE);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -290,6 +292,10 @@ public abstract class Controller {
         }catch(Exception e){
 
         }
+    }
+
+    public void setContentEdited(boolean contentEdited) {
+        isContentEdited = contentEdited;
     }
 
 //    protected static double setPrefWidth(Region element,relativeVal){

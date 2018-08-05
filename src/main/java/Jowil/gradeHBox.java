@@ -46,6 +46,7 @@ public class GradeHBox extends HBox {
         this.nameTextField.setText(name);
         nameTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         nameTextField.setAlignment(Pos.CENTER);
+        this.nameTextField.textProperty().addListener(t->parentController.setContentEdited(true));
 
 
         initPercentScoreTextField(percentScore);
@@ -174,6 +175,9 @@ public class GradeHBox extends HBox {
             if(newValue)
                 parentController.rootPane.requestFocus();
         });
+
+
+        rawScoreTextField.textProperty().addListener(t->parentController.setContentEdited(true));
     }
 
 
@@ -181,6 +185,7 @@ public class GradeHBox extends HBox {
         String s=percentScoreTextField.getText();
         return s.length()==0 ||  s.equals(".")||Double.parseDouble(s)>100;
     }
+
 
 
 }
