@@ -1,8 +1,10 @@
 package Jowil;
 
+import Jowil.Reports.*;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.lowagie.text.DocumentException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -102,13 +104,14 @@ public class GradeBoundariesController extends Controller{
 
 
 
-    private final static int DEFAULT_GRADE_CONFIGS_COUNT=3;
+    private final static int DEFAULT_GRADE_CONFIGS_COUNT=4;
     private final static String USER_PREFS_FILE_NAME="UserPrefs.json",GRADE_SCALE_FILE_NAME="GradeScales.json";
     int gradesConfigComboSelectedIndex;
     private  ArrayList<GradeHBox> gradesHBoxes;
-    private  final static String standardLettersGradingFile="Standard Letters Scale.jgc",
-            allLettersGradingFile="All Letters Scale.jgc",egyptianGradingFile1="Egyptian Scale 1.jgc"
-            ,egyptianGradingFile2="Egyptian Scale 2.jgc",labelsColor="black";
+    private  final static String labelsColor="black";
+
+    private final static Report[] reports={new Report1(),new Report2(),new Report3(),new Report4(),new Report5()};
+
 
     JSONObject prefsJsonObj;
     JSONObject gradeScalesJsonObj;
@@ -227,6 +230,31 @@ public class GradeBoundariesController extends Controller{
     @Override
     protected void goToNextWindow(){
 
+        if(reportsDirTextField.getText().isEmpty()){
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
+                    "Reports Directory Path is required.");
+            return;
+        }
+
+
+        File outDir=new File(reportsDirTextField.getText());
+
+
+
+        if(!outDir.exists()){
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
+                    "Reports Directory \""+reportsDirTextField.getText()+"\" doesn't exist.");
+            return;
+        }
+
+
+        if(!outDir.isDirectory()){
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
+                    "Path \""+reportsDirTextField.getText()+"\" is not a valid directory path.");
+            return;
+        }
+
+
         ArrayList<Pair<String,Double>> scale=new ArrayList<>();
         ArrayList<String> gradeNames=new ArrayList<>();
         ArrayList<Double> gradeMins=new ArrayList<>();
@@ -254,9 +282,58 @@ public class GradeBoundariesController extends Controller{
             String result=showSaveChangesDialog();
             if(result!=null){
                 saveNewConfig(result,scale);
-                saveJsonObj(GRADE_SCALE_FILE_NAME,gradeScalesJsonObj);
             }
         }
+
+        saveJsonObj(GRADE_SCALE_FILE_NAME,gradeScalesJsonObj);
+
+
+        //generate Reports
+
+        ArrayList<Report> reportsOut=new ArrayList<>();
+        ArrayList<Integer> formatsOut=new ArrayList<>();
+        JSONArray reportsConfig=new JSONArray();
+        JSONArray formatsConfig=new JSONArray();
+
+
+        //parse checkboxes and save their configs
+        int i=0;
+        for(CheckBox checkBox : reportsCheckBoxes){
+            boolean isSelected=checkBox.isSelected();
+            if(isSelected)
+                reportsOut.add(reports[i]);
+            reportsConfig.add(isSelected);
+            i++;
+        }
+
+
+        i=0;
+        for(CheckBox checkBox : formatsCheckBoxes){
+            boolean isSelected=checkBox.isSelected();
+            if(isSelected)
+                formatsOut.add(i);
+            formatsConfig.add(isSelected);
+            i++;
+        }
+
+
+        prefsJsonObj.put("reportsChosen",reportsConfig);
+        prefsJsonObj.put("formatsChosen",formatsConfig);
+        savePrefsJsonObj();
+
+        Report.initOutputFolderPaths(reportsDirTextField.getText());
+        ReportsHandler reportsHandler =new ReportsHandler();
+
+
+        try {
+            reportsHandler.generateReports(reportsOut,formatsOut);
+        } catch (IOException e) {
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -354,6 +431,8 @@ public class GradeBoundariesController extends Controller{
 
 
     private void initDeleteConfigButton(){
+        Tooltip tooltip = new Tooltip("Delete Configuration");
+        Tooltip.install(deleteConfigButton, tooltip);
         deleteConfigButton.setOnMouseClicked(t->deleteCurrentConfig());
 
     }
@@ -560,7 +639,7 @@ public class GradeBoundariesController extends Controller{
             scales.remove(gradesConfigComboSelectedIndex);
             gradeScalesJsonObj.put("scales", scales);
             comboItems.remove(gradesConfigComboSelectedIndex);
-            
+
         }
     }
 
@@ -574,8 +653,8 @@ public class GradeBoundariesController extends Controller{
 
         for(Pair<String,Double> grade: scale){
 
-            LinkedHashMap<String,Double> map=new LinkedHashMap<>();
-            map.put(grade.getKey(),grade.getValue());
+            LinkedHashMap<String,String> map=new LinkedHashMap<>();
+            map.put(grade.getKey(),Double.toString(grade.getValue()));
             grades.add(map);
         }
 
@@ -725,5 +804,7 @@ public class GradeBoundariesController extends Controller{
         return false;
 
     }
+
+
 
 }

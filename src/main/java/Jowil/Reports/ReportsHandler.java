@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 public class ReportsHandler {
 
-    public final static int HTML=0,PDF=1,TXT=2,WORD=3,XLS=4 ;
+    public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
 
     public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
