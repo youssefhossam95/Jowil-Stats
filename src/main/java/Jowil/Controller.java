@@ -165,13 +165,24 @@ public abstract class Controller {
         alert.show();
     }
 
+    protected  void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.showAndWait();
+    }
+
 
     /**
      *
      * @param s
      * @return null if the value is less than zero or is not Parsable to Double , otherwise returns a new string in a non-integer representation
      */
-    protected String tryDouble(String s){
+    public static String tryDouble(String s){
 
         s=s.trim();
         try

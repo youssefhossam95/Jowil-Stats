@@ -15,13 +15,21 @@ import java.util.regex.Pattern;
 
 abstract public class Report {
 
+    protected final static String PDF_FOLDER_NAME="\\PDF Reports\\",HTML_FOLDER_NAME="\\HTML Reports\\";
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
-    protected final String outputPdfFolderPath  = ".\\src\\main\\resources\\pdfReports\\" ;
-    protected final String outputHtmlFolderPath =".\\src\\main\\resources\\htmlReports\\" ;
+    protected static String outputPdfFolderPath;
+    protected static String outputHtmlFolderPath;
     protected String workSpacePath;
     protected String outputFileName ;
     protected String pdfHtmlPath ;
+
+
+
+    public static void initOutputFolderPaths(String outPath){
+        outputPdfFolderPath=outPath+PDF_FOLDER_NAME;
+        outputHtmlFolderPath=outPath+HTML_FOLDER_NAME;
+    }
 
     public void updateTemplateDate(Document doc) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");

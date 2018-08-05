@@ -159,7 +159,8 @@ JFXCheckBox {
 
 .scroll-pane {
    -fx-background: #FFFFFF;
-   -fx-border-color:  #A9A9A9;
+   /*-fx-border-color:  #A9A9A9;*/
+   -fx-border-color:  black;
 }
 
 .scroll-pane > .corner {
@@ -225,7 +226,7 @@ JFXCheckBox {
 }
 
 .gradesMinusIcon:hover{
--fx-fill: #ff4d4d;
+-fx-fill:#ff9999;
 }
 
 .trashIcon{
@@ -235,3 +236,4 @@ JFXCheckBox {
 .trashIcon:hover{
 -fx-fill:#87CEEB;
 }
+
