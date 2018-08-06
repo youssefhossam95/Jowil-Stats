@@ -324,6 +324,7 @@ public class Statistics {
 
 
     public static void init(){
+        initFormsScores();
         initScores();
         initPointBiserialTables();
         initSortedStudentAnswers();
