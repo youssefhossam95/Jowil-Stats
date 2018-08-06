@@ -43,11 +43,14 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
+
         ArrayList<Report> reports = new ArrayList<>();
+
         reports.add(new Report3()) ;
+        Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
         ArrayList<Integer> formats = new ArrayList<>() ;
         formats.add(ReportsHandler.HTML) ;
-//        formats.add(ReportsHandler.PDF);
+        formats.add(ReportsHandler.PDF);
 
         ReportsHandler reportsHandler = new ReportsHandler();
         reportsHandler.generateReports(reports , formats);
