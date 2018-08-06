@@ -39,7 +39,7 @@ public class GradeBoundariesController extends Controller {
     }
 
     @FXML
-    ScrollPane scrollPane;
+    Pane scrollPane;
 
     @FXML
     VBox gradesVBox;
@@ -370,8 +370,9 @@ public class GradeBoundariesController extends Controller {
 
 
     private void initScrollPane() {
-        scrollPane.setContent(gradesVBox);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.getChildren().add(gradesVBox);
+        //scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setStyle("-fx-border-color: #A9A9A9;fx-border-width:1");
         scrollPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
                 rootPane.requestFocus();

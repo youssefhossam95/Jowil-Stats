@@ -13,7 +13,7 @@
        <Label text="Grading Scale" fx:id="gradeBoundariesTitle"></Label>
        <Label text="Reports Preferences" fx:id="reportsConfigTitle"></Label>
        <Separator fx:id="midSeparator" orientation="VERTICAL"/>
-      <ScrollPane fx:id="scrollPane"/>
+      <Pane fx:id="scrollPane"/>
       <VBox fx:id="gradesVBox" >
          <children>
          </children>
