@@ -195,8 +195,8 @@ public class FileConfigController extends Controller{
         initIdentifierCombo();
         initFormCombo();
         initManualModeToggle();
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\Test.csv");
-        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeys2.csv");
+        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
     }
 

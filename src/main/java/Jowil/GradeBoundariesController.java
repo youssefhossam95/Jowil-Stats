@@ -26,17 +26,14 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 
 
-public class GradeBoundariesController extends Controller{
+public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml","Grading Scale and Report Generation",1.25,1.25,true,back);
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back);
 
 
     }
@@ -55,7 +52,6 @@ public class GradeBoundariesController extends Controller{
 
     @FXML
     StackPane deleteConfigButton;
-
 
 
     @FXML
@@ -90,43 +86,35 @@ public class GradeBoundariesController extends Controller{
     Node trashIcon;
 
 
+    HBox gradesLabelsHBox = new HBox();
+
+    Label gradeName = new Label("Name");
+    Label gradePercent = new Label("Score %");
+    Label gradeRaw = new Label("Score");
+    Label reportsLabel = new Label("Reports");
+    Label formatsLabel = new Label("File Formats");
 
 
-    HBox gradesLabelsHBox=new HBox();
-
-    Label gradeName=new Label("Name");
-    Label gradePercent=new Label("Score %");
-    Label gradeRaw=new Label("Score");
-    Label reportsLabel=new Label("Reports");
-    Label formatsLabel=new Label("File Formats");
-
-
-
-
-
-    private final static int DEFAULT_GRADE_CONFIGS_COUNT=4;
-    private final static String USER_PREFS_FILE_NAME="UserPrefs.json",GRADE_SCALE_FILE_NAME="GradeScales.json";
+    private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
+    private final static String USER_PREFS_FILE_NAME = "UserPrefs.json", GRADE_SCALE_FILE_NAME = "GradeScales.json";
     int gradesConfigComboSelectedIndex;
-    private  ArrayList<GradeHBox> gradesHBoxes;
-    private  final static String labelsColor="black";
+    private ArrayList<GradeHBox> gradesHBoxes;
+    private final static String labelsColor = "black";
 
-    private final static Report[] reports={new Report1(),new Report2(),new Report3(),new Report4(),new Report5()};
+    private final static Report[] reports = {new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
 
 
     JSONObject prefsJsonObj;
     JSONObject gradeScalesJsonObj;
 
-    ArrayList<ArrayList<GradeHBox>> configs=new ArrayList<>();
+    ArrayList<ArrayList<GradeHBox>> configs = new ArrayList<>();
 
 
-    ArrayList<CheckBox> reportsCheckBoxes=new ArrayList<>();
-    ArrayList<CheckBox> formatsCheckBoxes=new ArrayList<>();
+    ArrayList<CheckBox> reportsCheckBoxes = new ArrayList<>();
+    ArrayList<CheckBox> formatsCheckBoxes = new ArrayList<>();
 
 
-    ObservableList<String> comboItems=FXCollections.observableArrayList();
-
-
-
+    ObservableList<String> comboItems = FXCollections.observableArrayList();
 
 
     @Override
@@ -145,19 +133,18 @@ public class GradeBoundariesController extends Controller{
         initReportsVBox();
         initFormatsVbox();
         initFinishButton();
-        
+
     }
 
 
-
     @Override
-    protected void updateSizes(){
+    protected void updateSizes() {
 
         super.updateSizes();
 
-        double scrollPaneWidth=rootWidthToPixels(0.43);
-        double scrollPaneHeight=rootHeightToPixels(0.56);
-        Font gradesLabelsFonts=new Font("Arial",resX/100);
+        double scrollPaneWidth = rootWidthToPixels(0.43);
+        double scrollPaneHeight = rootHeightToPixels(0.56);
+        Font gradesLabelsFonts = new Font("Arial", resX / 100);
         //left half
         comboHBox.setLayoutX(rootWidthToPixels(0.05));
         comboHBox.setLayoutY(rootHeightToPixels(0.15));
@@ -170,13 +157,13 @@ public class GradeBoundariesController extends Controller{
         gradeBoundariesTitle.setLayoutX(comboHBox.getLayoutX());
         gradeBoundariesTitle.setLayoutY(rootHeightToPixels(0.05));
         gradesVBox.setSpacing(resYToPixels(0.025));
-        gradesLabelsHBox.setSpacing(scrollPaneWidth*0.03);
-        gradesLabelsHBox.setPadding(new Insets(scrollPaneHeight*0.05,0,0,0));
-        gradesVBox.setPadding(new Insets(0,0,0,scrollPaneWidth*0.02));
+        gradesLabelsHBox.setSpacing(scrollPaneWidth * 0.03);
+        gradesLabelsHBox.setPadding(new Insets(scrollPaneHeight * 0.05, 0, 0, 0));
+        gradesVBox.setPadding(new Insets(0, 0, 0, scrollPaneWidth * 0.02));
 
-        gradeName.setPrefWidth(scrollPaneWidth*0.15);
-        gradeRaw.setPrefWidth(scrollPaneWidth*0.13);
-        gradePercent.setPrefWidth(scrollPaneWidth*0.13);
+        gradeName.setPrefWidth(scrollPaneWidth * 0.15);
+        gradeRaw.setPrefWidth(scrollPaneWidth * 0.13);
+        gradePercent.setPrefWidth(scrollPaneWidth * 0.13);
 
         gradeName.setFont(gradesLabelsFonts);
         gradePercent.setFont(gradesLabelsFonts);
@@ -188,35 +175,33 @@ public class GradeBoundariesController extends Controller{
         midSeparator.setLayoutX(rootWidthToPixels(0.5));
         midSeparator.setLayoutY(rootHeightToPixels(0.03));
         midSeparator.setPrefHeight(rootHeightToPixels(0.8));
-        reportsConfigTitle.setLayoutX(midSeparator.getLayoutX()+rootWidthToPixels(0.03));
+        reportsConfigTitle.setLayoutX(midSeparator.getLayoutX() + rootWidthToPixels(0.03));
         reportsConfigTitle.setLayoutY(gradeBoundariesTitle.getLayoutY());
 
         reportsDirHBox.setSpacing(resXToPixels(0.005));
         reportsDirHBox.setLayoutY(comboHBox.getLayoutY());
         reportsDirHBox.setLayoutX(reportsConfigTitle.getLayoutX());
-        reportsDirHBox.setPrefWidth(rootWidthToPixels(0.95)-reportsDirHBox.getLayoutX());
-        HBox.setHgrow(reportsDirTextField,Priority.ALWAYS);
-
+        reportsDirHBox.setPrefWidth(rootWidthToPixels(0.95) - reportsDirHBox.getLayoutX());
+        HBox.setHgrow(reportsDirTextField, Priority.ALWAYS);
 
 
         reportsConfigHBox.setLayoutX(reportsConfigTitle.getLayoutX());
         reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
         reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
-        reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight()*0.8);
+        reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight() * 0.8);
         reportsConfigHBox.setSpacing(resXToPixels(0.04));
 
         reportsLabel.setFont(gradesLabelsFonts);
-        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight()*0.05,0,reportsConfigHBox.getPrefHeight()*0.05,0));
+        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.05, 0));
         formatsLabel.setFont(gradesLabelsFonts);
-        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight()*0.05,0,reportsConfigHBox.getPrefHeight()*0.05,0));
+        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.05, 0));
         reportsVBox.setSpacing(resYToPixels(0.02));
-        reportsVBox.setPadding(new Insets(0,0,0,reportsConfigHBox.getPrefWidth()*0.02));
+        reportsVBox.setPadding(new Insets(0, 0, 0, reportsConfigHBox.getPrefWidth() * 0.02));
         formatsVBox.setSpacing(resYToPixels(0.02));
 
 
-        for(GradeHBox hbox:gradesHBoxes)
-            hbox.updateSizes(scrollPaneWidth,scrollPaneHeight);
-
+        for (GradeHBox hbox : gradesHBoxes)
+            hbox.updateSizes(scrollPaneWidth, scrollPaneHeight);
 
 
     }
@@ -228,105 +213,116 @@ public class GradeBoundariesController extends Controller{
 
 
     @Override
-    protected void goToNextWindow(){
+    protected void goToNextWindow() {
 
-        if(reportsDirTextField.getText().isEmpty()){
+        if (reportsDirTextField.getText().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
                     "Reports Directory Path is required.");
             return;
         }
 
 
-        File outDir=new File(reportsDirTextField.getText());
+        File outDir = new File(reportsDirTextField.getText());
 
 
-
-        if(!outDir.exists()){
+        if (!outDir.exists()) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
-                    "Reports Directory \""+reportsDirTextField.getText()+"\" doesn't exist.");
+                    "Reports Directory \"" + reportsDirTextField.getText() + "\" doesn't exist.");
             return;
         }
 
 
-        if(!outDir.isDirectory()){
+        if (!outDir.isDirectory()) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
-                    "Path \""+reportsDirTextField.getText()+"\" is not a valid directory path.");
+                    "Path \"" + reportsDirTextField.getText() + "\" is not a valid directory path.");
             return;
         }
 
 
-        ArrayList<Pair<String,Double>> scale=new ArrayList<>();
-        ArrayList<String> gradeNames=new ArrayList<>();
-        ArrayList<Double> gradeMins=new ArrayList<>();
+        ArrayList<Pair<String, Double>> scale = new ArrayList<>();
+        ArrayList<String> gradeNames = new ArrayList<>();
+        ArrayList<Double> gradeMins = new ArrayList<>();
 
-        int counter=1;
-        for(GradeHBox hbox: gradesHBoxes){
-            Pair<String,Double> grade=hbox.getGrade();
-            if(grade.getKey().trim().isEmpty()){
+        int counter = 1;
+        for (GradeHBox hbox : gradesHBoxes) {
+            Pair<String, Double> grade = hbox.getGrade();
+            if (grade.getKey().trim().isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Grade Scale Error",
-                        "Error in Grade number "+counter+": Grade name cannot be empty.");
+                        "Error in Grade number " + counter + ": Grade name cannot be empty.");
                 return;
             }
             scale.add(grade);
-            gradeNames.add(grade.getKey());
-            gradeMins.add(grade.getValue());
             counter++;
         }
+
+        Collections.sort(scale,new PairSorter());
+
+        if(scale.get(0).getValue()!=0)
+            scale.add(0,new Pair<String,Double>("F",0.0));
+
+
+        for(Pair<String,Double> grade:scale){
+            gradeNames.add(grade.getKey());
+            gradeMins.add(grade.getValue() / 100);
+        }
+
+
+        gradeMins.add(1.0);
 
         Statistics.setGrades(gradeNames);
         Statistics.setGradesLowerRange(gradeMins);
 
         //save new changes if user wants to
 
-        if(isContentEdited){
-            String result=showSaveChangesDialog();
-            if(result!=null){
-                saveNewConfig(result,scale);
+        if (isContentEdited) {
+            String result = showSaveChangesDialog();
+            if (result != null) {
+                saveNewConfig(result, scale);
             }
         }
 
-        saveJsonObj(GRADE_SCALE_FILE_NAME,gradeScalesJsonObj);
+        saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
 
 
         //generate Reports
 
-        ArrayList<Report> reportsOut=new ArrayList<>();
-        ArrayList<Integer> formatsOut=new ArrayList<>();
-        JSONArray reportsConfig=new JSONArray();
-        JSONArray formatsConfig=new JSONArray();
+        ArrayList<Report> reportsOut = new ArrayList<>();
+        ArrayList<Integer> formatsOut = new ArrayList<>();
+        JSONArray reportsConfig = new JSONArray();
+        JSONArray formatsConfig = new JSONArray();
 
 
         //parse checkboxes and save their configs
-        int i=0;
-        for(CheckBox checkBox : reportsCheckBoxes){
-            boolean isSelected=checkBox.isSelected();
-            if(isSelected)
+        int i = 0;
+        for (CheckBox checkBox : reportsCheckBoxes) {
+            boolean isSelected = checkBox.isSelected();
+            if (isSelected)
                 reportsOut.add(reports[i]);
             reportsConfig.add(isSelected);
             i++;
         }
 
 
-        i=0;
-        for(CheckBox checkBox : formatsCheckBoxes){
-            boolean isSelected=checkBox.isSelected();
-            if(isSelected)
+        i = 0;
+        for (CheckBox checkBox : formatsCheckBoxes) {
+            boolean isSelected = checkBox.isSelected();
+            if (isSelected)
                 formatsOut.add(i);
             formatsConfig.add(isSelected);
             i++;
         }
 
 
-        prefsJsonObj.put("reportsChosen",reportsConfig);
-        prefsJsonObj.put("formatsChosen",formatsConfig);
+        prefsJsonObj.put("reportsChosen", reportsConfig);
+        prefsJsonObj.put("formatsChosen", formatsConfig);
         savePrefsJsonObj();
 
         Report.initOutputFolderPaths(reportsDirTextField.getText());
-        ReportsHandler reportsHandler =new ReportsHandler();
+        ReportsHandler reportsHandler = new ReportsHandler();
 
 
         try {
-            reportsHandler.generateReports(reportsOut,formatsOut);
+            reportsHandler.generateReports(reportsOut, formatsOut);
         } catch (IOException e) {
 
         } catch (DocumentException e) {
@@ -337,31 +333,29 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-
     @Override
     protected Controller getNextController() {
         return new HeadersCreateController(this);
     }
 
 
-    public void addNextGrade(int callingIndex){
-        int newIndex=callingIndex+1;
+    public void addNextGrade(int callingIndex) {
+        int newIndex = callingIndex + 1;
 
-        for(int i=callingIndex+1;i<gradesHBoxes.size();i++)
+        for (int i = callingIndex + 1; i < gradesHBoxes.size(); i++)
             gradesHBoxes.get(i).incrementIndex();
 
-        gradesHBoxes.add(newIndex,new GradeHBox(newIndex,"New Grade","50.0",this));
+        gradesHBoxes.add(newIndex, new GradeHBox(newIndex, "New Grade", "50.0", this));
         updateGradesVBox();
     }
 
 
+    public void deleteGrade(int callingIndex) {
 
-    public void deleteGrade(int callingIndex){
-
-        if(gradesHBoxes.size()==1) //never delete last hbox
+        if (gradesHBoxes.size() == 1) //never delete last hbox
             return;
 
-        for(int i=callingIndex+1;i<gradesHBoxes.size();i++)
+        for (int i = callingIndex + 1; i < gradesHBoxes.size(); i++)
             gradesHBoxes.get(i).decrementIndex();
 
         gradesHBoxes.remove(callingIndex);
@@ -370,40 +364,42 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-
     //////helper methods
 
-    
-    private void initScrollPane(){
+
+    private void initScrollPane() {
         scrollPane.setContent(gradesVBox);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.focusedProperty().addListener((observable,oldValue,newValue)->{
-            if(newValue)
+        scrollPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue)
                 rootPane.requestFocus();
         });
 
 
     }
-    
-    private void initGradesConfigCombo(){
+
+    private void initGradesConfigCombo() {
 
         loadGradeConfigs();
         gradesConfigCombo.setItems(comboItems);
 
 
         gradesConfigCombo.setVisibleRowCount(3);
-        gradesConfigCombo.setOnShown(t->gradesConfigCombo.getSelectionModel().clearSelection());
-        gradesConfigCombo.setOnHidden(t->{gradesConfigCombo.getSelectionModel().select(gradesConfigComboSelectedIndex); System.out.println("easy"+gradesConfigComboSelectedIndex);});
-        gradesConfigCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
+        gradesConfigCombo.setOnShown(t -> gradesConfigCombo.getSelectionModel().clearSelection());
+        gradesConfigCombo.setOnHidden(t -> {
+            gradesConfigCombo.getSelectionModel().select(gradesConfigComboSelectedIndex);
+            System.out.println("easy" + gradesConfigComboSelectedIndex);
+        });
+        gradesConfigCombo.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 
-            if((Integer)newValue==gradesConfigComboSelectedIndex || (Integer)newValue==-1 )
+            if ((Integer) newValue == gradesConfigComboSelectedIndex || (Integer) newValue == -1)
                 return;
 
-            gradesConfigComboSelectedIndex=(Integer)newValue;
+            gradesConfigComboSelectedIndex = (Integer) newValue;
             initGradesVBox();
-            isContentEdited=false;
+            isContentEdited = false;
 
-            if(gradesConfigComboSelectedIndex<DEFAULT_GRADE_CONFIGS_COUNT)
+            if (gradesConfigComboSelectedIndex < DEFAULT_GRADE_CONFIGS_COUNT)
                 trashIcon.setOpacity(0.3);
             else
                 trashIcon.setOpacity(1);
@@ -411,60 +407,61 @@ public class GradeBoundariesController extends Controller{
 
         });
 
-        gradesConfigCombo.setCellFactory(t->{
-                        final ListCell<String> cell = new ListCell<String>() {
-                            {
-                                //super.setPrefHeight(gradesConfigCombo.getPrefHeight());
-                            }
-                            @Override public void updateItem(String item,
-                                                             boolean empty) {
-                                super.updateItem(item, empty);
-                                setText(item);
-                            }
-                        };
-                        return cell;
-                    });
+        gradesConfigCombo.setCellFactory(t -> {
+            final ListCell<String> cell = new ListCell<String>() {
+                {
+                    //super.setPrefHeight(gradesConfigCombo.getPrefHeight());
+                }
+
+                @Override
+                public void updateItem(String item,
+                                       boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(item);
+                }
+            };
+            return cell;
+        });
 
 
         gradesConfigCombo.getSelectionModel().select(0);
     }
 
 
-    private void initDeleteConfigButton(){
+    private void initDeleteConfigButton() {
         Tooltip tooltip = new Tooltip("Delete Configuration");
         Tooltip.install(deleteConfigButton, tooltip);
-        deleteConfigButton.setOnMouseClicked(t->deleteCurrentConfig());
+        deleteConfigButton.setOnMouseClicked(t -> deleteCurrentConfig());
 
     }
 
 
-
-    private void initTitles(){
+    private void initTitles() {
         gradeBoundariesTitle.setFont(new Font("Arial", headersFontSize));
         reportsConfigTitle.setFont(new Font("Arial", headersFontSize));
     }
 
 
-    private  void initGradesVBox(){
+    private void initGradesVBox() {
         cloneGradesHBoxes(gradesConfigComboSelectedIndex);
         updateGradesVBox();
 
     }
 
-    private void initGradesLabelsHBox(){
+    private void initGradesLabelsHBox() {
 
 
-        gradesLabelsHBox.getChildren().addAll(gradeName,gradePercent,gradeRaw);
-        gradeName.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        gradesLabelsHBox.getChildren().addAll(gradeName, gradePercent, gradeRaw);
+        gradeName.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         gradeName.setAlignment(Pos.CENTER);
-        gradeRaw.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        gradeRaw.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         gradeRaw.setAlignment(Pos.CENTER);
-        gradePercent.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        gradePercent.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         gradePercent.setAlignment(Pos.CENTER);
     }
 
 
-    private void initReportsDirChooser(){
+    private void initReportsDirChooser() {
 
         Tooltip tooltip = new Tooltip("Choose Output Directory");
         Tooltip.install(reportsDirChooser, tooltip);
@@ -474,24 +471,24 @@ public class GradeBoundariesController extends Controller{
             public void handle(MouseEvent t) {
 
 
-                boolean isJsonSuccess=loadPrefsJsonObj();
+                boolean isJsonSuccess = loadPrefsJsonObj();
                 DirectoryChooser dirChooser = new DirectoryChooser();
                 dirChooser.setTitle("Choose Reports Output Directory");
-                String lastDir=(String)prefsJsonObj.get("reportsOutputDir");
+                String lastDir = (String) prefsJsonObj.get("reportsOutputDir");
 
-                if(isJsonSuccess) {
+                if (isJsonSuccess) {
                     lastDir = lastDir.isEmpty() ? System.getProperty("user.home") : lastDir;
                     dirChooser.setInitialDirectory(new File((lastDir)));
                 }
 
-                File newDir =dirChooser.showDialog(stage);
+                File newDir = dirChooser.showDialog(stage);
 
-                if(isJsonSuccess) {
+                if (isJsonSuccess) {
                     reportsDirTextField.setText(newDir.getPath());
                     reportsDirTextField.requestFocus();
                     reportsDirTextField.deselect();
-                    if(isJsonSuccess && !newDir.getPath().equals(lastDir)){
-                        prefsJsonObj.put("reportsOutputDir",newDir.getPath());
+                    if (isJsonSuccess && !newDir.getPath().equals(lastDir)) {
+                        prefsJsonObj.put("reportsOutputDir", newDir.getPath());
                         savePrefsJsonObj();
 
                     }
@@ -501,13 +498,13 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-    private void initReportsConfigHBox(){
+    private void initReportsConfigHBox() {
         reportsConfigHBox.setStyle("-fx-border-color: #A9A9A9;");
     }
 
-    private void initReportsVBox(){
+    private void initReportsVBox() {
 
-        reportsLabel.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        reportsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         reportsVBox.getChildren().add(reportsLabel);
 
         //add checkboxes
@@ -518,15 +515,15 @@ public class GradeBoundariesController extends Controller{
         reportsCheckBoxes.add(new JFXCheckBox("Report 5: Questions Statistics Report"));
 
         //load json array
-        boolean isJsonSuccess=loadPrefsJsonObj();
+        boolean isJsonSuccess = loadPrefsJsonObj();
 
-        JSONArray reportsChosen=(JSONArray)prefsJsonObj.get("reportsChosen");
+        JSONArray reportsChosen = (JSONArray) prefsJsonObj.get("reportsChosen");
 
         //initialize checkboxes
-        for(int i=0;i<reportsCheckBoxes.size();i++) {
-            Boolean value=true;
-            if(isJsonSuccess)
-                value=(Boolean) reportsChosen.get(i);
+        for (int i = 0; i < reportsCheckBoxes.size(); i++) {
+            Boolean value = true;
+            if (isJsonSuccess)
+                value = (Boolean) reportsChosen.get(i);
             reportsCheckBoxes.get(i).setSelected(value);
             reportsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
         }
@@ -535,9 +532,9 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-    private void initFormatsVbox(){
+    private void initFormatsVbox() {
 
-        formatsLabel.setStyle("-fx-text-fill:"+labelsColor+";-fx-font-weight: bold;");
+        formatsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         formatsVBox.getChildren().add(formatsLabel);
 
         formatsCheckBoxes.add(new JFXCheckBox("PDF"));
@@ -545,14 +542,14 @@ public class GradeBoundariesController extends Controller{
         formatsCheckBoxes.add(new JFXCheckBox("TXT"));
 
         //load json array
-        boolean isJsonSuccess=loadPrefsJsonObj();
-        JSONArray formatsChosen=(JSONArray)prefsJsonObj.get("formatsChosen");
+        boolean isJsonSuccess = loadPrefsJsonObj();
+        JSONArray formatsChosen = (JSONArray) prefsJsonObj.get("formatsChosen");
 
         //initialize checkboxes
-        for(int i=0;i<formatsCheckBoxes.size();i++) {
-            Boolean value=true;
-            if(isJsonSuccess)
-                value=(Boolean) formatsChosen.get(i);
+        for (int i = 0; i < formatsCheckBoxes.size(); i++) {
+            Boolean value = true;
+            if (isJsonSuccess)
+                value = (Boolean) formatsChosen.get(i);
             formatsCheckBoxes.get(i).setSelected(value);
             formatsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
         }
@@ -561,31 +558,32 @@ public class GradeBoundariesController extends Controller{
 
     }
 
-    private void initTrashIcon(){
+    private void initTrashIcon() {
         trashIcon.setOpacity(0.25);
-        trashIcon.setOnMouseEntered(t->{
-                if(gradesConfigComboSelectedIndex<DEFAULT_GRADE_CONFIGS_COUNT)
-                    return;
-                trashIcon.setStyle("-fx-fill:#87CEEB");
+        trashIcon.setOnMouseEntered(t -> {
+            if (gradesConfigComboSelectedIndex < DEFAULT_GRADE_CONFIGS_COUNT)
+                return;
+            trashIcon.setStyle("-fx-fill:#87CEEB");
         });
 
-        trashIcon.setOnMouseExited(t->trashIcon.setStyle("-fx-fill:#3184c9"));
+        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#3184c9"));
     }
 
-    private void initFinishButton(){
+    private void initFinishButton() {
         this.nextButton.setText("Finish");
     }
-    private JSONObject loadJsonObj(String name){
 
-        String file= "";
-        JSONObject jsonObj=null;
+    private JSONObject loadJsonObj(String name) {
+
+        String file = "";
+        JSONObject jsonObj = null;
         try {
-            file = URLDecoder.decode(getClass().getResource("/"+name).getFile(),"utf-8");
+            file = URLDecoder.decode(getClass().getResource("/" + name).getFile(), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         try {
-            jsonObj= (JSONObject)new JSONParser().parse(new FileReader(file));
+            jsonObj = (JSONObject) new JSONParser().parse(new FileReader(file));
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -594,15 +592,15 @@ public class GradeBoundariesController extends Controller{
         }
 
         return jsonObj;
-        
+
     }
-    
-    private void saveJsonObj(String name,JSONObject jsonObj){
+
+    private void saveJsonObj(String name, JSONObject jsonObj) {
 
         PrintWriter pw = null;
-        String file= "";
+        String file = "";
         try {
-            file = URLDecoder.decode(getClass().getResource("/"+name).getFile(),"utf-8");
+            file = URLDecoder.decode(getClass().getResource("/" + name).getFile(), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -618,23 +616,23 @@ public class GradeBoundariesController extends Controller{
         pw.close();
     }
 
-    
-    private boolean loadPrefsJsonObj(){
 
-        return (prefsJsonObj=loadJsonObj("UserPrefs.json"))!=null;
+    private boolean loadPrefsJsonObj() {
+
+        return (prefsJsonObj = loadJsonObj("UserPrefs.json")) != null;
     }
 
-    
-    private void savePrefsJsonObj(){
-        saveJsonObj(USER_PREFS_FILE_NAME,prefsJsonObj);
+
+    private void savePrefsJsonObj() {
+        saveJsonObj(USER_PREFS_FILE_NAME, prefsJsonObj);
     }
 
-    private void deleteCurrentConfig(){
+    private void deleteCurrentConfig() {
 
-        if(gradeScalesJsonObj==null || gradesConfigComboSelectedIndex<DEFAULT_GRADE_CONFIGS_COUNT)
+        if (gradeScalesJsonObj == null || gradesConfigComboSelectedIndex < DEFAULT_GRADE_CONFIGS_COUNT)
             return;
 
-        if(showGradeScaleDeleteConfirmation()) {
+        if (showGradeScaleDeleteConfirmation()) {
             JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
             scales.remove(gradesConfigComboSelectedIndex);
             gradeScalesJsonObj.put("scales", scales);
@@ -643,23 +641,23 @@ public class GradeBoundariesController extends Controller{
         }
     }
 
-    private void saveNewConfig(String scaleName,ArrayList<Pair<String,Double>> scale) {
+    private void saveNewConfig(String scaleName, ArrayList<Pair<String, Double>> scale) {
 
-        if(gradeScalesJsonObj==null)
+        if (gradeScalesJsonObj == null)
             return;
 
         JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
-        JSONArray grades=new JSONArray();
+        JSONArray grades = new JSONArray();
 
-        for(Pair<String,Double> grade: scale){
+        for (Pair<String, Double> grade : scale) {
 
-            LinkedHashMap<String,String> map=new LinkedHashMap<>();
-            map.put(grade.getKey(),Double.toString(grade.getValue()));
+            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+            map.put(grade.getKey(), Double.toString(grade.getValue()));
             grades.add(map);
         }
 
-        LinkedHashMap<String,JSONArray> newScale= new LinkedHashMap<String,JSONArray>();
-        newScale.put(scaleName,grades);
+        LinkedHashMap<String, JSONArray> newScale = new LinkedHashMap<String, JSONArray>();
+        newScale.put(scaleName, grades);
         scales.add(newScale);
 
         gradeScalesJsonObj.put("scales", scales);
@@ -668,29 +666,29 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-    private void loadGradeConfigs(){
+    private void loadGradeConfigs() {
 
 
-        if((gradeScalesJsonObj=loadJsonObj("GradeScales.json"))==null){
+        if ((gradeScalesJsonObj = loadJsonObj("GradeScales.json")) == null) {
             showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
                     "Error in loading Grade Scale Configurations");
             return;
         }
 
-        JSONArray scales=(JSONArray)gradeScalesJsonObj.get("scales");
+        JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
 
 
-        for(int i=0;i<scales.size();i++){
-            ArrayList<GradeHBox> vBoxGrades=new ArrayList<>();
+        for (int i = 0; i < scales.size(); i++) {
+            ArrayList<GradeHBox> vBoxGrades = new ArrayList<>();
 
-            JSONObject scale=(JSONObject)scales.get(i);
-            comboItems.add((String)scale.keySet().iterator().next());
-            JSONArray grades=(JSONArray)scale.values().iterator().next();
+            JSONObject scale = (JSONObject) scales.get(i);
+            comboItems.add((String) scale.keySet().iterator().next());
+            JSONArray grades = (JSONArray) scale.values().iterator().next();
 
-            for(int j=0;j<grades.size();j++){
+            for (int j = 0; j < grades.size(); j++) {
 
-                JSONObject grade=(JSONObject)grades.get(j);
-                vBoxGrades.add(new GradeHBox(j,(String)grade.keySet().iterator().next(),(String)grade.values().iterator().next(),this));
+                JSONObject grade = (JSONObject) grades.get(j);
+                vBoxGrades.add(new GradeHBox(j, (String) grade.keySet().iterator().next(), (String) grade.values().iterator().next(), this));
 
             }
 
@@ -702,19 +700,19 @@ public class GradeBoundariesController extends Controller{
     }
 
 
-    private void updateGradesVBox(){
+    private void updateGradesVBox() {
         gradesVBox.getChildren().clear();
         gradesVBox.getChildren().add(gradesLabelsHBox);
         gradesVBox.getChildren().addAll(gradesHBoxes);
         updateSizes();
     }
 
-    private void cloneGradesHBoxes(int index){
+    private void cloneGradesHBoxes(int index) {
 
-        gradesHBoxes=new ArrayList<>();
-        ArrayList<GradeHBox> currentConfig=configs.get(index);
+        gradesHBoxes = new ArrayList<>();
+        ArrayList<GradeHBox> currentConfig = configs.get(index);
 
-        for(GradeHBox hbox : currentConfig)
+        for (GradeHBox hbox : currentConfig)
             gradesHBoxes.add(new GradeHBox(hbox));
 
 
@@ -732,25 +730,25 @@ public class GradeBoundariesController extends Controller{
         return option.get() == ButtonType.OK;
     }
 
-    private String showSaveChangesDialog(){
+    private String showSaveChangesDialog() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Save Changes");
         dialog.setHeaderText("Do you want to save your changes as a new grade scale configuration?");
         dialog.setGraphic(new Alert(Alert.AlertType.CONFIRMATION).getGraphic());
         ButtonType saveButton = new ButtonType("Save New Configuration", ButtonBar.ButtonData.OK_DONE);
         ButtonType continueButton = new ButtonType("Ignore Changes", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButton,continueButton);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButton, continueButton);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 
 
         TextField configNameTextField = new TextField();
         configNameTextField.setPromptText("Configuration Name");
 
-        HBox box=new HBox();
-        Label label=new Label("Configuration Name:");
+        HBox box = new HBox();
+        Label label = new Label("Configuration Name:");
         label.prefHeightProperty().bind(configNameTextField.heightProperty());
         label.setAlignment(Pos.CENTER);
-        box.getChildren().addAll(label,configNameTextField);
+        box.getChildren().addAll(label, configNameTextField);
         box.setSpacing(7);
 
         dialog.getDialogPane().setContent(box);
@@ -759,7 +757,7 @@ public class GradeBoundariesController extends Controller{
 
         dialog.setResultConverter(dialogButton -> {
 
-            if(dialogButton==saveButton)
+            if (dialogButton == saveButton)
                 return configNameTextField.getText();
 
             return null;
@@ -767,37 +765,36 @@ public class GradeBoundariesController extends Controller{
         });
 
 
-        saveButt.addEventFilter( ActionEvent.ACTION, event->{
+        saveButt.addEventFilter(ActionEvent.ACTION, event -> {
 
 
-            if(configNameTextField.getText().trim().isEmpty()){
+            if (configNameTextField.getText().trim().isEmpty()) {
                 event.consume();
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
                         "Configuration name cannot be empty");
-            }
-            else if(isScaleExists(configNameTextField.getText().trim())){
+            } else if (isScaleExists(configNameTextField.getText().trim())) {
                 event.consume();
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
-                        "\""+configNameTextField.getText().trim()+"\" already exists.");
+                        "\"" + configNameTextField.getText().trim() + "\" already exists.");
             }
 
         });
 
         Optional<String> result = dialog.showAndWait();
 
-        if(result==null || !result.isPresent())
+        if (result == null || !result.isPresent())
             return null;
 
         return result.get().trim();
     }
 
 
-    private boolean isScaleExists(String targetScale){
+    private boolean isScaleExists(String targetScale) {
 
-        JSONArray scales=((JSONArray)gradeScalesJsonObj.get("scales"));
+        JSONArray scales = ((JSONArray) gradeScalesJsonObj.get("scales"));
 
-        for(Object scale:scales){
-            if(((JSONObject)scale).keySet().iterator().next().equals(targetScale))
+        for (Object scale : scales) {
+            if (((JSONObject) scale).keySet().iterator().next().equals(targetScale))
                 return true;
         }
 
@@ -805,6 +802,11 @@ public class GradeBoundariesController extends Controller{
 
     }
 
+    class PairSorter implements Comparator<Pair<String, Double>> {
 
-
+        @Override
+        public int compare(Pair<String, Double> o1, Pair<String, Double> o2) {
+            return (int) (double) (o1.getValue() - o2.getValue());
+        }
+    }
 }
