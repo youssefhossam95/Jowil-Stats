@@ -29,8 +29,8 @@ public class GradeHBox extends HBox {
     JFXTextField percentScoreTextField=new JFXTextField();
     JFXTextField rawScoreTextField=new JFXTextField();
     JFXSlider scoreSlider=new JFXSlider();
-    private final  Node addIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size(Double.toString(resX/80)).styleClass("gradesPlusIcon").build();
-    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.MINUS_CIRCLE).size(Double.toString(resX/80)).styleClass("gradesMinusIcon").build();
+    private final  Node addIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS).size(Double.toString(resX/85)).styleClass("gradesPlusIcon").build();
+    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).size(Double.toString(resX/80)).styleClass("gradesMinusIcon").build();
     StackPane addButton=new StackPane();
     StackPane removeButton=new StackPane();
     boolean isIgnorePercentScoreLosingFocus=false;

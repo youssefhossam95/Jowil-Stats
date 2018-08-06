@@ -214,7 +214,7 @@ JFXCheckBox {
 }
 
 .gradesPlusIcon{
--fx-fill:green
+-fx-fill:#049428;
 }
 
 .gradesPlusIcon:hover{
@@ -222,7 +222,7 @@ JFXCheckBox {
 }
 
 .gradesMinusIcon{
--fx-fill:red;
+-fx-fill:#f74242;
 }
 
 .gradesMinusIcon:hover{
