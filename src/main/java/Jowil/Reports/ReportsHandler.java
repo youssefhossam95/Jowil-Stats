@@ -45,6 +45,7 @@ public class ReportsHandler {
                 report.generatePdfReport();
             if(formats.indexOf(HTML) !=0 );
                 report.generateHtmlReport();
+                System.out.println("finished Report");
         }
 
 

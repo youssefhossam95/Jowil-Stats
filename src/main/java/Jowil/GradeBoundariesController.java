@@ -323,7 +323,9 @@ public class GradeBoundariesController extends Controller {
 
         try {
             reportsHandler.generateReports(reportsOut, formatsOut);
+            System.out.println("Done");
         } catch (IOException e) {
+            e.printStackTrace();
 
         } catch (DocumentException e) {
             e.printStackTrace();

@@ -27,8 +27,11 @@ abstract public class Report {
 
 
     public static void initOutputFolderPaths(String outPath){
-        outputPdfFolderPath=outPath+PDF_FOLDER_NAME;
-        outputHtmlFolderPath=outPath+HTML_FOLDER_NAME;
+//        outputPdfFolderPath=outPath+PDF_FOLDER_NAME;
+//        outputHtmlFolderPath=outPath+HTML_FOLDER_NAME;
+
+        outputPdfFolderPath=outPath;
+        outputHtmlFolderPath=outPath;
     }
 
     public void updateTemplateDate(Document doc) {
