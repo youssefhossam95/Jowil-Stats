@@ -242,7 +242,7 @@ public abstract class Controller {
             controller.startWindow();
         }
         else {
-            controller = (WeightsController) next;
+            controller = next;
             controller.showWindow();
         }
         isContentEdited=false;

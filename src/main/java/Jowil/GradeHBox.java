@@ -88,16 +88,15 @@ public class GradeHBox extends HBox {
     public void updateSizes(double scrollPaneWidth,double scrollPaneHeight){
 
 
-
-        nameTextField.setPrefWidth(scrollPaneWidth*0.15);
-        nameTextField.setPrefHeight(scrollPaneHeight/20);
-        rawScoreTextField.setPrefWidth(scrollPaneWidth*0.13);
-        rawScoreTextField.setPrefHeight(scrollPaneHeight/20);
-        percentScoreTextField.setPrefWidth(scrollPaneWidth*0.13);
-        percentScoreTextField.setPrefHeight(scrollPaneHeight/20);
-        scoreSlider.setPrefWidth(scrollPaneWidth*0.3);
-        scoreSlider.setPadding(new Insets(rawScoreTextField.getPrefHeight()/2,0,0,0));
-        this.setSpacing(scrollPaneWidth*0.03);
+        nameTextField.setPrefWidth((int)(scrollPaneWidth*0.15));
+        nameTextField.setPrefHeight((int)(scrollPaneHeight/20));
+        rawScoreTextField.setPrefWidth((int)(scrollPaneWidth*0.13));
+        rawScoreTextField.setPrefHeight((int)(scrollPaneHeight/20));
+        percentScoreTextField.setPrefWidth((int)(scrollPaneWidth*0.13));
+        percentScoreTextField.setPrefHeight((int)(scrollPaneHeight/20));
+        scoreSlider.setPrefWidth((int)(scrollPaneWidth*0.3));
+        scoreSlider.setPadding(new Insets((int)((rawScoreTextField.getPrefHeight()/2)),0,0,0));
+        this.setSpacing((int)(scrollPaneWidth*0.03));
 
     }
 
@@ -190,8 +189,12 @@ public class GradeHBox extends HBox {
         return s.length()==0 ||  s.equals(".")||Double.parseDouble(s)>100;
     }
 
-    Pair<String,Double> getGrade(){
+    public Pair<String,Double> getGrade(){
         return new Pair(nameTextField.getText(),Double.parseDouble(percentScoreTextField.getText()));
+    }
+
+    public void refreshRawScore(){
+        rawScoreTextField.setText(String.format("%.1f", Double.parseDouble(percentScoreTextField.getText()) / 100 * Statistics.getMaxScore()));
     }
 
 

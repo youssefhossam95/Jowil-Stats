@@ -311,7 +311,7 @@ public class Statistics {
 
     }
 
-    private static void initMaxScore() {
+    public static void initMaxScore() {
         double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
         maxScore = sum(wieghts) ;
         if(subjMaxScores.size()!=0) {

@@ -146,24 +146,24 @@ public class GradeBoundariesController extends Controller {
         double scrollPaneHeight = rootHeightToPixels(0.56);
         Font gradesLabelsFonts = new Font("Arial", resX / 100);
         //left half
-        comboHBox.setLayoutX(rootWidthToPixels(0.05));
+        comboHBox.setLayoutX((int)(rootWidthToPixels(0.05)));
         comboHBox.setLayoutY(rootHeightToPixels(0.15));
         comboHBox.setSpacing(resXToPixels(0.005));
         gradesConfigCombo.setPrefWidth(rootWidthToPixels(0.25));
-        scrollPane.setLayoutY(rootHeightToPixels(0.25));
-        scrollPane.setLayoutX(comboHBox.getLayoutX());
-        scrollPane.setPrefWidth(scrollPaneWidth);
-        scrollPane.setPrefHeight(scrollPaneHeight);
+        scrollPane.setLayoutY((int)(rootHeightToPixels(0.25)));
+        scrollPane.setLayoutX((int)(comboHBox.getLayoutX()));
+        scrollPane.setPrefWidth((int)(scrollPaneWidth));
+        scrollPane.setPrefHeight((int)(scrollPaneHeight));
         gradeBoundariesTitle.setLayoutX(comboHBox.getLayoutX());
         gradeBoundariesTitle.setLayoutY(rootHeightToPixels(0.05));
-        gradesVBox.setSpacing(resYToPixels(0.025));
-        gradesLabelsHBox.setSpacing(scrollPaneWidth * 0.03);
-        gradesLabelsHBox.setPadding(new Insets(scrollPaneHeight * 0.05, 0, 0, 0));
-        gradesVBox.setPadding(new Insets(0, 0, 0, scrollPaneWidth * 0.02));
+        gradesVBox.setSpacing((int)(resYToPixels(0.025)));
+        gradesLabelsHBox.setSpacing((int)(scrollPaneWidth * 0.03));
+        gradesLabelsHBox.setPadding(new Insets((int)(scrollPaneHeight * 0.05), 0, 0, 0));
+        gradesVBox.setPadding(new Insets(0, 0, 0, (int)(scrollPaneWidth * 0.02)));
 
-        gradeName.setPrefWidth(scrollPaneWidth * 0.15);
-        gradeRaw.setPrefWidth(scrollPaneWidth * 0.13);
-        gradePercent.setPrefWidth(scrollPaneWidth * 0.13);
+        gradeName.setPrefWidth((int)(scrollPaneWidth * 0.15));
+        gradeRaw.setPrefWidth((int)(scrollPaneWidth * 0.13));
+        gradePercent.setPrefWidth((int)(scrollPaneWidth * 0.13));
 
         gradeName.setFont(gradesLabelsFonts);
         gradePercent.setFont(gradesLabelsFonts);
@@ -320,6 +320,7 @@ public class GradeBoundariesController extends Controller {
         Report.initOutputFolderPaths(reportsDirTextField.getText());
         ReportsHandler reportsHandler = new ReportsHandler();
 
+        Statistics.init();
 
         try {
             reportsHandler.generateReports(reportsOut, formatsOut);
@@ -338,6 +339,13 @@ public class GradeBoundariesController extends Controller {
     @Override
     protected Controller getNextController() {
         return new HeadersCreateController(this);
+    }
+
+    @Override public void showWindow(){
+        super.showWindow();
+
+        for(GradeHBox hbox:gradesHBoxes) //
+            hbox.refreshRawScore();
     }
 
 
