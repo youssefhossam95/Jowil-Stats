@@ -89,6 +89,7 @@ public class Report1 extends Report{
 
         updateTemplateDate(doc); // updates the date of the footer to the current date
 
+
         Stage stage = new Stage() ;
 
         ArrayList<ArrayList<String>> statsTable = Statistics.report1Stats() ;

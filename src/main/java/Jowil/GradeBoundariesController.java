@@ -5,24 +5,33 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.lowagie.text.DocumentException;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -100,6 +109,11 @@ public class GradeBoundariesController extends Controller {
     int gradesConfigComboSelectedIndex;
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
+    private int reportsCount;
+
+
+    volatile SimpleIntegerProperty progressCount=new SimpleIntegerProperty();
+
 
     private final static Report[] reports = {new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
 
@@ -128,6 +142,7 @@ public class GradeBoundariesController extends Controller {
         initTitles();
         initGradesVBox();
         initDeleteConfigButton();
+        initReportsDirTextField();;
         initReportsDirChooser();
         initReportsConfigHBox();
         initReportsVBox();
@@ -146,14 +161,16 @@ public class GradeBoundariesController extends Controller {
         double scrollPaneHeight = rootHeightToPixels(0.56);
         Font gradesLabelsFonts = new Font("Arial", resX / 100);
         //left half
-        comboHBox.setLayoutX((int)(rootWidthToPixels(0.05)));
-        comboHBox.setLayoutY(rootHeightToPixels(0.15));
-        comboHBox.setSpacing(resXToPixels(0.005));
-        gradesConfigCombo.setPrefWidth(rootWidthToPixels(0.25));
         scrollPane.setLayoutY((int)(rootHeightToPixels(0.25)));
-        scrollPane.setLayoutX((int)(comboHBox.getLayoutX()));
+        scrollPane.setLayoutX((int)(rootWidthToPixels(0.05)));
         scrollPane.setPrefWidth((int)(scrollPaneWidth));
         scrollPane.setPrefHeight((int)(scrollPaneHeight));
+        gradesConfigCombo.setPrefWidth(rootWidthToPixels(0.25));
+        comboHBox.setLayoutX(scrollPane.getLayoutX());
+        comboHBox.setLayoutY(rootHeightToPixels(0.15));
+        //comboHBox.setSpacing(resXToPixels(0.005));
+        comboHBox.setSpacing(scrollPane.getPrefWidth()-gradesConfigCombo.getPrefWidth()-deleteConfigButton.getPrefWidth());
+
         gradeBoundariesTitle.setLayoutX(comboHBox.getLayoutX());
         gradeBoundariesTitle.setLayoutY(rootHeightToPixels(0.05));
         gradesVBox.setSpacing((int)(resYToPixels(0.025)));
@@ -211,6 +228,14 @@ public class GradeBoundariesController extends Controller {
     protected void saveChanges() {
     }
 
+
+    public int getProgressCount() {
+        return progressCount.get();
+    }
+
+    public SimpleIntegerProperty progressCountProperty() {
+        return progressCount;
+    }
 
     @Override
     protected void goToNextWindow() {
@@ -296,8 +321,10 @@ public class GradeBoundariesController extends Controller {
         int i = 0;
         for (CheckBox checkBox : reportsCheckBoxes) {
             boolean isSelected = checkBox.isSelected();
-            if (isSelected)
+            if (isSelected) {
                 reportsOut.add(reports[i]);
+                reportsCount++;
+            }
             reportsConfig.add(isSelected);
             i++;
         }
@@ -318,21 +345,45 @@ public class GradeBoundariesController extends Controller {
         savePrefsJsonObj();
 
         Report.initOutputFolderPaths(reportsDirTextField.getText());
-        ReportsHandler reportsHandler = new ReportsHandler();
+        ReportsHandler reportsHandler = new ReportsHandler(this);
 
         Statistics.init();
 
-        try {
-            reportsHandler.generateReports(reportsOut, formatsOut);
-            System.out.println("Done");
-        } catch (IOException e) {
-            e.printStackTrace();
+        showProgressDialog();
 
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+        Runnable task =new Runnable(){
+
+            @Override
+            public void run() {
 
 
+                try {
+                    reportsHandler.generateReports(reportsOut, formatsOut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Done");
+
+            }
+        };
+
+
+
+        Thread th = new Thread(task);
+        th.setDaemon(false);
+        th.start();
+
+
+
+
+
+
+
+
+
+        stage.close();
     }
 
 
@@ -481,8 +532,12 @@ public class GradeBoundariesController extends Controller {
                 () {
             public void handle(MouseEvent t) {
 
+                boolean isJsonSuccess=true;
 
-                boolean isJsonSuccess = loadPrefsJsonObj();
+                if(prefsJsonObj==null)
+                    isJsonSuccess= loadPrefsJsonObj();
+
+
                 DirectoryChooser dirChooser = new DirectoryChooser();
                 dirChooser.setTitle("Choose Reports Output Directory");
                 String lastDir = (String) prefsJsonObj.get("reportsOutputDir");
@@ -500,14 +555,18 @@ public class GradeBoundariesController extends Controller {
                     reportsDirTextField.deselect();
                     if (isJsonSuccess && !newDir.getPath().equals(lastDir)) {
                         prefsJsonObj.put("reportsOutputDir", newDir.getPath());
-                        savePrefsJsonObj();
-
                     }
                 }
             }
         });
     }
 
+
+    private void initReportsDirTextField(){
+        boolean isJsonSuccess = loadPrefsJsonObj();
+        String lastDir = (String) prefsJsonObj.get("reportsOutputDir");
+        reportsDirTextField.setText(isJsonSuccess?lastDir:"");
+    }
 
     private void initReportsConfigHBox() {
         reportsConfigHBox.setStyle("-fx-border-color: #A9A9A9;");
@@ -583,6 +642,8 @@ public class GradeBoundariesController extends Controller {
     private void initFinishButton() {
         this.nextButton.setText("Finish");
     }
+
+
 
     private JSONObject loadJsonObj(String name) {
 
@@ -811,6 +872,59 @@ public class GradeBoundariesController extends Controller {
 
         return false;
 
+    }
+
+    private void showProgressDialog(){
+
+        RingProgressIndicator indicator = new RingProgressIndicator(reportsCount);
+
+
+        progressCount.addListener(t->{
+            int progressValue=(int)((double)progressCount.get()/reportsCount*100);
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            indicator.setProgress(progressValue);
+                        }
+                    });
+
+        System.out.println("progress: "+progressValue);});
+
+
+        String labelMainText="Generating Reports...this may take a few minutes.";
+
+        Label label=new Label(labelMainText);
+
+        label.setFont(new Font(null,14));
+
+        VBox main = new VBox(1, label,indicator);
+        main.setPadding(new Insets(10,10,10,10));
+        main.setSpacing(resY/90);
+        main.setAlignment(Pos.CENTER);
+
+
+        Scene scene = new Scene(main,resX/2,resY/2);
+        main.setStyle("-fx-background-color:white");
+        indicator.setStyle("fx-background-color:transparent");
+        scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        Stage primaryStage=new Stage();
+
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Reports Generation Progress");
+        primaryStage.setResizable(false);
+
+        //primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.show();
+
+
+
+
+
+
+    }
+
+    public void incrementProgressCount(){
+        progressCount.setValue(progressCount.get()+1);
     }
 
     class PairSorter implements Comparator<Pair<String, Double>> {

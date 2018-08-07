@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -68,11 +69,16 @@ public class GradeHBox extends HBox {
 
 
 
+
         addButton.getChildren().add(addIcon);
         addButton.setOnMouseClicked(t-> parentController.addNextGrade(this.index));
+        Tooltip tooltipAdd = new Tooltip("Add Grade Below");
+        Tooltip.install(addButton, tooltipAdd);
 
         removeButton.getChildren().add(removeIcon);
         removeButton.setOnMouseClicked(t-> parentController.deleteGrade(this.index));
+        Tooltip tooltipRemove = new Tooltip("Delete Grade");
+        Tooltip.install(addButton, tooltipRemove);
 
         this.getChildren().addAll(nameTextField,percentScoreTextField,rawScoreTextField,scoreSlider,addButton,removeButton);
 
@@ -170,10 +176,11 @@ public class GradeHBox extends HBox {
 
     private void initRawScoreTextField(String percentScore){
 
-        this.rawScoreTextField.setText(Double.toString(Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
+        this.rawScoreTextField.setText(String.format("%.1f",Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
         this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         rawScoreTextField.setAlignment(Pos.CENTER);
         rawScoreTextField.setEditable(false);
+
         rawScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)->{
             if(newValue)
                 parentController.rootPane.requestFocus();
