@@ -13,5 +13,5 @@
 	-fx-fill:  circleindicator-color;
 }
 .fillindicator-filler-cover {
-	-fx-fill: -fx-background;
+	-fx-fill: white;
 }

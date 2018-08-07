@@ -58,7 +58,7 @@ public class ReportsHandler {
             if(formats.indexOf(HTML) !=-1)
                 report.generateHtmlReport();
             controller.incrementProgressCount();
-            System.out.println(controller.getProgressCount());
+
         }
 
 
