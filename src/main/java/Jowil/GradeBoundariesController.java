@@ -115,7 +115,7 @@ public class GradeBoundariesController extends Controller {
     volatile SimpleIntegerProperty progressCount=new SimpleIntegerProperty();
 
 
-    private final static Report[] reports = {new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
+    private static Report[] reports;
 
 
     JSONObject prefsJsonObj;
@@ -316,6 +316,9 @@ public class GradeBoundariesController extends Controller {
         JSONArray reportsConfig = new JSONArray();
         JSONArray formatsConfig = new JSONArray();
 
+        Statistics.init();
+
+        reports = new Report[]{new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
 
         //parse checkboxes and save their configs
         int i = 0;
@@ -347,7 +350,6 @@ public class GradeBoundariesController extends Controller {
         Report.initOutputFolderPaths(reportsDirTextField.getText());
         ReportsHandler reportsHandler = new ReportsHandler(this);
 
-        Statistics.init();
 
         showProgressDialog();
 
