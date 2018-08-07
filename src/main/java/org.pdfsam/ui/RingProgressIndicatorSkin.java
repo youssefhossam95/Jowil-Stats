@@ -92,7 +92,7 @@ public class RingProgressIndicatorSkin implements Skin<RingProgressIndicator> {
         if (value >= 0) {
             if(indicator.isDiscreteProgress) {
                 int prog=(int) ((double) value / 100 * indicator.totalCount);
-                percentLabel.setText(String.format("%d/%d", prog, indicator.totalCount));
+                percentLabel.setText(String.format("%d/%d\nReports", prog, indicator.totalCount));
                 System.out.println("prog "+prog);
             }
             else

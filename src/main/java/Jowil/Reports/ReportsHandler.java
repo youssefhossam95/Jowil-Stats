@@ -25,6 +25,9 @@ import sun.plugin.dom.core.Element;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.AttributedCharacterIterator;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,14 +55,19 @@ public class ReportsHandler {
 
     public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
 
+        long lastTick=System.currentTimeMillis();
         for(Report report:Reports) {
             if (formats.indexOf(PDF)!=-1)
                 report.generatePdfReport();
             if(formats.indexOf(HTML) !=-1)
                 report.generateHtmlReport();
+
             controller.incrementProgressCount();
-            System.out.println(controller.getProgressCount());
+
         }
+
+
+
 
 
     }

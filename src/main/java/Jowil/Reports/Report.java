@@ -1,10 +1,13 @@
 package Jowil.Reports;
 
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.DocumentException;
 import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +26,8 @@ abstract public class Report {
     protected String workSpacePath;
     protected String outputFileName ;
     protected String pdfHtmlPath ;
+    private static int currentFileCounter=1;
+
 
 
 
@@ -44,18 +49,33 @@ abstract public class Report {
 
     protected void generatePDF(String inputHtmlPath, String outputPdfPath) throws IOException, com.lowagie.text.DocumentException {
 
+        String logFileName=".\\src\\main\\resources\\speedLog.txt";
+
+
+
+
         String url = new File(inputHtmlPath).toURI().toURL().toString();
         System.out.println("URL: " + url);
 
         OutputStream out = new FileOutputStream(outputPdfPath);
 
+        long tick=System.currentTimeMillis();
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer();
 
         renderer.setDocument(url);
         renderer.layout();
         renderer.createPDF(out);
+        PdfReader pdfReader = new PdfReader(outputPdfPath);
 
+
+        try {
+            Files.write(Paths.get(logFileName), ("Report "+currentFileCounter+": Time = "+(System.currentTimeMillis()-tick)+", pages= "+pdfReader.getNumberOfPages()+"\n").getBytes(), StandardOpenOption.APPEND);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        currentFileCounter++;
         out.close();
 
     }
@@ -134,7 +154,7 @@ abstract public class Report {
 
 
     abstract  public  void generateHtmlReport() throws IOException;
-    abstract public void generatePdfReport() throws IOException, DocumentException;
+    abstract public void generatePdfReport() throws IOException, com.lowagie.text.DocumentException;
     abstract public void generateTxtReport() ;
 
 

@@ -1,0 +1,114 @@
+Report 1: Time = 1201, pages= 1
+Report 2: Time = 988, pages= 3
+Report 3: Time = 80, pages= 1
+Report 4: Time = 135439, pages= 54
+Report 5: Time = 523, pages= 19
+
+-----------------------------------------
+Report 1: Time = 880, pages= 1
+Report 2: Time = 923, pages= 3
+Report 3: Time = 101, pages= 1
+Report 4: Time = 118758, pages= 54
+Report 5: Time = 514, pages= 19
+
+-----------------------------------------
+Report 1: Time = 851, pages= 1
+Report 2: Time = 656, pages= 3
+Report 3: Time = 58, pages= 1
+Report 4: Time = 116597, pages= 54
+Report 5: Time = 510, pages= 19
+
+-----------------------------------------
+Report 1: Time = 1192, pages= 1
+Report 2: Time = 928, pages= 3
+Report 3: Time = 129, pages= 1
+Report 4: Time = 122165, pages= 54
+Report 5: Time = 546, pages= 19
+
+-----------------------------------------
+
+Report 1: Time = 1058, pages= 1
+Report 2: Time = 836, pages= 3
+Report 3: Time = 49, pages= 1
+Report 4: Time = 116705, pages= 54
+Report 5: Time = 505, pages= 19
+
+-----------------------------------------
+Report 1: Time = 1007, pages= 1
+Report 2: Time = 779, pages= 2
+Report 3: Time = 75, pages= 1
+
+-----------------------------------------
+Report 1: Time = 1303, pages= 1
+Report 2: Time = 517, pages= 2
+Report 3: Time = 34, pages= 1
+
+-----------------------------------------
+Report 1: Time = 1120, pages= 1
+Report 2: Time = 462, pages= 2
+Report 3: Time = 142, pages= 1
+
+-----------------------------------------
+Report 1: Time = 1486, pages= 1
+Report 2: Time = 1259, pages= 3
+Report 3: Time = 47, pages= 1
+Report 4: Time = 124017, pages= 54
+Report 5: Time = 401, pages= 10
+
+-----------------------------------------
+Report 1: Time = 1467, pages= 1
+Report 2: Time = 1118, pages= 3
+Report 3: Time = 78, pages= 1
+
+-----------------------------------------
+Report 1: Time = 1273, pages= 1
+Report 2: Time = 1110, pages= 3
+Report 3: Time = 85, pages= 1
+Report 4: Time = 129177, pages= 54
+Report 5: Time = 557, pages= 19
+
+-----------------------------------------
+Report 1: Time = 1349, pages= 1
+Report 2: Time = 731, pages= 3
+Report 3: Time = 47, pages= 1
+Report 4: Time = 131788, pages= 54
+Report 5: Time = 937, pages= 19
+Report 1: Time = 1211, pages= 1
+Report 2: Time = 723, pages= 3
+Report 3: Time = 53, pages= 1
+Report 1: Time = 1804, pages= 3
+Report 2: Time = 87, pages= 1
+Report 1: Time = 1776, pages= 3
+Report 2: Time = 60, pages= 1
+Report 1: Time = 1850, pages= 3
+Report 2: Time = 60, pages= 1
+Report 1: Time = 1502, pages= 3
+Report 2: Time = 65, pages= 1
+Report 3: Time = 128856, pages= 54
+Report 4: Time = 562, pages= 19
+Report 1: Time = 1766, pages= 3
+Report 2: Time = 67, pages= 1
+Report 1: Time = 1672, pages= 3
+Report 2: Time = 343, pages= 1
+Report 1: Time = 1723, pages= 3
+Report 2: Time = 55, pages= 1
+Report 1: Time = 2077, pages= 3
+Report 2: Time = 277, pages= 1
+Report 1: Time = 1855, pages= 3
+Report 2: Time = 70, pages= 1
+Report 1: Time = 1562, pages= 3
+Report 2: Time = 81, pages= 1
+Report 1: Time = 1730, pages= 3
+Report 2: Time = 59, pages= 1
+Report 1: Time = 1570, pages= 3
+Report 2: Time = 54, pages= 1
+Report 3: Time = 125263, pages= 54
+Report 4: Time = 866, pages= 19
+Report 1: Time = 2885, pages= 19
+Report 1: Time = 2783, pages= 19
+Report 1: Time = 2636, pages= 19
+Report 1: Time = 2677, pages= 19
+Report 1: Time = 2316, pages= 19
+Report 1: Time = 2453, pages= 19
+Report 1: Time = 2408, pages= 19
+Report 1: Time = 2304, pages= 19

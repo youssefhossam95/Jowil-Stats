@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.lowagie.text.DocumentException;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
@@ -31,6 +32,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.pdfsam.ui.FillProgressIndicator;
 import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
@@ -115,6 +117,9 @@ public class GradeBoundariesController extends Controller {
     volatile SimpleIntegerProperty progressCount=new SimpleIntegerProperty();
 
 
+    private static volatile SimpleDoubleProperty reportProgress=new SimpleDoubleProperty();
+
+
     private final static Report[] reports = {new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
 
 
@@ -169,7 +174,7 @@ public class GradeBoundariesController extends Controller {
         comboHBox.setLayoutX(scrollPane.getLayoutX());
         comboHBox.setLayoutY(rootHeightToPixels(0.15));
         //comboHBox.setSpacing(resXToPixels(0.005));
-        comboHBox.setSpacing(scrollPane.getPrefWidth()-gradesConfigCombo.getPrefWidth()-deleteConfigButton.getPrefWidth());
+        comboHBox.setSpacing(scrollPane.getPrefWidth()-gradesConfigCombo.getPrefWidth()-deleteConfigButton.getWidth());
 
         gradeBoundariesTitle.setLayoutX(comboHBox.getLayoutX());
         gradeBoundariesTitle.setLayoutY(rootHeightToPixels(0.05));
@@ -229,13 +234,10 @@ public class GradeBoundariesController extends Controller {
     }
 
 
-    public int getProgressCount() {
-        return progressCount.get();
+    public static void setReportProgress(double reportProgress) {
+        GradeBoundariesController.reportProgress.set(reportProgress);
     }
 
-    public SimpleIntegerProperty progressCountProperty() {
-        return progressCount;
-    }
 
     @Override
     protected void goToNextWindow() {
@@ -356,7 +358,6 @@ public class GradeBoundariesController extends Controller {
             @Override
             public void run() {
 
-
                 try {
                     reportsHandler.generateReports(reportsOut, formatsOut);
                 } catch (IOException e) {
@@ -374,12 +375,6 @@ public class GradeBoundariesController extends Controller {
         Thread th = new Thread(task);
         th.setDaemon(false);
         th.start();
-
-
-
-
-
-
 
 
 
@@ -550,7 +545,7 @@ public class GradeBoundariesController extends Controller {
                 File newDir = dirChooser.showDialog(stage);
 
                 if (isJsonSuccess) {
-                    reportsDirTextField.setText(newDir.getPath());
+                    reportsDirTextField.setText(newDir.getAbsolutePath());
                     reportsDirTextField.requestFocus();
                     reportsDirTextField.deselect();
                     if (isJsonSuccess && !newDir.getPath().equals(lastDir)) {
@@ -874,39 +869,53 @@ public class GradeBoundariesController extends Controller {
 
     }
 
-    private void showProgressDialog(){
+    private void showProgressDialog() {
 
-        RingProgressIndicator indicator = new RingProgressIndicator(reportsCount);
+        RingProgressIndicator counterIndicator = new RingProgressIndicator(reportsCount);
+
+        FillProgressIndicator reportProgressIndicator= new FillProgressIndicator();
+
+        reportProgress.addListener(t -> {
+
+            Platform.runLater(() -> {
+                reportProgressIndicator.setProgress((int)(reportProgress.get()*100));
+            });
+        });
+
+        progressCount.addListener(t -> {
+
+            int progressValue = (int) ((double) progressCount.get() / reportsCount * 100);
+            Platform.runLater(() -> {
+                counterIndicator.setProgress(progressValue);
+            });
+        });
 
 
-        progressCount.addListener(t->{
-            int progressValue=(int)((double)progressCount.get()/reportsCount*100);
-                    Platform.runLater(new Runnable() {
-                        @Override public void run() {
-                            indicator.setProgress(progressValue);
-                        }
-                    });
+        String labelMainText = "Generating Reports...this may take a few minutes.";
 
-        System.out.println("progress: "+progressValue);});
+        Label label = new Label(labelMainText);
+
+        label.setFont(new Font(null, 14));
 
 
-        String labelMainText="Generating Reports...this may take a few minutes.";
+        HBox indicatorsHBox=new HBox(resX/6);
 
-        Label label=new Label(labelMainText);
+        indicatorsHBox.getChildren().addAll(reportProgressIndicator,counterIndicator);
 
-        label.setFont(new Font(null,14));
 
-        VBox main = new VBox(1, label,indicator);
-        main.setPadding(new Insets(10,10,10,10));
-        main.setSpacing(resY/90);
+        VBox main = new VBox(1, label, indicatorsHBox);
+        main.setPadding(new Insets(10, 10, 10, 10));
+        main.setSpacing(resY / 90);
         main.setAlignment(Pos.CENTER);
 
 
-        Scene scene = new Scene(main,resX/2,resY/2);
+        Scene scene = new Scene(main, resX / 2, resY / 2);
         main.setStyle("-fx-background-color:white");
-        indicator.setStyle("fx-background-color:transparent");
-        scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-        Stage primaryStage=new Stage();
+        counterIndicator.setStyle("-fx-background-color:transparent");
+        reportProgressIndicator.setStyle("-fx-background-color:transparent");
+        //reportProgressIndicator.setStyle("fx-background-color:transparent");
+        //scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        Stage primaryStage = new Stage();
 
 
         primaryStage.setScene(scene);
@@ -915,13 +924,11 @@ public class GradeBoundariesController extends Controller {
 
         //primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
-
-
-
-
-
-
     }
+
+
+
+
 
     public void incrementProgressCount(){
         progressCount.setValue(progressCount.get()+1);

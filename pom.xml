@@ -39,11 +39,11 @@
             <version>3.6.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.xhtmlrenderer</groupId>
-            <artifactId>flying-saucer-pdf</artifactId>
-            <version>9.1.13</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.xhtmlrenderer</groupId>-->
+            <!--<artifactId>flying-saucer-pdf</artifactId>-->
+            <!--<version>9.1.13</version>-->
+        <!--</dependency>-->
 
 
         <dependency>
@@ -62,7 +62,80 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>swt</artifactId>
+                    <version>3.6</version>
+                    <type>jar</type>
+                    <scope>system</scope>
+                    <systemPath>${basedir}/lib/swt/swt-3.6-win32.jar</systemPath>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <!-- TODO handle 32 bit and 64 bit procs differently -->
+                    <family>Mac</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>swt</artifactId>
+                    <version>3.6</version>
+                    <type>jar</type>
+                    <scope>system</scope>
+                    <systemPath>${basedir}/lib/swt/swt-3.6-osx.jar</systemPath>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>swt</artifactId>
+                    <version>3.6</version>
+                    <type>jar</type>
+                    <scope>system</scope>
+                    <systemPath>${basedir}/lib/swt/swt-3.6-linux.jar</systemPath>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 
 

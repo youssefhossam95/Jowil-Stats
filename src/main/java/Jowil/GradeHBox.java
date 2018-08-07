@@ -78,7 +78,7 @@ public class GradeHBox extends HBox {
         removeButton.getChildren().add(removeIcon);
         removeButton.setOnMouseClicked(t-> parentController.deleteGrade(this.index));
         Tooltip tooltipRemove = new Tooltip("Delete Grade");
-        Tooltip.install(addButton, tooltipRemove);
+        Tooltip.install(removeButton, tooltipRemove);
 
         this.getChildren().addAll(nameTextField,percentScoreTextField,rawScoreTextField,scoreSlider,addButton,removeButton);
 

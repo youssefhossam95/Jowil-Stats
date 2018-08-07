@@ -19,6 +19,8 @@ import org.jsoup.nodes.Document;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Report1 extends Report{
