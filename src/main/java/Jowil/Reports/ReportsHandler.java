@@ -1,6 +1,7 @@
 package Jowil.Reports;
 
 import Jowil.GradeBoundariesController;
+import Jowil.ReportProgressController;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -38,17 +39,13 @@ public class ReportsHandler {
 
     public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
-    GradeBoundariesController controller;
+
 
     public ReportsHandler(){
 
     }
 
 
-    public ReportsHandler(GradeBoundariesController controller){
-        this.controller=controller;
-
-    }
 
     public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
 
@@ -57,7 +54,7 @@ public class ReportsHandler {
                 report.generatePdfReport();
             if(formats.indexOf(HTML) !=-1)
                 report.generateHtmlReport();
-            controller.incrementProgressCount();
+            ReportProgressController.incrementProgressCount();
 
         }
 

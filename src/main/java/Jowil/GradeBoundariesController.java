@@ -114,11 +114,7 @@ public class GradeBoundariesController extends Controller {
     private int reportsCount;
 
 
-    volatile SimpleIntegerProperty progressCount=new SimpleIntegerProperty();
 
-
-
-    private static volatile SimpleDoubleProperty reportProgress=new SimpleDoubleProperty();
 
 
     private static Report[] reports;
@@ -237,9 +233,7 @@ public class GradeBoundariesController extends Controller {
 
 
 
-    public static void setReportProgress(double reportProgress) {
-        GradeBoundariesController.reportProgress.set(reportProgress);
-    }
+
 
     @Override
     protected void goToNextWindow() {
@@ -352,7 +346,7 @@ public class GradeBoundariesController extends Controller {
         savePrefsJsonObj();
 
         Report.initOutputFolderPaths(reportsDirTextField.getText());
-        ReportsHandler reportsHandler = new ReportsHandler(this);
+        ReportsHandler reportsHandler = new ReportsHandler();
 
 
         showProgressDialog();
@@ -380,15 +374,6 @@ public class GradeBoundariesController extends Controller {
         Thread th = new Thread(task);
         th.setDaemon(false);
         th.start();
-
-
-
-
-
-
-
-
-
         stage.close();
     }
 
@@ -882,66 +867,10 @@ public class GradeBoundariesController extends Controller {
 
 
     private void showProgressDialog() {
-
-        RingProgressIndicator counterIndicator = new RingProgressIndicator(reportsCount);
-
-        FillProgressIndicator reportProgressIndicator= new FillProgressIndicator();
-
-        reportProgress.addListener(t -> {
-
-            Platform.runLater(() -> {
-                reportProgressIndicator.setProgress((int)(reportProgress.get()*100));
-            });
-        });
-
-        progressCount.addListener(t -> {
-
-            int progressValue = (int) ((double) progressCount.get() / reportsCount * 100);
-            Platform.runLater(() -> {
-                counterIndicator.setProgress(progressValue);
-            });
-        });
-
-
-        String labelMainText = "Generating Reports...this may take a few minutes.";
-
-        Label label = new Label(labelMainText);
-
-        label.setFont(new Font(null, 14));
-
-
-        HBox indicatorsHBox=new HBox(resX/20);
-
-        indicatorsHBox.getChildren().addAll(counterIndicator,reportProgressIndicator);
-
-        indicatorsHBox.setAlignment(Pos.CENTER);
-
-        VBox main = new VBox(1);
-        main.setPadding(new Insets(10, 10, 10, 10));
-        main.setSpacing(resY / 90);
-        main.setAlignment(Pos.CENTER);
-        main.getChildren().addAll(label,indicatorsHBox);
-
-        Scene scene = new Scene(main, resX / 2, resY / 2);
-        main.setStyle("-fx-background-color:white");
-        counterIndicator.setStyle("-fx-background-color:transparent");
-        reportProgressIndicator.setStyle("-fx-background-color:transparent");
-        //reportProgressIndicator.setStyle("fx-background-color:transparent");
-        //scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-        Stage primaryStage = new Stage();
-
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Reports Generation Progress");
-        primaryStage.setResizable(false);
-
-        //primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.show();
+        new ReportProgressController(reportsCount).startWindow();
     }
 
-    public void incrementProgressCount(){
-        progressCount.setValue(progressCount.get()+1);
-    }
+
 
     class PairSorter implements Comparator<Pair<String, Double>> {
 

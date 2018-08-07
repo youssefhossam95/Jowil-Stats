@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<?import org.pdfsam.ui.RingProgressIndicator?>
+<?import org.pdfsam.ui.FillProgressIndicator?>
+<AnchorPane prefHeight="422.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color:white">
+
+
+    <children>
+      <Label fx:id="titleLabel" text="Generating reports...this may take a while." >
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+
+        <HBox fx:id="mainHBox">
+      <VBox fx:id="counterVBox" alignment="CENTER">
+         <children>
+            <Label text="Reports Generated"  >
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+
+       <VBox fx:id="reportProgressVBox" alignment="TOP_CENTER">
+           <children>
+               <Label text="Report In Progress"  >
+                   <font>
+                       <Font name="System Bold" size="20.0" />
+                   </font>
+               </Label>
+
+               <FillProgressIndicator fx:id="reportProgressIndicator" style="-fx-background-color:transparent"></FillProgressIndicator>
+
+           </children>
+       </VBox>
+        </HBox>
+
+   </children>
+</AnchorPane>
