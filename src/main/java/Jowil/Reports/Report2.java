@@ -165,4 +165,9 @@ public class Report2 extends Report {
     public void generateTxtReport() {
 
     }
+
+    @Override
+    public void init()  {
+
+    }
 }

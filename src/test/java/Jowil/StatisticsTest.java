@@ -46,7 +46,7 @@ public class StatisticsTest extends TestCase {
 
         ArrayList<Report> reports = new ArrayList<>();
 
-        reports.add(new Report3()) ;
+        reports.add(new Report1()) ;
         Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
         ArrayList<Integer> formats = new ArrayList<>() ;
         formats.add(ReportsHandler.HTML) ;

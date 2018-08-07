@@ -3,6 +3,7 @@ package Jowil.Reports;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -24,16 +25,43 @@ import java.util.ArrayList;
 public class Report1 extends Report{
 
     String report1ImgFullPath  ;
+    ArrayList<ArrayList<String>> statsTable ;
+
+
     public Report1(){
         workSpacePath = reportsPath + "report1\\" ;
         templatePath = workSpacePath + "report1Template.html";
         outputFileName = "Report1" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         report1ImgFullPath = "file://"+System.getProperty("user.dir") + workSpacePath + "GradesDistributionHistogram.png" ;
+//        generateReport1Chart(statsTableTrans.get(0) , freq );
+
     }
 
 
-    private void generateReport1Chart(Stage stage , ArrayList<String> grades , double[] numberOfStudents) throws IOException {
+    @Override
+    public void init(){
+        statsTable = Statistics.report1Stats() ;
+        ArrayList<ArrayList<String>> statsTableTrans = Utils.transposeStringList(statsTable);
+
+        double[] freq = statsTableTrans.get(3).stream().mapToDouble(d -> Double.valueOf(d)).toArray() ;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    generateReport1Chart(statsTableTrans.get(0) , freq );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+
+    private void generateReport1Chart( ArrayList<String> grades , double[] numberOfStudents) throws IOException {
+        Stage stage = new Stage() ;
         stage.setTitle("Student Grades");
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -90,15 +118,10 @@ public class Report1 extends Report{
         updateTemplateDate(doc); // updates the date of the footer to the current date
 
 
-        Stage stage = new Stage() ;
+//        Stage stage = new Stage() ;
 
-        ArrayList<ArrayList<String>> statsTable = Statistics.report1Stats() ;
+//        ArrayList<ArrayList<String>> statsTable = Statistics.report1Stats() ;
 
-        ArrayList<ArrayList<String>> statsTableTrans = Utils.transposeStringList(statsTable);
-
-        double[] freq = statsTableTrans.get(3).stream().mapToDouble(d -> Double.valueOf(d)).toArray() ;
-
-        generateReport1Chart(stage , statsTableTrans.get(0) , freq );
 
         String tableRowsHtml = createRowsHtml(statsTable , ";grayRow" , "tg-l711") ;
 
@@ -135,4 +158,5 @@ public class Report1 extends Report{
 
 
     }
+
 }

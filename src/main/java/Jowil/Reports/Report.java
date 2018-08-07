@@ -25,13 +25,16 @@ abstract public class Report {
     protected String pdfHtmlPath ;
 
 
+    Report() {
+        init();
+    }
 
     public static void initOutputFolderPaths(String outPath){
-//        outputPdfFolderPath=outPath+PDF_FOLDER_NAME;
-//        outputHtmlFolderPath=outPath+HTML_FOLDER_NAME;
+        outputPdfFolderPath=outPath+PDF_FOLDER_NAME;
+        outputHtmlFolderPath=outPath+HTML_FOLDER_NAME;
 
-        outputPdfFolderPath=outPath;
-        outputHtmlFolderPath=outPath;
+//        outputPdfFolderPath=outPath;
+//        outputHtmlFolderPath=outPath;
     }
 
     public void updateTemplateDate(Document doc) {
@@ -136,6 +139,7 @@ abstract public class Report {
     abstract  public  void generateHtmlReport() throws IOException;
     abstract public void generatePdfReport() throws IOException, DocumentException;
     abstract public void generateTxtReport() ;
+    abstract public void init(); // function to get the abrobriate statistics from the statistics class
 
 
 }

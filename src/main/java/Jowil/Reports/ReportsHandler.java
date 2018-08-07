@@ -57,8 +57,8 @@ public class ReportsHandler {
                 report.generatePdfReport();
             if(formats.indexOf(HTML) !=-1)
                 report.generateHtmlReport();
-            controller.incrementProgressCount();
-            System.out.println(controller.getProgressCount());
+//            controller.incrementProgressCount();
+//            System.out.println(controller.getProgressCount());
         }
 
 

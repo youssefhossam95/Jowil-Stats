@@ -45,10 +45,12 @@ public class ReportChartsTest extends Application {
 
         ArrayList<Report> reports = new ArrayList<>();
         reports.add(new Report1()) ;
-        reports.add(new Report2()) ;
-        reports.add(new Report3());
-        reports.add(new Report4()) ;
-        reports.add(new Report5()) ;
+        Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
+
+//        reports.add(new Report2()) ;
+//        reports.add(new Report3());
+//        reports.add(new Report4()) ;
+//        reports.add(new Report5()) ;
         ArrayList<Integer> formats = new ArrayList<>() ;
         formats.add(ReportsHandler.HTML) ;
         formats.add(ReportsHandler.PDF);
