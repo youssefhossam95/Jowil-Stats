@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.lowagie.text.DocumentException;
+import com.sun.org.apache.regexp.internal.REProgram;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -346,34 +347,10 @@ public class GradeBoundariesController extends Controller {
         savePrefsJsonObj();
 
         Report.initOutputFolderPaths(reportsDirTextField.getText());
-        ReportsHandler reportsHandler = new ReportsHandler();
+
+        showProgressDialog(reportsOut,formatsOut);
 
 
-        showProgressDialog();
-
-        Runnable task =new Runnable(){
-
-            @Override
-            public void run() {
-
-
-                try {
-                    reportsHandler.generateReports(reportsOut, formatsOut);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Done");
-
-            }
-        };
-
-
-
-        Thread th = new Thread(task);
-        th.setDaemon(false);
-        th.start();
         stage.close();
     }
 
@@ -866,8 +843,8 @@ public class GradeBoundariesController extends Controller {
     }
 
 
-    private void showProgressDialog() {
-        new ReportProgressController(reportsCount).startWindow();
+    private void showProgressDialog(ArrayList<Report> reportsOut, ArrayList<Integer> formatsOut) {
+        new ReportProgressController(reportsCount,reportsOut,formatsOut).startWindow();
     }
 
 

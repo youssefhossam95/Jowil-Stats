@@ -1,5 +1,8 @@
 package Jowil;
 
+import Jowil.Reports.Report;
+import Jowil.Reports.ReportsHandler;
+import com.lowagie.text.DocumentException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,6 +20,7 @@ import org.pdfsam.ui.FillProgressIndicator;
 import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ReportProgressController {
 
@@ -34,6 +38,8 @@ public class ReportProgressController {
     private static volatile SimpleDoubleProperty reportProgress=new SimpleDoubleProperty();
 
     Pane root;
+    ArrayList<Report> reportsOut;
+    ArrayList<Integer> formatsOut;
 
 
 
@@ -56,10 +62,12 @@ public class ReportProgressController {
     Label titleLabel;
 
 
-    ReportProgressController(int reportsCount){
+    ReportProgressController(int reportsCount,ArrayList<Report> reportsOut,ArrayList<Integer>formatsOut){
 
 
         this.reportsCount=reportsCount;
+        this.formatsOut=formatsOut;
+        this.reportsOut=reportsOut;
 
         reportProgress.addListener(t -> {
 
@@ -117,6 +125,11 @@ public class ReportProgressController {
         catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
+        generateReports();
+
     }
 
     public void setCounterIndicator(RingProgressIndicator counterIndicator) {
@@ -136,4 +149,32 @@ public class ReportProgressController {
         ReportProgressController.reportProgress.set(reportProgress);
     }
 
+    private void generateReports(){
+
+        Runnable task =new Runnable(){
+
+            @Override
+            public void run() {
+
+                ReportsHandler reportsHandler = new ReportsHandler();
+
+                try {
+                    reportsHandler.generateReports(reportsOut, formatsOut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Done");
+
+            }
+        };
+
+
+
+        Thread th = new Thread(task);
+        th.setDaemon(false);
+        th.start();
+
+    }
 }

@@ -24,7 +24,7 @@
         <HBox fx:id="mainHBox">
       <VBox fx:id="counterVBox" alignment="CENTER">
          <children>
-            <Label text="Reports Generated"  >
+            <Label text="Reports Generated"  style="-fx-text-fill:#827f7f">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -34,7 +34,7 @@
 
        <VBox fx:id="reportProgressVBox" alignment="TOP_CENTER">
            <children>
-               <Label text="Report In Progress"  >
+               <Label text="Report In Progress"  style="-fx-text-fill:#827f7f">
                    <font>
                        <Font name="System Bold" size="20.0" />
                    </font>
