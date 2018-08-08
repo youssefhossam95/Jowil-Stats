@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
@@ -22,8 +23,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public abstract class Controller {
@@ -155,9 +158,9 @@ public abstract class Controller {
 
 
     //helper methods
-    protected  void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+    protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -166,11 +169,13 @@ public abstract class Controller {
         alert.show();
     }
 
-    protected  void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+    protected static void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.getButtonTypes().setAll(ButtonType.CLOSE);
+        Button closeButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButt.setText("OK");
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -296,6 +301,21 @@ public abstract class Controller {
 
     public void setContentEdited(boolean contentEdited) {
         isContentEdited = contentEdited;
+    }
+
+    public static boolean showConfirmationDialog(String title,String header,Window owner) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(header);
+        Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        okButt.setText("Yes");
+        alert.initOwner(owner);
+        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.get() == ButtonType.OK;
     }
 
 //    protected static double setPrefWidth(Region element,relativeVal){

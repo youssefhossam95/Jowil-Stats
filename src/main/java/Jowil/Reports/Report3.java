@@ -62,7 +62,7 @@ public class Report3 extends Report {
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml() ;
         doc .select("div#footer").remove();
-        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html", doc);
+        writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html", doc);
 
     }
 
@@ -71,7 +71,7 @@ public class Report3 extends Report {
 
         Document doc = generatePdfHtml();
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath , outputPdfFolderPath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
     }
 

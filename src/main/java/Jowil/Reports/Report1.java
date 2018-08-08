@@ -140,7 +140,7 @@ public class Report1 extends Report{
         doc.select("div#footer").remove() ;
 //        String report1ImgPath = "file://"+workSpacePath+"GradesDistributionHistogram.png";
         doc.select("img").attr("src" , report1ImgFullPath);
-        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html" , doc);
+        writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class Report1 extends Report{
 
         Document doc = generatePdfHtml() ;
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath,outputPdfFolderPath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
     }
 

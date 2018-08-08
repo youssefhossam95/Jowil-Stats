@@ -15,11 +15,14 @@ import java.util.regex.Pattern;
 
 abstract public class Report {
 
-    protected final static String PDF_FOLDER_NAME="\\PDF Reports\\",HTML_FOLDER_NAME="\\HTML Reports\\";
+
+    public final static String [] formatDirNames={"\\PDF Reports\\","\\HTML Reports\\","\\TXT Reports\\",
+            "\\Word Reports\\","\\XLS Reports\\"};
+
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
-    protected static String outputPdfFolderPath;
-    protected static String outputHtmlFolderPath;
+    protected static String [] outputFormatsFolderPaths;  //same order as ReportsHandler formats Constants
+    protected static String outPath;
     protected String workSpacePath;
     protected String outputFileName ;
     protected String pdfHtmlPath ;
@@ -30,11 +33,13 @@ abstract public class Report {
     }
 
     public static void initOutputFolderPaths(String outPath){
-        outputPdfFolderPath=outPath+PDF_FOLDER_NAME;
-        outputHtmlFolderPath=outPath+HTML_FOLDER_NAME;
 
-//        outputPdfFolderPath=outPath;
-//        outputHtmlFolderPath=outPath;
+        outputFormatsFolderPaths=new String[formatDirNames.length];
+        Report.outPath=outPath;
+
+        for(int i=0;i<outputFormatsFolderPaths.length;i++)
+            outputFormatsFolderPaths[i]=outPath+formatDirNames[i];
+
     }
 
     public void updateTemplateDate(Document doc) {
@@ -50,7 +55,10 @@ abstract public class Report {
         String url = new File(inputHtmlPath).toURI().toURL().toString();
         System.out.println("URL: " + url);
 
+
         OutputStream out = new FileOutputStream(outputPdfPath);
+
+
 
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer();
@@ -133,6 +141,10 @@ abstract public class Report {
             tableHtml+= "</tr>" ;
         }
         return tableHtml ;
+    }
+
+    public static String getOutPath(){
+        return outPath;
     }
 
 

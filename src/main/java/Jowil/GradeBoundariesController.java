@@ -38,6 +38,7 @@ import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -239,6 +240,8 @@ public class GradeBoundariesController extends Controller {
     @Override
     protected void goToNextWindow() {
 
+
+
         if (reportsDirTextField.getText().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
                     "Reports Directory Path is required.");
@@ -261,6 +264,25 @@ public class GradeBoundariesController extends Controller {
                     "Path \"" + reportsDirTextField.getText() + "\" is not a valid directory path.");
             return;
         }
+
+
+        if(!isCheckBoxesValid()){
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "CheckBoxes Selection Error",
+                    "You must select at least one report and one output format.");
+            return;
+        }
+
+        String projectDirName=getProjectDirName();
+        String outPath=outDir.getAbsolutePath()+"\\";
+
+        if(!createOutDirs(outPath,projectDirName)){
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
+                    "Cannot write to the specified reports directory. Make sure that you are permitted" +
+                            " to edit in this directory");
+            return;
+
+        }
+
 
 
         ArrayList<Pair<String, Double>> scale = new ArrayList<>();
@@ -308,6 +330,9 @@ public class GradeBoundariesController extends Controller {
         saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
 
 
+
+
+
         //generate Reports
 
         ArrayList<Report> reportsOut = new ArrayList<>();
@@ -342,17 +367,28 @@ public class GradeBoundariesController extends Controller {
         }
 
 
+
+
         prefsJsonObj.put("reportsChosen", reportsConfig);
         prefsJsonObj.put("formatsChosen", formatsConfig);
         savePrefsJsonObj();
 
-        Report.initOutputFolderPaths(reportsDirTextField.getText());
+
+
+
+
+        Report.initOutputFolderPaths(outPath+projectDirName);
+
+
+
 
         showProgressDialog(reportsOut,formatsOut);
 
 
         stage.close();
     }
+
+
 
 
     @Override
@@ -518,11 +554,11 @@ public class GradeBoundariesController extends Controller {
                 File newDir = dirChooser.showDialog(stage);
 
                 if (isJsonSuccess) {
-                    reportsDirTextField.setText(newDir.getPath());
+                    reportsDirTextField.setText(newDir.getAbsolutePath());
                     reportsDirTextField.requestFocus();
                     reportsDirTextField.deselect();
-                    if (isJsonSuccess && !newDir.getPath().equals(lastDir)) {
-                        prefsJsonObj.put("reportsOutputDir", newDir.getPath());
+                    if (isJsonSuccess && !newDir.getAbsolutePath().equals(lastDir)) {
+                        prefsJsonObj.put("reportsOutputDir", newDir.getAbsolutePath());
                     }
                 }
             }
@@ -761,13 +797,7 @@ public class GradeBoundariesController extends Controller {
 
     private boolean showGradeScaleDeleteConfirmation() {
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete File");
-        alert.setHeaderText("Are you sure want to delete this Grade Scale Configuration?");
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-        Optional<ButtonType> option = alert.showAndWait();
-
-        return option.get() == ButtonType.OK;
+        return showConfirmationDialog("Delete Grade Scale Configuration","Are you sure you want to delete this Grade Scale Configuration?",stage.getOwner());
     }
 
     private String showSaveChangesDialog() {
@@ -848,6 +878,74 @@ public class GradeBoundariesController extends Controller {
     }
 
 
+
+    private String getProjectDirName(){
+        return new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+    }
+
+    private boolean createOutDirs(String outPath,String projectName) {
+
+//        //project dir
+//        if(!makeDir(outPath+projectName))
+//            return false;
+//
+//
+//        //format dirs
+
+        System.out.println(new File(outPath).exists());
+
+        for(int i=0;i<formatsCheckBoxes.size();i++){
+
+            if(formatsCheckBoxes.get(i).isSelected()) {
+                boolean success = makeDir(outPath + projectName + "\\" + Report.formatDirNames[i]);
+                if (!success)
+                    return false;
+            }
+
+        }
+
+        return true;
+    }
+
+
+    private boolean makeDir(String dirPath){
+
+        File theDir = new File(dirPath);
+        System.out.println("Dir "+ theDir.getAbsolutePath());
+
+        if (!theDir.exists()) {
+
+            try{
+                return theDir.mkdirs();
+            }
+            catch(SecurityException se){
+                return false;
+            }
+
+        }
+        else
+            return true;
+
+    }
+
+    private boolean isCheckBoxesValid(){
+
+        boolean formatsValid=false;
+        boolean reportsValid=false;
+
+        for(CheckBox checkBox : formatsCheckBoxes){
+            if(checkBox.isSelected())
+                formatsValid=true;
+        }
+
+        for(CheckBox checkBox : reportsCheckBoxes){
+            if(checkBox.isSelected())
+                reportsValid=true;
+        }
+
+        return formatsValid && reportsValid;
+
+    }
 
     class PairSorter implements Comparator<Pair<String, Double>> {
 

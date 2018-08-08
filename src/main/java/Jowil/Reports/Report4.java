@@ -90,14 +90,14 @@ public class Report4 extends Report{
         Document doc = generatePdfHtml() ;
         doc.select("tr.headerRow").remove();
         doc.select("div#footer").remove();
-        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html" , doc);
+        writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
     @Override
     public void generatePdfReport() throws IOException, DocumentException {
         Document doc = generatePdfHtml() ;
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath, outputPdfFolderPath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
     }
 
     @Override

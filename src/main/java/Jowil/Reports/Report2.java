@@ -80,7 +80,7 @@ public class Report2 extends Report {
                 questionIndex += table.size();
             }
         }
-        writeHtmlFile(outputHtmlFolderPath+outputFileName+".html" , doc);
+        writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
 
     }
 
@@ -157,7 +157,7 @@ public class Report2 extends Report {
             }
         }
         writeHtmlFile(pdfHtmlPath , doc);
-        generatePDF(pdfHtmlPath , outputPdfFolderPath+outputFileName+".pdf");
+        generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
     }
 

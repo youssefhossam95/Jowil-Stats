@@ -49,11 +49,28 @@ public class ReportsHandler {
 
     public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
 
+        boolean isPDFExists= (formats.indexOf(PDF)!=-1);
+
         for(Report report:Reports) {
+
             if (formats.indexOf(PDF)!=-1)
                 report.generatePdfReport();
+
             if(formats.indexOf(HTML) !=-1)
                 report.generateHtmlReport();
+
+
+            if(!isPDFExists) {   //simulating filling effect without pdf
+                ReportProgressController.setReportProgress(1);
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                ReportProgressController.setReportProgress(0.0);
+            }
+
+
             ReportProgressController.incrementProgressCount();
 
         }

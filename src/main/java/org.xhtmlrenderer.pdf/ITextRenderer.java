@@ -362,7 +362,7 @@ public class ITextRenderer {
     }
 
     private void writePDF(List pages, RenderingContext c, com.lowagie.text.Rectangle firstPageSize, com.lowagie.text.Document doc,
-                          PdfWriter writer) throws DocumentException {
+                          PdfWriter writer) throws DocumentException{
         _outputDevice.setRoot(_root);
 
         _outputDevice.start(_doc);
@@ -396,6 +396,8 @@ public class ITextRenderer {
                 _outputDevice.initializePage(writer.getDirectContent(), nextPageSize.getHeight());
             }
             ReportProgressController.setReportProgress((i+1.0)/pageCount);
+
+
         }
 
         _outputDevice.finish(c, _root);
