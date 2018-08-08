@@ -880,7 +880,8 @@ public class GradeBoundariesController extends Controller {
 
 
     private String getProjectDirName(){
-        return new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+        //return new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+        return "Jowil";
     }
 
     private boolean createOutDirs(String outPath,String projectName) {

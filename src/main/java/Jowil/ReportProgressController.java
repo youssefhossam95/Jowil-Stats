@@ -190,17 +190,16 @@ public class ReportProgressController {
                 try {
                     reportsHandler.generateReports(reportsOut, formatsOut);
                 } catch (IOException e) {
-                    showReportsErrorMessage();
+                    showReportsErrorMessage(" Make sure that the file "+"\"Report"+(progressCount.get()+1)+".pdf\" is not opened in another application");
 
                 } catch (DocumentException e) {
 
-
-                    showReportsErrorMessage();
+                    showReportsErrorMessage("");
 
                 }
                 catch(RuntimeException e) {
                     if(!Thread.currentThread().isInterrupted()) //not caused by interruption
-                        showReportsErrorMessage();
+                        showReportsErrorMessage("");
 
                 }
 
@@ -220,7 +219,7 @@ public class ReportProgressController {
 //        System.out.println("Delete: " + new File(fileName).delete());
     }
 
-    private void showReportsErrorMessage(){
+    private void showReportsErrorMessage(String extraStatement){
 
         Platform.runLater(()->{
 
@@ -237,7 +236,7 @@ public class ReportProgressController {
 
         alert.setTitle("Reports Generation Error");
         alert.setHeaderText(null);
-        alert.setContentText("An error has occurred during report generation.");
+        alert.setContentText("An error has occurred during report generation."+extraStatement);
         alert.initOwner(stage.getOwner());
         Optional<ButtonType> option = alert.showAndWait();
 
