@@ -6,8 +6,6 @@ import com.lowagie.text.DocumentException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -251,8 +249,6 @@ public class ReportProgressController {
     }
 
     private void showFolderInExplorer(){
-
-
 
         stage.hide();
 

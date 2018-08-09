@@ -53,6 +53,8 @@ public class ReportsHandler {
 
         for(Report report:Reports) {
 
+
+
             if (formats.indexOf(PDF)!=-1)
                 report.generatePdfReport();
 
@@ -60,15 +62,9 @@ public class ReportsHandler {
                 report.generateHtmlReport();
 
 
-            if(!isPDFExists) {   //simulating filling effect without pdf
-                ReportProgressController.setReportProgress(1);
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ReportProgressController.setReportProgress(0.0);
-            }
+            if(!isPDFExists)
+                handleNoPDF();
+
 
 
             ReportProgressController.incrementProgressCount();
@@ -78,8 +74,23 @@ public class ReportsHandler {
 
     }
 
+    private void handleNoPDF() {
 
-   public  void generateReport5Chart(Stage stage , ArrayList<String> responsePercentagesWithClasses  , ArrayList<String> questionChoices ) throws IOException {
+
+        if(Thread.currentThread().isInterrupted())
+            return; //stop report generation if interrupted without pdf
+        ReportProgressController.setReportProgress(1);
+        try {
+            Thread.sleep(200); //simulating filling effect without pdf
+        } catch (InterruptedException e) {
+            System.out.println("dkhal el hramy wna nayma");
+            return; //stop report generation if interrupted without pdf
+        }
+        ReportProgressController.setReportProgress(0.0);
+    }
+
+
+    public  void generateReport5Chart(Stage stage , ArrayList<String> responsePercentagesWithClasses  , ArrayList<String> questionChoices ) throws IOException {
 
        stage.setTitle("Bar Chart Sample");
        final NumberAxis yAxis = new NumberAxis(0 , 100 ,10);
