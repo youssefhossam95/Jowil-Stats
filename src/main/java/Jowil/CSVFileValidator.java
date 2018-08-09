@@ -133,7 +133,7 @@ public class CSVFileValidator extends ValidatorBase {
             hasErrors.set(true);
             return;
         }
-        if (!file.getPath().endsWith(".csv")) {
+        if (!file.getPath().toLowerCase().endsWith(".csv")) {
             setMessage(CSVEXTENSIONMESSAGE);
             hasErrors.set(true);
             return;

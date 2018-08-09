@@ -19,9 +19,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -134,23 +131,36 @@ public abstract class Controller {
         }
     }
     protected void updateSizes(){
+
+        Insets navPadding=new Insets(0,0,0,0);
+        double navWidth=resX/15;
+        double navHeight=resX/47.5;
+
         rootWidth=rootPane.getPrefWidth();
         rootHeight=rootPane.getPrefHeight();
-        backButton.setPrefWidth(resX/15);
-        backButton.setPrefHeight(resX/250);
-        backButton.setLayoutY(rootHeight/1.17);
-        backButton.setLayoutX(rootWidth/1.35);
+
+        backButton.setPrefWidth(navWidth);
+        backButton.setPrefHeight(navHeight);
+        backButton.setPadding(navPadding);
+
+        nextButton.setPrefWidth(navWidth);
+        nextButton.setPrefHeight(navHeight);
+        nextButton.setPadding(navPadding);
         buttonsHbox.setLayoutX(rootWidth/20);
+
+        buttonsHbox.setPrefHeight(resY*680/35);
+
         if(rootHeight<=resY/1.25)
             buttonsHbox.setLayoutY(rootHeight/1.14);
         else
             buttonsHbox.setLayoutY(rootHeight-resY*(1-1/1.14));
+
         buttonsHbox.setSpacing(resX/100);
-        buttonsHbox.setPrefWidth(rootWidth/1.11);
+        buttonsHbox.setPrefWidth(rootWidth*0.9);
         buttonsHbox.setPadding(new Insets(resY/100, 0, 0, 0));
-        buttonsHbox.setAlignment(Pos.BASELINE_RIGHT);
-        nextButton.setPrefWidth(resX/15);
-        nextButton.setPrefHeight(resX/250);
+
+
+        buttonsHbox.setAlignment(Pos.TOP_RIGHT);
 
     }
 
@@ -311,6 +321,10 @@ public abstract class Controller {
         alert.setContentText(header);
         Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
         okButt.setText("Yes");
+
+        Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButt.setText("No");
+
         alert.initOwner(owner);
         alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
