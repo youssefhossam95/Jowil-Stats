@@ -10,11 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CSVHandler {
-    public static class EmptyAnswerKeyException extends Exception{
+    public static class InConsistentAnswerKeyException extends Exception{
 
         private int rowNumber;
 
-        EmptyAnswerKeyException(int rowNumber){
+        InConsistentAnswerKeyException(int rowNumber){
             this.rowNumber=rowNumber;
         }
 
@@ -175,12 +175,17 @@ public class CSVHandler {
         //parse students data
         while ((line = input.readLine()) != null) {
             String[] row = line.split(",",-1);
+
+            if(row.length==0) //ignore empty lines
+                continue;
+
             if(row.length!=colsCount && colsCount!=0)
                 throw new IllFormedCSVException(rowNumber);
             else
                 colsCount=row.length;
+
             Statistics.getStudentAnswers().add(cropArray(row, questionsColStartIndex,scoresStartIndex));
-            updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
+            updateStudentIdentifier(row,rowNumber);
             updateStudentForms(row,rowNumber);
             updateSubjScores(row);
             rowNumber++;
@@ -188,7 +193,7 @@ public class CSVHandler {
     }
 
 
-    public static int loadAnswerKeys(String answersFilePath) throws IOException, EmptyAnswerKeyException, IllFormedCSVException {
+    public static int loadAnswerKeys(String answersFilePath) throws IOException, IllFormedCSVException {
         BufferedReader input = new BufferedReader(new FileReader(answersFilePath));
         String line;
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
@@ -200,8 +205,7 @@ public class CSVHandler {
                 throw new IllFormedCSVException(rowNumber);
             else
                 colsCount=answers.length;
-            if(!isAllCellsFilled(answers))
-                throw new EmptyAnswerKeyException(rowNumber);
+
             ArrayList<String> answerKey= new ArrayList<String>(Arrays.asList(answers));
             correctAnswers.add(answerKey);
             rowNumber++;
@@ -246,6 +250,68 @@ public class CSVHandler {
         updateGroupsAndQHeaders(realIDGroups);
     }
 
+    public static void removeBlankQuestions() throws InConsistentAnswerKeyException {
+
+        //check if all filled -> no need for filtering
+        boolean isAllCellsFilled=true;
+        ArrayList<ArrayList<String>> corrAnswers=Statistics.getCorrectAnswers();
+
+        for(ArrayList<String> formAnswers:corrAnswers){
+
+            if(!isAllCellsFilled(formAnswers))
+                isAllCellsFilled=false;
+        }
+        if(isAllCellsFilled){
+            System.out.println("No emtpy cells in answer keys");
+            return;
+        }
+
+        ArrayList<String> form1Answers= corrAnswers.get(0);
+
+        //check for unexpected blanks
+        for(int i=0;i<form1Answers.size();i++) { //for every question
+
+            boolean isQuestionBlank=form1Answers.get(i).isEmpty();
+
+            for(int j=0;j<corrAnswers.size();j++) { //for every form
+
+                if(corrAnswers.get(j).get(i).isEmpty()!=isQuestionBlank)
+                    throw new InConsistentAnswerKeyException(j+1);
+
+            }
+        }
+
+
+
+
+        int qIndex=0;
+        ArrayList<Group> newGroups=new ArrayList<>();
+
+        for(Group group: detectedGroups){
+
+            int groupStart=qIndex;
+            int lastFilledIndex=-1;
+
+            for(int i=0;i<group.getqCount();i++){
+
+                if(!form1Answers.get(qIndex).isEmpty())
+                    lastFilledIndex=i;
+                qIndex++;
+            }
+
+            newGroups.add(new Group(group.getName(),lastFilledIndex+1));
+
+        }
+
+
+
+
+
+
+
+
+
+    }
 
     public static void updateGroupsAndQHeaders(ArrayList<Group> newGroups){
 
@@ -256,14 +322,6 @@ public class CSVHandler {
                 detectedQHeaders.add(group.getName() + (i + 1));
         }
         Statistics.setQuestionNames(detectedQHeaders);
-    }
-
-    public static int getLinesCount(String filePath) throws IOException {
-        BufferedReader input = new BufferedReader(new FileReader(filePath));
-        int count=0;
-        while(input.readLine() != null)
-            count++;
-        return count;
     }
 
 
@@ -484,6 +542,7 @@ public class CSVHandler {
         // question headers and Groups creations
         int expectedIndex = 1, digitBegin = 0;
         String currentGroup = "";
+
         for (; i < scoresStartIndex; i++) {
 
             if ((digitBegin = headers[i].lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found -> either end of group or weird column

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ReportChartsTest extends Application {
 
 
-    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
+    @Override public void start(Stage stage) throws IOException, CSVHandler.InConsistentAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
         String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
 
 

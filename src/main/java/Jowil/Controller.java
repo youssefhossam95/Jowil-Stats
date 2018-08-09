@@ -50,7 +50,8 @@ public abstract class Controller {
     final String myTitle;
     final double XSCALE,YSCALE;
     final boolean isResizable;
-
+    double navWidth;
+    double navHeight;
 
 
     protected boolean isContentEdited=false;
@@ -133,8 +134,8 @@ public abstract class Controller {
     protected void updateSizes(){
 
         Insets navPadding=new Insets(0,0,0,0);
-        double navWidth=resX/15;
-        double navHeight=resX/47.5;
+        navWidth=resX/15;
+        navHeight=resX/47.5;
 
         rootWidth=rootPane.getPrefWidth();
         rootHeight=rootPane.getPrefHeight();

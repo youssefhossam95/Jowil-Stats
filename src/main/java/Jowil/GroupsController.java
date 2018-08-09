@@ -101,7 +101,8 @@ public class GroupsController  extends Controller{
         choicesTreeView.setPrefHeight(rootHeightToPixels(0.67));
         choicesTreeView.setPrefWidth(rootWidthToPixels(0.3125));
 
-        manualButton.setPrefHeight(resXToPixels(0.004));
+        manualButton.setPrefHeight(navHeight);
+        //manualButton.setPrefWidth(navWidth);
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
         manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
         AnchorPane.setRightAnchor(choicesTreeVBox,rootWidth/20);
@@ -301,9 +302,9 @@ public class GroupsController  extends Controller{
 //        manualButton.setOnMouseExited(t->manualButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
 
         manualButton.setOnMouseClicked(t->{
-            HeadersCreateController controller = new HeadersCreateController(null);
-            isContentEdited=true;
-            controller.startWindow();
+//            HeadersCreateController controller = new HeadersCreateController(null);
+//            isContentEdited=true;
+//            controller.startWindow();
         });
 
         //buttonsHbox.getChildren().add(manualButton);

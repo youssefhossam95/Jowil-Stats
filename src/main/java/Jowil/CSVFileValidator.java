@@ -201,9 +201,6 @@ public class CSVFileValidator extends ValidatorBase {
         }  catch(IOException e) {
             setMessage(ERRORREADINGMESSAGE);
             hasErrors.set(true);
-        } catch (CSVHandler.EmptyAnswerKeyException e) {
-            setMessage(EMPTYCELLSMESSAGE+e.getRowNumber());
-            hasErrors.set(true);
         }
 
     }

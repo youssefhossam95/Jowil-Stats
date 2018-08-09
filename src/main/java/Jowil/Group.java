@@ -42,7 +42,7 @@ public class Group extends RecursiveTreeObject<Group> {
     }
 
     public String getCleanedName(){
-        return name.charAt(name.length()-1)=='-'?name.substring(0,name.length()-1):name;
+        return name.charAt(name.length()-1)=='-'?name.trim().substring(0,name.length()-1):name;
     }
 
 

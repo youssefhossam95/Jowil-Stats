@@ -195,8 +195,8 @@ public class FileConfigController extends Controller{
         initIdentifierCombo();
         initFormCombo();
         initManualModeToggle();
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+        //mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+        //answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
     }
 
@@ -248,7 +248,7 @@ public class FileConfigController extends Controller{
             }
 
             if(answersFileTextField.getText().length()==0){
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer key File Error", "No answer key file provided.");
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "No answer key file provided.");
                 return;
             }
 
@@ -258,14 +258,14 @@ public class FileConfigController extends Controller{
             }
 
             if(answersTextFieldResult==CSVFileValidator.ERROR){
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer key File Error", "Error in answer key file: "+answersTextFieldMessage);
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "Error in answer key file: "+answersTextFieldMessage);
                 return;
             }
 
             int formsCount=CSVHandler.getFormsCount();
 
             if(formsCount>1 && formComboSelectedIndex==0 &&mainTextFieldResult!=CSVFileValidator.WARNING){
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answers File Error",
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
                         formsCount+" answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.");
                 return;
             }
@@ -306,8 +306,21 @@ public class FileConfigController extends Controller{
 
             saveChanges();
 
+            //remove blank questions
+            if(!isManualMode) {
+                try {
+                    CSVHandler.removeBlankQuestions();
+                } catch (CSVHandler.InConsistentAnswerKeyException e) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
+                            "Error in answer key file at row "+e.getRowNumber()+". Blank answers positions are inconsistent.");
+                    return;
+                }
+            }
+
+
             try {
-                CSVHandler.loadCsv(isHeadersExist);
+                if(!isManualMode) // will be loaded from manual mode window
+                    CSVHandler.loadCsv(isHeadersExist);
             } catch (CSVHandler.IllFormedCSVException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file at row "+e.getRowNumber()+". File must contain a constant number of columns in all rows.");

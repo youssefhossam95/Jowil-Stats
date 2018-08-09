@@ -84,7 +84,7 @@ public class fxChartawy extends Application {
 //        Jowil.CSVHandler.setInfoHeadersTypes(studentData);
 //        Jowil.CSVHandler.loadCsv(isHeaders, false);
 //=======
-    @Override public void start(Stage stage) throws IOException, CSVHandler.EmptyAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
+    @Override public void start(Stage stage) throws IOException, CSVHandler.InConsistentAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
         CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\wello.csv");
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv");
         CSVHandler.setFormColIndex(3);
