@@ -272,7 +272,7 @@ public class FileConfigController extends Controller{
             //auto mode->contains headers->ignore headers if switched later to manual mode
             CSVHandler.setIsSkipRowInManual(true);
 
-            int answerKeyQCount=Statistics.getCorrectAnswers().get(0).size();
+            int answerKeyQCount=CSVHandler.getAnswerKeySize();
             int studentResponsesQCount=CSVHandler.getDetectedQHeaders().size();
 
             if(answerKeyQCount!=studentResponsesQCount){

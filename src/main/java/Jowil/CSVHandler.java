@@ -85,6 +85,8 @@ public class CSVHandler {
 
     private static boolean isSkipRowInManual;
 
+    private static int answerKeySize;
+
 
     //getters and setters
     public static void setFilePath(String filePath) {
@@ -153,6 +155,10 @@ public class CSVHandler {
         realIDGroups = realIDGroups;
     }
 
+    public static int getAnswerKeySize() {
+        return answerKeySize;
+    }
+
     //public methods
     /**
      *
@@ -193,7 +199,7 @@ public class CSVHandler {
                 colsCount=row.length;
 
             Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,scoresStartIndex));
-            updateStudentIdentifier(row,rowNumber);
+            updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
             updateStudentForms(row,rowNumber);
             updateSubjScores(row);
             rowNumber++;
@@ -218,6 +224,8 @@ public class CSVHandler {
         int colsCount=0;
         while ((line = input.readLine()) != null) {
             String [] answers=line.split(",",-1);
+
+            answerKeySize=answers.length;
 
             if(answers.length!=colsCount && colsCount!=0)
                 throw new IllFormedCSVException(rowNumber);
@@ -323,7 +331,7 @@ public class CSVHandler {
     ////////////////////helper functions
 
 
-    //assumes correct answers are set
+    //assumes correct answers were loaded
     private static ArrayList<String> extractStudentsAnswers(String [] original,int skipCols,int end){
         ArrayList<String> cropped=new ArrayList<String>();
         int qIndex=0;
@@ -332,9 +340,9 @@ public class CSVHandler {
             if (!isQuestionsIgnored.get(qIndex))
                 cropped.add(original[i]);
             else {
-                System.out.println(detectedQHeaders.get(qIndex) + " ignored ya joe");
                 isAnswerKeyContainsBlanks=true;
             }
+            qIndex++;
         }
 
         return cropped;
@@ -532,19 +540,19 @@ public class CSVHandler {
                 if ((digitBegin = headers[i].lastIndexOf("1")) == -1)//a weird column
                     break;
                 detectedGroups.add(new Group(currentGroup, currentGroupCount));
+                currentGroupCount=0;
                 expectedIndex = 1;
             }
             currentGroup = headers[i].substring(0, digitBegin);
             expectedIndex++;
-            qIndex++;
 
-            if(isQuestionsIgnored.get(qIndex) && isIgnoreBlanks)
+            if(isIgnoreBlanks && isQuestionsIgnored.get(qIndex))
                 System.out.println("Ignored "+headers[i]);
             else {
                 detectedQHeaders.add(headers[i]);
                 currentGroupCount++;
             }
-
+            qIndex++;
         }
 
         detectedGroups.add(new Group(currentGroup, currentGroupCount)); //add last group
