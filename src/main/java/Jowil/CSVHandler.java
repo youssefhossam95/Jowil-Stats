@@ -62,7 +62,8 @@ public class CSVHandler {
 
 
     //fields
-    public final static Integer STUDENTID=0, STUDENTNAME=1, STUDENTFORM=2, STUDENTIDCONT=3,IGNORE=4;
+
+    public final static Integer NORMAL_MODE=0,DECLARE_SUBJ_MODE=1,IGNORE_BLANKS_MODE=2;
     private static String filePath;
     private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
     private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
@@ -78,8 +79,11 @@ public class CSVHandler {
     private static int questionsColStartIndex;
     private static int questionsLimit;
     private static int CSVHeaderColsCount;
-    private static boolean isAnswerKeyContainsBlanks=true;
+    private static boolean isAnswerKeyContainsBlanks;
     private static ArrayList<Boolean> isQuestionsIgnored;
+    private static ArrayList<Group> realIDGroups;//groups in the beginning that start with "id".
+
+    private static boolean isSkipRowInManual;
 
 
     //getters and setters
@@ -89,10 +93,6 @@ public class CSVHandler {
     public static ArrayList<String> getDetectedQHeaders() {
         return detectedQHeaders;
     }
-    public static void setDetectedQHeaders(ArrayList<String> detectedQHeaders) {
-        CSVHandler.detectedQHeaders = detectedQHeaders;
-    }
-
 
     public static ArrayList<String> getDetectedInfoHeaders() {
         return detectedInfoHeaders;
@@ -109,15 +109,9 @@ public class CSVHandler {
         return subjQuestionsCount;
     }
 
-    public static void setSubjQuestionsCount(int subjQuestionsCount) {
-        CSVHandler.subjQuestionsCount = subjQuestionsCount;
-    }
+
     public static int getFormsCount() {
         return formsCount;
-    }
-
-    public static void setFormsCount(int formsCount) {
-        CSVHandler.formsCount = formsCount;
     }
 
 
@@ -143,7 +137,21 @@ public class CSVHandler {
         CSVHandler.questionsLimit = questionsLimit;
     }
 
+    public static boolean isIsAnswerKeyContainsBlanks() {
+        return isAnswerKeyContainsBlanks;
+    }
 
+    public static boolean isIsSkipRowInManual() {
+        return isSkipRowInManual;
+    }
+
+    public static void setIsSkipRowInManual(boolean isSkipRowInManual) {
+        CSVHandler.isSkipRowInManual = isSkipRowInManual;
+    }
+
+    public static void setRealIDGroups(ArrayList<Group> realIDGroups) {
+        realIDGroups = realIDGroups;
+    }
 
     //public methods
     /**
@@ -192,10 +200,7 @@ public class CSVHandler {
         }
 
 
-        if(isAnswerKeyContainsBlanks) {
-            cleanBlankAnswersEffect();
-            Statistics.setQuestionNames(detectedQHeaders);
-        }
+
     }
 
 
@@ -249,32 +254,18 @@ public class CSVHandler {
         return formsCount;
     }
 
-    private static void updateCleanedCorrectAnswers(ArrayList<ArrayList<String>> cleanedCorrectAnswers,String[] formAnswers) {
 
-        ArrayList<String> cleanedFormAnswers=new ArrayList<>();
-        isQuestionsIgnored=new ArrayList<>();
+    public static boolean processHeaders(int mode) throws IOException, EmptyCSVException {
 
-        for(String answer:formAnswers){
-            if(!answer.isEmpty())
-                cleanedFormAnswers.add(answer);
-            else
-                isAnswerKeyContainsBlanks=true;
+        if(realIDGroups==null)
+            detectedGroups=new ArrayList<>();
+        else
+            detectedGroups=realIDGroups;
 
-            isQuestionsIgnored.add(answer.isEmpty()); //blank answers must be consistent -> any form can be used
-
-        }
-
-        cleanedCorrectAnswers.add(cleanedFormAnswers);
-
-    }
-
-
-
-    public static boolean processHeaders(boolean isHeadersModificationMode) throws IOException, EmptyCSVException {
-        detectedGroups=new ArrayList<>();
         detectedQHeaders=new ArrayList<>();
         detectedInfoHeaders=new ArrayList<>();
         subjStartIndex=-1;
+
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line;
         if((line = input.readLine()) != null){
@@ -282,7 +273,7 @@ public class CSVHandler {
             CSVHeaderColsCount=headers.length;
             if(!isAllCellsLarge(headers))
                 return false;
-            classifyHeaders(headers,isHeadersModificationMode);
+            classifyHeaders(headers,mode);
         }
         else
             throw new EmptyCSVException();
@@ -297,23 +288,6 @@ public class CSVHandler {
         return new BufferedReader(new FileReader(file)).readLine()==null;
     }
 
-    public static void addRealIDGroups(ArrayList<Group> realIDGroups){
-        realIDGroups.addAll(detectedGroups); //append existing groups to realIDGroups
-        updateGroupsAndQHeaders(realIDGroups);
-    }
-
-
-    //can only be called before load CSV -> assumes answer keys contains no blanks, so qheaders can be generated from groups.
-    public static void updateGroupsAndQHeaders(ArrayList<Group> newGroups){
-
-        detectedGroups=newGroups;
-        detectedQHeaders=new ArrayList<>();
-        for (Group group : detectedGroups) {
-            for (int i = 0; i < group.getqCount(); i++)
-                detectedQHeaders.add(group.getName() + (i + 1));
-        }
-        Statistics.setQuestionNames(detectedQHeaders);
-    }
 
 
     public static void initQuestionsChoices(){
@@ -343,6 +317,7 @@ public class CSVHandler {
                 Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
         }
     }
+
 
 
     ////////////////////helper functions
@@ -421,35 +396,22 @@ public class CSVHandler {
         Statistics.getStudentIdentifier().add(identifier.toString());
     }
 
+    private static void updateCleanedCorrectAnswers(ArrayList<ArrayList<String>> cleanedCorrectAnswers,String[] formAnswers) {
 
+        ArrayList<String> cleanedFormAnswers=new ArrayList<>();
+        isQuestionsIgnored=new ArrayList<>();
 
-    private static void cleanBlankAnswersEffect() {
+        for(String answer:formAnswers){
+            if(!answer.isEmpty())
+                cleanedFormAnswers.add(answer);
+            else
+                isAnswerKeyContainsBlanks=true;
 
-        System.out.println("ana banadaf el blanks");
+            isQuestionsIgnored.add(answer.isEmpty()); //blank answers must be consistent -> any form can be used
 
-        ArrayList<Group> newGroups=new ArrayList<>();
-        ArrayList<String> newQHeaders=new ArrayList<>();
-        int qIndex=0;
-
-        for(Group group: detectedGroups){
-
-            int groupCount=0;
-
-            for(int i=0;i<group.getqCount();i++){
-
-                if(!isQuestionsIgnored.get(qIndex)){
-                    groupCount++;
-                    newQHeaders.add(detectedQHeaders.get(qIndex));
-                }
-                qIndex++;
-            }
-
-            newGroups.add(new Group(group.getName(),groupCount));
         }
 
-        detectedGroups=newGroups;
-        detectedQHeaders=newQHeaders;
-
+        cleanedCorrectAnswers.add(cleanedFormAnswers);
 
     }
 
@@ -519,22 +481,6 @@ public class CSVHandler {
         return maxString;
     }
 
-    private static boolean isAllCellsFilled(String [] cells){
-        for(String cell: cells){
-            if(cell.length()==0)
-                return false;
-        }
-        return true;
-    }
-
-
-    private static boolean isAllCellsFilled(ArrayList<String> cells){
-        for(String cell: cells){
-            if(cell.length()==0)
-                return false;
-        }
-        return true;
-    }
 
 
     private static boolean isAllCellsLarge(String [] cells){
@@ -546,7 +492,10 @@ public class CSVHandler {
     }
 
 
-    private static void classifyHeaders(String [] headers,boolean isHeadersModificationMode) {
+    private static void classifyHeaders(String [] headers,int mode) {
+
+        boolean isIgnoreBlanks=(mode==DECLARE_SUBJ_MODE|| mode==IGNORE_BLANKS_MODE);
+
         Pattern groupsPattern = Pattern.compile(".*\\d+");
         subjStartIndex=-1;
         subjEndIndex=-1;
@@ -570,11 +519,11 @@ public class CSVHandler {
 
         scoresStartIndex++;
 
-        if (isHeadersModificationMode)
+        if (mode==DECLARE_SUBJ_MODE)
             scoresStartIndex = questionsLimit + questionsColStartIndex;
 
         // question headers and Groups creations
-        int expectedIndex = 1, digitBegin = 0;
+        int expectedIndex = 1, digitBegin = 0,currentGroupCount=0,qIndex=0;
         String currentGroup = "";
 
         for (; i < scoresStartIndex; i++) {
@@ -582,17 +531,25 @@ public class CSVHandler {
             if ((digitBegin = headers[i].lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found -> either end of group or weird column
                 if ((digitBegin = headers[i].lastIndexOf("1")) == -1)//a weird column
                     break;
-                detectedGroups.add(new Group(currentGroup, expectedIndex - 1));
+                detectedGroups.add(new Group(currentGroup, currentGroupCount));
                 expectedIndex = 1;
             }
             currentGroup = headers[i].substring(0, digitBegin);
             expectedIndex++;
-            detectedQHeaders.add(headers[i]);
+            qIndex++;
+
+            if(isQuestionsIgnored.get(qIndex) && isIgnoreBlanks)
+                System.out.println("Ignored "+headers[i]);
+            else {
+                detectedQHeaders.add(headers[i]);
+                currentGroupCount++;
+            }
+
         }
 
-        detectedGroups.add(new Group(currentGroup, expectedIndex - 1)); //add last group
+        detectedGroups.add(new Group(currentGroup, currentGroupCount)); //add last group
 
-        if (isHeadersModificationMode) {
+        if (mode==DECLARE_SUBJ_MODE) {
             subjStartIndex=scoresStartIndex;
             subjEndIndex=headers.length;
             subjQuestionsCount=subjEndIndex-subjStartIndex;

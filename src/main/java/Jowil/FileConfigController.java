@@ -234,7 +234,7 @@ public class FileConfigController extends Controller{
 //
         nextButton.setOnMouseClicked(t->{
 
-            boolean isHeadersExist=true;
+
             boolean isManualMode=manualModeToggle.isSelected();
             rootPane.requestFocus();
 
@@ -242,6 +242,7 @@ public class FileConfigController extends Controller{
             validateMainTextField();
             validateAnswersTextField();
 
+            //check for errors
             if(mainFileTextField.getText().length()==0){
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "No students responses file provided.");
                 return;
@@ -271,46 +272,62 @@ public class FileConfigController extends Controller{
             }
 
 
-
+            //if no headers
             if(mainTextFieldResult==CSVFileValidator.WARNING){
-                isHeadersExist=false;
-                isManualMode=true;
+
                 int selectedAction=showHeadersWarningDialog();
                 if(selectedAction==CANCEL)
                     return;
-                if(selectedAction==SKIPROW)
-                    isHeadersExist=true;
+                CSVHandler.setIsSkipRowInManual(selectedAction==SKIPROW);
             }
-            else if(!isManualMode){
-                int answerKeyQCount=Statistics.getCorrectAnswers().get(0).size();
-                int studentResponsesQCount=CSVHandler.getDetectedQHeaders().size();
-                if(answerKeyQCount!=studentResponsesQCount){
-                    int selectedAction=showQCountWarningDialog(answerKeyQCount,studentResponsesQCount);
-                    if(selectedAction==CANCEL)
-                        return;
 
-                    if(selectedAction==DECLARESUBJ){
-                        CSVHandler.setQuestionsLimit(answerKeyQCount);
-                        try {
-                            CSVHandler.processHeaders(true);
-                        } catch(Exception e){
-                            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
-                                    "Error in reloading responses file.");
-                            return;
-                        }
+            if(isManualMode) {
+                openManualMode();
+                return;
+            }
+
+
+            //auto mode->contains headers->ignore headers if switched later to manual mode
+            CSVHandler.setIsSkipRowInManual(true);
+
+            int answerKeyQCount=Statistics.getCorrectAnswers().get(0).size();
+            int studentResponsesQCount=CSVHandler.getDetectedQHeaders().size();
+
+            if(answerKeyQCount!=studentResponsesQCount){
+                int selectedAction=showQCountWarningDialog(answerKeyQCount,studentResponsesQCount);
+                if(selectedAction==CANCEL)
+                    return;
+
+                if(selectedAction==DECLARESUBJ){
+                    CSVHandler.setQuestionsLimit(answerKeyQCount);
+                    try {
+                        CSVHandler.processHeaders(CSVHandler.DECLARE_SUBJ_MODE); //declare subjs and remove blanks bl mara
+                    } catch(Exception e){
+                        showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
+                                "Error in reloading responses file.");
+                        return;
                     }
-                    else //continue to manual mode
-                        isManualMode=true;
+                }
+                else {
+                    openManualMode();//continue to manual mode
+                    return;
                 }
             }
+            else if(CSVHandler.isIsAnswerKeyContainsBlanks()){ //questions counts matching in auto mode but correct answers contain blanks
+                try {
 
+                    CSVHandler.processHeaders(CSVHandler.IGNORE_BLANKS_MODE); //clean the blanks
+                } catch(Exception e){
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
+                            "Error in reloading responses file.");
+                    return;
+                }
+            }
             saveChanges();
 
 
-
             try {
-                if(!isManualMode) // will be loaded from manual mode window
-                    CSVHandler.loadCsv(isHeadersExist);
+                    CSVHandler.loadCsv(true);
             } catch (CSVHandler.IllFormedCSVException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file at row "+e.getRowNumber()+". File must contain a constant number of columns in all rows.");
@@ -326,16 +343,7 @@ public class FileConfigController extends Controller{
             }
 
 
-
-            if(!isManualMode){
-                GroupsController controller;
-                next = controller = new GroupsController(this);
-                controller.startWindow();
-            }
-            else{
-                HeadersCreateController controller=new HeadersCreateController(this);
-                controller.startWindow();
-            }
+            new GroupsController(this).startWindow();
             stage.close();
 
             });
@@ -601,8 +609,11 @@ public class FileConfigController extends Controller{
 
 
         //add idGroups to detected groups
-        if(idGroups.size()!=0)
-            CSVHandler.addRealIDGroups(idGroups);
+
+        if(idGroups.isEmpty())
+            CSVHandler.setRealIDGroups(null);
+        else
+            CSVHandler.setRealIDGroups(idGroups);
 
     }
 
@@ -789,6 +800,12 @@ public class FileConfigController extends Controller{
         answersFileTextField.validate();
         answersTextFieldResult=validator.getMessageType();
         answersTextFieldMessage=validator.getMessage();
+    }
+
+    private void openManualMode(){
+        new HeadersCreateController(this).startWindow();
+        CSVHandler.setRealIDGroups(null);//populate combos wasn't called -> reintialize realIDGroups
+
     }
 
 
