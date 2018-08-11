@@ -158,7 +158,7 @@ public class CSVFileValidator extends ValidatorBase {
         isHeadersFound = true;
         CSVHandler.setFilePath(file.getPath());
         try {
-            if (!CSVHandler.processHeaders(false)) {
+            if (!CSVHandler.processHeaders(CSVHandler.NORMAL_MODE)) {
                 setMessage(NO_HEADERS_MESSAGE);
                 isHeadersFound = false;
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");

@@ -1,43 +1,25 @@
 package Jowil;
 import com.jfoenix.controls.*;
-import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 
-import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import de.jensd.fx.glyphs.GlyphsBuilder;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.util.Callback;
-
-import static com.jfoenix.validation.base.ValidatorBase.PSEUDO_CLASS_ERROR;
 
 
 public class FileConfigController extends Controller{
@@ -195,8 +177,8 @@ public class FileConfigController extends Controller{
         initIdentifierCombo();
         initFormCombo();
         initManualModeToggle();
-        //mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-        //answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
     }
 

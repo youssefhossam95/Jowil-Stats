@@ -30,7 +30,7 @@ public class ReportChartsTest extends Application {
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders(false);
+        boolean isHeaders=CSVHandler.processHeaders(CSVHandler.NORMAL_MODE);
         Jowil.CSVHandler.loadCsv(isHeaders);
 
 
