@@ -6,19 +6,14 @@ import de.jensd.fx.glyphs.GlyphsBuilder;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.DefaultProperty;
-import javafx.css.PseudoClass;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+
 import javafx.scene.control.TextInputControl;
-import javafx.util.converter.NumberStringConverter;
+
 
 import java.io.File;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.ParsePosition;
+
 
 
 @DefaultProperty(value = "icon")
@@ -35,10 +30,10 @@ public class CSVFileValidator extends ValidatorBase {
     private final static Node mainSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.3em").styleClass("error").build();
     private final static Node answersSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.3em").styleClass("error").build();
 
-    public final static String EMPTYCSVMESSAGE="Empty CSV file.",DOESNOTEXISTMESSAGE="File doesn't exist.",
-            REQUIREDFIELDMESSAGE="Required field.",CSVEXTENSIONMESSAGE="File must have a \".csv\" extension.",
-            ERRORREADINGMESSAGE="Error in reading file.",NOHEADERSMESSAGE="No headers detected.",
-            EMPTYCELLSMESSAGE="File contains empty cells at row ", ILLFORMEDCSVMESSAGE="Invalid number of columns at row %d";
+    public final static String EMPTY_CSV_MESSAGE="Empty CSV file.",DOES_NOT_EXIST_MESSAGE="File doesn't exist.",
+            REQUIRED_FIELD_MESSAGE="Required field.",CSV_EXTENSION_MESSAGE="File must have a \".csv\" extension.",
+            ERROR_READING_MESSAGE="Error in reading file.",NO_HEADERS_MESSAGE="No headers detected.",
+            INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.", ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d";
 
     private boolean isHeadersFound=true;
 
@@ -123,29 +118,29 @@ public class CSVFileValidator extends ValidatorBase {
         //basic csv checks
 
         if(file.getPath().length()==0){
-            setMessage(REQUIREDFIELDMESSAGE);
+            setMessage(REQUIRED_FIELD_MESSAGE);
             hasErrors.set(true);
             return;
         }
 
         if (!file.exists()) {
-            setMessage(DOESNOTEXISTMESSAGE);
+            setMessage(DOES_NOT_EXIST_MESSAGE);
             hasErrors.set(true);
             return;
         }
         if (!file.getPath().toLowerCase().endsWith(".csv")) {
-            setMessage(CSVEXTENSIONMESSAGE);
+            setMessage(CSV_EXTENSION_MESSAGE);
             hasErrors.set(true);
             return;
         }
         try{
             if(CSVHandler.isCSVFileEmpty(file)){
-                setMessage(EMPTYCSVMESSAGE);
+                setMessage(EMPTY_CSV_MESSAGE);
                 hasErrors.set(true);
                 return;
             }
         } catch (IOException e) {
-            setMessage(ERRORREADINGMESSAGE);
+            setMessage(ERROR_READING_MESSAGE);
             hasErrors.set(true);
             return;
         }
@@ -164,7 +159,7 @@ public class CSVFileValidator extends ValidatorBase {
         CSVHandler.setFilePath(file.getPath());
         try {
             if (!CSVHandler.processHeaders(false)) {
-                setMessage(NOHEADERSMESSAGE);
+                setMessage(NO_HEADERS_MESSAGE);
                 isHeadersFound = false;
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
                 setIcon(warningIcon);
@@ -173,12 +168,12 @@ public class CSVFileValidator extends ValidatorBase {
                 return;
             }
         } catch (IOException e) {
-            setMessage(ERRORREADINGMESSAGE);
+            setMessage(ERROR_READING_MESSAGE);
             hasErrors.set(true);
             return;
 
         } catch (CSVHandler.EmptyCSVException e) {
-            setMessage(EMPTYCSVMESSAGE);
+            setMessage(EMPTY_CSV_MESSAGE);
             hasErrors.set(true);
             return;
         }
@@ -196,10 +191,13 @@ public class CSVFileValidator extends ValidatorBase {
             CSVHandler.loadAnswerKeys(file.getPath());
         }
         catch(CSVHandler.IllFormedCSVException e){
-            setMessage(String.format(ILLFORMEDCSVMESSAGE,e.getRowNumber()));
+            setMessage(String.format(ILLFORMED_CSV_MESSAGE,e.getRowNumber()));
             hasErrors.set(true);
         }  catch(IOException e) {
-            setMessage(ERRORREADINGMESSAGE);
+            setMessage(ERROR_READING_MESSAGE);
+            hasErrors.set(true);
+        } catch (CSVHandler.InConsistentAnswerKeyException e) {
+            setMessage(INCONSISTENT_ANSWER_KEY_MESSAGE);
             hasErrors.set(true);
         }
 

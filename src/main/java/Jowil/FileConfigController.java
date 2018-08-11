@@ -306,16 +306,6 @@ public class FileConfigController extends Controller{
 
             saveChanges();
 
-            //remove blank questions
-            if(!isManualMode) {
-                try {
-                    CSVHandler.removeBlankQuestions();
-                } catch (CSVHandler.InConsistentAnswerKeyException e) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                            "Error in answer key file at row "+e.getRowNumber()+". Blank answers positions are inconsistent.");
-                    return;
-                }
-            }
 
 
             try {
