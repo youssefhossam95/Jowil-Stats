@@ -401,6 +401,8 @@ public class WeightsController extends Controller{
 
 
 
+
+
     }
 
     private TableColumn<ObservableList<StringProperty>, String> createColumn(
@@ -448,6 +450,7 @@ public class WeightsController extends Controller{
                 objTable.refresh();
             }
         }
+
 
         );
 

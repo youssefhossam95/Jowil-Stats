@@ -64,7 +64,6 @@ public class CSVHandler {
 
     //fields
 
-    public final static Integer NORMAL_MODE=0,DECLARE_SUBJ_MODE=1,IGNORE_BLANKS_MODE=2;
     private static String responsesFilePath;
     private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
     private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
@@ -203,9 +202,6 @@ public class CSVHandler {
             updateSubjScores(row);
             rowNumber++;
         }
-
-
-
 
 
     }
@@ -440,7 +436,7 @@ public class CSVHandler {
 
         for(int i=start;i<end;i++){
             String answer =formAnswers[i];
-            if(!answer.isEmpty())
+            if(!answer.trim().isEmpty())
                 cleanedFormAnswers.add(answer);
             else
                 isAnswerKeyContainsBlanks=true;
@@ -619,6 +615,18 @@ public class CSVHandler {
     private static boolean isUpperCase(String s){
 
         return s.toUpperCase().equals(s);
+    }
+
+    //true if csv file contains headers only
+    public static boolean isFileContainsNoRows(File file) throws IOException {
+        BufferedReader input = new BufferedReader(new FileReader(file));
+        boolean isHeadersExist=isAllCellsLarge(input.readLine().split(",",-1));
+
+        if(!isHeadersExist)
+            return false;
+
+        return input.readLine()==null;
+
     }
 
 

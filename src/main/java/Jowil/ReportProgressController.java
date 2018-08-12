@@ -53,8 +53,6 @@ public class ReportProgressController {
     @FXML
     FillProgressIndicator reportProgressIndicator;
 
-    @FXML
-    VBox reportProgressVBox;
 
     @FXML
     VBox counterVBox;

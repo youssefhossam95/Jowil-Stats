@@ -34,7 +34,8 @@ public class CSVFileValidator extends ValidatorBase {
     public final static String EMPTY_CSV_MESSAGE="Empty CSV file.",DOES_NOT_EXIST_MESSAGE="File doesn't exist.",
             REQUIRED_FIELD_MESSAGE="Required field.",CSV_EXTENSION_MESSAGE="File must have a \".csv\" extension.",
             ERROR_READING_MESSAGE="Error in reading file.",NO_HEADERS_MESSAGE="No headers detected.",
-            INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.", ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d";
+            INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.",
+            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d",HEADERS_ONLY_MESSAGE="File contains headers only.";
 
 
 
@@ -136,6 +137,19 @@ public class CSVFileValidator extends ValidatorBase {
             hasErrors.set(true);
             return;
         }
+
+        try{
+            if(CSVHandler.isFileContainsNoRows(file)){
+                setMessage(HEADERS_ONLY_MESSAGE);
+                hasErrors.set(true);
+                return;
+            }
+        } catch (IOException e) {
+            setMessage(ERROR_READING_MESSAGE);
+            hasErrors.set(true);
+            return;
+        }
+
 
 
     }
