@@ -24,24 +24,19 @@ public class CSVFileValidator extends ValidatorBase {
     JFXTextField myTextField;
     int textFieldID;
     final public static int MAINFILETEXTFIELD=0, ANSWERSFILETEXTFIELD=1;
-    private final static Node mainErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
-    private final static Node answersErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").styleClass("error").build();
-    private final static Node warningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").styleClass("error").build();
-    private final static Node mainSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.3em").styleClass("error").build();
-    private final static Node answersSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.3em").styleClass("error").build();
+    private final static Node mainErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").build();
+    private final static Node answersErrorIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size("1em").build();
+    private final static Node mainWarningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").build();
+    private final static Node answersWarningIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.WARNING).size("1em").build();
+    private final static Node mainSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.3em").build();
+    private final static Node answersSuccessIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CHECK).size("1.3em").build();
 
     public final static String EMPTY_CSV_MESSAGE="Empty CSV file.",DOES_NOT_EXIST_MESSAGE="File doesn't exist.",
             REQUIRED_FIELD_MESSAGE="Required field.",CSV_EXTENSION_MESSAGE="File must have a \".csv\" extension.",
             ERROR_READING_MESSAGE="Error in reading file.",NO_HEADERS_MESSAGE="No headers detected.",
             INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.", ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d";
 
-    private boolean isHeadersFound=true;
 
-    public CSVFileValidator() { }
-
-    public CSVFileValidator(String message) {
-        super(message);
-    }
 
 
     public CSVFileValidator(JFXTextField myTextField,int textFieldID){
@@ -50,9 +45,6 @@ public class CSVFileValidator extends ValidatorBase {
 
     }
 
-    public boolean isHeadersFound() {
-        return isHeadersFound;
-    }
 
     public void setTextField(JFXTextField myTextField){
         this.myTextField=myTextField;
@@ -155,14 +147,12 @@ public class CSVFileValidator extends ValidatorBase {
         if(hasErrors.get())
             return;
 
-        isHeadersFound = true;
-        CSVHandler.setFilePath(file.getPath());
+        CSVHandler.setResponsesFilePath(file.getPath());
         try {
-            if (!CSVHandler.processHeaders(CSVHandler.NORMAL_MODE)) {
+            if (!CSVHandler.processHeaders(false)) {
                 setMessage(NO_HEADERS_MESSAGE);
-                isHeadersFound = false;
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
-                setIcon(warningIcon);
+                setIcon(mainWarningIcon);
                 messageType=WARNING;
                 hasErrors.set(true);
                 return;
@@ -181,6 +171,9 @@ public class CSVFileValidator extends ValidatorBase {
     }
 
     private void validateAnswersCSV(File file){
+
+        boolean isHeadersExist=false;
+
         setIcon(answersErrorIcon);
 
         validateCSV(file);
@@ -188,7 +181,7 @@ public class CSVFileValidator extends ValidatorBase {
             return;
 
         try {
-            CSVHandler.loadAnswerKeys(file.getPath());
+            isHeadersExist=CSVHandler.loadAnswerKeys(file.getPath(),false);
         }
         catch(CSVHandler.IllFormedCSVException e){
             setMessage(String.format(ILLFORMED_CSV_MESSAGE,e.getRowNumber()));
@@ -200,6 +193,15 @@ public class CSVFileValidator extends ValidatorBase {
             setMessage(INCONSISTENT_ANSWER_KEY_MESSAGE);
             hasErrors.set(true);
         }
+
+        if(!isHeadersExist){
+            setMessage(NO_HEADERS_MESSAGE);
+            myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
+            setIcon(answersWarningIcon);
+            messageType=WARNING;
+            hasErrors.set(true);
+        }
+
 
     }
 

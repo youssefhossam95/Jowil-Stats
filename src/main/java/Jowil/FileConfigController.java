@@ -253,8 +253,19 @@ public class FileConfigController extends Controller{
                 return;
             }
 
+            int responsesColCount=CSVHandler.getResponsesColsCount();
+            int answersColCount=CSVHandler.getAnswersColsCount();
 
-            //if no headers
+            if(responsesColCount!=answersColCount){ //check if columns count doesn't match
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", "Student responses file contains " +
+                        responsesColCount + " columns, while the answer key file contains " + answersColCount + " columns.");
+                return;
+                }
+
+                
+
+
+            //if no headers in responses
             if(mainTextFieldResult==CSVFileValidator.WARNING){
 
                 int selectedAction=showHeadersWarningDialog();
@@ -272,39 +283,45 @@ public class FileConfigController extends Controller{
             //auto mode->contains headers->ignore headers if switched later to manual mode
             CSVHandler.setIsSkipRowInManual(true);
 
-            int answerKeyQCount=CSVHandler.getAnswerKeySize();
-            int studentResponsesQCount=CSVHandler.getDetectedQHeaders().size();
 
-            if(answerKeyQCount!=studentResponsesQCount){
-                int selectedAction=showQCountWarningDialog(answerKeyQCount,studentResponsesQCount);
-                if(selectedAction==CANCEL)
+            if(answersTextFieldResult==CSVFileValidator.SUCCESS){ //both files contain headers -> check for headers mismatch
+                boolean isMismatched;
+                try {
+                    isMismatched=CSVHandler.isFilesHeadersMismatched(new File(mainFileTextField.getText()),new File(answersFileTextField.getText()));
+                } catch (IOException e) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
+                            "Error in reloading files.");
                     return;
-
-                if(selectedAction==DECLARESUBJ){
-                    CSVHandler.setQuestionsLimit(answerKeyQCount);
-                    try {
-                        CSVHandler.processHeaders(CSVHandler.DECLARE_SUBJ_MODE); //declare subjs and remove blanks bl mara
-                    } catch(Exception e){
-                        showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
-                                "Error in reloading responses file.");
-                        return;
-                    }
                 }
-                else {
-                    openManualMode();//continue to manual mode
+                if(isMismatched){
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Headers Mismatch Error","Headers of " +
+                            "answers and student responses files are not identical.");
                     return;
                 }
             }
-            else if(CSVHandler.isIsAnswerKeyContainsBlanks()){ //questions counts matching in auto mode but correct answers contain blanks
+
+
+            try {
+                CSVHandler.loadAnswerKeys(answersFileTextField.getText(),true);
+            } catch (IOException e) {
+
+            } catch (CSVHandler.IllFormedCSVException e) {
+                e.printStackTrace(); //msh hat7sl hena la2en lw feh aslun kan hasal f el call el f CSVFileValidator
+            } catch (CSVHandler.InConsistentAnswerKeyException e) {
+                e.printStackTrace(); //nafs el kalam zy el fo2eha
+            }
+
+            if(CSVHandler.isIsAnswerKeyContainsBlanks()){ //questions counts matching in auto mode but correct answers contain blanks
                 try {
 
-                    CSVHandler.processHeaders(CSVHandler.IGNORE_BLANKS_MODE); //clean the blanks
+                    CSVHandler.processHeaders(true); //clean the blanks
                 } catch(Exception e){
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
                             "Error in reloading responses file.");
                     return;
                 }
             }
+
             saveChanges();
 
 
@@ -323,6 +340,7 @@ public class FileConfigController extends Controller{
                         "Error in students responses file: "+e.getMessage());
                 return;
             }
+
 
 
             new GroupsController(this).startWindow();
@@ -722,33 +740,8 @@ public class FileConfigController extends Controller{
 
     }
 
-    private int showQCountWarningDialog(int answersQCount, int responsesQcount){
 
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-        alert.setTitle("Questions Count");
-        alert.setHeaderText("Questions count mismatch");
-        alert.setOnCloseRequest(t->alert.hide());
-        alert.setContentText(responsesQcount+" questions were detected in student responses file, while the answer key file contains "+ answersQCount+" answers.");
-        ButtonType declareSubjButton= new ButtonType("Declare The Extra "+(responsesQcount-answersQCount)+" Questions As Subjective");
-        ButtonType continueButton = new ButtonType("Continue To Manual Mode");
-        ButtonType close =ButtonType.CLOSE;
 
-        if(responsesQcount>answersQCount)
-            alert.getButtonTypes().setAll(declareSubjButton,continueButton,close);
-        else
-            alert.getButtonTypes().setAll(continueButton,close);
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if(result.get()==continueButton)
-            return CONTINUE;
-        else if(result.get()==declareSubjButton)
-            return DECLARESUBJ;
-        else
-            return CANCEL;
-
-    }
 
     private void validateMainTextField(){
 
@@ -789,6 +782,7 @@ public class FileConfigController extends Controller{
         CSVHandler.setRealIDGroups(null);//populate combos wasn't called -> reintialize realIDGroups
 
     }
+
 
 
 }

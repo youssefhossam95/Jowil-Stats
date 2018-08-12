@@ -24,12 +24,13 @@ public class StatisticsTest extends TestCase {
             ////////////////////// test using jo csv ///////////////////////////////////////
         String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
 
-        CSVHandler.setFilePath(inputFilesFolderPath+"StudentAnswers.csv");
-        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv");
+        CSVHandler.setResponsesFilePath(inputFilesFolderPath+"StudentAnswers.csv");
+
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders(CSVHandler.NORMAL_MODE);
+        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
+        boolean isHeaders=CSVHandler.processHeaders(true);
         Jowil.CSVHandler.loadCsv(isHeaders);
 
         TestUtils.setQuestionChoicesFromFile(inputFilesFolderPath+"QuestionChoices.csv");

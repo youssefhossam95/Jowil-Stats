@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class CSVHandler {
 
 
+
     public static class InConsistentAnswerKeyException extends Exception{
 
         private int rowNumber;
@@ -64,7 +65,7 @@ public class CSVHandler {
     //fields
 
     public final static Integer NORMAL_MODE=0,DECLARE_SUBJ_MODE=1,IGNORE_BLANKS_MODE=2;
-    private static String filePath;
+    private static String responsesFilePath;
     private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
     private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
     private static ArrayList<Group> detectedGroups= new ArrayList<Group>();
@@ -77,20 +78,19 @@ public class CSVHandler {
     private static int identifierColEndIndex;
     private static int formColIndex;
     private static int questionsColStartIndex;
-    private static int questionsLimit;
-    private static int CSVHeaderColsCount;
+    private static int questionsColEndIndex;
     private static boolean isAnswerKeyContainsBlanks;
     private static ArrayList<Boolean> isQuestionsIgnored;
     private static ArrayList<Group> realIDGroups;//groups in the beginning that start with "id".
-
+    private static int responsesColsCount;
+    private static int answersColsCount;
     private static boolean isSkipRowInManual;
 
-    private static int answerKeySize;
 
 
     //getters and setters
-    public static void setFilePath(String filePath) {
-        CSVHandler.filePath = filePath;
+    public static void setResponsesFilePath(String responsesFilePath) {
+        CSVHandler.responsesFilePath = responsesFilePath;
     }
     public static ArrayList<String> getDetectedQHeaders() {
         return detectedQHeaders;
@@ -135,10 +135,6 @@ public class CSVHandler {
         CSVHandler.questionsColStartIndex = questionsColStartIndex;
     }
 
-    public static void setQuestionsLimit(int questionsLimit) {
-        CSVHandler.questionsLimit = questionsLimit;
-    }
-
     public static boolean isIsAnswerKeyContainsBlanks() {
         return isAnswerKeyContainsBlanks;
     }
@@ -152,11 +148,15 @@ public class CSVHandler {
     }
 
     public static void setRealIDGroups(ArrayList<Group> realIDGroups) {
-        realIDGroups = realIDGroups;
+        CSVHandler.realIDGroups = realIDGroups;
     }
 
-    public static int getAnswerKeySize() {
-        return answerKeySize;
+    public static int getResponsesColsCount() {
+        return responsesColsCount;
+    }
+
+    public static int getAnswersColsCount() {
+        return answersColsCount;
     }
 
     //public methods
@@ -166,7 +166,7 @@ public class CSVHandler {
      */
     public static  void loadCsv(boolean isHeadersExist ) throws IOException, InvalidFormNumberException, IllFormedCSVException {
 
-        BufferedReader input = new BufferedReader(new FileReader(filePath));
+        BufferedReader input = new BufferedReader(new FileReader(responsesFilePath));
         String line = null;
         int rowNumber=1;
 
@@ -184,7 +184,7 @@ public class CSVHandler {
         }
 
 
-        int colsCount=CSVHeaderColsCount;
+
 
         //parse students data
         while ((line = input.readLine()) != null) {
@@ -193,12 +193,11 @@ public class CSVHandler {
             if(row.length==0) //ignore empty lines
                 continue;
 
-            if(row.length!=colsCount && colsCount!=0)
+            if(row.length!=responsesColsCount) //equals zero if no headers
                 throw new IllFormedCSVException(rowNumber);
-            else
-                colsCount=row.length;
 
-            Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,scoresStartIndex));
+
+            Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
             updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
             updateStudentForms(row,rowNumber);
             updateSubjScores(row);
@@ -207,12 +206,14 @@ public class CSVHandler {
 
 
 
+
+
     }
 
 
 
-
-    public static int loadAnswerKeys(String answersFilePath) throws IOException, IllFormedCSVException, InConsistentAnswerKeyException {
+    //if loading mode off, it will be used only to check if csv is valid
+    public static boolean loadAnswerKeys(String answersFilePath,boolean isLoadingMode) throws IOException, IllFormedCSVException, InConsistentAnswerKeyException {
 
         isAnswerKeyContainsBlanks=false;
         BufferedReader input = new BufferedReader(new FileReader(answersFilePath));
@@ -220,19 +221,25 @@ public class CSVHandler {
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
         ArrayList<ArrayList<String>> cleanedCorrectAnswers=new ArrayList<>(); //without ignored questions
 
-        int rowNumber=1;
+        String firstLine=input.readLine(); //can't be null because empty csv check is already called in CSVFileValidator
+
+        boolean isHeadersExist=isAllCellsLarge(firstLine.split(",",-1));
+
+
+
+        int rowNumber=isHeadersExist?2:1;
         int colsCount=0;
-        while ((line = input.readLine()) != null) {
+        while ((line = (rowNumber==1?firstLine:input.readLine())) != null) { //read saved first line if no headers exist
             String [] answers=line.split(",",-1);
 
-            answerKeySize=answers.length;
 
             if(answers.length!=colsCount && colsCount!=0)
                 throw new IllFormedCSVException(rowNumber);
             else
                 colsCount=answers.length;
 
-            updateCleanedCorrectAnswers(cleanedCorrectAnswers,answers);
+            if(isLoadingMode)
+                updateCleanedCorrectAnswers(cleanedCorrectAnswers,answers,questionsColStartIndex,questionsColEndIndex);
             ArrayList<String> answerKey= new ArrayList<String>(Arrays.asList(answers));
             correctAnswers.add(answerKey);
             rowNumber++;
@@ -257,13 +264,20 @@ public class CSVHandler {
 
         }
 
-        Statistics.setCorrectAnswers(cleanedCorrectAnswers);
+
+        if(isLoadingMode)
+            Statistics.setCorrectAnswers(cleanedCorrectAnswers);
+
+
         formsCount=correctAnswers.size();
-        return formsCount;
+        answersColsCount=colsCount;
+
+        return isHeadersExist;
     }
 
 
-    public static boolean processHeaders(int mode) throws IOException, EmptyCSVException {
+
+    public static boolean processHeaders(boolean isIgnoreBlanks ) throws IOException, EmptyCSVException {
 
         if(realIDGroups==null)
             detectedGroups=new ArrayList<>();
@@ -274,14 +288,14 @@ public class CSVHandler {
         detectedInfoHeaders=new ArrayList<>();
         subjStartIndex=-1;
 
-        BufferedReader input = new BufferedReader(new FileReader(filePath));
+        BufferedReader input = new BufferedReader(new FileReader(responsesFilePath));
         String line;
         if((line = input.readLine()) != null){
             String headers[]=line.split(",",-1);
-            CSVHeaderColsCount=headers.length;
+            responsesColsCount=headers.length;
             if(!isAllCellsLarge(headers))
                 return false;
-            classifyHeaders(headers,mode);
+            classifyHeaders(headers,isIgnoreBlanks);
         }
         else
             throw new EmptyCSVException();
@@ -324,6 +338,21 @@ public class CSVHandler {
             for(int i=0;i<group.getqCount();i++)
                 Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
         }
+    }
+
+    public static boolean isFilesHeadersMismatched(File first,File second) throws IOException {
+        String[] firstHeaders=new BufferedReader(new FileReader(first)).readLine().split(",",-1);
+        String [] secondHeaders=new BufferedReader(new FileReader(second)).readLine().split(",",-1);
+
+        if(firstHeaders.length!=secondHeaders.length)
+            return true;
+
+        for(int i=0;i<firstHeaders.length;i++){
+            if(!firstHeaders[i].equals(secondHeaders[i]))
+                return true;
+        }
+
+        return false;
     }
 
 
@@ -404,12 +433,13 @@ public class CSVHandler {
         Statistics.getStudentIdentifier().add(identifier.toString());
     }
 
-    private static void updateCleanedCorrectAnswers(ArrayList<ArrayList<String>> cleanedCorrectAnswers,String[] formAnswers) {
+    private static void updateCleanedCorrectAnswers(ArrayList<ArrayList<String>> cleanedCorrectAnswers,String[] formAnswers,int start,int end) {
 
         ArrayList<String> cleanedFormAnswers=new ArrayList<>();
         isQuestionsIgnored=new ArrayList<>();
 
-        for(String answer:formAnswers){
+        for(int i=start;i<end;i++){
+            String answer =formAnswers[i];
             if(!answer.isEmpty())
                 cleanedFormAnswers.add(answer);
             else
@@ -500,9 +530,9 @@ public class CSVHandler {
     }
 
 
-    private static void classifyHeaders(String [] headers,int mode) {
+    private static void classifyHeaders(String [] headers,boolean isIgnoreBlanks) {
 
-        boolean isIgnoreBlanks=(mode==DECLARE_SUBJ_MODE|| mode==IGNORE_BLANKS_MODE);
+
 
         Pattern groupsPattern = Pattern.compile(".*\\d+");
         subjStartIndex=-1;
@@ -527,8 +557,9 @@ public class CSVHandler {
 
         scoresStartIndex++;
 
-        if (mode==DECLARE_SUBJ_MODE)
-            scoresStartIndex = questionsLimit + questionsColStartIndex;
+        questionsColEndIndex=scoresStartIndex;
+
+
 
         // question headers and Groups creations
         int expectedIndex = 1, digitBegin = 0,currentGroupCount=0,qIndex=0;
@@ -557,12 +588,6 @@ public class CSVHandler {
 
         detectedGroups.add(new Group(currentGroup, currentGroupCount)); //add last group
 
-        if (mode==DECLARE_SUBJ_MODE) {
-            subjStartIndex=scoresStartIndex;
-            subjEndIndex=headers.length;
-            subjQuestionsCount=subjEndIndex-subjStartIndex;
-            return;
-        }
 
         //find sub score start and end indices(if exist)
         for (i = scoresStartIndex; i < headers.length; i++) {
@@ -606,7 +631,7 @@ public class CSVHandler {
         ArrayList<ArrayList<String>> csvRows = new ArrayList<>();
 
         while( (line = input.readLine()) != null ) {
-            String[] row = line.split(",") ;
+            String[] row = line.split(",",-1);
             ArrayList<String> rowList = new ArrayList<String>() ;
             for(int i = 0 ; i < row.length ; i++)
                 rowList.add(row[i]);

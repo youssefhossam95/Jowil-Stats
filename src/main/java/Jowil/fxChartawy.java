@@ -85,12 +85,12 @@ public class fxChartawy extends Application {
 //        Jowil.CSVHandler.loadCsv(isHeaders, false);
 //=======
     @Override public void start(Stage stage) throws IOException, CSVHandler.InConsistentAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
-        CSVHandler.setFilePath(".\\src\\test\\TestCSVs\\wello.csv");
-        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv");
+        CSVHandler.setResponsesFilePath(".\\src\\test\\TestCSVs\\wello.csv");
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders(CSVHandler.NORMAL_MODE);
+        boolean isHeaders=CSVHandler.processHeaders(false);
+        CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv",true);
         Jowil.CSVHandler.loadCsv(isHeaders);
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();

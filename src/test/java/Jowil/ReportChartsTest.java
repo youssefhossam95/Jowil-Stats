@@ -25,12 +25,12 @@ public class ReportChartsTest extends Application {
         String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
 
 
-        CSVHandler.setFilePath(inputFilesFolderPath+"StudentAnswers.csv");
-        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv");
+        CSVHandler.setResponsesFilePath(inputFilesFolderPath+"StudentAnswers.csv");
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders(CSVHandler.NORMAL_MODE);
+        boolean isHeaders=CSVHandler.processHeaders(true);
+        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
         Jowil.CSVHandler.loadCsv(isHeaders);
 
 
