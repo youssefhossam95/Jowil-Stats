@@ -629,25 +629,31 @@ public class CSVHandler {
 
     }
 
+    public static ArrayList<ArrayList<String>> readPartialCSVFile(String filePath,int maxRowsCount) throws IOException {
 
-
-
-
-    public static ArrayList<ArrayList<String>> readCsvFile (String filePath) throws IOException {
         BufferedReader input = new BufferedReader(new FileReader(filePath));
         String line ;
         ArrayList<ArrayList<String>> csvRows = new ArrayList<>();
+        int rowsCount=0;
 
-        while( (line = input.readLine()) != null ) {
+        while( (line = input.readLine()) != null && rowsCount!=maxRowsCount) {
             String[] row = line.split(",",-1);
             ArrayList<String> rowList = new ArrayList<String>() ;
             for(int i = 0 ; i < row.length ; i++)
                 rowList.add(row[i]);
             csvRows.add(rowList);
+            rowsCount++;
         }
         return csvRows ;
     }
 
+    public static ArrayList<ArrayList<String>> readCsvFile (String filePath) throws IOException {
+        return readPartialCSVFile(filePath,-1);
+    }
+
+    public static ArrayList<ArrayList<String>> readResponsesFile(int maxRowsCount) throws IOException {
+        return readPartialCSVFile(responsesFilePath,maxRowsCount);
+    }
 
 
 

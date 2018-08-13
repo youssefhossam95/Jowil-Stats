@@ -137,10 +137,10 @@ public class WeightsController extends Controller{
 
     protected void updateSizes() {
         super.updateSizes();
-        objTableVbox.setSpacing(resYToPixels(0.015));
+        objTableVbox.setSpacing(rootHeightToPixels(0.019));
         objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, rootWidthToPixels(0.05)));
         objTable.setPrefHeight(rootHeightToPixels(0.67));
-        objHBox.setSpacing(resXToPixels(0.005));
+        objHBox.setSpacing(rootWidthToPixels(0.00625));
         subjHBox.setSpacing(resXToPixels(0.005));
         subjTable.setPrefHeight(rootHeightToPixels(0.67));
         subjTableVbox.setSpacing(resYToPixels(0.015));
@@ -348,7 +348,7 @@ public class WeightsController extends Controller{
 
         subjTable.setEditable(true);
         subjTable.setItems(subjQuestions);
-        subjTable.setPlaceholder(new Label("No subjective  Questions detected"));
+        subjTable.setPlaceholder(new Label("No subjective Questions detected"));
         //subjTable.setStyle("-fx-border-color:#1E90FF");
         subjTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

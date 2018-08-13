@@ -157,13 +157,13 @@ JFXCheckBox {
 
 }
 
-.scroll-pane {
+.gradesScrollPane {
    -fx-background: #FFFFFF;
    /*-fx-border-color:  #A9A9A9;*/
    -fx-border-color:  black;
 }
 
-.scroll-pane > .corner {
+.gradesScrollPane > .corner {
     -fx-background-color: transparent;
 }
 
@@ -234,3 +234,12 @@ JFXCheckBox {
 }
 
 
+.columnSetsScrollPane {
+   -fx-background: #FFFFFF;
+   /*-fx-border-color:  #A9A9A9;*/
+
+}
+
+.columnSetsScrollPane > .corner {
+    -fx-background-color: transparent;
+}

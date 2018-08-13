@@ -393,7 +393,7 @@ public class GradeBoundariesController extends Controller {
 
     @Override
     protected Controller getNextController() {
-        return new HeadersCreateController(this);
+        return null;
     }
 
     @Override public void showWindow(){

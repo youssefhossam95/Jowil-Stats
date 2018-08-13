@@ -260,21 +260,22 @@ public class FileConfigController extends Controller{
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", "Student responses file contains " +
                         responsesColCount + " columns, while the answer key file contains " + answersColCount + " columns.");
                 return;
-                }
-
-
-
-
-            //if no headers in responses
-            if(mainTextFieldResult==CSVFileValidator.WARNING){
-
-                int selectedAction=showHeadersWarningDialog();
-                if(selectedAction==CANCEL)
-                    return;
-                CSVHandler.setIsSkipRowInManual(selectedAction==SKIPROW);
             }
 
+
             if(isManualMode) {
+
+                //if no headers in responses
+                if(mainTextFieldResult==CSVFileValidator.WARNING){
+
+                    int selectedAction=showHeadersWarningDialog();
+                    if(selectedAction==CANCEL)
+                        return;
+                    CSVHandler.setIsSkipRowInManual(selectedAction==SKIPROW);
+                }
+                else //manual mode set by the user
+                    CSVHandler.setIsSkipRowInManual(true);
+
                 openManualMode();
                 return;
             }
@@ -326,7 +327,7 @@ public class FileConfigController extends Controller{
 
 
             try {
-                    CSVHandler.loadCsv(true);
+                CSVHandler.loadCsv(true);
             } catch (CSVHandler.IllFormedCSVException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file at row "+e.getRowNumber()+". File must contain a constant number of columns in all rows.");
@@ -778,8 +779,9 @@ public class FileConfigController extends Controller{
     }
 
     private void openManualMode(){
-        new HeadersCreateController(this).startWindow();
+        new ManualModeController(this).startWindow();
         CSVHandler.setRealIDGroups(null);//populate combos wasn't called -> reintialize realIDGroups
+        stage.close();
 
     }
 
