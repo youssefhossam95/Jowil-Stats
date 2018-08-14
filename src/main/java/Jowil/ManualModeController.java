@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -21,6 +22,7 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -60,10 +62,28 @@ public class ManualModeController extends Controller{
     @FXML
     HBox columnSetHBox;
 
+    @FXML
+    Separator midSeparator;
+
+    @FXML
+    VBox scrollPaneVBox;
+
+    @FXML
+    Label rightLabel;
+
+
 
     ObservableList<ObservableList<StringProperty>> tableContent= FXCollections.observableArrayList();
+    ArrayList<TablePosition> lastSelectedCells;
+    TablePosition lastClickedPos;
+    int colClicksCount=0;
     ArrayList<String> tableHeaders;
-    static final int MAX_ROWS_COUNT=10;
+    static final int MAX_ROWS_COUNT=11;
+    static int cellsCount=0;
+    ArrayList<SimpleStringProperty> colColors;
+    int firstColIndex=-1;
+    int secondColIndex=-1;
+    static final String CELL_DEFAULT_COLOR="transparent";
 
     ManualModeController(Controller back){
         super("ManualMode.fxml","Manual Mode",1.25,1.25,true,back);
@@ -73,17 +93,33 @@ public class ManualModeController extends Controller{
     @Override
     protected void updateSizes() {
         super.updateSizes();
+
+
+        //left
         tableVBox.setLayoutX(rootWidthToPixels(0.05));
         tableVBox.setLayoutY(rootHeightToPixels(0.04));
-        tableVBox.setSpacing(rootHeightToPixels(0.019));
+        tableVBox.setSpacing(rootHeightToPixels(0.05));
         tableVBox.setPadding(new Insets(0, 0, 0, 0));
         tableVBox.setPrefWidth(rootWidthToPixels(0.6));
-        table.setPrefHeight(rootHeightToPixels(0.5));
-        columnSetHBox.setSpacing(rootWidthToPixels(0.00625));
-        scrollPane.setLayoutX(tableVBox.getLayoutX()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
-        scrollPane.setLayoutY(tableVBox.getLayoutY()+tableVBox.getSpacing()+tableTitle.getHeight());
-        scrollPane.setPrefWidth(buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()-scrollPane.getLayoutX());
+        table.setPrefHeight(rootHeightToPixels(0.55));
+        columnSetHBox.setSpacing(rootWidthToPixels(0.01));
+        columnSetTextField.setPrefWidth(tableVBox.getPrefWidth()*0.25);
+        columnSetCombo.setPrefWidth(tableVBox.getPrefWidth()*0.25);
+        //columnSetHBox.setPadding(new Insets(rootHeightToPixels(0.05),0,0,0));
 
+        midSeparator.setLayoutX(tableVBox.getLayoutY()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
+        midSeparator.setLayoutY(rootHeightToPixels(0.03));
+        midSeparator.setPrefHeight(rootHeightToPixels(0.8));
+
+
+        //right
+        scrollPaneVBox.setLayoutX(tableVBox.getLayoutX()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
+        scrollPaneVBox.setLayoutY(tableVBox.getLayoutY());
+        scrollPaneVBox.setSpacing(tableVBox.getSpacing());
+        scrollPaneVBox.setPadding(tableVBox.getPadding());
+        //scrollPane.setLayoutY(tableVBox.getLayoutY()+tableVBox.getSpacing()+tableTitle.getHeight());
+        scrollPane.setPrefWidth(buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()-scrollPaneVBox.getLayoutX());
+        scrollPane.setPrefHeight(table.getPrefHeight());
 //        for(int i=table.getColumns().size()-1;i>=0;i--){
 //            TableColumn<ObservableList<String>,String> column=(TableColumn<ObservableList<String>,String>)table.getColumns().get(i);
 //            column.setPrefWidth(rootWidthToPixels(0.06));
@@ -94,7 +130,9 @@ public class ManualModeController extends Controller{
     @Override
     protected void initComponents() {
         tableTitle.setFont(new Font("Arial",headersFontSize));
+        rightLabel.setFont(tableTitle.getFont());
         addButton.getStyleClass().add("BlueJFXButton");
+        addButton.setOnMouseClicked(t->updateSelectedRangeColor());
         initTable();
     }
 
@@ -121,10 +159,13 @@ public class ManualModeController extends Controller{
 
 
 
+
         int colsCount=tableContent.get(0).size();
 
+        colColors=new ArrayList<>();
         for(int i=0;i<colsCount;i++){
             table.getColumns().add(createColumn(i));
+            colColors.add(new SimpleStringProperty(CELL_DEFAULT_COLOR));
         }
 
 
@@ -132,6 +173,19 @@ public class ManualModeController extends Controller{
 
 
         Platform.runLater(() -> table.refresh());
+
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+
+
+
+        table.getFocusModel().focusedCellProperty().addListener((obs, oldVal, newVal) -> {
+
+            if(newVal!=oldVal)
+                selectRequiredRange((TablePosition)newVal);
+        });
+
+
 
 
 
@@ -176,7 +230,7 @@ public class ManualModeController extends Controller{
 
 
 
-        column.setCellFactory((t) -> EditCell.createStringEditCell());
+        column.setCellFactory((t) -> ManualModeCell.createManualModeCell(columnIndex,table,this));
         column.setSortable(false);
         column.setEditable(false);
         column.setText(title);
@@ -196,5 +250,115 @@ public class ManualModeController extends Controller{
 
 
         return column;
+    }
+
+    private void selectRequiredRange(TablePosition pos){
+
+        if(colClicksCount==2){
+            colClicksCount=0;
+            return;
+        }
+        if( pos.getTableColumn() != null ){
+
+            if(lastClickedPos!=null ){ //a column was selected before
+
+                int clickedCol=pos.getColumn();
+                int lastCol=lastClickedPos.getColumn();
+
+                firstColIndex=lastCol;
+                secondColIndex=clickedCol;
+
+                TableColumn minCol;
+                TableColumn maxCol;
+
+                int minIndex;
+                int maxIndex;
+
+
+                if(clickedCol<lastCol){
+                    minCol=pos.getTableColumn();
+                    maxCol=lastClickedPos.getTableColumn();
+                    minIndex=clickedCol;
+                    maxIndex=lastCol;
+                }
+                else{
+                    minCol=lastClickedPos.getTableColumn();
+                    maxCol=pos.getTableColumn();
+                    minIndex=lastCol;
+                    maxIndex=clickedCol;
+                }
+
+                if(isRangeInValid(minIndex,maxIndex)){
+
+                }
+                else {
+                    table.getSelectionModel().selectRange(0, minCol, table.getItems().size(), maxCol);
+                    lastSelectedCells = obsListToArrayList(table.getSelectionModel().getSelectedCells());
+                }
+            }
+            else {
+
+                if(isColumnInvalid(pos.getColumn())){
+
+                }
+                else {
+
+                    table.getSelectionModel().selectRange(0, pos.getTableColumn(), table.getItems().size(), pos.getTableColumn());
+                    lastSelectedCells = obsListToArrayList(table.getSelectionModel().getSelectedCells());
+                    firstColIndex = secondColIndex = pos.getColumn();
+                }
+            }
+
+            lastClickedPos=pos;
+
+            if(colClicksCount==2)
+                colClicksCount=0;
+
+            colClicksCount++;
+
+
+        }
+
+    }
+
+
+    ArrayList<TablePosition> obsListToArrayList(ObservableList<TablePosition> list){
+
+        ArrayList<TablePosition> copy=new ArrayList<>();
+        for(TablePosition pos:list)
+            copy.add(pos);
+        return copy;
+    }
+
+    private void updateSelectedRangeColor(){
+        int start=Math.min(firstColIndex,secondColIndex);
+        int end=Math.max(firstColIndex,secondColIndex);
+        System.out.println("updating colors");
+        for(int i=start;i<=end;i++)
+            colColors.get(i).set("yellow");
+
+
+    }
+
+    private boolean isRangeInValid(int minIndex, int maxIndex) {
+        for(int i=minIndex;i<=maxIndex;i++){
+            if(!colColors.get(i).get().equals(CELL_DEFAULT_COLOR))
+                return true;
+        }
+
+        return false;
+
+    }
+
+    private boolean isColumnInvalid(int index){
+        return !colColors.get(index).get().equals(CELL_DEFAULT_COLOR);
+    }
+
+    public void resetTable() {
+        this.colClicksCount=0;
+        this.lastClickedPos=null;
+        table.getSelectionModel().clearSelection();
+        this.firstColIndex=-1;
+        this.secondColIndex=-1;
     }
 }

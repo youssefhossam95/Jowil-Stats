@@ -26,6 +26,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
     public EditCell(StringConverter<T> converter) {
         this.converter = converter ;
 
+
         itemProperty().addListener((obx, oldItem, newItem) -> {
             if (newItem == null) {
                 setText(null);

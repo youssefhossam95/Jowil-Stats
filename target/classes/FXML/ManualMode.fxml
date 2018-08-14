@@ -12,18 +12,20 @@
 <?import com.jfoenix.controls.JFXButton?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
 
+    <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
     <VBox fx:id="tableVBox">
         <Label fx:id="tableTitle" text="Student Responses File Overview"></Label>
         <TableView fx:id="table" editable="false" ></TableView>
         <HBox fx:id="columnSetHBox">
-            <JFXTextField fx:id="columnSetTextField" promptText="Column Set Name"></JFXTextField>
-            <JFXComboBox fx:id="columnSetCombo" promptText="Column Set Type"></JFXComboBox>
+            <JFXTextField fx:id="columnSetTextField" promptText="Column Set Name" focusColor="#3184c9"></JFXTextField>
+            <JFXComboBox fx:id="columnSetCombo" promptText="Column Set Type" focusColor="#3184c9"></JFXComboBox>
             <Button fx:id="addButton" text="Add Selected Column Set" textFill="white" ></Button>
         </HBox>
 
-
     </VBox>
-
+    <VBox fx:id="scrollPaneVBox">
+        <Label fx:id="rightLabel" text="Column Sets" ></Label>
     <ScrollPane fx:id="scrollPane" styleClass="columnSetsScrollPane "></ScrollPane>
+    </VBox>
 
 </AnchorPane>
