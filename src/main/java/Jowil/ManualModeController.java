@@ -74,16 +74,17 @@ public class ManualModeController extends Controller{
 
 
     ObservableList<ObservableList<StringProperty>> tableContent= FXCollections.observableArrayList();
-    ArrayList<TablePosition> lastSelectedCells;
-    TablePosition lastClickedPos;
     int colClicksCount=0;
     ArrayList<String> tableHeaders;
     static final int MAX_ROWS_COUNT=11;
     static int cellsCount=0;
     ArrayList<SimpleStringProperty> colColors;
+    int prevClickedCol=-1;
     int firstColIndex=-1;
     int secondColIndex=-1;
     static final String CELL_DEFAULT_COLOR="transparent";
+    ColorGenerator colorGen=new ColorGenerator();
+
 
     ManualModeController(Controller back){
         super("ManualMode.fxml","Manual Mode",1.25,1.25,true,back);
@@ -156,10 +157,6 @@ public class ManualModeController extends Controller{
         loadTableContents();
         table.setItems(tableContent);
 
-
-
-
-
         int colsCount=tableContent.get(0).size();
 
         colColors=new ArrayList<>();
@@ -175,17 +172,6 @@ public class ManualModeController extends Controller{
         Platform.runLater(() -> table.refresh());
 
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-
-
-
-        table.getFocusModel().focusedCellProperty().addListener((obs, oldVal, newVal) -> {
-
-            if(newVal!=oldVal)
-                selectRequiredRange((TablePosition)newVal);
-        });
-
-
 
 
 
@@ -252,72 +238,50 @@ public class ManualModeController extends Controller{
         return column;
     }
 
-    private void selectRequiredRange(TablePosition pos){
-
-        if(colClicksCount==2){
-            colClicksCount=0;
-            return;
-        }
-        if( pos.getTableColumn() != null ){
-
-            if(lastClickedPos!=null ){ //a column was selected before
-
-                int clickedCol=pos.getColumn();
-                int lastCol=lastClickedPos.getColumn();
-
-                firstColIndex=lastCol;
-                secondColIndex=clickedCol;
-
-                TableColumn minCol;
-                TableColumn maxCol;
-
-                int minIndex;
-                int maxIndex;
+    public boolean selectRequiredRange(int clickedCol){
 
 
-                if(clickedCol<lastCol){
-                    minCol=pos.getTableColumn();
-                    maxCol=lastClickedPos.getTableColumn();
-                    minIndex=clickedCol;
-                    maxIndex=lastCol;
-                }
-                else{
-                    minCol=lastClickedPos.getTableColumn();
-                    maxCol=pos.getTableColumn();
-                    minIndex=lastCol;
-                    maxIndex=clickedCol;
-                }
+        if(prevClickedCol!=-1){ //a column was selected before
 
-                if(isRangeInValid(minIndex,maxIndex)){
+            int minIndex=Math.min(clickedCol,prevClickedCol);
+            int maxIndex=Math.max(clickedCol,prevClickedCol);
 
-                }
-                else {
-                    table.getSelectionModel().selectRange(0, minCol, table.getItems().size(), maxCol);
-                    lastSelectedCells = obsListToArrayList(table.getSelectionModel().getSelectedCells());
-                }
+
+            TableColumn minCol=(TableColumn)table.getColumns().get(minIndex);
+            TableColumn maxCol=(TableColumn)table.getColumns().get(maxIndex);
+
+
+            if(isRangeInValid(minIndex,maxIndex)){
+                resetTable(true);
+                showIllegalClickMessage("range");
+                return false;
             }
             else {
-
-                if(isColumnInvalid(pos.getColumn())){
-
-                }
-                else {
-
-                    table.getSelectionModel().selectRange(0, pos.getTableColumn(), table.getItems().size(), pos.getTableColumn());
-                    lastSelectedCells = obsListToArrayList(table.getSelectionModel().getSelectedCells());
-                    firstColIndex = secondColIndex = pos.getColumn();
-                }
+                table.getSelectionModel().selectRange(0, minCol, table.getItems().size(), maxCol);
+                firstColIndex=prevClickedCol;
+                secondColIndex=clickedCol;
             }
-
-            lastClickedPos=pos;
-
-            if(colClicksCount==2)
-                colClicksCount=0;
-
-            colClicksCount++;
-
-
         }
+        else {
+
+            if(isColumnInvalid(clickedCol)){
+                resetTable(true);
+                return false;
+            }
+            else {
+                TableColumn col =(TableColumn)table.getColumns().get(clickedCol);
+                table.getSelectionModel().selectRange(0, col, table.getItems().size(), col);
+                firstColIndex = secondColIndex =clickedCol;
+            }
+        }
+
+        prevClickedCol=clickedCol;
+
+        colClicksCount++;
+
+
+        return true;
+
 
     }
 
@@ -331,12 +295,24 @@ public class ManualModeController extends Controller{
     }
 
     private void updateSelectedRangeColor(){
+
         int start=Math.min(firstColIndex,secondColIndex);
         int end=Math.max(firstColIndex,secondColIndex);
-        System.out.println("updating colors");
-        for(int i=start;i<=end;i++)
-            colColors.get(i).set("yellow");
+        if(start==-1)
+            return;
 
+
+        String nextColor=colorGen.getNextColor();
+
+        if(nextColor==null){
+            colorGen.resetAvailable();
+            nextColor=colorGen.getNextColor();
+        }
+
+        for(int i=start;i<=end;i++)
+            colColors.get(i).set(nextColor);
+
+        resetTable(false);
 
     }
 
@@ -354,11 +330,18 @@ public class ManualModeController extends Controller{
         return !colColors.get(index).get().equals(CELL_DEFAULT_COLOR);
     }
 
-    public void resetTable() {
+    public void resetTable(boolean isIgnoreClear) {
         this.colClicksCount=0;
-        this.lastClickedPos=null;
-        table.getSelectionModel().clearSelection();
+        prevClickedCol=-1;
+        if(!isIgnoreClear)
+            table.getSelectionModel().clearSelection();
         this.firstColIndex=-1;
         this.secondColIndex=-1;
     }
+
+    private void showIllegalClickMessage(String type){
+        showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Invalid Selection","Selected " +
+                type+" must not overlap with an existing column set.");
+    }
+
 }
