@@ -477,7 +477,7 @@ public class GradeBoundariesController extends Controller {
         gradesConfigCombo.setCellFactory(t -> {
             final ListCell<String> cell = new ListCell<String>() {
                 {
-                    //super.setPrefHeight(gradesConfigCombo.getPrefHeight());
+                    this.setPrefHeight(rootHeight*0.05);
                 }
 
                 @Override

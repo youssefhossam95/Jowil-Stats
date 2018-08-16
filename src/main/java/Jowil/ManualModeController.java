@@ -1,39 +1,25 @@
 package Jowil;
 
 import com.jfoenix.controls.*;
-import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
-import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.application.Platform;
-import javafx.beans.Observable;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.Pair;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class ManualModeController extends Controller{
 
@@ -101,13 +87,17 @@ public class ManualModeController extends Controller{
     int colClicksCount=0;
     ArrayList<String> tableHeaders;
     static final int MAX_ROWS_COUNT=11;
-    static int cellsCount=0;
     ArrayList<SimpleStringProperty> colColors;
     int prevClickedCol=-1;
     int firstColIndex=-1;
     int secondColIndex=-1;
     static final String CELL_DEFAULT_COLOR="transparent";
     ColorGenerator colorGen=new ColorGenerator();
+    final static String OBJECTIVE_TYPE="Objective Questions Group", SUBJECTIVE_TYPE="Subjective Questions Group",
+    ID_TYPE="Student ID",FORM_TYPE="Form Number";
+    final static String[] comboOptions={OBJECTIVE_TYPE,SUBJECTIVE_TYPE,ID_TYPE ,FORM_TYPE};
+//    int IDStartIndex,IDEndIndex,formIndex;
+    int columnSetComboSelectedIndex;
 
 
     ManualModeController(Controller back){
@@ -154,6 +144,7 @@ public class ManualModeController extends Controller{
         scrollPaneTitlesHBox.setPadding(new Insets((int)(scrollPaneHeight * 0.05), 0, 0, 0));
         scrollPaneTitlesHBox.setSpacing((int)(scrollPaneWidth * 0.03));
 
+
         CSNameLabel.setPrefWidth((int)(scrollPaneWidth*0.21));
         CSTypeLabel.setPrefWidth((int)(scrollPaneWidth*0.21));
         CSColorLabel.setPrefWidth((int)(scrollPaneWidth*0.15));
@@ -176,12 +167,14 @@ public class ManualModeController extends Controller{
             if (newValue)
                 rootPane.requestFocus();
         });
+
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
 
         initTable();
         initColumnSetsVBox();
         initAddButton();
+        initColumnSetCombo();
     }
 
 
@@ -229,6 +222,44 @@ public class ManualModeController extends Controller{
     }
 
 
+    private void initColumnSetCombo(){
+        ObservableList<String> items=FXCollections.observableArrayList();
+
+        for(String s:comboOptions)
+            items.add(s);
+
+        columnSetCombo.setItems(items);
+
+        columnSetCombo.setVisibleRowCount(3);
+        columnSetCombo.setOnShown(t -> columnSetCombo.getSelectionModel().clearSelection());
+        columnSetCombo.setOnHidden(t -> columnSetCombo.getSelectionModel().select(columnSetComboSelectedIndex));
+
+        columnSetCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
+
+            if((Integer)newValue!=-1)
+                columnSetComboSelectedIndex=(Integer)newValue;
+
+        });
+
+        columnSetCombo.getSelectionModel().select(0);
+
+        columnSetCombo.setCellFactory(param ->  {
+            final ListCell<String> cell = new ListCell<String>() {
+                {
+
+                    this.setPrefHeight(rootHeight*0.05);
+                }
+                @Override public void updateItem(String item,
+                                                 boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(item);
+                }
+                };
+            return cell;
+        });
+
+    }
+
     private void initColumnSetsVBox() {
 
     }
@@ -241,13 +272,24 @@ public class ManualModeController extends Controller{
                         "Column Set Name cannot be empty.");
                 return;
             }
-            addColumnSet();
+
+            if(table.getSelectionModel().getSelectedCells().isEmpty()){
+
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Column Set Error",
+                        "No columns selected.");
+                return;
+
+            }
+
+            if(isAllowColumnSetAddition())
+                addColumnSet();
 
 
 
 
         });
     }
+
 
 
 
@@ -361,13 +403,38 @@ public class ManualModeController extends Controller{
     }
 
 
-    ArrayList<TablePosition> obsListToArrayList(ObservableList<TablePosition> list){
+    private boolean isAllowColumnSetAddition() {
 
-        ArrayList<TablePosition> copy=new ArrayList<>();
-        for(TablePosition pos:list)
-            copy.add(pos);
-        return copy;
+        int type=columnSetComboSelectedIndex;
+        String newGroupName=columnSetTextField.getText();
+
+
+        for (ColumnSet columnSet : columnSets) {
+
+            if(columnSet.getName().equals(newGroupName)){ //check for repeated name
+                showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Column Set Addition Error",
+                        "A column set with the name \""+newGroupName+"\" already exists.");
+                return false;
+            }
+
+            if (!comboOptions[type].equals(OBJECTIVE_TYPE) && columnSet.getType().equals(comboOptions[type])) { //check for repeated type except if objective group
+                boolean isReplaceExisting = showConfirmationDialog("Confirm Column Set Addition",
+                        "A " + comboOptions[type] + " column set already exists. Do you want to replace the existing column set?"
+                        , stage.getOwner());
+
+                if (isReplaceExisting) {
+                    deleteColumnSet(columnSet);
+                    return true;
+                } else
+                    return false;
+            }
+
+
+        }
+
+        return true;
     }
+
 
     private void addColumnSet(){
 
@@ -385,7 +452,7 @@ public class ManualModeController extends Controller{
         resetTable(false);
 
 
-        columnSets.add(new ColumnSet(columnSetTextField.getText(),nextColor,start,end-start+1,this,"easy"));
+        columnSets.add(new ColumnSet(columnSetTextField.getText(),nextColor,start,end-start+1,this,comboOptions[columnSetCombo.getSelectionModel().getSelectedIndex()]));
         columnSets.sort(new ColumnSetSorter());
 
         columnSetsVBox.getChildren().setAll(columnSets);
@@ -406,6 +473,7 @@ public class ManualModeController extends Controller{
     private boolean isColumnInvalid(int index){
         return !colColors.get(index).get().equals(CELL_DEFAULT_COLOR);
     }
+
 
     public void resetTable(boolean isIgnoreClear) {
         this.colClicksCount=0;

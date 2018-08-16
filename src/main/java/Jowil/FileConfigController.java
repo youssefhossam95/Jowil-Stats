@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 
@@ -480,7 +481,8 @@ public class FileConfigController extends Controller{
                     @Override public ListCell<String> call(ListView<String> param) {
                         final ListCell<String> cell = new ListCell<String>() {
                             {
-                                //super.setPrefHeight(identifierCombo.getPrefHeight());
+                                this.setPrefHeight(rootHeight*0.06);
+                                //this.setFont(new Font("Arial",resY/30));
                             }
                             @Override public void updateItem(String item,
                                                              boolean empty) {

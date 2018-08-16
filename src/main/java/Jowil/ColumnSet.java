@@ -18,6 +18,7 @@ import static Jowil.Controller.resX;
 
 public class ColumnSet extends HBox {
 
+
     private String name;
     private String type;
     private String color;
@@ -26,8 +27,9 @@ public class ColumnSet extends HBox {
 
 
 
+
     private JFXTextField nameTextField;
-    private JFXTextField typeTextField;
+    private Label typeTextField;
     private HBox colorPane;
     private Pane innerColorPane;
     private HBox rangeHBox;
@@ -47,7 +49,9 @@ public class ColumnSet extends HBox {
         this.startIndex=startIndex;
         this.mySize=mySize;
         this.parentController=parentController;
-        this.innerLabelsFont=new Font("Arial", Controller.resX/110);
+        this.innerLabelsFont=new Font("Arial", Controller.resX/100);
+
+
 
         this.setAlignment(Pos.CENTER);
 
@@ -59,11 +63,11 @@ public class ColumnSet extends HBox {
         nameTextField.setAlignment(Pos.CENTER);
 
 
-        typeTextField=new JFXTextField();
+        typeTextField=new Label();
         typeTextField.setFont(innerLabelsFont);
-        typeTextField.setText(this.type);
+        typeTextField.setText(getCroppedType());
         typeTextField.setStyle("-jfx-focus-color:#3184c9;-jfx-unfocus-color: #989898");
-        typeTextField.setEditable(false);
+        //typeTextField.setEditable(false);
         typeTextField.setAlignment(Pos.CENTER);
 
 
@@ -85,7 +89,11 @@ public class ColumnSet extends HBox {
 
 
         removeButton.getChildren().add(removeIcon);
-        removeButton.setOnMouseClicked(t-> parentController.deleteColumnSet(this));
+        removeButton.setOnMouseClicked(t-> {
+            if(Controller.showConfirmationDialog("Confirm Column Set Deletion","Are you sure you want to " +
+                    "delete this column set?",parentController.stage.getOwner()))
+                parentController.deleteColumnSet(this);
+        });
         Tooltip tooltipRemove = new Tooltip("Delete Column Set");
         Tooltip.install(removeButton, tooltipRemove);
 
@@ -113,6 +121,31 @@ public class ColumnSet extends HBox {
     public int getStartIndex() {
         return startIndex;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCroppedType(){
+
+        String obj="Objective",id="ID",form="Form",subj="Subjective";
+        if(type.contains(obj))
+            return obj;
+        if(type.contains(id))
+            return id;
+        if(type.contains(form))
+            return form;
+        if(type.contains(subj))
+            return subj;
+
+        return "";
+    }
+
+
 
     public String getColor() {
         return color;

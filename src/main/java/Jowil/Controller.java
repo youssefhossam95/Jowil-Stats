@@ -314,12 +314,12 @@ public abstract class Controller {
         isContentEdited = contentEdited;
     }
 
-    public static boolean showConfirmationDialog(String title,String header,Window owner) {
+    public static boolean showConfirmationDialog(String title,String content,Window owner) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(header);
+        alert.setContentText(content);
         Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
         okButt.setText("Yes");
 
