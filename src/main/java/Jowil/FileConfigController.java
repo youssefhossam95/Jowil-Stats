@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import javafx.util.Callback;
 
+import static Jowil.CSVHandler.NOT_AVAILABLE;
+
 
 public class FileConfigController extends Controller{
 
@@ -664,8 +666,8 @@ public class FileConfigController extends Controller{
         Statistics.setIdentifierName(idenfierName);
 
         if(identifierSelectedIndex==-1) { //none chosen
-            CSVHandler.setIdentifierColStartIndex(-1);
-            CSVHandler.setIdentifierColEndIndex(-1);
+            CSVHandler.setIdentifierColStartIndex(NOT_AVAILABLE);
+            CSVHandler.setIdentifierColEndIndex(NOT_AVAILABLE);
             return;
         }
 
@@ -688,7 +690,7 @@ public class FileConfigController extends Controller{
 
     private void saveFormColumn(){
 
-        int formSelectedIndex=CSVHandler.getFormsCount()==1?-1:formComboSelectedIndex-1; //remove None effect
+        int formSelectedIndex=CSVHandler.getFormsCount()==1?NOT_AVAILABLE:formComboSelectedIndex-1; //remove None effect
         CSVHandler.setFormColIndex(getUnFilteredIndex(formSelectedIndex));
     }
 

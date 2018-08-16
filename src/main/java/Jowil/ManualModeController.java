@@ -18,8 +18,11 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
+
+import static Jowil.CSVHandler.NOT_AVAILABLE;
 
 public class ManualModeController extends Controller{
 
@@ -88,9 +91,9 @@ public class ManualModeController extends Controller{
     ArrayList<String> tableHeaders;
     static final int MAX_ROWS_COUNT=11;
     ArrayList<SimpleStringProperty> colColors;
-    int prevClickedCol=-1;
-    int firstColIndex=-1;
-    int secondColIndex=-1;
+    int prevClickedCol=NOT_AVAILABLE;
+    int firstColIndex=NOT_AVAILABLE;
+    int secondColIndex=NOT_AVAILABLE;
     static final String CELL_DEFAULT_COLOR="transparent";
     ColorGenerator colorGen=new ColorGenerator();
     final static String OBJECTIVE_TYPE="Objective Questions Group", SUBJECTIVE_TYPE="Subjective Questions Group",
@@ -185,14 +188,41 @@ public class ManualModeController extends Controller{
         return null;
     }
 
+
     @Override
     protected void stabalizeTables(){
         disableTableDrag(table);
     }
 
-    protected void saveChanges(){}
+    protected void saveChanges(){
 
-    
+        int objStartIndex=-1,objEndIndex=-1,subjStartIndex=-1,subjEndIndex=-1,IDStartIndex=-1,IDEndIndex=-1,formIndex=-1;
+
+        for(ColumnSet columnSet:columnSets){
+            String type=columnSet.getType();
+
+            if(type.equals(OBJECTIVE_TYPE)){
+                if(objStartIndex==-1) //first objective group
+                    objStartIndex=columnSet.getStartIndex();
+                objEndIndex=columnSet.getEndIndex();
+
+            }else if(type.equals(SUBJECTIVE_TYPE)){ //only one col set can exist
+                subjStartIndex=columnSet.getStartIndex();
+                subjEndIndex=columnSet.getEndIndex();
+            }else if(type.equals(ID_TYPE)){ //only one id group col set exist
+                IDStartIndex=columnSet.getStartIndex();
+                IDEndIndex=columnSet.getEndIndex();
+            }else{ //form type must be only one column
+                formIndex=columnSet.getStartIndex();
+            }
+
+        }
+
+        saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex);
+
+    }
+
+
 
 
     //init functions
@@ -358,7 +388,7 @@ public class ManualModeController extends Controller{
     public boolean selectRequiredRange(int clickedCol){
 
 
-        if(prevClickedCol!=-1){ //a column was selected before
+        if(prevClickedCol!=NOT_AVAILABLE){ //a column was selected before
 
             int minIndex=Math.min(clickedCol,prevClickedCol);
             int maxIndex=Math.max(clickedCol,prevClickedCol);
@@ -408,6 +438,12 @@ public class ManualModeController extends Controller{
         int type=columnSetComboSelectedIndex;
         String newGroupName=columnSetTextField.getText();
 
+
+        if(comboOptions[type].equals(FORM_TYPE) && firstColIndex!=secondColIndex){
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Column Set Addition Error",
+                    "A column set of type \""+FORM_TYPE+"\" cannot have more than one column.");
+            return false;
+        }
 
         for (ColumnSet columnSet : columnSets) {
 
@@ -461,6 +497,7 @@ public class ManualModeController extends Controller{
     }
 
     private boolean isRangeInValid(int minIndex, int maxIndex) {
+
         for(int i=minIndex;i<=maxIndex;i++){
             if(!colColors.get(i).get().equals(CELL_DEFAULT_COLOR))
                 return true;
@@ -477,12 +514,12 @@ public class ManualModeController extends Controller{
 
     public void resetTable(boolean isIgnoreClear) {
         this.colClicksCount=0;
-        prevClickedCol=-1;
+        prevClickedCol=NOT_AVAILABLE;
 
         if(!isIgnoreClear) //avoid clear selection when nothing selected, otherwise ->index out of bounds exception
             table.getSelectionModel().clearSelection();
-        this.firstColIndex=-1;
-        this.secondColIndex=-1;
+        this.firstColIndex=NOT_AVAILABLE;
+        this.secondColIndex=NOT_AVAILABLE;
     }
 
     private void showInvalidSelectionMessage(String type){
@@ -500,6 +537,9 @@ public class ManualModeController extends Controller{
             if(colColor.get().equals(deletedColor))
                 colColor.set("transparent");
         }
+    }
+
+    private void saveToCSVHandler(int objStartIndex, int objEndIndex, int subjStartIndex, int subjEndIndex, int idStartIndex, int idEndIndex, int formIndex) {
     }
 
     class ColumnSetSorter implements Comparator<ColumnSet> {

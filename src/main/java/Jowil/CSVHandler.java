@@ -84,6 +84,7 @@ public class CSVHandler {
     private static int responsesColsCount;
     private static int answersColsCount;
     private static boolean isSkipRowInManual;
+    public final static int NOT_AVAILABLE=-1;
 
 
 
@@ -282,7 +283,7 @@ public class CSVHandler {
 
         detectedQHeaders=new ArrayList<>();
         detectedInfoHeaders=new ArrayList<>();
-        subjStartIndex=-1;
+
 
         BufferedReader input = new BufferedReader(new FileReader(responsesFilePath));
         String line;
@@ -377,7 +378,7 @@ public class CSVHandler {
     private static void updateSubjScores(String [] row){
 
         //no subj questions
-        if(subjStartIndex==-1)
+        if(subjStartIndex==NOT_AVAILABLE)
             return;
 
         ArrayList<Double> studentSubScores= new ArrayList<Double>();
@@ -396,7 +397,7 @@ public class CSVHandler {
 
     private static void updateStudentForms( String [] row, int rowNumber) throws InvalidFormNumberException {
 
-        if(formColIndex<0){
+        if(formColIndex==NOT_AVAILABLE){
             Statistics.getStudentForms().add(0);
             return;
         }
@@ -417,7 +418,7 @@ public class CSVHandler {
 
     private static void updateStudentIdentifier(String [] row,int studentAutoNumber){
 
-        if(identifierColStartIndex==-1){ //autoID mode
+        if(identifierColStartIndex==NOT_AVAILABLE){ //autoID mode
             Statistics.getStudentIdentifier().add(Integer.toString(studentAutoNumber));
             return;
         }
@@ -531,8 +532,8 @@ public class CSVHandler {
 
 
         Pattern groupsPattern = Pattern.compile(".*\\d+");
-        subjStartIndex=-1;
-        subjEndIndex=-1;
+        subjStartIndex=NOT_AVAILABLE;
+        subjEndIndex=NOT_AVAILABLE;
         //info headers
         int i;
         for (i = 0; i < headers.length; i++) {
@@ -589,7 +590,7 @@ public class CSVHandler {
         for (i = scoresStartIndex; i < headers.length; i++) {
 
             if (headers[i].toLowerCase().startsWith("subj")) {
-                if (subjStartIndex == -1) { //subj first time
+                if (subjStartIndex == NOT_AVAILABLE) { //subj first time
                     subjStartIndex = i;
                     subjEndIndex = i;
                 } else
@@ -599,7 +600,7 @@ public class CSVHandler {
 
         subjEndIndex++; //to be exclusive
 
-        if (subjStartIndex == -1)
+        if (subjStartIndex == NOT_AVAILABLE)
             subjQuestionsCount = 0;
         else
             subjQuestionsCount = subjEndIndex - subjStartIndex;

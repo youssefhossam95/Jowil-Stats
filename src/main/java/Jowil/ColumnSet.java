@@ -24,6 +24,7 @@ public class ColumnSet extends HBox {
     private String color;
     private int startIndex;
     private int mySize;
+    private int endIndex;
 
 
 
@@ -48,6 +49,7 @@ public class ColumnSet extends HBox {
         this.color=color;
         this.startIndex=startIndex;
         this.mySize=mySize;
+        this.endIndex=startIndex+mySize-1;
         this.parentController=parentController;
         this.innerLabelsFont=new Font("Arial", Controller.resX/100);
 
@@ -122,6 +124,14 @@ public class ColumnSet extends HBox {
         return startIndex;
     }
 
+    public int getMySize() {
+        return mySize;
+    }
+
+    public int getEndIndex() {
+        return endIndex;
+    }
+
     public String getType() {
         return type;
     }
@@ -129,6 +139,8 @@ public class ColumnSet extends HBox {
     public String getName() {
         return name;
     }
+
+
 
     public String getCroppedType(){
 
