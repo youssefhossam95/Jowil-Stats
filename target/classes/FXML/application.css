@@ -243,3 +243,12 @@ JFXCheckBox {
 .columnSetsScrollPane > .corner {
     -fx-background-color: transparent;
 }
+
+
+.columnSetMinusIcon{
+-fx-fill:red;
+}
+
+.columnSetMinusIcon:hover{
+-fx-fill:#ff9999;
+}

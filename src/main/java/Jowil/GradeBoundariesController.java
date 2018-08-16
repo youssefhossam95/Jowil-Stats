@@ -115,6 +115,7 @@ public class GradeBoundariesController extends Controller {
     private final static String labelsColor = "black";
     private int reportsCount;
 
+    Font gradesLabelsFonts = new Font("Arial", resX / 100);
 
 
 
@@ -163,7 +164,7 @@ public class GradeBoundariesController extends Controller {
 
         double scrollPaneWidth = rootWidthToPixels(0.43);
         double scrollPaneHeight = rootHeightToPixels(0.56);
-        Font gradesLabelsFonts = new Font("Arial", resX / 100);
+
         //left half
         scrollPane.setLayoutY((int)(rootHeightToPixels(0.25)));
         scrollPane.setLayoutX((int)(rootWidthToPixels(0.05)));

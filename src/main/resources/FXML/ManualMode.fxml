@@ -23,9 +23,20 @@
         </HBox>
 
     </VBox>
-    <VBox fx:id="scrollPaneVBox">
-        <Label fx:id="rightLabel" text="Column Sets" ></Label>
-    <ScrollPane fx:id="scrollPane" styleClass="columnSetsScrollPane "></ScrollPane>
+    <VBox fx:id="rightSideVBox">
+        <Label fx:id="rightTitleLabel" text="Column Sets" ></Label>
+    <ScrollPane fx:id="scrollPane" styleClass="columnSetsScrollPane ">
+        <VBox fx:id="scrollPaneContentVBox">
+            <HBox fx:id="scrollPaneTitlesHBox">
+            <Label fx:id="CSNameLabel" text="Name" alignment="CENTER"></Label>
+                <Label fx:id="CSTypeLabel" text="Type" alignment="CENTER"></Label>
+            <Label fx:id="CSRangeLabel" text="Range" alignment="CENTER"></Label>
+                <Label fx:id="CSColorLabel" text="Color" alignment="CENTER"></Label>
+
+            </HBox>
+            <VBox fx:id="columnSetsVBox"></VBox>
+        </VBox>
+    </ScrollPane>
     </VBox>
 
 </AnchorPane>

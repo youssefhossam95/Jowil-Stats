@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import static Jowil.Controller.resX;
+
 
 public class TreeViewCustomCell extends TreeCell<String> {
 
@@ -93,7 +95,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 setText(null);
             }else{ //range node
 
-                HBox cellBox = new HBox(3);
+                HBox cellBox = new HBox(resX/400);
                 cellBox.setAlignment(Pos.CENTER_LEFT);
                 String min=this.getTreeItem().getChildren().get(GroupsController.getFirstPossible(this.getTreeItem().getParent().getValue())).getValue();
                 String max=this.getTreeItem().getChildren().get(GroupsController.getLastPossible(this.getTreeItem().getParent().getValue())).getValue();
