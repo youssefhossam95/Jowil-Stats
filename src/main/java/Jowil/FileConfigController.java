@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javafx.util.Callback;
+
+import static Jowil.CSVHandler.NOT_AVAILABLE;
 
 
 public class FileConfigController extends Controller{
@@ -480,7 +483,8 @@ public class FileConfigController extends Controller{
                     @Override public ListCell<String> call(ListView<String> param) {
                         final ListCell<String> cell = new ListCell<String>() {
                             {
-                                //super.setPrefHeight(identifierCombo.getPrefHeight());
+                                this.setPrefHeight(rootHeight*0.06);
+                                //this.setFont(new Font("Arial",resY/30));
                             }
                             @Override public void updateItem(String item,
                                                              boolean empty) {
@@ -662,8 +666,8 @@ public class FileConfigController extends Controller{
         Statistics.setIdentifierName(idenfierName);
 
         if(identifierSelectedIndex==-1) { //none chosen
-            CSVHandler.setIdentifierColStartIndex(-1);
-            CSVHandler.setIdentifierColEndIndex(-1);
+            CSVHandler.setIdentifierColStartIndex(NOT_AVAILABLE);
+            CSVHandler.setIdentifierColEndIndex(NOT_AVAILABLE);
             return;
         }
 
@@ -686,7 +690,7 @@ public class FileConfigController extends Controller{
 
     private void saveFormColumn(){
 
-        int formSelectedIndex=CSVHandler.getFormsCount()==1?-1:formComboSelectedIndex-1; //remove None effect
+        int formSelectedIndex=CSVHandler.getFormsCount()==1?NOT_AVAILABLE:formComboSelectedIndex-1; //remove None effect
         CSVHandler.setFormColIndex(getUnFilteredIndex(formSelectedIndex));
     }
 

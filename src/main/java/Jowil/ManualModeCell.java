@@ -1,14 +1,12 @@
 package Jowil;
 
-import com.lowagie.text.Table;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
-import static Jowil.ManualModeController.cellsCount;
+
 
 public class ManualModeCell<S, T> extends TableCell<S, T> {
 
@@ -28,10 +26,16 @@ public class ManualModeCell<S, T> extends TableCell<S, T> {
         this.setAlignment(Pos.CENTER);
         this.controller=controller;
 
+
+
         initListeners();
 
+
         controller.colColors.get(columnIndex).addListener((obs,oldValue,newValue)->{
-            this.setStyle("-fx-background-color:"+newValue);
+            if(newValue.equals("transparent"))
+                this.setStyle("");
+            else
+                this.setStyle("-fx-background-color:"+newValue);
         });
 
     }
@@ -89,6 +93,7 @@ public class ManualModeCell<S, T> extends TableCell<S, T> {
                 this.isForceFocus=true; //workaround for probably a bug in javafx
                 this.setFocused(false); //to prevent focusing
             }
+
 
 
         });

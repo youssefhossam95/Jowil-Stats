@@ -17,15 +17,26 @@
         <Label fx:id="tableTitle" text="Student Responses File Overview"></Label>
         <TableView fx:id="table" editable="false" ></TableView>
         <HBox fx:id="columnSetHBox">
-            <JFXTextField fx:id="columnSetTextField" promptText="Column Set Name" focusColor="#3184c9"></JFXTextField>
-            <JFXComboBox fx:id="columnSetCombo" promptText="Column Set Type" focusColor="#3184c9"></JFXComboBox>
+            <JFXTextField fx:id="columnSetTextField" promptText="Column Set Name" focusColor="#3184c9" labelFloat="true"></JFXTextField>
+            <JFXComboBox fx:id="columnSetCombo" promptText="Column Set Type" focusColor="#3184c9" labelFloat="true"></JFXComboBox>
             <Button fx:id="addButton" text="Add Selected Column Set" textFill="white" ></Button>
         </HBox>
 
     </VBox>
-    <VBox fx:id="scrollPaneVBox">
-        <Label fx:id="rightLabel" text="Column Sets" ></Label>
-    <ScrollPane fx:id="scrollPane" styleClass="columnSetsScrollPane "></ScrollPane>
+    <VBox fx:id="rightSideVBox">
+        <Label fx:id="rightTitleLabel" text="Column Sets" ></Label>
+    <ScrollPane fx:id="scrollPane" styleClass="columnSetsScrollPane ">
+        <VBox fx:id="scrollPaneContentVBox">
+            <HBox fx:id="scrollPaneTitlesHBox">
+            <Label fx:id="CSNameLabel" text="Name" alignment="CENTER"></Label>
+                <Label fx:id="CSTypeLabel" text="Type" alignment="CENTER"></Label>
+            <Label fx:id="CSRangeLabel" text="Range" alignment="CENTER"></Label>
+                <Label fx:id="CSColorLabel" text="Color" alignment="CENTER"></Label>
+
+            </HBox>
+            <VBox fx:id="columnSetsVBox"></VBox>
+        </VBox>
+    </ScrollPane>
     </VBox>
 
 </AnchorPane>
