@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ abstract public class Report {
 
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
+//    protected final String ReportsPath = "\\reports" ;
+//    URLDecoder.decode(getClass().getResource("/GradeConfigs").getFile(),"utf-8")
     protected static String [] outputFormatsFolderPaths;  //same order as ReportsHandler formats Constants
     protected static String outPath;
     protected String workSpacePath;
@@ -46,7 +49,7 @@ abstract public class Report {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDateTime now = LocalDateTime.now();
 //        System.out.println();
-            doc.select("div#footerLeft").last().text(dtf.format(now));
+        doc.select("div#footerLeft").last().text(dtf.format(now));
     }
 
 
@@ -61,7 +64,7 @@ abstract public class Report {
 
 
         //Flying Saucer part
-        ITextRenderer renderer = new ITextRenderer();
+        ITextRenderer renderer = new ITextRenderer(true);
 
         renderer.setDocument(url);
         renderer.layout();

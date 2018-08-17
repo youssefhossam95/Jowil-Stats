@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -21,6 +22,8 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static org.apache.commons.math3.stat.StatUtils.sum;
 
 public class Report1 extends Report{
 
@@ -152,11 +155,34 @@ public class Report1 extends Report{
 
     }
 
+
+    public String generatePattern(String block ,int lenght ){
+        String output = "";
+        for(int i = 0 ; i < lenght ; i++)
+            output+=block ;
+        return output ;
+     }
     @Override
     public void generateTxtReport() {
 
+        int cellHorizontalPadding = 3 ;
+        ArrayList<String>tableHeaders = new ArrayList<>();
+        tableHeaders.add("Grade") ; tableHeaders.add("Percent Score") ;
+        tableHeaders.add("Raw Score") ; tableHeaders.add("Frequency") ; tableHeaders.add("Percentage");
+
+        ArrayList<ArrayList<String>>tableWithHeaders = Utils.cloneTable(statsTable) ;
+        tableWithHeaders.add(0 , tableHeaders) ;
+
+        String txtTitle = TxtUtils.generateTitleLine("Grades Distribution Report",
+                TxtUtils.calcTableWidth(tableWithHeaders,cellHorizontalPadding),2) ;
+        String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding) ;
+
+        String outputTxt =TxtUtils.newLine+txtTitle + txtTable ;
+        System.out.println(outputTxt);
 
 
+
+        TxtUtils.writeTxtToFile(outputTxt , "E:\\work\\Jowil\\temp\\wello.txt");
     }
 
 }

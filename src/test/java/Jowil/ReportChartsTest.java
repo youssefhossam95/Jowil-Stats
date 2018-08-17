@@ -29,13 +29,14 @@ public class ReportChartsTest extends Application {
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders(true);
+        boolean isHeaders=CSVHandler.processHeaders(false);
         CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
+        CSVHandler.processHeaders(true);
         Jowil.CSVHandler.loadCsv(isHeaders);
 
 
         TestUtils.setQuestionChoicesFromFile(inputFilesFolderPath+"QuestionChoices.csv");
-        TestUtils.setQuestionsWeights(Statistics.getQuestionNames().size() , Statistics.getNumberOfForms());
+        TestUtils.setQuestionsWeights(Statistics.getQuestionsChoices().size() , Statistics.getNumberOfForms());
         TestUtils.fillGradeRanges() ;
 
         Statistics.initFormsScores();
@@ -43,20 +44,22 @@ public class ReportChartsTest extends Application {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
-        ArrayList<Report> reports = new ArrayList<>();
-        reports.add(new Report1()) ;
-        Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
-
+        Report2 report = new Report2();
+        report.generatePrintablePdf();
+//        ArrayList<Report> reports = new ArrayList<>();
+//        reports.add(new Report1()) ;
+//        Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
+//
 //        reports.add(new Report2()) ;
-//        reports.add(new Report3());
-//        reports.add(new Report4()) ;
-//        reports.add(new Report5()) ;
-        ArrayList<Integer> formats = new ArrayList<>() ;
-        formats.add(ReportsHandler.HTML) ;
-        formats.add(ReportsHandler.PDF);
-
-        ReportsHandler reportsHandler = new ReportsHandler();
-        reportsHandler.generateReports(reports , formats);
+////        reports.add(new Report3());
+////        reports.add(new Report4()) ;
+////        reports.add(new Report5()) ;
+//        ArrayList<Integer> formats = new ArrayList<>() ;
+//        formats.add(ReportsHandler.HTML) ;
+//        formats.add(ReportsHandler.PDF);
+//
+//        ReportsHandler reportsHandler = new ReportsHandler();
+//        reportsHandler.generateReports(reports , formats);
 
     }
 

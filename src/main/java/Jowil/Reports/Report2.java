@@ -1,8 +1,11 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Table;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -13,6 +16,9 @@ import java.util.Map;
 
 public class Report2 extends Report {
 
+    private ArrayList<Map<String , String>> formsStatsMaps ;
+    private ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsTables ;
+    ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsPrintableTables ;
 
     public Report2(){
         workSpacePath = reportsPath + "report2\\" ;
@@ -66,9 +72,12 @@ public class Report2 extends Report {
                 doc.select("div.divTitle").addClass("second-page-header") ;
                 doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
             }
-            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
+            fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
 
-            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
+//            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
+//
+//            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
             int questionIndex = 0;
 
             for (ArrayList<ArrayList<String>> table : statsTables) {
@@ -109,8 +118,11 @@ public class Report2 extends Report {
                 doc.select("div.divTitle").addClass("second-page-header") ;
                 doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
             }
-            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
-            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
+            fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
+
+//            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
+//            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
             int questionIndex = 0;
             int remainingRows = ROWS_IN_FIRST_PAGE;
             for (ArrayList<ArrayList<String>> table : statsTables) {
@@ -161,13 +173,84 @@ public class Report2 extends Report {
 
     }
 
+    private ArrayList<ArrayList<String>> preprocessMap (Map<String , String> statsMap){
+        ArrayList<ArrayList<String>> mapAsTable  = new ArrayList<>();
+        ArrayList<String> tableRow = new ArrayList<>() ;
+
+        tableRow.add("Number Of Students") ; tableRow.add(statsMap.get("Number Of Students")) ;
+        tableRow.add("Mean") ; tableRow.add(statsMap.get("Mean")) ;
+        tableRow.add("Lowest Score") ; tableRow.add(statsMap.get("Lowest Score")) ;
+
+        mapAsTable.add(tableRow) ;
+        tableRow = new ArrayList<>() ;
+
+        tableRow.add("Maximum Possible Score") ; tableRow.add(statsMap.get("Maximum Possible Score")) ;
+        tableRow.add("Median") ; tableRow.add(statsMap.get("Median"));
+        tableRow.add("Highest Score") ; tableRow.add(statsMap.get("Highest Score")) ;
+
+        mapAsTable.add(tableRow) ;
+        tableRow = new ArrayList<>() ;
+
+        tableRow.add("Score Range") ; tableRow.add(statsMap.get("Range")) ;
+        tableRow.add("Standard Deviation") ; tableRow.add(statsMap.get("Standard Deviation"));
+        tableRow.add("KR20") ; tableRow.add(statsMap.get("Kuder-Richardson Formula 20")) ;
+
+        mapAsTable.add(tableRow) ;
+
+        return mapAsTable ;
+    }
+
     @Override
     public void generateTxtReport() {
+        final int CHP_CENTER_TABLE = 3 ;
+        final  int CHP_LR_TABLE = 5 ;
+        final int PADDING_BETWEEN_TABLES = 2 ;
+
+
+        Map<String, String> statsMap  = formsStatsMaps.get(0) ;
+        ArrayList<ArrayList<String>> statsTable  = formsStatsTables.get(0).get(0) ;
+
+        ArrayList<String>tableHeaders = new ArrayList<>();
+        tableHeaders.add("No.") ; tableHeaders.add("Question") ;
+//        ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
+//        for(String qChoice: questionChoices )
+
+        tableHeaders.add("Raw Score") ; tableHeaders.add("Frequency") ; tableHeaders.add("Percentage");
+
+        ArrayList<ArrayList<String>>tableWithHeaders = Utils.cloneTable(statsTable) ;
+        tableWithHeaders.add(0 , tableHeaders) ;
+
+        ArrayList<ArrayList<String>> mapAsTable = preprocessMap(statsMap);
+        String txtTable = TxtUtils.generateTxtTableAlignLR(mapAsTable,"" , CHP_LR_TABLE);
+        String Table2 = TxtUtils.generateTxtTableAlignCenter(statsTable , "" ,CHP_CENTER_TABLE ) ;
+        ArrayList<String>tables = new ArrayList<>();
+        tables.add(txtTable); tables.add(Table2) ;
+        String outputTxt = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
+        System.out.println(outputTxt);
+
+        TxtUtils.writeTxtToFile(outputTxt , "E:\\work\\Jowil\\temp\\wello.txt");
+
+    }
+
+    public void generatePrintablePdf() throws IOException {
+
+        File file = new File(templatePath);
+        Document doc = Jsoup.parse(file, "UTF-8");
+        updateTemplateDate(doc); // updates the date of the footer to the current date
+
+        
 
     }
 
     @Override
     public void init()  {
-
+        formsStatsMaps = new ArrayList<>() ;
+        formsStatsTables = new ArrayList<>();
+        formsStatsPrintableTables = new ArrayList<>();
+        for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            formsStatsMaps.add(Statistics.report2GeneralStats(formIndex)) ;
+            formsStatsTables.add(Statistics.report2TableStats(formIndex)) ;
+            formsStatsPrintableTables.add(Statistics.report2PrintableStats(formsStatsTables.get(formIndex) , formIndex)) ;
+        }
     }
 }
