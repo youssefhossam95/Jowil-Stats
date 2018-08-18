@@ -18,7 +18,7 @@ abstract public class Report {
 
 
     public final static String [] formatDirNames={"\\PDF Reports\\","\\HTML Reports\\","\\TXT Reports\\",
-            "\\Word Reports\\","\\XLS Reports\\"};
+            "\\Word Reports\\","\\XLS Reports\\" , "\\Printable PDF Reports\\"};
 
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
@@ -154,6 +154,7 @@ abstract public class Report {
     abstract  public  void generateHtmlReport() throws IOException;
     abstract public void generatePdfReport() throws IOException, DocumentException;
     abstract public void generateTxtReport() ;
+    abstract public void generatePrintablePdfReport() throws IOException, DocumentException;
     abstract public void init(); // function to get the abrobriate statistics from the statistics class
 
 

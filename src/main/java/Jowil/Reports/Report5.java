@@ -140,6 +140,11 @@ public class Report5 extends Report {
     }
 
     @Override
+    public void generatePrintablePdfReport() throws IOException {
+
+    }
+
+    @Override
     public void init() {
 
     }

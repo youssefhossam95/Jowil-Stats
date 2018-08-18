@@ -9,6 +9,7 @@ import com.lowagie.text.Table;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import javax.print.Doc;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,88 @@ public class Report2 extends Report {
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 
-    private void fillGeneralStatsReport2 (Document doc , Map<String , String> generalStatsMap) {
+        private Document generatePdfHtml(boolean isPrintable) throws IOException {
+            File file = new File(templatePath);
+            Document doc = Jsoup.parse(file, "UTF-8");
+
+            updateTemplateDate(doc); // updates the date of the footer to the current date
+
+            final int ROWS_IN_BLANK_PAGE = 37 ;
+            final int ROWS_IN_FIRST_PAGE = 18 ;
+            final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 6 ;
+            final int MINIMUM_REMAINING_ROWS = 7 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
+
+            final String pageBreakHtml= "<div class='page-break'></div>\n" ;
+
+            String tableHtml = doc.select("table.t2").last().outerHtml() ;
+            String templateBodyHtml = doc.select("div#template").html() ;
+            System.out.println(templateBodyHtml);
+
+            for (int formIndex = 0; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+                if(formIndex>0) {
+                    doc.select("table").last().after(pageBreakHtml);
+                    doc.select("div.page-break").last().after(templateBodyHtml) ;
+                    doc.select("div.divTitle").addClass("second-page-header") ;
+                    doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                }
+                fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
+                ArrayList<ArrayList<ArrayList<String>>> statsTables ;
+                if(isPrintable)
+                    statsTables = formsStatsPrintableTables.get(formIndex);
+                else
+                    statsTables = formsStatsTables.get(formIndex);
+
+
+//            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
+//            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
+                int questionIndex = 0;
+                int remainingRows = ROWS_IN_FIRST_PAGE;
+                for (ArrayList<ArrayList<String>> table : statsTables) {
+                    //create new table unless its first time
+                    if (questionIndex != 0) {
+
+                        //check if page break is needed
+                        if (remainingRows < MINIMUM_REMAINING_ROWS) {
+                            doc.select("table").last().after(pageBreakHtml);
+                            remainingRows = ROWS_IN_BLANK_PAGE - 2;
+                            doc.select("div.page-break").last().after(tableHtml);
+
+                        } else {
+                            remainingRows -= NUMBER_OF_ROWS_FOR_TABLE_HEADER;
+                            doc.select("table").last().after(tableHtml);
+                        }
+                    }
+                    fillResponseFreqHeaders(doc, questionIndex);
+
+                    //start and end indeces for questions to be shown in the page
+                    int startIndex = 0;
+                    int endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, remainingRows);
+                    do {
+                        System.out.println("in the while looop");
+                        //create html table
+                        ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
+                        String rowsHtml = createRowsHtml(pageTable, ";grayRow", "");
+                        doc.select("tr.bottom-header-row").last().after(rowsHtml);
+
+                        //update remaining rows counter
+                        int numberOfInsertedRows = endIndex - startIndex;
+                        remainingRows -= numberOfInsertedRows;
+                        if (remainingRows < MINIMUM_REMAINING_ROWS && endIndex != table.size()) {
+                            doc.select("table").last().after(pageBreakHtml);
+                            //insert a new table in the new page
+                            doc.select("div.page-break").last().after(tableHtml);
+                            fillResponseFreqHeaders(doc, questionIndex);
+                            remainingRows = ROWS_IN_BLANK_PAGE;
+                        }
+                        startIndex = endIndex;
+                        endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, endIndex + remainingRows);
+                    } while (startIndex != endIndex);
+                    questionIndex += table.size();
+                }
+            }
+            return doc ;
+        }
+        private void fillGeneralStatsReport2 (Document doc , Map<String , String> generalStatsMap) {
         doc.select("td.NumberOfStudents").last().text(generalStatsMap.get("Number Of Students")) ;
         doc.select("td.MaxPossibleScore").last().text(generalStatsMap.get("Maximum Possible Score")) ;
 
@@ -95,79 +177,7 @@ public class Report2 extends Report {
 
     @Override
     public void generatePdfReport() throws IOException, DocumentException {
-        File file = new File(templatePath);
-        Document doc = Jsoup.parse(file, "UTF-8");
-
-        updateTemplateDate(doc); // updates the date of the footer to the current date
-
-        final int ROWS_IN_BLANK_PAGE = 37 ;
-        final int ROWS_IN_FIRST_PAGE = 18 ;
-        final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 6 ;
-        final int MINIMUM_REMAINING_ROWS = 7 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
-
-        final String pageBreakHtml= "<div class='page-break'></div>\n" ;
-
-        String tableHtml = doc.select("table.t2").last().outerHtml() ;
-        String templateBodyHtml = doc.select("div#template").html() ;
-        System.out.println(templateBodyHtml);
-
-        for (int formIndex = 0; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
-            if(formIndex>0) {
-                doc.select("table").last().after(pageBreakHtml);
-                doc.select("div.page-break").last().after(templateBodyHtml) ;
-                doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
-            }
-            fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
-            ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
-
-//            fillGeneralStatsReport2(doc, Statistics.report2GeneralStats(formIndex));
-//            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
-            int questionIndex = 0;
-            int remainingRows = ROWS_IN_FIRST_PAGE;
-            for (ArrayList<ArrayList<String>> table : statsTables) {
-                //create new table unless its first time
-                if (questionIndex != 0) {
-
-                    //check if page break is needed
-                    if (remainingRows < MINIMUM_REMAINING_ROWS) {
-                        doc.select("table").last().after(pageBreakHtml);
-                        remainingRows = ROWS_IN_BLANK_PAGE - 2;
-                        doc.select("div.page-break").last().after(tableHtml);
-
-                    } else {
-                        remainingRows -= NUMBER_OF_ROWS_FOR_TABLE_HEADER;
-                        doc.select("table").last().after(tableHtml);
-                    }
-                }
-                fillResponseFreqHeaders(doc, questionIndex);
-
-                //start and end indeces for questions to be shown in the page
-                int startIndex = 0;
-                int endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, remainingRows);
-                do {
-                    System.out.println("in the while looop");
-                    //create html table
-                    ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
-                    String rowsHtml = createRowsHtml(pageTable, ";grayRow", "");
-                    doc.select("tr.bottom-header-row").last().after(rowsHtml);
-
-                    //update remaining rows counter
-                    int numberOfInsertedRows = endIndex - startIndex;
-                    remainingRows -= numberOfInsertedRows;
-                    if (remainingRows < MINIMUM_REMAINING_ROWS && endIndex != table.size()) {
-                        doc.select("table").last().after(pageBreakHtml);
-                        //insert a new table in the new page
-                        doc.select("div.page-break").last().after(tableHtml);
-                        fillResponseFreqHeaders(doc, questionIndex);
-                        remainingRows = ROWS_IN_BLANK_PAGE;
-                    }
-                    startIndex = endIndex;
-                    endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, endIndex + remainingRows);
-                } while (startIndex != endIndex);
-                questionIndex += table.size();
-            }
-        }
+        Document doc = generatePdfHtml(false) ;
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
@@ -232,14 +242,33 @@ public class Report2 extends Report {
 
     }
 
-    public void generatePrintablePdf() throws IOException {
-
-        File file = new File(templatePath);
-        Document doc = Jsoup.parse(file, "UTF-8");
+    @Override
+    public void generatePrintablePdfReport() throws IOException, DocumentException {
+        Document doc = generatePdfHtml(true) ;
         updateTemplateDate(doc); // updates the date of the footer to the current date
 
-        
+        String printableLegendHtml = "<div class=\"wrapper\">\n" +
+                "            <span><strong> * : </strong></span>\n" +
+                "            <span class=\" second\"> Distractor</span>\n" +
+                "        </div>\n" +
+                "       \n" +
+                "        <div class=\"wrapper\" style=\"margin-bottom: 30px\">\n" +
+                "            <span>\n" +
+                "                <strong>\n" +
+                "                    <u>under Line</u>:\n" +
+                "                </strong>\n" +
+                "            </span>\n" +
+                "            <span class=\" second\"> Correct Answer</span>\n" +
+                "        </div>\n" ;
+        String correctAnswerHtml = "<th rowspan='2' >Correct <br> Answer</th>" ;
+        String nonDistractorHtml = "<th rowspan='2' >Non <br> Distractors</th>" ;
 
+        doc.select("div.legend").html(printableLegendHtml) ;
+        doc.select("th.question").after(correctAnswerHtml) ;
+        doc.select("th.point-biserial").before(nonDistractorHtml) ;
+
+        writeHtmlFile(pdfHtmlPath , doc);
+        generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
     @Override

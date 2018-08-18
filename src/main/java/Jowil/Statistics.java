@@ -556,9 +556,11 @@ public class Statistics {
     }
 
     public static ArrayList<ArrayList<ArrayList<String>>> report2PrintableStats ( ArrayList<ArrayList<ArrayList<String>>> tablesStats , int formIndex) {
+
+        ArrayList<ArrayList<ArrayList<String>>> newTables = new ArrayList<>() ;
         int questionIndex = 0 ;
         for(int tableIndex = 0  ; tableIndex < tablesStats.size() ; tableIndex++ ) {
-            ArrayList<ArrayList<String>> tableStats = tablesStats.get(tableIndex);
+            ArrayList<ArrayList<String>> tableStats = Utils.cloneTable(tablesStats.get(tableIndex));
             for (int rowIndex = 0 ; rowIndex < tableStats.size() ; rowIndex++) {
                 ArrayList<String> tableRow = tableStats.get(rowIndex);
                 String correctAnswer = correctAnswers.get(formIndex).get(questionIndex) ;
@@ -574,13 +576,14 @@ public class Statistics {
                             String cellClass = parts[1] ;
                             //check for nonDistractor
                             if(cellData.equals("0")){
-                                if(nonDistractors!="")
-                                    nonDistractors+="," ;
-                                nonDistractors+= questionsChoices.get(questionIndex).get(colIndex-2) ;
+                                nonDistractors+= questionsChoices.get(questionIndex).get(colIndex-2)+" " ;
                             }
                             //remove colors
                             if (cellClass.equals("red")) {
-                                cellData+=";under-line" ;
+                                cellData+="*;bold" ;
+                            }
+                            if (cellClass.equals("green")) {
+                                cellData+=";under-line";
                             }
                             tableRow.set(colIndex , cellData);
 
@@ -588,12 +591,15 @@ public class Statistics {
                     }
                 }
                 tableRow.add(2 , correctAnswer) ; //Correct Answers
+                if(nonDistractors.equals(""))
+                    nonDistractors="-";
                 tableRow.add(3+numberOfChoices , nonDistractors ) ;
                 questionIndex++ ;
             }
+            newTables.add(tableStats) ;
         }
-        System.out.println(tablesStats);
-        return tablesStats ;
+        System.out.println(newTables);
+        return newTables ;
     }
 
     public static ArrayList<ArrayList<ArrayList<String>>> report2TableStats (int formIndex) {
