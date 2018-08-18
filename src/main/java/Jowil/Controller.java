@@ -147,7 +147,7 @@ public abstract class Controller {
         nextButton.setPrefWidth(navWidth);
         nextButton.setPrefHeight(navHeight);
         nextButton.setPadding(navPadding);
-        buttonsHbox.setLayoutX(rootWidth/20);
+        buttonsHbox.setLayoutX(rootWidth*0.05);
 
         buttonsHbox.setPrefHeight(resY*680/35);
 
@@ -237,7 +237,7 @@ public abstract class Controller {
     }
 
 
-    private void initNextButton(){
+    protected void initNextButton(){
         //nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
 
 //        nextButton.setOnMouseEntered(t->nextButton.setStyle("-fx-background-color:#878a8a;"));
