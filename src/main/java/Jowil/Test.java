@@ -8,22 +8,6 @@ import com.lowagie.text.DocumentException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation ;
 
 
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.docx4j.jaxb.Context;
-import org.docx4j.openpackaging.contenttype.ContentType;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.PartName;
-import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
-import org.docx4j.relationships.Relationship;
-import org.docx4j.wml.CTAltChunk;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.*;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -37,26 +21,12 @@ import static com.sun.javafx.scene.control.skin.Utils.getResource;
 
 public class Test {
 
-    public static void main(String [] args) throws IOException, DocumentException, Docx4JException {
+    public static void main(String [] args) throws IOException, DocumentException {
 
 
 
 //        System.out.println(URLDecoder.decode(getResource("/reports/report1/report1template.html").getFile(),"utf-8"));
 
-
-        XWPFDocument document = new XWPFDocument();
-
-        //Write the Document in file system
-        FileOutputStream out = new FileOutputStream( new File("E:\\work\\Jowil\\temp\\createdocument.docx"));
-        XWPFParagraph paragraph = document.createParagraph();
-        XWPFRun run = paragraph.createRun();
-        run.setText("At tutorialspoint.com, we strive hard to " +
-                        "provide quality tutorials for self-learning " +
-                        "purpose in the domains of Academics, Information " +
-                        "Technology, Management and Computer Programming Languages.");
-        document.write(out);
-        out.close();
-        System.out.println("createdocument.docx written successully");
 
 
         //        ////////////////////////////  conversion code ///////////////////////////////////////

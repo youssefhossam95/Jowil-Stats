@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 public class Report4 extends Report{
 
+
+    private ArrayList<ArrayList<String>> statsTable ;
+
     public Report4(){
         workSpacePath = reportsPath + "report4\\" ;
         templatePath = workSpacePath + "report4Template.html";
@@ -38,14 +41,13 @@ public class Report4 extends Report{
         String headerHtml = doc.select("tr.headerRow").outerHtml();
 
 
-        // get the table data from statistics class
-        ArrayList<ArrayList<String>> statsTable = Statistics.report4Stats() ;
+        ArrayList<ArrayList<String>> tempStatsTable = Utils.cloneTable(statsTable) ;
 
         // separate the maean row (last row)
-        ArrayList<ArrayList<String>> meanRow =new ArrayList<ArrayList<String>> ( statsTable.subList(statsTable.size()-1 , statsTable.size()));
+        ArrayList<ArrayList<String>> meanRow =new ArrayList<ArrayList<String>> ( tempStatsTable.subList(tempStatsTable.size()-1 , tempStatsTable.size()));
 
         // adding colspan attribute to first element in each row
-        for(ArrayList<String> tableRow:statsTable) {
+        for(ArrayList<String> tableRow:tempStatsTable) {
             tableRow.set(0,tableRow.get(0) + "#colspan='2'" ) ;
             String barWidth = tableRow.get(tableRow.size() - 1);
             String passingPercent = ((DecimalFormat) format).format(Statistics.getPassingPercent()*100) +"%";
@@ -53,26 +55,26 @@ public class Report4 extends Report{
                                 "<div class='greenBar' style='width:" + barWidth + "'> </div>\n" +
                                 "<div class='benchmark' style='width:" + passingPercent + "'> </div>"+
                              "</div>";
-            tableRow.add(divHtml) ;
+            tableRow.add(divHtml+";bar") ;
         }
 
         int startIndex = 0 ;
-        int endIndex = (int)Utils.getNumberWithinLimits(statsTable.size() , 0 , NUMBER_OF_ROWS_FIRST_PAGE) ;
+        int endIndex = (int)Utils.getNumberWithinLimits(tempStatsTable.size() , 0 , NUMBER_OF_ROWS_FIRST_PAGE) ;
 
         do  {
             ArrayList<ArrayList<String>> pageTable ;
-            if(endIndex == statsTable.size()) {
-                pageTable = new ArrayList<ArrayList<String>>(statsTable.subList(startIndex, endIndex - 1));
+            if(endIndex == tempStatsTable.size()) {
+                pageTable = new ArrayList<ArrayList<String>>(tempStatsTable.subList(startIndex, endIndex - 1));
                 String rowsHtml = createRowsHtml(pageTable , "grayRow" ,dataCellCommonClass );
                 doc.select("tr.headerRow").last().after(rowsHtml) ;
             }
             else {
-                pageTable = new ArrayList<ArrayList<String>>(statsTable.subList(startIndex, endIndex));
+                pageTable = new ArrayList<ArrayList<String>>(tempStatsTable.subList(startIndex, endIndex));
                 String rowsHtml = createRowsHtml(pageTable , "" ,dataCellCommonClass );
                 doc.select("tr.headerRow").last().after(rowsHtml + headerHtml);
             }
             startIndex = endIndex ;
-            endIndex = (int)Utils.getNumberWithinLimits(  statsTable.size() ,  0 , endIndex+NUMBER_OF_ROWS_BALNK_PAGE)  ;
+            endIndex = (int)Utils.getNumberWithinLimits(  tempStatsTable.size() ,  0 , endIndex+NUMBER_OF_ROWS_BALNK_PAGE)  ;
         }while ((endIndex != startIndex));
 
 
@@ -106,7 +108,16 @@ public class Report4 extends Report{
     }
 
     @Override
-    public void init() {
+    public void generatePrintablePdfReport() throws IOException, DocumentException {
+        Document doc = generatePdfHtml() ;
+        doc.select("th.bar-header").remove() ;
+        doc.select("td.bar").remove() ;
+        writeHtmlFile(pdfHtmlPath , doc);
+        generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
+    }
 
+    @Override
+    public void init() {
+        statsTable = Statistics.report4Stats() ;
     }
 }

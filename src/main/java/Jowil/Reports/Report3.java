@@ -81,6 +81,15 @@ public class Report3 extends Report {
     }
 
     @Override
+    public void generatePrintablePdfReport() throws IOException, DocumentException {
+
+        Document doc = generatePdfHtml();
+        writeHtmlFile(pdfHtmlPath , doc);
+        generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
+
+    }
+
+    @Override
     public void init() {
 
     }

@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 public class ReportsHandler {
 
-    public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 ;
+    public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 , PRINTABLE_PDF=5 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
     public static boolean isTestMode = true ;
 
@@ -53,14 +53,17 @@ public class ReportsHandler {
 
         for(Report report:Reports) {
 
-
-
             if (formats.indexOf(PDF)!=-1)
                 report.generatePdfReport();
 
             if(formats.indexOf(HTML) !=-1)
                 report.generateHtmlReport();
 
+            if (formats.indexOf(TXT)!=-1)
+                report.generateTxtReport();
+
+            if(formats.indexOf(PRINTABLE_PDF) !=-1)
+                report.generatePrintablePdfReport();
 
             if(!isPDFExists)
                 handleNoPDF();

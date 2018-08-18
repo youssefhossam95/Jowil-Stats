@@ -185,4 +185,14 @@ public class Report1 extends Report{
         TxtUtils.writeTxtToFile(outputTxt , "E:\\work\\Jowil\\temp\\wello.txt");
     }
 
+    @Override
+    public void generatePrintablePdfReport() throws IOException, DocumentException {
+
+        Document doc = generatePdfHtml() ;
+        writeHtmlFile(pdfHtmlPath , doc);
+        generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
+
+
+    }
+
 }
