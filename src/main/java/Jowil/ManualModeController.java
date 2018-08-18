@@ -178,9 +178,13 @@ public class ManualModeController extends Controller{
         initColumnSetsVBox();
         initAddButton();
         initColumnSetCombo();
+        initNextButton();
     }
 
+    @Override
+    protected void saveChanges() {
 
+    }
 
 
     @Override
@@ -194,33 +198,7 @@ public class ManualModeController extends Controller{
         disableTableDrag(table);
     }
 
-    protected void saveChanges(){
 
-        int objStartIndex=-1,objEndIndex=-1,subjStartIndex=-1,subjEndIndex=-1,IDStartIndex=-1,IDEndIndex=-1,formIndex=-1;
-
-        for(ColumnSet columnSet:columnSets){
-            String type=columnSet.getType();
-
-            if(type.equals(OBJECTIVE_TYPE)){
-                if(objStartIndex==-1) //first objective group
-                    objStartIndex=columnSet.getStartIndex();
-                objEndIndex=columnSet.getEndIndex();
-
-            }else if(type.equals(SUBJECTIVE_TYPE)){ //only one col set can exist
-                subjStartIndex=columnSet.getStartIndex();
-                subjEndIndex=columnSet.getEndIndex();
-            }else if(type.equals(ID_TYPE)){ //only one id group col set exist
-                IDStartIndex=columnSet.getStartIndex();
-                IDEndIndex=columnSet.getEndIndex();
-            }else{ //form type must be only one column
-                formIndex=columnSet.getStartIndex();
-            }
-
-        }
-
-        saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex);
-
-    }
 
 
 
@@ -249,6 +227,99 @@ public class ManualModeController extends Controller{
 
 
 
+    }
+
+    @Override
+    protected void initNextButton(){
+        nextButton.setOnMouseClicked(t->{
+            rootPane.requestFocus();
+
+            if(!saveColumnSets())
+                return;
+
+            new GroupsController(null).startWindow();
+
+
+
+
+        });
+
+    }
+
+    private boolean saveColumnSets(){
+        int objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,firstObjCS,lastObjCS;
+        objStartIndex=objEndIndex=subjStartIndex=subjEndIndex=IDStartIndex=IDEndIndex=formIndex=firstObjCS=lastObjCS=NOT_AVAILABLE;
+
+        ArrayList<ColumnSet> objColSets=new ArrayList<>();
+
+        int index=0;
+        for(ColumnSet columnSet:columnSets){
+            String type=columnSet.getType();
+
+            if(type.equals(OBJECTIVE_TYPE)){
+                if(objStartIndex==NOT_AVAILABLE) { //first objective group
+                    objStartIndex = columnSet.getStartIndex();
+                    firstObjCS=index;
+                }
+                objEndIndex=columnSet.getEndIndex();
+                lastObjCS=index;
+                objColSets.add(columnSet);
+
+            }else if(type.equals(SUBJECTIVE_TYPE)){ //only one col set can exist
+                subjStartIndex=columnSet.getStartIndex();
+                subjEndIndex=columnSet.getEndIndex();
+            }else if(type.equals(ID_TYPE)){ //only one id group col set exist
+                IDStartIndex=columnSet.getStartIndex();
+                IDEndIndex=columnSet.getEndIndex();
+            }else{ //form type must be only one column
+                formIndex=columnSet.getStartIndex();
+            }
+            index++;
+        }
+
+        //make end indices exclusive
+        objEndIndex++;
+        subjEndIndex=(subjEndIndex==-1)?-1:subjEndIndex+1;
+        IDEndIndex=(IDEndIndex==-1)?-1:IDEndIndex+1;
+
+
+
+        if(objStartIndex==-1){
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Question Groups Error","" +
+                    "You must add at least one objective questions group column set.");
+            return false;
+        }
+
+        int gapStart;
+        if((gapStart=getObjGapStart(objStartIndex,objEndIndex))!=-1){
+            String gapStartName=tableHeaders==null?"Column "+(gapStart+1):tableHeaders.get(gapStart);
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Question Groups Error","" +
+                    "Objective questions groups must be consecutive. A gap exists at "+gapStartName+".");
+            return false;
+        }
+
+        ArrayList<String> unexpectedColSetInfo;
+        if((unexpectedColSetInfo=getUnExpectedColSet(firstObjCS,lastObjCS))!=null){
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Question Groups Error","" +
+                    "Objective questions groups must be consecutive. Column set \""+unexpectedColSetInfo.get(0)+"\" " +
+                    "of type \"" +unexpectedColSetInfo.get(1)+"\" cannot be placed between objective column sets.");
+            return false;
+        }
+
+
+        if(CSVHandler.getFormsCount()>1 && formIndex==-1){
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Form Number Column Set Error","" +
+                    CSVHandler.getFormsCount()+" forms were detected. A form number column must be added.");
+            return false;
+        }
+        System.out.println("number of forms:"+CSVHandler.getFormsCount());
+
+
+
+        if(!saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,objColSets))
+            return false;
+
+        return true;
     }
 
 
@@ -539,8 +610,80 @@ public class ManualModeController extends Controller{
         }
     }
 
-    private void saveToCSVHandler(int objStartIndex, int objEndIndex, int subjStartIndex, int subjEndIndex, int idStartIndex, int idEndIndex, int formIndex) {
+
+    private int getObjGapStart(int start, int end) {
+
+        for(int i=start;i<end;i++){
+            if(colColors.get(i).get().equals(CELL_DEFAULT_COLOR))
+                return i;
+        }
+
+        return -1; //gap not found
+
     }
+
+    private boolean saveToCSVHandler(int objStartIndex, int objEndIndex, int subjStartIndex, int subjEndIndex, int idStartIndex, int idEndIndex, int formIndex, ArrayList<ColumnSet> objColSets) {
+
+        CSVHandler.setQuestionsColStartIndex(objStartIndex);
+        CSVHandler.setQuestionsColEndIndex(objEndIndex);
+
+        CSVHandler.setSubjStartIndex(subjStartIndex);
+        CSVHandler.setSubjEndIndex(subjEndIndex);
+        CSVHandler.setSubjQuestionsCount(subjStartIndex==NOT_AVAILABLE?0:subjEndIndex-subjStartIndex);
+
+        CSVHandler.setFormColIndex(formIndex);
+
+        CSVHandler.setIdentifierColStartIndex(idStartIndex);
+        CSVHandler.setIdentifierColEndIndex(idEndIndex);
+
+
+        try {
+            CSVHandler.generateObjectiveGroupsFromColSets(objColSets);
+        } catch (CSVHandler.InConsistentAnswerKeyException e) {
+            e.printStackTrace(); //maynf3sh yhsl
+        } catch (IOException e) {
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Answer Key Error","Error in " +
+                    "reloading answer key file.");
+            return false;
+        } catch (CSVHandler.IllFormedCSVException e) {
+            e.printStackTrace(); //mynf3sh yhsl
+        }
+
+        try {
+            CSVHandler.loadCsv(CSVHandler.isIsSkipRowInManual());
+        } catch (CSVHandler.IllFormedCSVException e) {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                    "Error in students responses file at row "+e.getRowNumber()+". File must contain the same number of columns in all rows.");
+            return false;
+        }catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                    "Error in reading students responses file.");
+            return false;
+        } catch (CSVHandler.InvalidFormNumberException e) {
+            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                    "Error in students responses file: "+e.getMessage());
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private ArrayList<String> getUnExpectedColSet(int firstObjCS, int lastObjCS) {
+
+        for(int i=firstObjCS;i<=lastObjCS;i++){
+            ColumnSet columnSet=columnSets.get(i);
+            if(!columnSet.getType().equals(OBJECTIVE_TYPE)){
+                ArrayList<String> unExpectedInfo=new ArrayList<>();
+                unExpectedInfo.add(columnSet.getName());
+                unExpectedInfo.add(columnSet.getType());
+                return unExpectedInfo;
+            }
+        }
+
+        return null;
+    }
+
 
     class ColumnSetSorter implements Comparator<ColumnSet> {
 

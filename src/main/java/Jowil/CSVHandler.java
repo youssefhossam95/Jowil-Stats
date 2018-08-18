@@ -30,7 +30,7 @@ public class CSVHandler {
 
 
         InvalidFormNumberException(int rowNumber){
-            super("Student in row "+rowNumber+ " has an invalid form number.");
+            super("Invalid Form number at row "+rowNumber+".");
         }
     }
     public static class EmptyCSVException extends Exception{
@@ -65,6 +65,7 @@ public class CSVHandler {
     //fields
 
     private static String responsesFilePath;
+    private static String answerKeyFilePath; //used in manual mode
     private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
     private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
     private static ArrayList<Group> detectedGroups= new ArrayList<Group>();
@@ -86,6 +87,7 @@ public class CSVHandler {
     private static boolean isSkipRowInManual;
     public final static int NOT_AVAILABLE=-1;
 
+    //NOTE: ALL END INDICES SUCH AS "identifierColEndIndex" ARE EXCLUSIVE
 
 
     //getters and setters
@@ -159,6 +161,27 @@ public class CSVHandler {
         return answersColsCount;
     }
 
+    public static void setScoresStartIndex(int scoresStartIndex) {
+        CSVHandler.scoresStartIndex = scoresStartIndex;
+    }
+
+    public static void setSubjStartIndex(int subjStartIndex) {
+        CSVHandler.subjStartIndex = subjStartIndex;
+    }
+
+    public static void setSubjEndIndex(int subjEndIndex) {
+        CSVHandler.subjEndIndex = subjEndIndex;
+    }
+
+    public static void setQuestionsColEndIndex(int questionsColEndIndex) {
+        CSVHandler.questionsColEndIndex = questionsColEndIndex;
+    }
+
+    public static void setSubjQuestionsCount(int subjQuestionsCount) {
+        CSVHandler.subjQuestionsCount = subjQuestionsCount;
+    }
+
+
     //public methods
     /**
      *
@@ -213,6 +236,7 @@ public class CSVHandler {
     public static boolean loadAnswerKeys(String answersFilePath,boolean isLoadingMode) throws IOException, IllFormedCSVException, InConsistentAnswerKeyException {
 
         isAnswerKeyContainsBlanks=false;
+        answerKeyFilePath=answersFilePath;
         BufferedReader input = new BufferedReader(new FileReader(answersFilePath));
         String line;
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
@@ -647,6 +671,33 @@ public class CSVHandler {
         }
         return csvRows ;
     }
+
+    public static void generateObjectiveGroupsFromColSets(ArrayList<ColumnSet> objColSets) throws InConsistentAnswerKeyException, IOException, IllFormedCSVException {
+
+        detectedGroups=new ArrayList<>();
+        detectedQHeaders=new ArrayList<>();
+
+
+        loadAnswerKeys(answerKeyFilePath,true);
+
+        int qIndex=0;
+        for(ColumnSet columnSet:objColSets){
+            int nextQ=1,groupQCount=0;
+            String groupName=columnSet.getName();
+
+            for(int i=0;i<columnSet.getMySize();i++){
+                if(!isQuestionsIgnored.get(qIndex)){
+                    detectedQHeaders.add(groupName+nextQ);
+                    groupQCount++;
+                }
+                nextQ++;
+                qIndex++;
+            }
+            detectedGroups.add(new Group(groupName,groupQCount));
+        }
+
+    }
+
 
     public static ArrayList<ArrayList<String>> readCsvFile (String filePath) throws IOException {
         return readPartialCSVFile(filePath,-1);

@@ -214,7 +214,7 @@ public class FileConfigController extends Controller{
     }
 
     //helper methods
-    private void initNextButton(){
+    protected void initNextButton(){
 
 //
         nextButton.setOnMouseClicked(t->{
@@ -333,7 +333,7 @@ public class FileConfigController extends Controller{
                 CSVHandler.loadCsv(true);
             } catch (CSVHandler.IllFormedCSVException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file at row "+e.getRowNumber()+". File must contain a constant number of columns in all rows.");
+                        "Error in students responses file at row "+e.getRowNumber()+". File must contain the same number of columns in all rows.");
                 return;
             }catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
