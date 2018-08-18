@@ -105,18 +105,16 @@ public class ColumnSet extends HBox {
 
 
     public void updateSizes(double scrollPaneWidth,double scrollPaneHeight){
-        removeIcon.setGlyphSize(parentController.rootWidth/64);
-        rightArrowIcon.setGlyphSize(parentController.rootWidth/75);
+        removeIcon.setGlyphSize((int)(parentController.rootWidth/64));
+        rightArrowIcon.setGlyphSize((int)(parentController.rootWidth/75));
         nameTextField.setPrefWidth((int)(scrollPaneWidth*0.21));
         typeTextField.setPrefWidth((int)(scrollPaneWidth*0.21));
         rangeHBox.setPrefWidth((int)(0.2*scrollPaneWidth));
         colorPane.setPrefWidth((int)(0.15*scrollPaneWidth));
         nameTextField.setPrefHeight((int)(scrollPaneHeight/12));
         typeTextField.setPrefHeight((int)(scrollPaneHeight/12));
-        innerColorPane.setPrefWidth(nameTextField.getPrefHeight());
-        //removeButton.setPrefWidth((int)(0.1*scrollPaneWidth));
+        innerColorPane.setPrefWidth((int)(nameTextField.getPrefHeight()));
         this.setSpacing((int)(scrollPaneWidth*0.03));
-
 
     }
 
