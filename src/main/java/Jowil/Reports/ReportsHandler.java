@@ -39,7 +39,7 @@ public class ReportsHandler {
 
     public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
-
+    public static boolean isTestMode = true ;
 
     public ReportsHandler(){
 
@@ -66,8 +66,8 @@ public class ReportsHandler {
                 handleNoPDF();
 
 
-
-            ReportProgressController.incrementProgressCount();
+            if(!isTestMode)
+                ReportProgressController.incrementProgressCount();
 
         }
 

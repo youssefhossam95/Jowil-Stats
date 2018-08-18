@@ -102,9 +102,15 @@ public class ITextRenderer {
     private PDFCreationListener _listener;
 
     private boolean _timeouted;
+    private boolean isTestMood;
 
     public ITextRenderer() {
         this(DEFAULT_DOTS_PER_POINT, DEFAULT_DOTS_PER_PIXEL);
+        isTestMood = false ;
+    }
+    public ITextRenderer( boolean isTestMood ){
+        this(DEFAULT_DOTS_PER_POINT, DEFAULT_DOTS_PER_PIXEL);
+        this.isTestMood = isTestMood;
     }
 
     public ITextRenderer(float dotsPerPoint, int dotsPerPixel) {
@@ -376,7 +382,8 @@ public class ITextRenderer {
         firePreWrite(pageCount); // opportunity to adjust meta data
         setDidValues(doc); // set PDF header fields from meta data
 
-        ReportProgressController.setReportProgress(0.0);
+        if(!isTestMood)
+            ReportProgressController.setReportProgress(0.0);
 
         for (int i = 0; i < pageCount; i++) {
 
@@ -395,7 +402,8 @@ public class ITextRenderer {
                 doc.newPage();
                 _outputDevice.initializePage(writer.getDirectContent(), nextPageSize.getHeight());
             }
-            ReportProgressController.setReportProgress((i+1.0)/pageCount);
+            if(!isTestMood)
+                ReportProgressController.setReportProgress((i+1.0)/pageCount);
 
 
         }

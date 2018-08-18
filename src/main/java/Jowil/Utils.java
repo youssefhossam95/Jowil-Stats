@@ -55,4 +55,12 @@ public class Utils {
         return clonedTable ;
     }
 
+
+    public static String generatePattern(String block ,int lenght ){
+        String output = "";
+        for(int i = 0 ; i < lenght ; i++)
+            output+=block ;
+        return output ;
+    }
+
 }
