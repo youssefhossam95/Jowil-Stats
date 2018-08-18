@@ -10,7 +10,6 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation ;
 
 import java.io.*;
 
-import static com.sun.javafx.scene.control.skin.Utils.getResource;
 
 public class Test {
 

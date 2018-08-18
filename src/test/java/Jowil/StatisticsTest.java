@@ -53,7 +53,7 @@ public class StatisticsTest extends TestCase {
         formats.add(ReportsHandler.HTML) ;
         formats.add(ReportsHandler.PDF);
 
-        ReportsHandler reportsHandler = new ReportsHandler();
+        ReportsHandler reportsHandler = new ReportsHandler(true);
         reportsHandler.generateReports(reports , formats);
     }
 

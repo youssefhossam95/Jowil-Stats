@@ -58,7 +58,7 @@ public class ReportChartsTest extends Application {
         formats.add(ReportsHandler.HTML) ;
         formats.add(ReportsHandler.PDF);
         formats.add(ReportsHandler.PRINTABLE_PDF) ;
-        ReportsHandler reportsHandler = new ReportsHandler();
+        ReportsHandler reportsHandler = new ReportsHandler(true);
         reportsHandler.generateReports(reports , formats);
 
     }

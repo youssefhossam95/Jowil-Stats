@@ -64,7 +64,7 @@ abstract public class Report {
 
 
         //Flying Saucer part
-        ITextRenderer renderer = new ITextRenderer(true);
+        ITextRenderer renderer = new ITextRenderer(ReportsHandler.isTestMode);
 
         renderer.setDocument(url);
         renderer.layout();

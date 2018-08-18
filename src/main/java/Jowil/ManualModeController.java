@@ -238,8 +238,7 @@ public class ManualModeController extends Controller{
                 return;
 
             new GroupsController(null).startWindow();
-
-
+            stage.close();
 
 
         });

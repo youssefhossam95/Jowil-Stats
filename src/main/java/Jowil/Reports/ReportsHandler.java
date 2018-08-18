@@ -39,10 +39,13 @@ public class ReportsHandler {
 
     public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 , PRINTABLE_PDF=5 ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
-    public static boolean isTestMode = true ;
+    public static boolean isTestMode;
 
     public ReportsHandler(){
-
+        isTestMode=false;
+    }
+    public ReportsHandler(boolean isTestMode){
+        ReportsHandler.isTestMode=isTestMode;
     }
 
 
