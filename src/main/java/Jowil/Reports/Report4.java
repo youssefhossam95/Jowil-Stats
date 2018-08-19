@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -102,9 +103,46 @@ public class Report4 extends Report{
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
     }
 
+    private ArrayList<ArrayList<String>> getTableWithHeaders () {
+
+        ArrayList<String>tableHeaders = new ArrayList<>();
+        tableHeaders.add("Student"); tableHeaders.add("Grade") ;
+        tableHeaders.add("Score") ; tableHeaders.add("Percentage");
+        ArrayList<ArrayList<String>> tableWithHeaders = cleanTable(Utils.cloneTable(statsTable)) ;
+        tableWithHeaders.add(0,tableHeaders) ;
+        return tableWithHeaders ;
+     }
+
     @Override
     public void generateTxtReport() {
 
+        final int CHP = 2  ;
+        ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders();
+
+        String outputTxt = "" ;
+        int pageWidth = TxtUtils.calcTableWidth(tableWithHeaders , CHP) ;
+
+        String txtTitle = TxtUtils.generateTitleLine("Studets Grades Report",
+                pageWidth,2) ;
+
+        outputTxt+= txtTitle ;
+
+//        String tableTxt = TxtUtils.generateTxtTableAlignCenter((ArrayList)tableWithHeaders.subList(0 ,tableWithHeaders.size()-1 ) , "" , CHP ) ;
+
+        String tableTxt = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , CHP  , false) ;
+
+        String [] tableLines = tableTxt.split(TxtUtils.newLine) ;
+        String newTableTxt = "" ;
+        for (int lineIndex = 0 ; lineIndex < tableLines.length ; lineIndex++) {
+            if(lineIndex == tableLines.length-1){
+                newTableTxt += Utils.generatePattern("*" , pageWidth)+TxtUtils.newLine ;
+            }
+            newTableTxt+= tableLines[lineIndex] + TxtUtils.newLine ;
+
+        }
+        outputTxt += newTableTxt ;
+
+        TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
 
     @Override

@@ -2,6 +2,7 @@ package Jowil;
 
 import Jowil.Reports.Report;
 import Jowil.Reports.Report1;
+import Jowil.Reports.ReportsHandler;
 import com.lowagie.text.DocumentException;
 
 
@@ -105,9 +106,9 @@ public class Test {
 
 //        //////////////////////// to create pdf from html //////////////////////////////////
 
-//         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-//        ReportsHandler reportsHandler = new ReportsHandler();
-//        reportsHandler.generatePDF(reportsPath + "report2\\test.html", reportsPath + "report2\\test2.pdf");
+         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+        ReportsHandler reportsHandler = new ReportsHandler();
+        reportsHandler.generatePDF(reportsPath + "report5\\Report5.html", reportsPath + "report5\\test5.pdf");
 
     }
 }

@@ -175,14 +175,14 @@ public class Report1 extends Report{
 
         String txtTitle = TxtUtils.generateTitleLine("Grades Distribution Report",
                 TxtUtils.calcTableWidth(tableWithHeaders,cellHorizontalPadding),2) ;
-        String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding) ;
+        String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding , false) ;
 
         String outputTxt =TxtUtils.newLine+txtTitle + txtTable ;
         System.out.println(outputTxt);
 
 
 
-        TxtUtils.writeTxtToFile(outputTxt , "E:\\work\\Jowil\\temp\\wello.txt");
+        TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
 
     @Override

@@ -30,13 +30,24 @@ public class TxtUtils {
       return (int) sum(calcCellsWidths(table , cellHorizontalPadding).stream().mapToDouble(d -> d).toArray());
     }
 
+    public static int calcPageWidth (ArrayList<ArrayList<ArrayList<String>>> pageTables , ArrayList<Integer> tablesCHP) {
+        int pageWidth = 0  ;
+        for(int tableIndex = 0 ; tableIndex < pageTables.size() ; tableIndex++) {
+            ArrayList<ArrayList<String>> table = pageTables.get(tableIndex)  ;
+            int tableWidth = calcTableWidth(table , tablesCHP.get(tableIndex));
+            if(tableWidth>pageWidth)
+                pageWidth = tableWidth ;
+        }
+        return pageWidth ;
+    }
+
     public static String generateTitleLine (String title , int pageWidth , int paddingBelow) {
         String padding = Utils.generatePattern(newLine , paddingBelow) ;
         String spaceBeofore =   Utils.generatePattern( " " , (int)Math.floor((pageWidth-title.length())/2)) ;
         return spaceBeofore+ title + padding ;
     }
 
-    public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding ) {
+    public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ) {
 
         String txtTable = "" ;
         ArrayList<Integer> cellsWidths = calcCellsWidths(table , cellHorizontalPadding) ;
@@ -55,7 +66,7 @@ public class TxtUtils {
                 txtTable += Utils.generatePattern(" ",numberOfSpacesNeeded) + cellString ;
             }
             // add line after the first Row
-            if (rowIndex ==0)
+            if (rowIndex ==0 || showLines)
                 txtTable+=newLine + Utils.generatePattern("-" , tableWidth)    ;
 
             txtTable+=newLine ;

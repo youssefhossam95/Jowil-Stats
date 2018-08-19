@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -148,6 +149,25 @@ abstract public class Report {
 
     public static String getOutPath(){
         return outPath;
+    }
+
+    /**
+     * remove classes and atrributes (for html docs) from table
+     * @param table table to be cleaned
+     * @return the cleaned version of the table
+     */
+    protected ArrayList<ArrayList<String>> cleanTable (ArrayList<ArrayList<String>> table) {
+        ArrayList<ArrayList<String>> cleanedTable = Utils.cloneTable(table);
+        for (int rowIndex = 0; rowIndex < cleanedTable.size(); rowIndex++) {
+            ArrayList<String> tableRow = cleanedTable.get(rowIndex);
+            for (int colIndex = 0; colIndex < tableRow.size(); colIndex++) {
+                String data = tableRow.get(colIndex) ;
+                if(data.contains(";")){
+                    tableRow.set(colIndex, data.split(";")[0]) ;
+                }
+            }
+        }
+        return cleanedTable ;
     }
 
 

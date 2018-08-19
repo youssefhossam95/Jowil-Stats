@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class Report2 extends Report {
 
@@ -210,35 +211,94 @@ public class Report2 extends Report {
         return mapAsTable ;
     }
 
-    @Override
-    public void generateTxtReport() {
-        final int CHP_CENTER_TABLE = 3 ;
-        final  int CHP_LR_TABLE = 5 ;
-        final int PADDING_BETWEEN_TABLES = 2 ;
-
-
-        Map<String, String> statsMap  = formsStatsMaps.get(0) ;
-        ArrayList<ArrayList<String>> statsTable  = formsStatsTables.get(0).get(0) ;
+    private ArrayList<String> getHeaders ( int questionIndex ) {
 
         ArrayList<String>tableHeaders = new ArrayList<>();
-        tableHeaders.add("No.") ; tableHeaders.add("Question") ;
-//        ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
-//        for(String qChoice: questionChoices )
+        tableHeaders.add("No.") ; tableHeaders.add("Question") ; tableHeaders.add("Correct Answer") ;
 
-        tableHeaders.add("Raw Score") ; tableHeaders.add("Frequency") ; tableHeaders.add("Percentage");
+        ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
+        for(String qChoice: questionChoices )
+            tableHeaders.add(qChoice) ;
+        tableHeaders.add("Non Distractors") ;
+        tableHeaders.add("Point Biserial") ; tableHeaders.add("total") ; tableHeaders.add("lower 27%");
+        tableHeaders.add("upper 27%") ;
 
-        ArrayList<ArrayList<String>>tableWithHeaders = Utils.cloneTable(statsTable) ;
-        tableWithHeaders.add(0 , tableHeaders) ;
+        return tableHeaders ;
+    }
 
-        ArrayList<ArrayList<String>> mapAsTable = preprocessMap(statsMap);
-        String txtTable = TxtUtils.generateTxtTableAlignLR(mapAsTable,"" , CHP_LR_TABLE);
-        String Table2 = TxtUtils.generateTxtTableAlignCenter(statsTable , "" ,CHP_CENTER_TABLE ) ;
-        ArrayList<String>tables = new ArrayList<>();
-        tables.add(txtTable); tables.add(Table2) ;
-        String outputTxt = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
+    private int calcTxtPageWidth(int chpCenterTable  ,int chpLRTable )  {
+        ArrayList<Integer> tabelsChp  = new ArrayList<>( );
+        ArrayList<ArrayList<ArrayList<String>>> firstFormTables = new ArrayList<>();
+
+        int questionIndex = 0 ;
+        for(ArrayList<ArrayList<String>> table:formsStatsPrintableTables.get(0)) {
+            ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table);
+            tableWithHeaders.add(0, getHeaders(questionIndex));
+            tableWithHeaders = cleanTable(tableWithHeaders) ;
+            firstFormTables.add(tableWithHeaders) ;
+            tabelsChp.add(chpCenterTable) ;
+        }
+        firstFormTables.add( preprocessMap( formsStatsMaps.get(0)) )  ;
+        tabelsChp.add(chpLRTable) ;
+        return  TxtUtils.calcPageWidth(firstFormTables , tabelsChp) ;
+    }
+    @Override
+    public void generateTxtReport() {
+        final int CHP_CENTER_TABLE = 3 ; // cell horizontal padding for center aligned tables
+        final  int CHP_LR_TABLE = 5 ; // cell horizontal padding for Tables aligned Left Right
+        final int PADDING_BETWEEN_TABLES = 2 ;
+
+        String outputTxt="" ;
+
+
+        int pageWidth = calcTxtPageWidth(CHP_CENTER_TABLE , CHP_LR_TABLE);
+
+        for(int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            Map<String, String> statsMap = formsStatsMaps.get(formIndex);
+            ArrayList<ArrayList<ArrayList<String>>> formsStatsTables = formsStatsPrintableTables.get(formIndex);
+
+
+
+            ArrayList<ArrayList<String>> mapAsTable = preprocessMap(statsMap);
+            String generalStatsTxt = TxtUtils.generateTxtTableAlignLR(mapAsTable, "", CHP_LR_TABLE);
+
+            String reportTitle = "Condenced Test Report"  ;
+            if(Statistics.getNumberOfForms()>1)
+                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+
+            String txtTitle = TxtUtils.generateTitleLine(reportTitle,
+                    pageWidth,2) ;
+
+            if(formIndex>0)
+                outputTxt += Utils.generatePattern("#" , pageWidth)+TxtUtils.newLine;
+
+            outputTxt+= txtTitle ;
+
+            outputTxt+= generalStatsTxt  ;
+
+            String legend = "* : Distractor"+TxtUtils.newLine ;
+
+            outputTxt+= Utils.generatePattern(TxtUtils.newLine , 2 ) + legend ;
+
+            ArrayList<String> txtTables = new ArrayList<>();
+
+
+            int questionIndex = 0;
+
+            for(int tableIndex = 0 ; tableIndex< formsStatsTables.size() ; tableIndex++ ) {
+                ArrayList<ArrayList<String>> statsTable = cleanTable(formsStatsTables.get(tableIndex));
+                ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);
+                tableWithHeaders.add(0, getHeaders(questionIndex));
+                txtTables.add(TxtUtils.generateTxtTableAlignCenter(tableWithHeaders, "", CHP_CENTER_TABLE , false));
+                questionIndex += statsTable.size() ;
+             }
+
+             outputTxt += TxtUtils.stackTablesV(txtTables, PADDING_BETWEEN_TABLES) ;
+            }
+//        String outputTxt = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
         System.out.println(outputTxt);
 
-        TxtUtils.writeTxtToFile(outputTxt , "E:\\work\\Jowil\\temp\\wello.txt");
+        TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
 
     }
 

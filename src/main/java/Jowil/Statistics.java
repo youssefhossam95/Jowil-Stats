@@ -417,7 +417,7 @@ public class Statistics {
 
     public static Map<String,String> calcGeneralStats (ArrayList<Double> studentScores ,  int numberOfQuestions) {
         DecimalFormat format = new DecimalFormat("0.#");
-        Map<String , String>  statsMap = new HashMap<String, String>() ;
+        Map<String , String>  statsMap = new LinkedHashMap<>() ;
 
         double[] scores = studentScores.stream().mapToDouble(d -> d).toArray();
         double benchMark = 75.0 ;
@@ -447,13 +447,16 @@ public class Statistics {
 
 
         statsMap.put("Number Of Students" , format.format(studentScores.size()));
-        statsMap.put("Mean" , format.format(mean));
+
         statsMap.put("Number Of Graded Questions" , format.format(numberOfQuestions) );
         statsMap.put("Maximum Possible Score" , format.format(maxScore)) ; // assuming all Forms should have the same weight sum
         statsMap.put("Benchmark" ,  format.format(benchMark) ) ;
+
+        statsMap.put("Mean" , format.format(mean));
         statsMap.put("Mean Percent Score" , format.format(mean/maxScore) ) ;
         statsMap.put("Highest Score" ,format.format(HightestScore) ) ;
         statsMap.put("Lowest Score" , format.format(LowestScore)) ;
+
         statsMap.put("Standard Deviation" , format.format(std) ) ;
         statsMap.put("Variance" , format.format(variance)) ;
         statsMap.put("Range" , format.format(HightestScore - LowestScore))  ;
@@ -477,7 +480,9 @@ public class Statistics {
     public static  Map<String ,String> report3Stats() {
 
         double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
-        return calcGeneralStats(studentScores , questionsChoices.size() )  ;
+        Map <String , String > map = calcGeneralStats(studentScores , questionsChoices.size() );
+        map.remove("Number Of Students") ;  // not in report 3
+        return map ;
 
     }
     private static void  initPointBiserialTables ()  {

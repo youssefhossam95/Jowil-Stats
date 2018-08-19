@@ -1,12 +1,16 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.ArabicLigaturizer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Report3 extends Report {
@@ -75,8 +79,60 @@ public class Report3 extends Report {
 
     }
 
+    public ArrayList<ArrayList<ArrayList<String>>> processMap (Map<String , String> map ){
+
+        int [] tablesRowCount = {3 , 4 , 7 ,3 ,2} ;
+        ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<>() ;
+        ArrayList<ArrayList<String>> table  = new ArrayList<>();
+        ArrayList<String>tableRow = new ArrayList<>() ;
+
+        int currentTableRows = 0 ;
+        int tableIndex = 0 ;
+        for(Map.Entry<String , String> entry:map.entrySet()) {
+            if(currentTableRows == tablesRowCount[tableIndex]){
+                tableIndex++ ;
+                currentTableRows = 0 ;
+                tables.add(table);
+                table = new ArrayList<>() ;
+            }
+            tableRow.add(entry.getKey()) ; tableRow.add(entry.getValue());
+            table.add(tableRow);
+            tableRow = new ArrayList<>() ;
+            currentTableRows++ ;
+
+        }
+
+        System.out.println(tables);
+        return tables ;
+    }
+
     @Override
     public void generateTxtReport() {
+
+        final int  PADDING_BETWEEN_TABLES = 2 ;
+        final int CHP = 10 ;
+
+        String outputTxt = "" ;
+
+        String [] tablesTitles = {"Test Data" , "Basic Statistics" , "Dispersion" , "Confidence Intervals"} ;
+        ArrayList<ArrayList<ArrayList<String>>> tables =  processMap(Statistics.report3Stats());
+        ArrayList<Integer> CHPS = new ArrayList<>();
+        for(ArrayList<ArrayList<String>> table:tables)
+            CHPS.add(CHP);
+
+        int pageWidth = TxtUtils.calcPageWidth(tables,CHPS);
+
+        String txtTitle = TxtUtils.generateTitleLine("Test Statistics Report",
+                pageWidth,2) ;
+
+        outputTxt+= txtTitle ;
+        ArrayList<String> txtTables = new ArrayList<>() ;
+        for ( int tableIndex = 0 ; tableIndex < tables.size() ; tableIndex++){
+            txtTables.add(TxtUtils.generateTxtTableAlignLR(tables.get(tableIndex) ,tablesTitles[tableIndex],CHP)) ;
+        }
+        outputTxt += TxtUtils.stackTablesV(txtTables,PADDING_BETWEEN_TABLES);
+
+        TxtUtils.writeTxtToFile(outputTxt, outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt" );
 
     }
 

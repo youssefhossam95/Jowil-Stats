@@ -46,6 +46,27 @@ public class ReportsHandler {
     }
 
 
+    public void generatePDF(String inputHtmlPath, String outputPdfPath) throws IOException, com.lowagie.text.DocumentException {
+
+        String url = new File(inputHtmlPath).toURI().toURL().toString();
+        System.out.println("URL: " + url);
+
+
+        OutputStream out = new FileOutputStream(outputPdfPath);
+
+
+
+        //Flying Saucer part
+        ITextRenderer renderer = new ITextRenderer(true);
+
+        renderer.setDocument(url);
+        renderer.layout();
+        renderer.createPDF(out);
+
+        out.close();
+
+    }
+
 
     public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
 
@@ -79,6 +100,9 @@ public class ReportsHandler {
 
     private void handleNoPDF() {
 
+
+        if(isTestMode)
+            return;
 
         if(Thread.currentThread().isInterrupted())
             return; //stop report generation if interrupted without pdf
