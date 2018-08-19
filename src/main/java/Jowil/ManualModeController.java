@@ -217,6 +217,9 @@ public class ManualModeController extends Controller{
             colColors.add(new SimpleStringProperty(CELL_DEFAULT_COLOR));
         }
 
+        TableColumn lastDummy=new TableColumn("   ");
+        table.getColumns().add(lastDummy);
+
 
         table.getSelectionModel().setCellSelectionEnabled(true);
 

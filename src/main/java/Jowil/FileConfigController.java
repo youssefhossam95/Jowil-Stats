@@ -692,6 +692,7 @@ public class FileConfigController extends Controller{
 
         int formSelectedIndex=CSVHandler.getFormsCount()==1?NOT_AVAILABLE:formComboSelectedIndex-1; //remove None effect
         CSVHandler.setFormColIndex(getUnFilteredIndex(formSelectedIndex));
+        CSVHandler.setFormColName(combosItems.get(formComboSelectedIndex));
     }
 
 

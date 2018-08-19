@@ -156,6 +156,10 @@ public class Statistics {
         return studentIdentifier;
     }
 
+    public static String getIdentifierName() {
+        return identifierName;
+    }
+
     public static ArrayList<String> getSpecificQuestionChoices(int questionIndex){return questionsChoices.get(questionIndex);}
 
     public static int getNumberOfForms (){
