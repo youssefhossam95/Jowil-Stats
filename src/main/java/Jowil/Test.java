@@ -10,15 +10,7 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation ;
 
 
 import java.io.*;
-import java.net.URLDecoder;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.sun.javafx.scene.control.skin.Utils.getResource;
 
 public class Test {
 
@@ -112,3 +104,4 @@ public class Test {
 
     }
 }
+

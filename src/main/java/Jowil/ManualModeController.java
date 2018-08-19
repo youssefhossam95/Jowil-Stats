@@ -131,12 +131,12 @@ public class ManualModeController extends Controller{
 
 
         //right
-        rightSideVBox.setLayoutX(tableVBox.getLayoutX()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
-        rightSideVBox.setLayoutY(tableVBox.getLayoutY());
-        rightSideVBox.setSpacing(tableVBox.getSpacing());
+        rightSideVBox.setLayoutX((int)(tableVBox.getLayoutX()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05)));
+        rightSideVBox.setLayoutY((int)(tableVBox.getLayoutY()));
+        rightSideVBox.setSpacing((int)(tableVBox.getSpacing()));
         rightSideVBox.setPadding(tableVBox.getPadding());
-        double scrollPaneWidth=buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()-rightSideVBox.getLayoutX();
-        double scrollPaneHeight=table.getPrefHeight();
+        double scrollPaneWidth=(int)(buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()-rightSideVBox.getLayoutX());
+        double scrollPaneHeight=(int)(table.getPrefHeight());
         scrollPane.setPrefWidth(scrollPaneWidth);
         scrollPane.setPrefHeight(scrollPaneHeight);
 
@@ -238,8 +238,7 @@ public class ManualModeController extends Controller{
                 return;
 
             new GroupsController(null).startWindow();
-
-
+            stage.close();
 
 
         });

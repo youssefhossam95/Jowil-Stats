@@ -696,6 +696,7 @@ public class CSVHandler {
             detectedGroups.add(new Group(groupName,groupQCount));
         }
 
+        Statistics.setQuestionNames(detectedQHeaders);
     }
 
 
