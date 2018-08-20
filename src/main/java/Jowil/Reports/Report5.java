@@ -2,6 +2,7 @@ package Jowil.Reports;
 
 import Jowil.CSVHandler;
 import Jowil.Group;
+import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -13,8 +14,12 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Report5 extends Report {
+
+    private ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsTables ;
 
     public Report5(){
         workSpacePath = reportsPath + "report5\\" ;
@@ -23,7 +28,7 @@ public class Report5 extends Report {
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
 
-    private Document generatePdfHtml () throws IOException {
+    private Document generatePdfHtml (ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsTables) throws IOException {
         File file = new File(templatePath);
         Document doc =  Jsoup.parse(file , "UTF-8") ;
 
@@ -44,16 +49,16 @@ public class Report5 extends Report {
         for (int formIndex = 0; formIndex <Statistics.getNumberOfForms() ; formIndex++) {
             int groupIndex = 0 ;
             int nextGroupTableIndex = groups.get(groupIndex).getqCount() ;
-            ArrayList<ArrayList<ArrayList<String>>> tables = Statistics.report5stats(formIndex);
-
+//            ArrayList<ArrayList<ArrayList<String>>> tables = Statistics.report5stats(formIndex);
+            ArrayList<ArrayList<ArrayList<String>>> tables = formsTables.get(formIndex);
             if(formIndex>0) {
                 doc.select("div.wrapper").last().after(pageBreakHtml);
                 doc.select("div.page-break").last().after(templateHtml) ;
                 doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
             }else
             if(Statistics.getNumberOfForms()>1)
-                doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
 
             int remainingRows = NUMBER_OF_ROWS_IN_PAGE - ROWS_OF_MAIN_HEADER;
 
@@ -97,7 +102,11 @@ public class Report5 extends Report {
 
                 for (ArrayList<String> tableRow : modifiedTable) {
                     String barClass = tableRow.get(tableRow.size() - 1);
-                    String barWidth = tableRow.get(tableRow.size() - 2);
+                    String barWidth  ;
+                    if(tableRow.size()==4)
+                         barWidth = tableRow.get(tableRow.size() - 2);
+                    else
+                        barWidth = tableRow.get(tableRow.size() - 3);
                     String divHtml = "<div class='emptyBar'> \n <div class='" + barClass + "' style='width:" + barWidth + "%'></div>\n</div>";
                     tableRow.set(tableRow.size() - 1, divHtml);
                 }
@@ -120,7 +129,7 @@ public class Report5 extends Report {
 
     @Override
     public void generateHtmlReport() throws IOException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(formsStatsTables) ;
         doc.select("div#footer").remove() ;
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
@@ -128,7 +137,7 @@ public class Report5 extends Report {
     @Override
     public void generatePdfReport() throws IOException, DocumentException {
 
-        Document doc  = generatePdfHtml();
+        Document doc  = generatePdfHtml(formsStatsTables);
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
@@ -136,16 +145,116 @@ public class Report5 extends Report {
 
     @Override
     public void generateTxtReport() {
+        System.out.println(getPrintableTables(ReportsHandler.TXT)) ;
+    }
+
+    private void editRowForTxt (ArrayList<String> tableRow) {
+        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
+        int numberOfSolvers = Integer.valueOf(tableRow.get(1));
+        String addedData;
+        if(rowClass.equals("greenBar"))
+            addedData = "<--" ;
+        else if(numberOfSolvers == 0)
+            addedData = "-";
+        else if(rowClass.equals("distBar"))
+            addedData = "!";
+       else
+           addedData="" ;
+        tableRow.set(tableRow.size()-1 , addedData) ; // replace the bar cell with the info cell
 
     }
 
-    @Override
-    public void generatePrintablePdfReport() throws IOException {
+    private void editRowForPrintablePdf (ArrayList<String> tableRow) {
+        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
+        int numberOfSolvers = Integer.valueOf(tableRow.get(1));
+        String addedImgName;
+        if(rowClass.equals("greenBar"))
+            addedImgName = "correct" ;
+        else if(numberOfSolvers == 0)
+            addedImgName = "nonDistractor";
+        else if(rowClass.equals("distBar"))
+            addedImgName = "distractor";
+        else {
+            addedImgName= null ;
+        }
+        String addedData = addedImgName!=null?
+                "<img src='"+addedImgName+".png' height='15px' class='type-img'> </img>":" " ;
 
+//                                            tableRow.set(tableRow.size()-1 , "printable-bar");
+
+        if(numberOfSolvers!=0)
+            tableRow.set(tableRow.size()-1 , "printable-bar");
+        else
+            tableRow.set(tableRow.size()-1 , "");
+
+        tableRow.add(3 , addedData) ;
+
+    }
+
+    private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getPrintableTables (int type){
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = new ArrayList<>();
+        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
+            ArrayList<ArrayList<ArrayList<String>>> tables  = Utils.clone3D(formsStatsTables.get(formIndex)) ;
+            for ( int tableIndex = 0 ; tableIndex < tables.size() ; tableIndex++ ) {
+                ArrayList<ArrayList<String>> table = tables.get(tableIndex) ;
+//                if(type==ReportsHandler.TXT)
+//                    table = cleanTable(table) ;
+                for( int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++){
+                    ArrayList<String> tableRow = table.get(rowIndex);
+//                        System.out.println(tableRow.size());
+                        if(type == ReportsHandler.PRINTABLE_PDF)
+                            editRowForPrintablePdf(tableRow);
+                        else
+                            editRowForTxt(tableRow);
+                }
+            }
+            printableFormsStatsTables.add(tables);
+        }
+        return  printableFormsStatsTables ;
+    }
+
+    @Override
+    public void generatePrintablePdfReport() throws IOException, DocumentException {
+
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.PRINTABLE_PDF);
+        Document doc = generatePdfHtml(printableFormsStatsTables) ;
+        doc.select("th.percent").after("<th>  </th>") ;
+        //change border color of empty bar
+        doc.select("div.emptyBar").attr("style" , "border-color: #999999") ;
+
+
+        String addedDivStyle = "background-color: white;\n" +
+                               "color: black;\n" +
+                               "border: 2px solid #08436b;";
+        // change div title
+        doc.select("div.divTitle").attr("style" , addedDivStyle) ;
+
+        // edit the legends
+        Elements elements = doc.select("span.left");
+        String [] legendPngs = {"correct", "nonDistractor", "distractor"  } ;
+        for(int elementIndex = 0 ; elementIndex < elements.size() ; elementIndex++) {
+            Element element = elements.get(elementIndex) ;
+            if(elementIndex%3==1)
+                doc.select("span.right").get(elementIndex).text("Non Distractor");
+            String Style = "background-image: url(\""+legendPngs[elementIndex%3]+".png\");\n" +
+                    "background-size: 100% 100%;\n" +
+                    "height: 15px;\n" +
+                    "width: 15px;" ;
+            if(elementIndex%3==2)
+                Style+= "margin-bottom:100px";
+            element.attr("style" , Style) ;
+        }
+
+
+        writeHtmlFile(pdfHtmlPath , doc);
+        generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
     @Override
     public void init() {
-
+        formsStatsTables = new ArrayList<>();
+        for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            formsStatsTables.add(Statistics.report5stats(formIndex)) ;
+        }
     }
 }

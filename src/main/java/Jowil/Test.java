@@ -100,7 +100,7 @@ public class Test {
 
          final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
         ReportsHandler reportsHandler = new ReportsHandler();
-        reportsHandler.generatePDF(reportsPath + "report5\\Report5.html", reportsPath + "report5\\test5.pdf");
+        reportsHandler.generatePDF(reportsPath + "report5\\Report5.html", reportsPath + "report5\\test.pdf");
 
     }
 }

@@ -55,6 +55,15 @@ public class Utils {
         return clonedTable ;
     }
 
+    public static ArrayList<ArrayList<ArrayList<String>>> clone3D ( ArrayList<ArrayList<ArrayList<String>>> input3D){
+        ArrayList<ArrayList<ArrayList<String>>> cloned3D = new ArrayList<>() ;
+        for(ArrayList<ArrayList<String>>table:input3D) {
+            ArrayList<ArrayList<String>> clonedTable = cloneTable(table);
+            cloned3D.add(clonedTable) ;
+        }
+        return cloned3D ;
+    }
+
 
     public static String generatePattern(String block ,int lenght ){
         String output = "";
