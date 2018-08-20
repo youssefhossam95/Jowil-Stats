@@ -47,17 +47,18 @@ public class ReportChartsTest extends Application {
 //        Report2 report = new Report2();
 //        report.generatePrintablePdf();
         ArrayList<Report> reports = new ArrayList<>();
-        reports.add(new Report1()) ;
+//        reports.add(new Report1()) ;
         Report.initOutputFolderPaths("E:\\work\\Jowil\\output folder test\\Jowil");
-
-        reports.add(new Report2()) ;
-        reports.add(new Report3());
-        reports.add(new Report4()) ;
-//        reports.add(new Report5()) ;
+//
+//        reports.add(new Report2()) ;
+//        reports.add(new Report3());
+//        reports.add(new Report4()) ;
+        reports.add(new Report5()) ;
         ArrayList<Integer> formats = new ArrayList<>() ;
-        formats.add(ReportsHandler.HTML) ;
-        formats.add(ReportsHandler.PDF);
+//        formats.add(ReportsHandler.HTML) ;
+//        formats.add(ReportsHandler.PDF);
         formats.add(ReportsHandler.PRINTABLE_PDF) ;
+//        formats.add(ReportsHandler.TXT) ;
         ReportsHandler reportsHandler = new ReportsHandler(true);
         reportsHandler.generateReports(reports , formats);
 
