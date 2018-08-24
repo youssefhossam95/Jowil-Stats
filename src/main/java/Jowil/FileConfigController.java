@@ -206,6 +206,7 @@ public class FileConfigController extends Controller{
 //        subjVBox.getChildren().add(slider);
 //        rootPane.getChildren().add(subjVBox);
 
+        //super.buildComponentsGraph();
         Label label=new Label();
         label.setText("This is an error message");
         label.getStyleClass().add("chat-bubble");
@@ -692,6 +693,7 @@ public class FileConfigController extends Controller{
 
         int formSelectedIndex=CSVHandler.getFormsCount()==1?NOT_AVAILABLE:formComboSelectedIndex-1; //remove None effect
         CSVHandler.setFormColIndex(getUnFilteredIndex(formSelectedIndex));
+        CSVHandler.setFormColName(combosItems.get(formComboSelectedIndex));
     }
 
 

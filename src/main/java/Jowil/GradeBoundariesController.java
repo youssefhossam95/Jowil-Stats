@@ -496,7 +496,7 @@ public class GradeBoundariesController extends Controller {
 
 
     private void initDeleteConfigButton() {
-        Tooltip tooltip = new Tooltip("Delete Configuration");
+        Tooltip tooltip = new Tooltip("Delete Grade Scale Configuration");
         Tooltip.install(deleteConfigButton, tooltip);
         deleteConfigButton.setOnMouseClicked(t -> deleteCurrentConfig());
 
@@ -648,52 +648,6 @@ public class GradeBoundariesController extends Controller {
         this.nextButton.setText("Finish");
     }
 
-
-
-    private JSONObject loadJsonObj(String name) {
-
-        String file = "";
-        JSONObject jsonObj = null;
-        try {
-            file = URLDecoder.decode(getClass().getResource("/" + name).getFile(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsonObj = (JSONObject) new JSONParser().parse(new FileReader(file));
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObj;
-
-    }
-
-    private void saveJsonObj(String name, JSONObject jsonObj) {
-
-        PrintWriter pw = null;
-        String file = "";
-        try {
-            file = URLDecoder.decode(getClass().getResource("/" + name).getFile(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            pw = new PrintWriter(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        pw.write(jsonObj.toJSONString());
-        pw.flush();
-        pw.close();
-    }
-
-
     private boolean loadPrefsJsonObj() {
 
         return (prefsJsonObj = loadJsonObj("UserPrefs.json")) != null;
@@ -798,7 +752,7 @@ public class GradeBoundariesController extends Controller {
 
     private boolean showGradeScaleDeleteConfirmation() {
 
-        return showConfirmationDialog("Delete Grade Scale Configuration","Are you sure you want to delete this Grade Scale Configuration?",stage.getOwner());
+        return showConfirmationDialog("Delete Grade Scale Configuration","Are you sure you want to delete \""+comboItems.get(gradesConfigComboSelectedIndex)+"\" grade scale configuration?",stage.getOwner());
     }
 
     private String showSaveChangesDialog() {

@@ -19,10 +19,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -52,11 +57,14 @@ public abstract class Controller {
     final boolean isResizable;
     double navWidth;
     double navHeight;
+    boolean isHeightCalling;
 
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
     protected final double headersFontSize=resX/64;
+    private boolean isMaximizedChanged=false;
+    boolean isWait=false;
 
 
 
@@ -71,7 +79,10 @@ public abstract class Controller {
         if(back==null)
             backButton.setVisible(false);
         this.back=back;
+
     }
+
+
 
     protected abstract void initComponents();
     protected abstract void saveChanges();
@@ -96,7 +107,9 @@ public abstract class Controller {
 
     public void showWindow(){
         stage.show();
+        stage.setMaximized(false);
         rootPane.requestFocus();
+        this.updateSizes();
     }
 
     public void startWindow(){
@@ -108,24 +121,57 @@ public abstract class Controller {
             stage = new Stage();
             loader.setController(this);
             Pane root = loader.load();
-            scene = new Scene(root,resX/XSCALE,resY/YSCALE);
+
+            if(XSCALE==1 && YSCALE==1) {
+                stage.setMaximized(true);
+            }
+            scene = new Scene(root, resX / XSCALE, resY / YSCALE);
+
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(isResizable);
+
+            stage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
+                public void changed(ObservableValue<? extends Boolean> observableValue, Boolean old, Boolean neww) {
+                    isMaximizedChanged=true;
+
+
+                }
+            });
+
+
             stage.widthProperty().addListener(new ChangeListener<Number>() {
                 public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+
+                    isHeightCalling=false;
                     updateSizes();
+
                 }
             });
+
+
+
             stage.heightProperty().addListener(new ChangeListener<Number>() {
                 public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+
+                    isHeightCalling=true;
                     updateSizes();
                 }
             });
-            stage.show();
+
+
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
+
+            if(!(this instanceof StartController))
+                stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOnCloseRequest(event -> {
+                if(!showConfirmationDialog("Cancel Project","Are you sure you want to cancel this project?",stage.getOwner()))
+                    event.consume();
+            });
+            stage.show();
+
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -137,8 +183,21 @@ public abstract class Controller {
         navWidth=resX/15;
         navHeight=resX/47.5;
 
-        rootWidth=rootPane.getPrefWidth();
+
+
+
+        if(!isHeightCalling) {
+            if (scene != null && !isMaximizedChanged) {
+                rootWidth = scene.getWidth();
+            } else { //if maximised property was changed use scene width will not be properly set
+                rootWidth = rootPane.getPrefWidth();
+                System.out.println("maxim");
+                isMaximizedChanged = false;
+            }
+        }
+
         rootHeight=rootPane.getPrefHeight();
+
 
         backButton.setPrefWidth(navWidth);
         backButton.setPrefHeight(navHeight);
@@ -162,6 +221,8 @@ public abstract class Controller {
 
 
         buttonsHbox.setAlignment(Pos.TOP_RIGHT);
+        System.out.println(rootWidth);
+        System.out.println(rootHeight);
 
     }
 
@@ -171,7 +232,7 @@ public abstract class Controller {
     //helper methods
     protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -182,7 +243,7 @@ public abstract class Controller {
 
     protected static void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.getButtonTypes().setAll(ButtonType.CLOSE);
         Button closeButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE);
@@ -252,15 +313,14 @@ public abstract class Controller {
 
     protected void goToNextWindow(){
         saveChanges();
-        Controller controller;
+
         if(next==null || isContentEdited) { //if first time or edit manually has been pressed
-            next = controller = getNextController();
-            controller.startWindow();
+            next = getNextController();
+            next.startWindow();
         }
-        else {
-            controller = next;
-            controller.showWindow();
-        }
+        else
+            next.showWindow();
+
         isContentEdited=false;
         stage.close();
     }
@@ -327,10 +387,58 @@ public abstract class Controller {
         cancelButt.setText("No");
 
         alert.initOwner(owner);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
 
         return option.get() == ButtonType.OK;
+    }
+
+
+    protected JSONObject loadJsonObj(String path) {
+
+        String file = "";
+        JSONObject jsonObj = null;
+        try {
+            file = URLDecoder.decode(getClass().getResource("/" + path).getFile(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
+        try {
+            jsonObj = (JSONObject) new JSONParser().parse(new FileReader(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return jsonObj;
+
+    }
+
+    protected void saveJsonObj(String path, JSONObject jsonObj) {
+
+        PrintWriter pw = null;
+        String file = "";
+        try {
+            file = URLDecoder.decode(getClass().getResource("/" + path).getFile(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            pw = new PrintWriter(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        pw.write(jsonObj.toJSONString());
+        pw.flush();
+        pw.close();
     }
 
 //    protected static double setPrefWidth(Region element,relativeVal){

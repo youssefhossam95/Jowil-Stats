@@ -101,6 +101,7 @@ public class ManualModeController extends Controller{
     final static String[] comboOptions={OBJECTIVE_TYPE,SUBJECTIVE_TYPE,ID_TYPE ,FORM_TYPE};
 //    int IDStartIndex,IDEndIndex,formIndex;
     int columnSetComboSelectedIndex;
+    boolean isManualModeActivated; //true if manualMode window was called by turning on manual mode in fileConfig window
 
 
     ManualModeController(Controller back){
@@ -179,6 +180,7 @@ public class ManualModeController extends Controller{
         initAddButton();
         initColumnSetCombo();
         initNextButton();
+
     }
 
     @Override
@@ -217,6 +219,9 @@ public class ManualModeController extends Controller{
             colColors.add(new SimpleStringProperty(CELL_DEFAULT_COLOR));
         }
 
+        TableColumn lastDummy=new TableColumn("   ");
+        table.getColumns().add(lastDummy);
+
 
         table.getSelectionModel().setCellSelectionEnabled(true);
 
@@ -231,6 +236,8 @@ public class ManualModeController extends Controller{
 
     @Override
     protected void initNextButton(){
+        if(back==null)
+            nextButton.setText("Save Changes");
         nextButton.setOnMouseClicked(t->{
             rootPane.requestFocus();
 

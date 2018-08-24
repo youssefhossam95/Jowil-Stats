@@ -7,5 +7,15 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
+    <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
+    <VBox fx:id="groupsTableVbox">
+        <Label text="Groups Overview" fx:id="groupsLabel"></Label>
+        <JFXTreeTableView fx:id="groupsTable"></JFXTreeTableView>
+    </VBox>
+    <VBox fx:id="choicesTreeVBox">
+        <Label text="Groups Choices" fx:id="treeLabel"></Label>
+    </VBox>
+    <JFXButton fx:id="manualButton" text="Switch to Manual Mode"></JFXButton>
 </AnchorPane>
