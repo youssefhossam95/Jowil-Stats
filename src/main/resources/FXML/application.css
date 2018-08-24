@@ -262,6 +262,29 @@ JFXCheckBox {
 
     /*-fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);*/
 }
-.largeButton:hover{
--jfx-button-type:RAISED;
+
+JFXListView:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+
+     /* There is some oddness if padding is in em values rather than pixels,
+        in particular, the left border of the control doesn't show. */
+    -fx-padding: 1; /* 0.083333em; */
+
+}
+
+/*.projectsDialog{
+    -fx-background-color: #f9d900;
+}*/
+/*.projectsDialog > *.button-bar > *.container{
+    -fx-background-color: #a9e200;
+}*/
+/*.projectsDialog:header *.header-panel{
+    -fx-background-color: #a59c31;
+}*/
+.projectsDialog:header *.header-panel *.label{
+    -fx-font-size: 15px;
+    -fx-font-family:"System Bold";
+    -fx-font-weight: bold;
+
 }

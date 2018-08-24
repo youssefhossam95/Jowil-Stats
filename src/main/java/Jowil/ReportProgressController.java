@@ -188,10 +188,9 @@ public class ReportProgressController {
                 } catch (IOException e) {
                     showReportsErrorMessage(" Make sure that the file "+"\"Report"+(progressCount.get()+1)+".pdf\" is not opened in another application");
 
+
                 } catch (DocumentException e) {
-
                     showReportsErrorMessage("");
-
                 }
                 catch(RuntimeException e) {
                     if(!Thread.currentThread().isInterrupted()) //not caused by interruption

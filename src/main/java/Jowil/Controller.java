@@ -19,10 +19,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -74,7 +79,9 @@ public abstract class Controller {
         if(back==null)
             backButton.setVisible(false);
         this.back=back;
+
     }
+
 
 
     protected abstract void initComponents();
@@ -152,13 +159,18 @@ public abstract class Controller {
                     updateSizes();
                 }
             });
-            if(isWait)
-                stage.showAndWait();
-            else
-                stage.show();
+
 
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOnCloseRequest(event -> {
+                if(!showConfirmationDialog("Cancel Project","Are you sure you want to cancel this project?",stage.getOwner()))
+                    event.consume();
+            });
+            stage.show();
+
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -219,7 +231,7 @@ public abstract class Controller {
     //helper methods
     protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -230,7 +242,7 @@ public abstract class Controller {
 
     protected static void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.getButtonTypes().setAll(ButtonType.CLOSE);
         Button closeButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE);
@@ -300,15 +312,14 @@ public abstract class Controller {
 
     protected void goToNextWindow(){
         saveChanges();
-        Controller controller;
+
         if(next==null || isContentEdited) { //if first time or edit manually has been pressed
-            next = controller = getNextController();
-            controller.startWindow();
+            next = getNextController();
+            next.startWindow();
         }
-        else {
-            controller = next;
-            controller.showWindow();
-        }
+        else
+            next.showWindow();
+
         isContentEdited=false;
         stage.close();
     }
@@ -375,10 +386,58 @@ public abstract class Controller {
         cancelButt.setText("No");
 
         alert.initOwner(owner);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
 
         return option.get() == ButtonType.OK;
+    }
+
+
+    protected JSONObject loadJsonObj(String path) {
+
+        String file = "";
+        JSONObject jsonObj = null;
+        try {
+            file = URLDecoder.decode(getClass().getResource("/" + path).getFile(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
+        try {
+            jsonObj = (JSONObject) new JSONParser().parse(new FileReader(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return jsonObj;
+
+    }
+
+    protected void saveJsonObj(String path, JSONObject jsonObj) {
+
+        PrintWriter pw = null;
+        String file = "";
+        try {
+            file = URLDecoder.decode(getClass().getResource("/" + path).getFile(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            pw = new PrintWriter(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        pw.write(jsonObj.toJSONString());
+        pw.flush();
+        pw.close();
     }
 
 //    protected static double setPrefWidth(Region element,relativeVal){

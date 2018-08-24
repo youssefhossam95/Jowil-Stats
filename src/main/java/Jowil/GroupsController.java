@@ -141,6 +141,7 @@ public class GroupsController  extends Controller{
         midSeparator.setPrefHeight(rootHeightToPixels(0.75));
 
 
+        manualButton.toFront();
 
 
 
@@ -374,24 +375,12 @@ public class GroupsController  extends Controller{
 
     private void initManualButton(){
         manualButton.getStyleClass().add("BlueJFXButton");
-//        manualButton.setOnMouseEntered(t->manualButton.setStyle("-fx-background-color:#878a8a;"));
-//        manualButton.setOnMouseExited(t->manualButton.setStyle("-fx-background-color:transparent;-fx-border-color:#949797"));
-
         manualButton.setOnMouseClicked(t->{
-//            HeadersCreateController controller = new HeadersCreateController(null);
-//            isContentEdited=true;
-//            controller.startWindow();
+
+            new ManualModeController(null).startWindow();
+            stage.close();
         });
-
-        //buttonsHbox.getChildren().add(manualButton);
-
     }
-
-    private void initIdentifierCombo(){
-        ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
-
-    }
-
 
 
 

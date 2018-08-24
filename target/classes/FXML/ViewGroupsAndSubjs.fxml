@@ -17,5 +17,5 @@
     <VBox fx:id="choicesTreeVBox">
         <Label text="Groups Choices" fx:id="treeLabel"></Label>
     </VBox>
-    <JFXButton fx:id="manualButton" text="Edit Manually"></JFXButton>
+    <JFXButton fx:id="manualButton" text="Switch to Manual Mode"></JFXButton>
 </AnchorPane>
