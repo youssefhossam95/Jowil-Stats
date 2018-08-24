@@ -33,6 +33,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
@@ -102,10 +103,21 @@ public class GroupsController  extends Controller{
         midSeparator.setVisible(false);
         //initInfoGridPane();
         choicesTreeVBox.getChildren().add(choicesTreeView);
+
+        backButton.setOnMouseClicked(event -> {
+
+            rootPane.requestFocus();
+            if(ManualModeController.isIsManualModeUsedBefore()){
+                if(!showConfirmBack())
+                    return;
+            }
+
+            back.showWindow();
+            stage.close();
+        });
         treeLabel.setFont(new Font("Arial", headersFontSize));
 
     }
-
 
     @Override
     protected void updateSizes(){
@@ -376,8 +388,7 @@ public class GroupsController  extends Controller{
     private void initManualButton(){
         manualButton.getStyleClass().add("BlueJFXButton");
         manualButton.setOnMouseClicked(t->{
-
-            new ManualModeController(null).startWindow();
+            new ManualModeController(this).startWindow();
         });
     }
 
@@ -443,6 +454,26 @@ public class GroupsController  extends Controller{
         return groupsIndices.get(groupName);
     }
 
+    private boolean showConfirmBack() {
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Continue to File Configuration");
+        alert.setHeaderText(null);
+        alert.setContentText("Going back to file configuration will reset all the" +
+                " changes made in manual editing. Are you sure you want to continue to file configuration?");
+
+        alert.getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
+        Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        okButt.setText("Yes");
+        Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButt.setText("No");
+
+        alert.initOwner(stage.getOwner());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.isPresent() && option.get() == ButtonType.OK;
+    }
 }
 
 

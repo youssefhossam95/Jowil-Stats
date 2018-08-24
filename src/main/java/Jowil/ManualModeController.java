@@ -86,6 +86,7 @@ public class ManualModeController extends Controller{
 
 
     ObservableList<ObservableList<StringProperty>> tableContent= FXCollections.observableArrayList();
+    private static boolean isManualModeUsedBefore;
     ArrayList<ColumnSet> columnSets=new ArrayList<>();
     int colClicksCount=0;
     ArrayList<String> tableHeaders;
@@ -101,13 +102,22 @@ public class ManualModeController extends Controller{
     final static String[] comboOptions={OBJECTIVE_TYPE,SUBJECTIVE_TYPE,ID_TYPE ,FORM_TYPE};
 //    int IDStartIndex,IDEndIndex,formIndex;
     int columnSetComboSelectedIndex;
-    boolean isManualModeActivated; //true if manualMode window was called by turning on manual mode in fileConfig window
+    Controller caller;
 
 
-    ManualModeController(Controller back){
-        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,back);
+    ManualModeController(Controller caller){
+        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null);
+        this.caller=caller;
+
     }
 
+    public static boolean isIsManualModeUsedBefore() {
+        return isManualModeUsedBefore;
+    }
+
+    public static void setIsManualModeUsedBefore(boolean isManualModeUsedBefore) {
+        ManualModeController.isManualModeUsedBefore = isManualModeUsedBefore;
+    }
 
     @Override
     protected void updateSizes() {
@@ -174,7 +184,6 @@ public class ManualModeController extends Controller{
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-
         initTable();
         initColumnSetsVBox();
         initAddButton();
@@ -188,6 +197,13 @@ public class ManualModeController extends Controller{
 
     }
 
+    @Override
+    public void startWindow(){
+        super.startWindow();
+        stage.setOnCloseRequest(event->{
+        });
+        stage.setY(caller.stage.getY()+15);
+    }
 
     @Override
     protected Controller getNextController() {
@@ -236,19 +252,32 @@ public class ManualModeController extends Controller{
 
     @Override
     protected void initNextButton(){
-        if(back==null)
-            nextButton.setText("Save Changes");
+
+        nextButton.setText("Save Changes");
         nextButton.setOnMouseClicked(t->{
             rootPane.requestFocus();
 
             if(!saveColumnSets())
                 return;
 
-            new GroupsController(null).startWindow();
+            isManualModeUsedBefore=true;
             stage.close();
-
+            if(caller instanceof FileConfigController){
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                caller.stage.hide();
+                new GroupsController(caller).startWindow();
+            }
+            else {
+                caller.stage.close();
+                new GroupsController(caller.back).startWindow();
+            }
 
         });
+
 
     }
 

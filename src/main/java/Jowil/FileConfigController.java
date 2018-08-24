@@ -223,10 +223,11 @@ public class FileConfigController extends Controller{
 
             boolean isManualMode=manualModeToggle.isSelected();
             rootPane.requestFocus();
-
-
             validateMainTextField();
             validateAnswersTextField();
+
+            if(mainTextFieldResult==CSVFileValidator.WARNING)
+                isManualMode=true;
 
             //check for errors
             if(mainFileTextField.getText().length()==0){
@@ -266,6 +267,7 @@ public class FileConfigController extends Controller{
                 return;
             }
 
+            ManualModeController.setIsManualModeUsedBefore(false);
 
             if(isManualMode) {
 
@@ -787,7 +789,6 @@ public class FileConfigController extends Controller{
     private void openManualMode(){
         new ManualModeController(this).startWindow();
         CSVHandler.setRealIDGroups(null);//populate combos wasn't called -> reintialize realIDGroups
-        stage.close();
 
     }
 
