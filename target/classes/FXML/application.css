@@ -252,3 +252,16 @@ JFXCheckBox {
 .columnSetMinusIcon:hover{
 -fx-fill:#ff9999;
 }
+
+.startPane{
+    /*-fx-background-image: url("../Images/AnyTrans-Logo-1.png");*/
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 900 900;
+    -fx-background-position: center center;
+    /*-fx-opacity:0.05;*/
+
+    /*-fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);*/
+}
+.largeButton:hover{
+-jfx-button-type:RAISED;
+}

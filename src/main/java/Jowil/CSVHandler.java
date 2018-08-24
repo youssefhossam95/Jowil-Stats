@@ -64,6 +64,8 @@ public class CSVHandler {
 
     //fields
 
+    //NOTE: ALL END INDICES SUCH AS "identifierColEndIndex" ARE EXCLUSIVE
+
     private static String responsesFilePath;
     private static String answerKeyFilePath; //used in manual mode
     private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
@@ -86,8 +88,9 @@ public class CSVHandler {
     private static int answersColsCount;
     private static boolean isSkipRowInManual;
     public final static int NOT_AVAILABLE=-1;
+    private static String formColName;
 
-    //NOTE: ALL END INDICES SUCH AS "identifierColEndIndex" ARE EXCLUSIVE
+
 
 
     //getters and setters
@@ -181,6 +184,25 @@ public class CSVHandler {
         CSVHandler.subjQuestionsCount = subjQuestionsCount;
     }
 
+    public static int getIdentifierColStartIndex() {
+        return identifierColStartIndex;
+    }
+
+    public static int getIdentifierColEndIndex() {
+        return identifierColEndIndex;
+    }
+
+    public static int getFormColIndex() {
+        return formColIndex;
+    }
+
+    public static String getFormColName() {
+        return formColName;
+    }
+
+    public static void setFormColName(String formColName) {
+        CSVHandler.formColName = formColName;
+    }
 
     //public methods
     /**
