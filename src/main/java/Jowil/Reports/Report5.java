@@ -145,7 +145,42 @@ public class Report5 extends Report {
 
     @Override
     public void generateTxtReport() {
-        System.out.println(getPrintableTables(ReportsHandler.TXT)) ;
+
+        final int CHP = 2 ;
+
+        ArrayList<String> headers = new ArrayList<>( );
+        headers.add("Response") ;headers.add("Count") ; headers.add("Percent"); headers.add("info") ;
+
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.TXT) ;
+        String outputTxt = "" ;
+
+        int pageWidth = TxtUtils.calcTableWidth(printableFormsStatsTables.get(0).get(0) , CHP);
+
+        for(int formIndex = 0  ;formIndex <Statistics.getNumberOfForms() ; formIndex++) {
+
+            if(formIndex>0)
+                outputTxt += Utils.generatePattern("#" , pageWidth)+TxtUtils.newLine;
+
+            String reportTitle = "Condenced Test Report"  ;
+            if(Statistics.getNumberOfForms()>1)
+                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+
+            String txtTitle = TxtUtils.generateTitleLine(reportTitle,
+                    pageWidth,2) ;
+
+            outputTxt+= txtTitle ;
+            ArrayList<String> formTxtTables = new ArrayList<>() ;
+            ArrayList<ArrayList<ArrayList<String>>> formTables = printableFormsStatsTables.get(formIndex);
+            for(int tableIndex = 0; tableIndex < formTables.size() ; tableIndex++) {
+                ArrayList<ArrayList<String>> table = cleanTable(formTables.get(tableIndex)) ;
+                table.add(0,headers) ;
+                String questionName = Statistics.getQuestionNames().get(tableIndex);
+                formTxtTables.add( TxtUtils.generateTxtTableAlignCenter(table,questionName ,CHP , false));
+            }
+            outputTxt+= TxtUtils.stackTablesV(formTxtTables , 2) ;
+        }
+
+        TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
 
     private void editRowForTxt (ArrayList<String> tableRow) {
@@ -193,15 +228,11 @@ public class Report5 extends Report {
 
     private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getPrintableTables (int type){
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = new ArrayList<>();
-        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
-            ArrayList<ArrayList<ArrayList<String>>> tables  = Utils.clone3D(formsStatsTables.get(formIndex)) ;
-            for ( int tableIndex = 0 ; tableIndex < tables.size() ; tableIndex++ ) {
-                ArrayList<ArrayList<String>> table = tables.get(tableIndex) ;
-//                if(type==ReportsHandler.TXT)
-//                    table = cleanTable(table) ;
-                for( int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++){
-                    ArrayList<String> tableRow = table.get(rowIndex);
-//                        System.out.println(tableRow.size());
+        for(ArrayList<ArrayList<ArrayList<String>>> tables: formsStatsTables) {
+            ArrayList<ArrayList<ArrayList<String>>> clonedTables  = Utils.clone3D(tables) ;
+            for ( ArrayList<ArrayList<String>> table :clonedTables ) {
+
+                for(  ArrayList<String> tableRow :table){
                         if(type == ReportsHandler.PRINTABLE_PDF)
                             editRowForPrintablePdf(tableRow);
                         else
@@ -222,12 +253,8 @@ public class Report5 extends Report {
         //change border color of empty bar
         doc.select("div.emptyBar").attr("style" , "border-color: #999999") ;
 
+        styleTitlePrintable(doc);
 
-        String addedDivStyle = "background-color: white;\n" +
-                               "color: black;\n" +
-                               "border: 2px solid #08436b;";
-        // change div title
-        doc.select("div.divTitle").attr("style" , addedDivStyle) ;
 
         // edit the legends
         Elements elements = doc.select("span.left");
@@ -248,6 +275,11 @@ public class Report5 extends Report {
 
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
+    }
+
+    @Override
+    public void generateCsvReport() {
+
     }
 
     @Override

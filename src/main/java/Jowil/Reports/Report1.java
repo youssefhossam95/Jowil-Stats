@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
@@ -20,8 +21,10 @@ import org.jsoup.nodes.Document;
 
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.apache.commons.math3.stat.StatUtils.sum;
 
@@ -37,11 +40,14 @@ public class Report1 extends Report{
         outputFileName = "Report1" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         report1ImgFullPath = "file://"+System.getProperty("user.dir") + workSpacePath + "GradesDistributionHistogram.png" ;
-//        generateReport1Chart(statsTableTrans.get(0) , freq );
-
     }
 
 
+    /**
+     * this function is called before the constructor
+     * get the statistical calculations for statistics calss
+     * generate the bar chart of the report
+     */
     @Override
     public void init(){
         statsTable = Statistics.report1Stats() ;
@@ -62,7 +68,12 @@ public class Report1 extends Report{
 
     }
 
-
+    /**
+     * generate a bar chart for reprot 1 that represent the grade distribution, and stores it in image.
+     * @param grades ArrayList that contians all the grades of studest i.e. A+ , B ...
+     * @param numberOfStudents the number of students that got the corresponding grade
+     * @throws IOException if it couldn't store the img in the spicified path
+     */
     private void generateReport1Chart( ArrayList<String> grades , double[] numberOfStudents) throws IOException {
         Stage stage = new Stage() ;
         stage.setTitle("Student Grades");
@@ -92,8 +103,6 @@ public class Report1 extends Report{
 
         for(int gradeIndex = 0 ;  gradeIndex<grades.size() ; gradeIndex++) {
             String addedClass = "normal" ;
-//            if(gradeIndex == maxIndex)
-//                addedClass = "largest" ;
             Node n = bc.lookup(".data"+gradeIndex+".chart-bar");
             n.getStyleClass().add(addedClass);
         }
@@ -107,11 +116,16 @@ public class Report1 extends Report{
         bc.applyCss();
         bc.layout();
         stage.setScene(scene);
-//        stage.show();
 
         WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
         ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath+"GradesDistributionHistogram.png"));
     }
+
+    /**
+     * generate the html document for the report. This html is then manipulated in different ways to be used in many formats
+     * @return Document of the generated html
+     * @throws IOException if it couldn't find the html template that it start with
+     */
 
     private Document generatePdfHtml() throws IOException {
         final int MAX_NUMBER_OF_1PAGE_ROWS = 7;
@@ -119,12 +133,6 @@ public class Report1 extends Report{
         Document doc = Jsoup.parse(file, "UTF-8");
 
         updateTemplateDate(doc); // updates the date of the footer to the current date
-
-
-//        Stage stage = new Stage() ;
-
-//        ArrayList<ArrayList<String>> statsTable = Statistics.report1Stats() ;
-
 
         String tableRowsHtml = createRowsHtml(statsTable , ";grayRow" , "tg-l711") ;
 
@@ -141,7 +149,6 @@ public class Report1 extends Report{
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml() ;
         doc.select("div#footer").remove() ;
-//        String report1ImgPath = "file://"+workSpacePath+"GradesDistributionHistogram.png";
         doc.select("img").attr("src" , report1ImgFullPath);
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
@@ -154,14 +161,6 @@ public class Report1 extends Report{
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
     }
-
-
-    public String generatePattern(String block ,int lenght ){
-        String output = "";
-        for(int i = 0 ; i < lenght ; i++)
-            output+=block ;
-        return output ;
-     }
     @Override
     public void generateTxtReport() {
 
@@ -180,18 +179,27 @@ public class Report1 extends Report{
         String outputTxt =TxtUtils.newLine+txtTitle + txtTable ;
         System.out.println(outputTxt);
 
-
-
         TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
 
     @Override
     public void generatePrintablePdfReport() throws IOException, DocumentException {
-
         Document doc = generatePdfHtml() ;
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
+    }
 
+    @Override
+    public void generateCsvReport() throws IOException {
+        String csvFile = "abc.csv";
+        FileWriter writer = new FileWriter(csvFile);
+
+        ArrayList<String> hi = new ArrayList<>();
+        CsvUtils.writeLine(writer, hi );
+        hi.add("w") ; hi .add("r") ;
+        CsvUtils.writeLine(writer , hi);
+        writer.flush();
+        writer.close();
 
     }
 

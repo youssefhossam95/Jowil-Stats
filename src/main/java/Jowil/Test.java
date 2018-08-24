@@ -6,15 +6,58 @@ import Jowil.Reports.ReportsHandler;
 import com.lowagie.text.DocumentException;
 
 
+import javafx.util.Pair;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation ;
-
+import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import org.apache.commons.math3.stat.StatUtils.* ;
 
 import java.io.*;
+import java.util.ArrayList;
+
+import static org.apache.commons.math3.stat.StatUtils.max;
 
 
 public class Test {
 
+    /**
+     * function to get the slope and the average error of the trend for question hardness data sequence
+     * @param hardness the ordered hardness of questions at index 0 question 1 ... etc
+     * @return Pair with key = slope and value = error
+     */
+    public static Pair<Double , Double> getTrendData (ArrayList<Double> hardness) {
+        double[] hardnessArray = hardness.stream().mapToDouble(d -> d).toArray();
+        double [][] X = new double[hardnessArray.length][1] ;
+
+        double maxHardness = max(hardnessArray);
+        for (int i = 0 ; i< hardnessArray.length ; i++) { // x axis = 0 --> 1
+            X[i][0] = (double)i / (double)(hardnessArray.length - 1);
+            hardnessArray[i]/=maxHardness ;  // to make hardness 0 --> 1
+        }
+        OLSMultipleLinearRegression ols = new OLSMultipleLinearRegression();
+        ols.newSampleData(hardnessArray , X) ;
+        RealMatrix coff = MatrixUtils.createColumnRealMatrix(ols.estimateRegressionParameters());
+        double slope = coff.getColumnVector(0).getEntry(1);
+        double Rss = ols.estimateRegressionStandardError();
+        System.out.println("Resedual sum squared: "+ols.calculateResidualSumOfSquares());
+//        ols.
+        return new Pair<Double, Double>(slope , Rss) ;
+        }
     public static void main(String [] args) throws IOException, DocumentException {
+
+        ArrayList<Double> hardness = new ArrayList<>( );
+        for(int i = 0 ; i < 40 ; i ++)
+            hardness.add(0.0);hardness.add(10.0);
+//       hardness.add(0.0);hardness.add(10.0);
+//        hardness.add(0.0); hardness.add(10.0) ;  hardness.add(0.0) ;  hardness.add(10.0) ;
+//        hardness.add(0.0) ; hardness.add(10.0) ; hardness.add(0.0); hardness.add(10.0);
+        Pair<Double , Double> pair = getTrendData(hardness ) ;
+        double slope = pair.getKey();
+        double Rss = pair.getValue() ;
+        System.out.println("slope: " + slope);
+        System.out.println("standard Error: " + Rss);
+
 
 
 
@@ -97,10 +140,10 @@ public class Test {
 
 
 //        //////////////////////// to create pdf from html //////////////////////////////////
-
-         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-        ReportsHandler reportsHandler = new ReportsHandler();
-        reportsHandler.generatePDF(reportsPath + "report5\\Report5.html", reportsPath + "report5\\test.pdf");
+//
+//         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//        ReportsHandler reportsHandler = new ReportsHandler();
+//        reportsHandler.generatePDF(reportsPath + "report5\\Report5.html", reportsPath + "report5\\test.pdf");
 
     }
 }

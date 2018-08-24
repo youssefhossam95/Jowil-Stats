@@ -155,6 +155,11 @@ public class Report4 extends Report{
     }
 
     @Override
+    public void generateCsvReport() {
+
+    }
+
+    @Override
     public void init() {
         statsTable = Statistics.report4Stats() ;
     }

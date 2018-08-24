@@ -7,9 +7,7 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class StatisticsTest extends TestCase {
 
@@ -29,6 +27,7 @@ public class StatisticsTest extends TestCase {
         CSVHandler.setFormColIndex(3);
         CSVHandler.setIdentifierColStartIndex(0);
         CSVHandler.setIdentifierColEndIndex(1);
+        CSVHandler.processHeaders(false);
         CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
         boolean isHeaders=CSVHandler.processHeaders(true);
         Jowil.CSVHandler.loadCsv(isHeaders);
@@ -44,17 +43,18 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
+        Statistics.report6Stats();
 
-        ArrayList<Report> reports = new ArrayList<>();
-
-        reports.add(new Report1()) ;
-        Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
-        ArrayList<Integer> formats = new ArrayList<>() ;
-        formats.add(ReportsHandler.HTML) ;
-        formats.add(ReportsHandler.PDF);
-
-        ReportsHandler reportsHandler = new ReportsHandler(true);
-        reportsHandler.generateReports(reports , formats);
+//        ArrayList<Report> reports = new ArrayList<>();
+//
+//        reports.add(new Report1()) ;
+//        Report.initOutputFolderPaths("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources");
+//        ArrayList<Integer> formats = new ArrayList<>() ;
+//        formats.add(ReportsHandler.HTML) ;
+//        formats.add(ReportsHandler.PDF);
+//
+//        ReportsHandler reportsHandler = new ReportsHandler(true);
+//        reportsHandler.generateReports(reports , formats);
     }
 
     public void tearDown() throws Exception {

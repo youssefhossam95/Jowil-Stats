@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 public class ReportsHandler {
 
-    public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 , PRINTABLE_PDF=5 ;
+    public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 , PRINTABLE_PDF=5 , CSV = 6  ;
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
     public static boolean isTestMode;
 
@@ -88,6 +88,9 @@ public class ReportsHandler {
 
             if(formats.indexOf(PRINTABLE_PDF) !=-1)
                 report.generatePrintablePdfReport();
+
+            if(formats.indexOf(CSV)!=-1)
+                report.generateCsvReport();
 
             if(!isPDFExists)
                 handleNoPDF();

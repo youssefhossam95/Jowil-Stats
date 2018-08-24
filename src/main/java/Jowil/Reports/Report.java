@@ -82,6 +82,15 @@ abstract public class Report {
         out.close();
     }
 
+    protected void styleTitlePrintable (Document doc) {
+        String addedDivStyle = "background-color: white;\n" +
+                "color: black;\n" +
+                "border: 2px solid #08436b;";
+        // change div title
+        doc.select("div.divTitle").attr("style" , addedDivStyle) ;
+
+    }
+
     protected Map<String , String > parseCellData(String cellDataString) {
         Map<String , String > cellDataMap = new HashMap<String , String>() ;
 
@@ -175,6 +184,7 @@ abstract public class Report {
     abstract public void generatePdfReport() throws IOException, DocumentException;
     abstract public void generateTxtReport() ;
     abstract public void generatePrintablePdfReport() throws IOException, DocumentException;
+    abstract public void generateCsvReport() throws IOException;
     abstract public void init(); // function to get the abrobriate statistics from the statistics class
 
 
