@@ -52,11 +52,14 @@ public abstract class Controller {
     final boolean isResizable;
     double navWidth;
     double navHeight;
+    boolean isHeightCalling;
 
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
     protected final double headersFontSize=resX/64;
+    private boolean isMaximizedChanged=false;
+    boolean isWait=false;
 
 
 
@@ -72,6 +75,7 @@ public abstract class Controller {
             backButton.setVisible(false);
         this.back=back;
     }
+
 
     protected abstract void initComponents();
     protected abstract void saveChanges();
@@ -96,7 +100,9 @@ public abstract class Controller {
 
     public void showWindow(){
         stage.show();
+        stage.setMaximized(false);
         rootPane.requestFocus();
+        this.updateSizes();
     }
 
     public void startWindow(){
@@ -108,22 +114,49 @@ public abstract class Controller {
             stage = new Stage();
             loader.setController(this);
             Pane root = loader.load();
-            scene = new Scene(root,resX/XSCALE,resY/YSCALE);
+
+            if(XSCALE==1 && YSCALE==1) {
+                stage.setMaximized(true);
+            }
+            scene = new Scene(root, resX / XSCALE, resY / YSCALE);
+
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(isResizable);
+
+            stage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
+                public void changed(ObservableValue<? extends Boolean> observableValue, Boolean old, Boolean neww) {
+                    isMaximizedChanged=true;
+
+
+                }
+            });
+
+
             stage.widthProperty().addListener(new ChangeListener<Number>() {
                 public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+
+                    isHeightCalling=false;
                     updateSizes();
+
                 }
             });
+
+
+
             stage.heightProperty().addListener(new ChangeListener<Number>() {
                 public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+
+                    isHeightCalling=true;
                     updateSizes();
                 }
             });
-            stage.show();
+            if(isWait)
+                stage.showAndWait();
+            else
+                stage.show();
+
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
         }
@@ -137,8 +170,21 @@ public abstract class Controller {
         navWidth=resX/15;
         navHeight=resX/47.5;
 
-        rootWidth=rootPane.getPrefWidth();
+
+
+
+        if(!isHeightCalling) {
+            if (scene != null && !isMaximizedChanged) {
+                rootWidth = scene.getWidth();
+            } else { //if maximised property was changed use scene width will not be properly set
+                rootWidth = rootPane.getPrefWidth();
+                System.out.println("maxim");
+                isMaximizedChanged = false;
+            }
+        }
+
         rootHeight=rootPane.getPrefHeight();
+
 
         backButton.setPrefWidth(navWidth);
         backButton.setPrefHeight(navHeight);
@@ -162,6 +208,8 @@ public abstract class Controller {
 
 
         buttonsHbox.setAlignment(Pos.TOP_RIGHT);
+        System.out.println(rootWidth);
+        System.out.println(rootHeight);
 
     }
 

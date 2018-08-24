@@ -18,8 +18,4 @@
         <Label text="Groups Choices" fx:id="treeLabel"></Label>
     </VBox>
     <JFXButton fx:id="manualButton" text="Edit Manually"></JFXButton>
-    <VBox fx:id="infoVBox">
-        <Label fx:id="infoTitleLabel" text="Detection Info"></Label>
-    <Pane fx:id="gridPaneContainer"></Pane>
-    </VBox>
 </AnchorPane>

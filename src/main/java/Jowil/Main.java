@@ -33,8 +33,9 @@ public class Main extends Application {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         System.out.println(Controller.resX=primaryScreenBounds.getWidth());
         System.out.println(Controller.resY=primaryScreenBounds.getHeight());
-        FileConfigController controller =new FileConfigController();
-        controller.startWindow();
+//        FileConfigController controller =new FileConfigController();
+//        controller.startWindow();
+        new StartController().startWindow();
     }
 
     public static void main(String[] args) {

@@ -206,6 +206,7 @@ public class FileConfigController extends Controller{
 //        subjVBox.getChildren().add(slider);
 //        rootPane.getChildren().add(subjVBox);
 
+        //super.buildComponentsGraph();
         Label label=new Label();
         label.setText("This is an error message");
         label.getStyleClass().add("chat-bubble");

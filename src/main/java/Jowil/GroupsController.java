@@ -68,13 +68,6 @@ public class GroupsController  extends Controller{
     Label treeLabel;
 
 
-    @FXML
-    Pane gridPaneContainer;
-
-    @FXML
-    VBox infoVBox;
-
-    GridPane infoGridPane=new GridPane();
 
 
 
@@ -106,7 +99,8 @@ public class GroupsController  extends Controller{
         initGroupsTableVBox();
         initManualButton();
         initTreeView();
-        initInfoGridPane();
+        midSeparator.setVisible(false);
+        //initInfoGridPane();
         choicesTreeVBox.getChildren().add(choicesTreeView);
         treeLabel.setFont(new Font("Arial", headersFontSize));
 
@@ -128,12 +122,12 @@ public class GroupsController  extends Controller{
         choicesTreeView.setPrefHeight(rootHeightToPixels(0.67));
         choicesTreeView.setPrefWidth(rootWidthToPixels(0.27));
 
-        infoVBox.setLayoutX(groupsTableVbox.getLayoutX()+groupsTable.getPrefWidth()+rootWidthToPixels(0.03));
+        //infoVBox.setLayoutX(groupsTableVbox.getLayoutX()+groupsTable.getPrefWidth()+rootWidthToPixels(0.03));
 
-        infoVBox.setLayoutY(groupsTableVbox.getLayoutY()+groupsLabel.getPrefHeight()+groupsTableVbox.getSpacing());
-        infoGridPane.setPrefWidth(groupsTable.getPrefWidth());
-        //infoGridPane.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
-        gridPaneContainer.setMaxWidth(infoGridPane.getPrefWidth());
+//        infoVBox.setLayoutY(groupsTableVbox.getLayoutY()+groupsLabel.getPrefHeight()+groupsTableVbox.getSpacing());
+//        infoGridPane.setPrefWidth(groupsTable.getPrefWidth());
+//        //infoGridPane.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
+//        gridPaneContainer.setMaxWidth(infoGridPane.getPrefWidth());
 
         manualButton.setPrefHeight(navHeight);
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
@@ -142,9 +136,9 @@ public class GroupsController  extends Controller{
         choicesTreeVBox.setLayoutX(rootWidthToPixels(0.95)-choicesTreeView.getPrefWidth());
         choicesTreeView.setLayoutY(groupsTable.getLayoutY());
 
-        midSeparator.setLayoutX(rootWidthToPixels(0.65));
+        midSeparator.setLayoutX(rootWidthToPixels(0.5));
         midSeparator.setLayoutY(groupsTableVbox.getLayoutY());
-        midSeparator.setPrefHeight(rootHeightToPixels(0.8));
+        midSeparator.setPrefHeight(rootHeightToPixels(0.75));
 
 
 
@@ -329,54 +323,54 @@ public class GroupsController  extends Controller{
     }
 
 
-    private void initInfoGridPane() {
-
-        Insets leftLabelsPadding=new Insets(resY*0.01,resX*0.015,resY*0.01,resX*0.002);
-        Insets rightLabelsPadding=new Insets(resY*0.01,resX*0.007,resY*0.01,resX*0.004);
-
-        Label [] labels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
-                new Label("Number of Subjective Questions"),new Label("Number of Students"),
-                new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};
-
-        String [] values={Integer.toString(Statistics.getQuestionNames().size()),
-                Integer.toString(CSVHandler.getDetectedGroups().size()),Integer.toString(CSVHandler.getSubjQuestionsCount()),
-                Integer.toString(Statistics.getStudentAnswers().size()),Integer.toString(CSVHandler.getFormsCount()),
-        CSVHandler.getIdentifierColStartIndex()==NOT_AVAILABLE?"None":Statistics.getIdentifierName(),
-                CSVHandler.getFormColName()};
-
-
-//        Label objCountLabel=new Label("Number of Objective Questions");
-//        Label objGroupsCount=new Label("Number of Objective Groups");
-//        Label subjCountLabel=new Label("Number of Subjective Questions");
-//        Label studentsCountLabel=new Label("Number of Students");
-//        Label formsCountLabel=new Label("Number of Forms");
-//        Label identifierColLabel=new Label("Identifier Column");
-//        Label formsColLabel=new Label("Form Column");
-
-        //infoGridPane.setAlignment(Pos.CENTER);
-
-
-
-        for (int i=0;i<labels.length;i++){
-            infoGridPane.add(labels[i],0,i);
-            labels[i].setPadding(leftLabelsPadding);
-            labels[i].setStyle("-fx-font-weight: bold;");
-            Label valueLabel=new Label(values[i]);
-            valueLabel.setPadding(rightLabelsPadding);
-            infoGridPane.add(valueLabel,1,i);
-        }
-//        infoGridPane.setGridLinesVisible(true);
-
-
-
-        gridPaneContainer.getChildren().add(infoGridPane);
-
-
-        gridPaneContainer.setStyle("-fx-border-width:1;-fx-border-color:#A9A9A9;");
-
-
-
-    }
+//    private void initInfoGridPane() {
+//
+//        Insets leftLabelsPadding=new Insets(resY*0.01,resX*0.015,resY*0.01,resX*0.002);
+//        Insets rightLabelsPadding=new Insets(resY*0.01,resX*0.007,resY*0.01,resX*0.004);
+//
+//        Label [] labels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
+//                new Label("Number of Subjective Questions"),new Label("Number of Students"),
+//                new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};
+//
+//        String [] values={Integer.toString(Statistics.getQuestionNames().size()),
+//                Integer.toString(CSVHandler.getDetectedGroups().size()),Integer.toString(CSVHandler.getSubjQuestionsCount()),
+//                Integer.toString(Statistics.getStudentAnswers().size()),Integer.toString(CSVHandler.getFormsCount()),
+//        CSVHandler.getIdentifierColStartIndex()==NOT_AVAILABLE?"None":Statistics.getIdentifierName(),
+//                CSVHandler.getFormColName()};
+//
+//
+////        Label objCountLabel=new Label("Number of Objective Questions");
+////        Label objGroupsCount=new Label("Number of Objective Groups");
+////        Label subjCountLabel=new Label("Number of Subjective Questions");
+////        Label studentsCountLabel=new Label("Number of Students");
+////        Label formsCountLabel=new Label("Number of Forms");
+////        Label identifierColLabel=new Label("Identifier Column");
+////        Label formsColLabel=new Label("Form Column");
+//
+//        //infoGridPane.setAlignment(Pos.CENTER);
+//
+//
+//
+//        for (int i=0;i<labels.length;i++){
+//            infoGridPane.add(labels[i],0,i);
+//            labels[i].setPadding(leftLabelsPadding);
+//            labels[i].setStyle("-fx-font-weight: bold;");
+//            Label valueLabel=new Label(values[i]);
+//            valueLabel.setPadding(rightLabelsPadding);
+//            infoGridPane.add(valueLabel,1,i);
+//        }
+////        infoGridPane.setGridLinesVisible(true);
+//
+//
+//
+//        gridPaneContainer.getChildren().add(infoGridPane);
+//
+//
+//        gridPaneContainer.setStyle("-fx-border-width:1;-fx-border-color:#A9A9A9;");
+//
+//
+//
+//    }
 
     private void initManualButton(){
         manualButton.getStyleClass().add("BlueJFXButton");
