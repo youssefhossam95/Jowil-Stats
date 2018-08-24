@@ -164,7 +164,8 @@ public abstract class Controller {
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
 
-            stage.initModality(Modality.APPLICATION_MODAL);
+            if(!(this instanceof StartController))
+                stage.initModality(Modality.APPLICATION_MODAL);
             stage.setOnCloseRequest(event -> {
                 if(!showConfirmationDialog("Cancel Project","Are you sure you want to cancel this project?",stage.getOwner()))
                     event.consume();

@@ -127,7 +127,6 @@ public class StartController extends Controller{
     public void startWindow(){
         super.startWindow();
         loadProjectsJson();
-
         stage.setOnCloseRequest(event -> {
 
         });

@@ -378,7 +378,6 @@ public class GroupsController  extends Controller{
         manualButton.setOnMouseClicked(t->{
 
             new ManualModeController(null).startWindow();
-            stage.close();
         });
     }
 
