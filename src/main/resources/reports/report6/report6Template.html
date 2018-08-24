@@ -1,0 +1,177 @@
+<html>
+
+<head>
+  <style type="text/css">
+    @page {
+
+      margin: 50px 25px 40px 25px;
+      /* margin:0px ;  */
+      size: 29cm 29.7cm;
+      @bottom-left {
+        content: element(footerLeft);
+      }
+      @bottom-right {
+        content: element(footerRight);
+      }
+      @bottom-center {
+        content: element(footerCenter);
+      }
+    }
+
+
+
+    #pagenumber:before {
+      content: counter(page);
+    }
+
+    #pagecount:before {
+      content: counter(pages);
+    }
+
+    #footerCenter {
+      position: running(footerCenter);
+      text-align: center;
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+
+    }
+
+    #footerLeft {
+      position: running(footerLeft);
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+      text-align: left;
+    }
+
+    #footerRight {
+      position: running(footerRight);
+      border-top: 1px solid #157880;
+      padding-top: 5px;
+      text-align: right;
+      /* padding-right: 50px ;   */
+    }
+
+    .divTitle {
+      top: 28px;
+      margin-left: 5%;
+      margin-right: 5%;
+      height: 30px;
+      background-color: #157880;
+      margin-bottom: 100px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    tr {
+      line-height: 35px
+    }
+
+    .tg {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-left: 5%;
+      width: 90%;
+      margin-bottom: 20px
+    }
+
+    .tg td {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      ;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black;
+    }
+
+    .tg th {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black
+    }
+
+    .tg .tg-l711 {
+      border-width: 0px;
+      text-align: center
+    }
+
+    .tg .tg-i13m {
+      font-weight: bold;
+      background-color: #efefef;
+      border-width: 0;
+      border-top-width: 3px;
+      border-top-color: #157880;
+      text-align: center
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .new-page-img {
+      page-break-before: always;
+      margin-top: 200px;
+    }
+
+    .grayRow {
+      background-color: #efefef;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .second-page-header {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='footer'>
+    <div id="footerLeft"> 25/7/2018 </div>
+    <div id="footerRight">Page
+      <span id="pagenumber"></span> of
+      <span id="pagecount"></span>
+    </div>
+
+    <div id="footerCenter">Group Details Report</div>
+  </div>
+  <div id='template'>
+
+    <div class="divTitle">
+      Group Details Report
+    </div>
+    <table class="tg">
+      <tr class="headerRow">
+        <th class="tg-i13m">Section Name</th>
+        <th class="tg-i13m">Hardest Question</th>
+        <th class="tg-i13m">Easiest Question</th>
+        <th class="tg-i13m">Average
+          <br> Correct Percentage</th>
+        <th class="tg-i13m">Percentage Of Questions
+          <br> with Distractors</th>
+        <th class="tg-i13m">Average
+          <br> Point Biserial </th>
+        <th class="tg-i13m">Difficality
+          <br> (0-10) </t h>
+
+      </tr>
+    </table>
+    <img src="Histogram.png" width="70%" height="auto"> </img>
+  </div>
+</body>
+
+</html>

@@ -332,6 +332,11 @@ public class Report2 extends Report {
     }
 
     @Override
+    public void generateCsvReport() {
+
+    }
+
+    @Override
     public void init()  {
         formsStatsMaps = new ArrayList<>() ;
         formsStatsTables = new ArrayList<>();

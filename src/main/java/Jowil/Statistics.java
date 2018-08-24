@@ -38,6 +38,7 @@ public class Statistics {
     private static ArrayList<ArrayList<String>> studentAnswers; //student vs answers
     private static ArrayList<ArrayList<ArrayList<String>>>sortedStudentAnswers; //for each form :student vs (answers+score)
     private static ArrayList<ArrayList<ArrayList<Double>>>answersStats; //For each form :Questions vs each possible choice percentage ( every row can have different number of possible choices)
+    private static ArrayList<ArrayList<Double>> correctAnswersPercents ; // for each form the percentage of studests who got the correct answer
     private static ArrayList<ArrayList<String>> questionsChoices; //list of all possible choices in order for every question. (every row can have different number of choices)
     private static ArrayList<ArrayList<Double>> subjScores; //subjective scores -> student  vs sub scores
     private static ArrayList<String> grades ; // list of university grades i.e. A , B , C
@@ -321,6 +322,21 @@ public class Statistics {
 
     }
 
+    public static void initCorrectAnswersPercent(){
+        correctAnswersPercents = new ArrayList<>( );
+        for(int formIndex = 0  ; formIndex < getNumberOfForms()  ; formIndex++){
+            ArrayList<ArrayList<Double>> formAnswerStats=answersStats.get(formIndex);
+
+            ArrayList<Double> formCorrectPercents = new ArrayList<>();
+            for(int questionIndex = 0  ; questionIndex< formAnswerStats.size() ; questionIndex++) {
+                ArrayList<String> formCorrectAnswers = correctAnswers.get(formIndex);
+                    String correctAnswer  = formCorrectAnswers.get(questionIndex);
+                    int correctAnswerIndex = questionsChoices.get(questionIndex).indexOf(correctAnswer);
+                    formCorrectPercents.add(formAnswerStats.get(questionIndex).get(correctAnswerIndex));
+                }
+            correctAnswersPercents.add(formCorrectPercents) ;
+        }
+    }
 
 
     public static void init(){
@@ -329,6 +345,7 @@ public class Statistics {
         initPointBiserialTables();
         initSortedStudentAnswers();
         initAnswersStats();
+        initCorrectAnswersPercent();
     }
 
 
@@ -412,7 +429,119 @@ public class Statistics {
 
     public static double calcKr21 (double mean , double var , int n) {
 
-        return  n/(n-1) * ( 1 - (mean * (n - mean) / (n * var))) ;
+        return n / (n - 1) * (1 - (mean * (n - mean) / (n * var)));
+    }
+
+
+    public static Map<String , String> calcFormTestInsights(ArrayList<Double> formCorrectPercents) {
+
+        Map <String, String> formTestInsights = new LinkedHashMap<>();
+        double groupMinCorrectPercent = 1 ;
+        double groupMaxCorrectPercent = 0 ;
+
+        String hardestQuestion = "" ;
+        String easiestQuestion = "" ;
+
+        String hardestGroup = "" ;
+        String easiestGroup = "" ;
+
+        double[] formPercents = formCorrectPercents.stream().mapToDouble(d -> d).toArray();
+        double maxFormPercent = max(formPercents) ;
+        double minFormPercent = min(formPercents) ;
+
+        int questionIndex = formCorrectPercents.indexOf(maxFormPercent) ;
+        easiestQuestion = questionNames.get(questionIndex);
+        questionIndex  = formCorrectPercents.indexOf(minFormPercent) ;
+        hardestQuestion = questionNames.get(questionIndex);
+
+
+        ArrayList<Group> groups = CSVHandler.getDetectedGroups();
+        int qIndex=   0 ;
+        for(Group group:groups){
+            int qCount = group.getqCount() ;
+            double[] groupPercents = formCorrectPercents.subList(qIndex , qIndex+qCount).stream().mapToDouble(d -> d).toArray();
+            double avgGroupPercent = sum(groupPercents)/qCount ;
+            if(avgGroupPercent>groupMaxCorrectPercent){
+                groupMaxCorrectPercent = avgGroupPercent ;
+                easiestGroup = group.getCleanedName() ;
+            }
+            if(avgGroupPercent<groupMinCorrectPercent){
+                groupMinCorrectPercent =avgGroupPercent ;
+                hardestGroup = group.getCleanedName() ;
+            }
+
+            qIndex+= qCount ;
+        }
+
+        formTestInsights.put("Hardest Question" , hardestQuestion);
+        formTestInsights.put("Easiest Question" , easiestQuestion) ;
+        formTestInsights.put("Hardest Section" , hardestGroup) ;
+        formTestInsights.put("Easiest Section" , easiestGroup) ;
+
+        return formTestInsights ;
+    }
+
+    public static Map<String , String> calcTestInsights(){
+        Map<String , String> statsMap = new LinkedHashMap<>();
+        double minCorrectPercent = 1 ;
+        double maxCorrectPercent = 0 ;
+
+        double groupMinCorrectPercent = 1 ;
+        double groupMaxCorrectPercent = 0 ;
+
+        String hardestQuestion = "" ;
+        String easiestQuestion = "" ;
+
+        String hardestGroup = "" ;
+        String easiestGroup = "" ;
+
+        for(int formIndex =0  ; formIndex<getNumberOfForms() ; formIndex++) {
+            String form ="" ;
+
+            // string to spicify form that contains the question
+            if (getNumberOfForms()>1)
+                form = " in Form "+(formIndex+1) ;
+
+            // for hardest and easiest questions
+            ArrayList<Double> formCorrectPercents = correctAnswersPercents.get(formIndex);
+            double[] formPercents = formCorrectPercents.stream().mapToDouble(d -> d).toArray();
+            double maxFormPercent = max(formPercents) ;
+            if(maxFormPercent>maxCorrectPercent) {
+                maxCorrectPercent = maxFormPercent ;
+                int questionIndex = formCorrectPercents.indexOf(maxFormPercent) ;
+                easiestQuestion = questionNames.get(questionIndex)+form ;
+            }
+            double minFormPercent = min(formPercents) ;
+            if(minFormPercent<minCorrectPercent) {
+                minCorrectPercent = minFormPercent ;
+                int questionIndex = formCorrectPercents.indexOf(minFormPercent) ;
+                hardestQuestion = questionNames.get(questionIndex)+form ;
+            }
+            // hardest and easiest groups
+            ArrayList<Group> groups = CSVHandler.getDetectedGroups();
+            int qIndex=   0 ;
+            for(Group group:groups){
+                int qCount = group.getqCount() ;
+                double[] groupPercents = formCorrectPercents.subList(qIndex , qIndex+qCount).stream().mapToDouble(d -> d).toArray();
+                double avgGroupPercent = sum(groupPercents)/qCount ;
+                if(avgGroupPercent>groupMaxCorrectPercent){
+                    groupMaxCorrectPercent = avgGroupPercent ;
+                    easiestGroup = group.getCleanedName() + form ;
+                }
+                if(avgGroupPercent<groupMinCorrectPercent){
+                    groupMinCorrectPercent =avgGroupPercent ;
+                    hardestGroup = group.getCleanedName()+form  ;
+                }
+
+                qIndex+= qCount ;
+            }
+        }
+
+        statsMap.put("Hardest Question" , hardestQuestion) ;
+        statsMap.put("Easiest Question" , easiestQuestion) ;
+        statsMap.put("Hardest Section" , hardestGroup) ;
+        statsMap.put("Easiest Section" , easiestGroup) ;
+        return  statsMap;
     }
 
     public static Map<String,String> calcGeneralStats (ArrayList<Double> studentScores ,  int numberOfQuestions) {
@@ -477,12 +606,30 @@ public class Statistics {
 
     }
 
-    public static  Map<String ,String> report3Stats() {
+    public static  ArrayList<Map<String ,String>> report3Stats() {
 
-        double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
-        Map <String , String > map = calcGeneralStats(studentScores , questionsChoices.size() );
-        map.remove("Number Of Students") ;  // not in report 3
-        return map ;
+        ArrayList<Map<String , String>> report3Maps = new ArrayList<>();
+
+        Map <String , String > testInsightsMap = calcTestInsights();
+        Map <String , String > generalStatsMap = calcGeneralStats(studentScores , questionsChoices.size() );
+        generalStatsMap.remove("Number Of Students") ;  // not in report 3
+
+        Map compinedMap = new LinkedHashMap() ;
+        compinedMap.putAll(testInsightsMap);
+        compinedMap.putAll(generalStatsMap);
+
+        report3Maps.add(compinedMap);
+        for(int formIndex = 0 ; formIndex< getNumberOfForms() ; formIndex++) {
+            generalStatsMap = calcGeneralStats(formsScors.get(formIndex) ,questionsChoices.size()) ;
+            testInsightsMap =  calcFormTestInsights(correctAnswersPercents.get(formIndex));
+            generalStatsMap.remove("Number Of Students") ;  // not in report 3
+            compinedMap = new LinkedHashMap() ;
+            compinedMap.putAll(testInsightsMap);
+            compinedMap.putAll(generalStatsMap);
+            report3Maps.add(compinedMap) ;
+        }
+
+        return report3Maps ;
 
     }
     private static void  initPointBiserialTables ()  {
@@ -775,6 +922,85 @@ public class Statistics {
             statsTable.add(tableRow);
         }
         return statsTable ;
+    }
+
+    /**
+     * get the hardest question given a list of correct Answer Percent for each Question
+     * @param correctPercents List of correct Answer Percent for each Question
+     * @param startingIndex starting index of the list in the main list of questions
+     * @return hardest question name
+     */
+    private static String getHardestQusetion (ArrayList<Double> correctPercents , int startingIndex){
+        double[] percents = correctPercents.stream().mapToDouble(d -> d).toArray();
+        double minPercent = min(percents) ;
+        int questionIndex = correctPercents.indexOf(minPercent) + startingIndex ;
+        return questionNames.get(questionIndex);
+    }
+
+    /**
+     * get the easiest question given a list of correct Answer Percent for each Question
+     * @param correctPercents List of correct Answer Percent for each Question
+     * @param startingIndex starting index of the list in the main list of questions
+     * @return easiest question name
+     */
+    private static String getEasiestQusetion (ArrayList<Double> correctPercents , int startingIndex){
+        double[] percents = correctPercents.stream().mapToDouble(d -> d).toArray();
+        double maxPercent = max(percents) ;
+        int questionIndex = correctPercents.indexOf(maxPercent) + startingIndex ;
+        return questionNames.get(questionIndex);
+    }
+
+
+    public static ArrayList<ArrayList<ArrayList<String>>> report6Stats () {
+
+        DecimalFormat format = new DecimalFormat("0.#");
+        DecimalFormat format2 = new DecimalFormat("0.##");
+
+        ArrayList<ArrayList<ArrayList<String>>> report6FormTables = new ArrayList<>();
+        ArrayList<ArrayList<String>> formTable = new ArrayList<>( );
+        ArrayList<String> tableRow = new ArrayList<>( );
+
+        for( int formIndex = 0 ; formIndex< getNumberOfForms() ; formIndex++ ) {
+            ArrayList<Double> formCorrectPercents = correctAnswersPercents.get(formIndex);
+            ArrayList<Group> groups = CSVHandler.getDetectedGroups();
+            int qIndex = 0;
+            for (Group group : groups) {
+                tableRow.add(group.getCleanedName()); // group name
+                int qCount = group.getqCount();
+
+                ArrayList<Double> groupCorrectPercents = new ArrayList<>(formCorrectPercents.subList(qIndex, qIndex + qCount));
+                String hardestQuestion = getHardestQusetion(groupCorrectPercents, qIndex);
+                tableRow.add(hardestQuestion); // hardest question
+                String easiestQuestion = getEasiestQusetion(groupCorrectPercents, qIndex);
+                tableRow.add(easiestQuestion); // easiest question
+
+                double[] percents = groupCorrectPercents.stream().mapToDouble(d -> d).toArray();
+                double avgCorrectPercent = sum(percents) / percents.length;
+                tableRow.add(format.format(avgCorrectPercent * 100) + "%"); // average correct percent
+
+                Double pointBiserialSum = 0.0;
+                int questionsWithDistractorCount = 0;
+                for (int i = 0; i < qCount; i++) { // interate over each question in the group
+                    pointBiserialSum += calcPointBiserial(formIndex, qIndex + i);
+                    for (Double answerPercent : answersStats.get(formIndex).get(qIndex + i)) {  // iterate over percent of Responses for each question
+                        if (answerPercent > formCorrectPercents.get(qIndex + i)) //check for distractors
+                            questionsWithDistractorCount++;
+                    }
+                }
+                tableRow.add(format.format((double) questionsWithDistractorCount / qCount * 100) + "%"); // questions with Distractors
+                tableRow.add(format2.format(pointBiserialSum / qCount)); // avg point biserial
+
+                tableRow.add(format.format((1 - avgCorrectPercent) * 10)); // difficality
+                formTable.add(tableRow);
+                tableRow = new ArrayList<>();
+                qIndex += qCount;
+            }
+            report6FormTables.add(formTable) ;
+            formTable = new ArrayList<>();
+        }
+
+//        System.out.println(formTable);
+        return  report6FormTables ;
     }
 
 }

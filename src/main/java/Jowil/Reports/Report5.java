@@ -253,12 +253,8 @@ public class Report5 extends Report {
         //change border color of empty bar
         doc.select("div.emptyBar").attr("style" , "border-color: #999999") ;
 
+        styleTitlePrintable(doc);
 
-        String addedDivStyle = "background-color: white;\n" +
-                               "color: black;\n" +
-                               "border: 2px solid #08436b;";
-        // change div title
-        doc.select("div.divTitle").attr("style" , addedDivStyle) ;
 
         // edit the legends
         Elements elements = doc.select("span.left");
@@ -279,6 +275,11 @@ public class Report5 extends Report {
 
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
+    }
+
+    @Override
+    public void generateCsvReport() {
+
     }
 
     @Override
