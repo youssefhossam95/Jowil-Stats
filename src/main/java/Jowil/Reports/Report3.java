@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
@@ -80,7 +81,7 @@ public class Report3 extends Report {
                 doc.select("table").last().after(pageBreakHtml);
                 doc.select("div.page-break").last().after(templateBodyHtml) ;
                 doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("h2").last().text("Form "+ mapIndex + " Test Statistics Report");
+                doc.select("div.divTitle").last().text("Form "+ mapIndex + " Test Statistics Report");
             }
 
             Map<String , String > statsMap = report3Maps.get(mapIndex);
@@ -178,6 +179,7 @@ public class Report3 extends Report {
     public void generatePrintablePdfReport() throws IOException, DocumentException {
 
         Document doc = generatePdfHtml();
+        styleTitlePrintable(doc);
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
 
@@ -185,6 +187,36 @@ public class Report3 extends Report {
 
     @Override
     public void generateCsvReport() {
+        final int  PADDING_BETWEEN_TABLES = 2 ;
+
+        String outputCsv = "" ;
+
+        char separator = ',';
+
+        String [] tablesTitles = {"Test Insights","Test Data" , "Basic Statistics" , "Dispersion" , "Confidence Intervals" , "Test Reliability"} ;
+
+        ArrayList<Map<String, String> > reprot3Maps = Statistics.report3Stats() ;
+        for (int mapIndex=  0 ; mapIndex <reprot3Maps.size() ; mapIndex++ ) {
+
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(reprot3Maps.get(mapIndex));
+
+            int pageWidth = CsvUtils.calcPageWidth(tables);
+
+            String form = "" ;
+            if(mapIndex>0) {
+                form = "Form " + mapIndex;;
+            }
+            String txtTitle = CsvUtils.generateTitleLine(form +" Test Statistics Report", separator ,
+                    pageWidth, 2);
+
+            outputCsv += txtTitle;
+            ArrayList<String> txtTables = new ArrayList<>();
+            for (int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
+                txtTables.add(CsvUtils.generateTable(tables.get(tableIndex),separator , tablesTitles[tableIndex])) ;
+            }
+            outputCsv += CsvUtils.stackTablesV(txtTables, PADDING_BETWEEN_TABLES);
+        }
+        CsvUtils.writeCsvToFile(outputCsv, outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv" );
 
     }
 

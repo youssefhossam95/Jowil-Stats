@@ -711,6 +711,7 @@ public class Statistics {
         return calcGeneralStats (formsScors.get(formIndex) , questionsChoices.size());
     }
 
+    // this fucntion needs refactoring
     public static ArrayList<ArrayList<ArrayList<String>>> report2PrintableStats ( ArrayList<ArrayList<ArrayList<String>>> tablesStats , int formIndex) {
 
         ArrayList<ArrayList<ArrayList<String>>> newTables = new ArrayList<>() ;
@@ -725,14 +726,14 @@ public class Statistics {
                 String nonDistractors = "" ;
                 for(int colIndex = 0 ; colIndex< tableRow.size();  colIndex++) {
                     String data = tableRow.get(colIndex);
-                    if(colIndex>1 && colIndex < 2+numberOfChoices) {
+                    if(colIndex>2 && colIndex < 3+numberOfChoices) {
                         if(data.contains(";")) {
                             String [] parts = data.split(";");
                             String cellData = parts[0] ;
                             String cellClass = parts[1] ;
                             //check for nonDistractor
                             if(cellData.equals("0")){
-                                nonDistractors+= questionsChoices.get(questionIndex).get(colIndex-2)+" " ;
+                                nonDistractors+= questionsChoices.get(questionIndex).get(colIndex-3)+" " ;
                             }
                             //remove colors
                             if (cellClass.equals("red")) {
@@ -746,10 +747,10 @@ public class Statistics {
                         }
                     }
                 }
-                tableRow.add(2 , correctAnswer) ; //Correct Answers
+//                tableRow.add(2 , correctAnswer) ; //Correct Answers
                 if(nonDistractors.equals(""))
                     nonDistractors="-";
-                tableRow.add(3+numberOfChoices , nonDistractors ) ;
+//                tableRow.add(3+numberOfChoices , nonDistractors ) ; // nonDistractors
                 questionIndex++ ;
             }
             newTables.add(tableStats) ;
@@ -784,21 +785,33 @@ public class Statistics {
             tableRow.add(questionNames.get(questionIndex));// Question
             ArrayList<Double> questionStats =  answersStats.get(formIndex).get(questionIndex) ;
             String correctAnswer = correctAnswers.get(formIndex).get(questionIndex) ;
+
+            tableRow.add(correctAnswer); // correct answer
             int correctAnswerIndex = questionsChoices.get(questionIndex).indexOf(correctAnswer);
 
             double correctAnswerPrecentage = questionStats.get(correctAnswerIndex);
 
+            String nonDistractors ="" ;
             for(int answerIndex = 0 ; answerIndex < questionStats.size() ; answerIndex ++ ) {
                 String addedClass = "" ;
+                String percentOfSolvers = format.format(questionStats.get(answerIndex) * 100) ;
                 if(answerIndex== correctAnswerIndex)
-                    addedClass=";green";
-                else if(questionStats.get(answerIndex)> correctAnswerPrecentage)
-                    addedClass=";red" ;
-                else if(questionStats.get(answerIndex) ==0 )
-                    addedClass=";gold";
-                tableRow.add(format.format(questionStats.get(answerIndex) * 100)+addedClass) ; //Response Frequences
+                    addedClass=";green under-line";
+                else if(questionStats.get(answerIndex)> correctAnswerPrecentage) {
+                    addedClass = ";red bold";
+                    percentOfSolvers+= "*" ;
+                }
+                else if(questionStats.get(answerIndex) ==0 ) {
+                    addedClass = ";gold";
+                    nonDistractors += questionChoices.get(answerIndex)+" " ;
+                    percentOfSolvers = "(0)";
+                }
+                tableRow.add(percentOfSolvers+addedClass) ; //Response Frequences
             }
 
+            if(nonDistractors.equals(""))
+                nonDistractors= "-" ;
+            tableRow.add(nonDistractors);
             tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ; // Point Biserial
             tableRow.add(format.format(correctAnswerPrecentage * 100)+"%") ; // Total
             tableRow.add(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex)); //upper 27
@@ -832,15 +845,24 @@ public class Statistics {
                 ArrayList<String>tableRow = new ArrayList<>() ;
                 String addedClass = "; " ;
                 String barClass = "redBar" ;
+                String imgName = "" ;
                 if(correctAnswerIndex == choiceIndex) {
                     addedClass = ";correct-answer";
                     barClass = "greenBar" ;
+                    imgName = "correct";
                 }
                 tableRow.add(questionChoices.get(choiceIndex) + addedClass) ;
                 tableRow.add(format.format(questionStats.get(choiceIndex)*numberOfStudents)) ;
                 tableRow.add(format.format(questionStats.get(choiceIndex)*100)) ;
-                if(questionStats.get(choiceIndex)> correctAnswerPrecentage)
-                    barClass= "distBar" ;
+                if(questionStats.get(choiceIndex)> correctAnswerPrecentage) {
+                    barClass = "distBar";
+                    imgName = "distractor";
+                }
+                if(questionStats.get(choiceIndex)==0)
+                    imgName = "nonDistractor";
+
+                String addedCol = imgName.equals("")?" ":"<img src='"+imgName+".png' height='15px' class='type-img'> </img>" ;
+                tableRow.add(addedCol);
                 tableRow.add(barClass);
                 table.add(tableRow);
             }
