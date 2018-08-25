@@ -100,6 +100,15 @@ public class StartController extends Controller{
             newLabel.setFont(buttonsFont);
         });
 
+//        newStack.setOnMousePressed(event -> {
+//            newRect.setScaleX(1);
+//            newRect.setScaleY(1);
+//            newImageView.setScaleX(1);
+//            newImageView.setScaleY(1);
+//            newLabel.setFont(buttonsFont);
+//        });
+
+
         openStack.setOnMouseEntered(event -> {
 
             openRect.setScaleX(scalingFactor);
