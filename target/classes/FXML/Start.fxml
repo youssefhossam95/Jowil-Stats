@@ -15,7 +15,7 @@
 
                 <ImageView fx:id="upperImageView" pickOnBounds="true">
                     <image>
-                        <Image url="@../Images/chalk-board-with-math.jpg" />
+                        <Image url="@../Images/chalk-board-with-mathhh.jpg" />
                     </image>
                     <viewport>
                         <Rectangle2D />
