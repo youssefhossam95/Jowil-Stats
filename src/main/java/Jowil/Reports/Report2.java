@@ -1,6 +1,7 @@
 package Jowil.Reports;
 
 import Jowil.CSVHandler;
+import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
@@ -24,6 +25,13 @@ public class Report2 extends Report {
     private ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsTables ;
     ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsPrintableTables ;
 
+    final String lineHtml = "<div class=\"line\">\n" +
+            "            <span class=\"group-title\">\n" +
+            "                title\n" +
+            "            </span>\n" +
+            "        </div>" ;
+
+
     public Report2(){
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
@@ -37,10 +45,11 @@ public class Report2 extends Report {
 
             updateTemplateDate(doc); // updates the date of the footer to the current date
 
-            final int ROWS_IN_BLANK_PAGE = 37 ;
-            final int ROWS_IN_FIRST_PAGE = 18 ;
-            final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 6 ;
-            final int MINIMUM_REMAINING_ROWS = 7 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
+            final int ROWS_IN_BLANK_PAGE = 35 ;
+            final int ROWS_IN_FIRST_PAGE = 14 ;
+            final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 4 ;
+
+            final int MINIMUM_REMAINING_ROWS = 4 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
 
             final String pageBreakHtml= "<div class='page-break'></div>\n" ;
 
@@ -67,21 +76,29 @@ public class Report2 extends Report {
 //            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
                 int questionIndex = 0;
                 int remainingRows = ROWS_IN_FIRST_PAGE;
+                ArrayList<Group> groups = CSVHandler.getDetectedGroups();
+                int groupIndex = 0 ;
                 for (ArrayList<ArrayList<String>> table : statsTables) {
                     //create new table unless its first time
                     if (questionIndex != 0) {
 
                         //check if page break is needed
-                        if (remainingRows < MINIMUM_REMAINING_ROWS) {
+                        if (remainingRows < MINIMUM_REMAINING_ROWS  +  NUMBER_OF_ROWS_FOR_TABLE_HEADER) {
                             doc.select("table").last().after(pageBreakHtml);
-                            remainingRows = ROWS_IN_BLANK_PAGE - 2;
-                            doc.select("div.page-break").last().after(tableHtml);
+                            doc.select("div.page-break").last().after(lineHtml) ;
+                            doc.select("span.group-title").last().text(groups.get(groupIndex).getCleanedName());
+                            remainingRows = ROWS_IN_BLANK_PAGE - NUMBER_OF_ROWS_FOR_TABLE_HEADER;
+                            doc.select("div.line").last().after(tableHtml);
 
                         } else {
-                            remainingRows -= NUMBER_OF_ROWS_FOR_TABLE_HEADER;
-                            doc.select("table").last().after(tableHtml);
+                            remainingRows -= NUMBER_OF_ROWS_FOR_TABLE_HEADER *2;
+                            doc.select("table").last().after(lineHtml) ;
+                            doc.select("span.group-title").last().text(groups.get(groupIndex).getCleanedName());
+                            doc.select("div.line").last().after(tableHtml);
                         }
-                    }
+                    }else // fill first line with group name
+                        doc.select("span.group-title").last().text(groups.get(groupIndex).getCleanedName());
+
                     fillResponseFreqHeaders(doc, questionIndex);
 
                     //start and end indeces for questions to be shown in the page
@@ -107,6 +124,7 @@ public class Report2 extends Report {
                         endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, endIndex + remainingRows);
                     } while (startIndex != endIndex);
                     questionIndex += table.size();
+                    groupIndex++ ;
                 }
             }
             return doc ;
@@ -164,9 +182,14 @@ public class Report2 extends Report {
 //            ArrayList<ArrayList<ArrayList<String>>> statsTables = Statistics.report2TableStats(formIndex);
             int questionIndex = 0;
 
+            ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
+            int groupIndex = 0 ;
             for (ArrayList<ArrayList<String>> table : statsTables) {
-                if(questionIndex!=0)
-                   doc.select("table").last().after(tableHtml);
+                if(questionIndex!=0) {
+                    doc.select("table").last().after(lineHtml) ;
+                    doc.select("div.line").last().after(tableHtml);
+                }
+                doc.select("span.group-title").last().text(groups.get(groupIndex++).getCleanedName());
                 fillResponseFreqHeaders(doc, questionIndex);
                 String rowsHtml = createRowsHtml(table, ";grayRow", "");
                 doc.select("tr.bottom-header-row").last().after(rowsHtml);
@@ -385,6 +408,11 @@ public class Report2 extends Report {
 
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
 
+
+    }
+
+    @Override
+    public void generateTsvReprot() {
 
     }
 
