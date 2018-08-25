@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -82,7 +83,8 @@ public class StartController extends Controller{
         Font buttonsFont=new Font("System Bold",resX*0.011);
         openLabel.setFont(buttonsFont);
         newLabel.setFont(buttonsFont);
-        lowerAncPane.setStyle("-fx-background-color:transparent"); //anchor pane not white
+        lowerAncPane.setStyle("-fx-background-color:transparent;-fx-border-width:1 0 0 0;-fx-border-color:#626365"); //anchor pane not white
+
         newStack.setOnMouseEntered(event -> {
             
             newRect.setScaleX(scalingFactor);
@@ -161,7 +163,7 @@ public class StartController extends Controller{
         Insets buttonImagesMargin=new Insets(0,0,0.04*resY,0);
 
         super.updateSizes();
-        double upperHeight=rootHeight*0.245;
+        double upperHeight=(int)(rootHeight*0.245);
         double lowerHeight=1-upperHeight;
 
 
@@ -169,7 +171,7 @@ public class StartController extends Controller{
         upperImageView.setFitHeight(upperHeight);
 
         lowerAncPane.setPrefWidth(rootWidth);
-        lowerAncPane.setPrefHeight(lowerHeight);
+        //lowerAncPane.setPrefHeight(lowerHeight);
 
         logoImageView.setFitWidth(0.08*resX);
         logoImageView.setFitHeight(0.11*resY);
@@ -185,8 +187,8 @@ public class StartController extends Controller{
         openStack.setLayoutX(0.24*rootWidth);
         openStack.setLayoutY(0.24*rootHeight);
 
-        openRect.setWidth(0.173*resX);
-        openRect.setHeight(0.4*resY);
+        openRect.setWidth(0.15*resX); // kant 0.173
+        openRect.setHeight(0.34*resY); //kant 0.4
         openRect.setArcWidth(resX*0.01);
         openRect.setArcHeight(resY*0.02);
 

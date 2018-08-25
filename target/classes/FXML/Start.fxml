@@ -24,7 +24,7 @@
 
     </top>
     <center>
-        <AnchorPane fx:id="lowerAncPane" BorderPane.alignment="CENTER">
+        <AnchorPane fx:id="lowerAncPane" BorderPane.alignment="CENTER" >
             <children>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
