@@ -769,16 +769,22 @@ public class Statistics {
         ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<ArrayList<ArrayList<String>>>();
         ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>() ;
 
+
+        ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
+        int groupIndex = 0 ;
+        int changeTableNumberOfQuestions = groups.get(0).getqCount() ;
+
         for(int questionIndex = 0 ; questionIndex < formCorrectAnswers.size() ; questionIndex++) {
 
 
             ArrayList<String> questionChoices = questionsChoices.get(questionIndex);
-            ArrayList<String> previousQuestionChoices = questionIndex>0?questionsChoices.get(questionIndex-1):questionChoices;
+//            ArrayList<String> previousQuestionChoices = questionIndex>0?questionsChoices.get(questionIndex-1):questionChoices;
 
             // check if the table format changed ... create new table
-            if(!questionChoices.equals(previousQuestionChoices)) {
+            if(questionIndex == changeTableNumberOfQuestions) {
                tables.add(table);
                table = new ArrayList<ArrayList<String>>() ;
+               changeTableNumberOfQuestions += groups.get(++groupIndex).getqCount() ;
             }
             ArrayList<String>tableRow = new ArrayList<>() ;
             tableRow.add(String.valueOf(questionIndex+1)) ; // NO.
