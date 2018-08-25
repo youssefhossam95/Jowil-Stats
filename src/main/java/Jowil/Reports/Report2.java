@@ -308,23 +308,18 @@ public class Report2 extends Report {
     public void generatePrintablePdfReport() throws IOException, DocumentException {
         Document doc = generatePdfHtml(false) ;
 
-//        String printableLegendHtml = "<div class=\"wrapper\">\n" +
-//                "            <span><strong> * : </strong></span>\n" +
-//                "            <span class=\" second\"> Distractor</span>\n" +
-//                "        </div>\n" +
-//                "       \n" +
-//                "        <div class=\"wrapper\" style=\"margin-bottom: 30px\">\n" +
-//                "            <span>\n" +
-//                "                <strong>\n" +
-//                "                    <u>under Line</u>:\n" +
-//                "                </strong>\n" +
-//                "            </span>\n" +
-//                "            <span class=\" second\"> Correct Answer</span>\n" +
-//                "        </div>\n" ;
+        String printableLegendHtml = "<div class=\"wrapper\">\n" +
+                "            <span class=\"bold\"> Correct Answer :</span>\n" +
+                "            <span class=\"second \"> Bold</span>\n" +
+                "        </div>\n" +
+                "        <div class=\"wrapper\" style=\"margin-bottom: 10px\">\n" +
+                "            <span class=\"bold\"> Distractor : </span>\n" +
+                "            <span class=\"second\" > Bold  *  </span>\n" +
+                "        </div>" ;
 //        String correctAnswerHtml = "<th rowspan='2' >Correct <br> Answer</th>" ;
 //        String nonDistractorHtml = "<th rowspan='2' >Non <br> Distractors</th>" ;
 //
-//        doc.select("div.legend").html(printableLegendHtml) ;
+        doc.select("div.legend").html(printableLegendHtml) ;
 //        doc.select("th.question").after(correctAnswerHtml) ;
 //        doc.select("th.point-biserial").before(nonDistractorHtml) ;
 

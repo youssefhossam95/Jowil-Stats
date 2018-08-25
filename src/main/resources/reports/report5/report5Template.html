@@ -94,7 +94,7 @@
             background-color: #08436b;
             margin-bottom: 20px;
             text-align: center;
-            color: white;       
+            color: white;
             font-size: 24px;
             font-weight: bold;
 
@@ -148,7 +148,7 @@
             height: 10px;
         }
 
-        .distBar {
+        .grayBar {
 
             background-color: #64686b;
             height: 10px;
@@ -246,7 +246,11 @@
             position: relative;
         }
 
-        
+        .legend-img {
+            background-size: 100% 100%;
+            height: 15px;
+            width: 15px;
+        }
     </style>
 </head>
 
@@ -267,19 +271,18 @@
         </div>
         <div class="legend">
             <div class="wrapperSmall">
-                <span class="left" style="background-color:green"></span>
+                <span class="left legend-img" style="background-image: url('correctColored.png');"></span>
                 <span class=" right"> Correct Answer</span>
             </div>
             <div class="wrapperSmall">
-                <span class="left" style="background-color:red"></span>
-                <span class=" right"> Wrong Answer</span>
+                <span class="left legend-img" style="background-image: url('nonDistractorColored.png');"></span>
+                <span class=" right">Non Distractor</span>
             </div>
             <div class="wrapperSmall">
-                <span class="left" style="background-color: #64686b;margin-bottom:100px"></span>
+                <span class="left legend-img" style="background-image: url('distractorColored.png')"></span>
                 <span class=" right"> Distractor</span>
             </div>
         </div>
-
 
         <div class="line">
             <span class="group-title">

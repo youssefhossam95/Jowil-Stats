@@ -796,7 +796,7 @@ public class Statistics {
                 String addedClass = "" ;
                 String percentOfSolvers = format.format(questionStats.get(answerIndex) * 100) ;
                 if(answerIndex== correctAnswerIndex)
-                    addedClass=";green under-line";
+                    addedClass=";green bold";
                 else if(questionStats.get(answerIndex)> correctAnswerPrecentage) {
                     addedClass = ";red bold";
                     percentOfSolvers+= "*" ;
@@ -804,7 +804,7 @@ public class Statistics {
                 else if(questionStats.get(answerIndex) ==0 ) {
                     addedClass = ";gold";
                     nonDistractors += questionChoices.get(answerIndex)+" " ;
-                    percentOfSolvers = "(0)";
+//                    percentOfSolvers = "(0)";
                 }
                 tableRow.add(percentOfSolvers+addedClass) ; //Response Frequences
             }
@@ -844,22 +844,22 @@ public class Statistics {
             for(int choiceIndex = 0 ; choiceIndex< questionChoices.size() ; choiceIndex ++) {
                 ArrayList<String>tableRow = new ArrayList<>() ;
                 String addedClass = "; " ;
-                String barClass = "redBar" ;
+                String barClass = "grayBar" ;
                 String imgName = "" ;
                 if(correctAnswerIndex == choiceIndex) {
                     addedClass = ";correct-answer";
                     barClass = "greenBar" ;
-                    imgName = "correct";
+                    imgName = "correctColored";
                 }
                 tableRow.add(questionChoices.get(choiceIndex) + addedClass) ;
                 tableRow.add(format.format(questionStats.get(choiceIndex)*numberOfStudents)) ;
                 tableRow.add(format.format(questionStats.get(choiceIndex)*100)) ;
                 if(questionStats.get(choiceIndex)> correctAnswerPrecentage) {
-                    barClass = "distBar";
-                    imgName = "distractor";
+                    barClass = "redBar";
+                    imgName = "distractorColored";
                 }
                 if(questionStats.get(choiceIndex)==0)
-                    imgName = "nonDistractor";
+                    imgName = "nonDistractorColored";
 
                 String addedCol = imgName.equals("")?" ":"<img src='"+imgName+".png' height='15px' class='type-img'> </img>" ;
                 tableRow.add(addedCol);
@@ -919,6 +919,7 @@ public class Statistics {
 
         DecimalFormat format = new DecimalFormat("0.#");
 
+
         ArrayList<ArrayList<String>> statsTable = new ArrayList<ArrayList<String>>();
 
         int numberOfStudents = studentScores.size();
@@ -941,8 +942,13 @@ public class Statistics {
             tableRow.add(grades.get(gradeIndex));
             tableRow.add(format.format(gradesLowerRange.get(gradeIndex)*100)+
                     " - " + format.format(gradesLowerRange.get(gradeIndex+1)*100) );
-            tableRow.add(format.format(gradesLowerRange.get(gradeIndex)*maxScore)+
-                    " - " + format.format( gradesLowerRange.get(gradeIndex+1)*maxScore)) ;
+
+            String gradeLowerRange = format.format(gradesLowerRange.get(gradeIndex)*maxScore) ;
+            gradeLowerRange = gradeLowerRange.contains(".")?gradeLowerRange:gradeLowerRange+".0" ;
+            String gradeUpperRange = format.format(gradesLowerRange.get(gradeIndex+1)*maxScore) ;
+            gradeUpperRange = gradeUpperRange.contains(".")?gradeUpperRange:gradeUpperRange+".0" ;
+
+            tableRow.add(gradeLowerRange+ " - " + gradeUpperRange) ;
             tableRow.add(String.valueOf(gradeCount)) ;
             tableRow.add(format.format( (double) gradeCount/(double)numberOfStudents *100) + "%");
             statsTable.add(tableRow);

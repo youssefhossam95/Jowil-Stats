@@ -256,24 +256,6 @@ public class Report5 extends Report {
 
         styleTitlePrintable(doc);
 
-
-        // edit the legends
-        Elements elements = doc.select("span.left");
-        String [] legendPngs = {"correct", "nonDistractor", "distractor"  } ;
-        for(int elementIndex = 0 ; elementIndex < elements.size() ; elementIndex++) {
-            Element element = elements.get(elementIndex) ;
-            if(elementIndex%3==1)
-                doc.select("span.right").get(elementIndex).text("Non Distractor");
-            String Style = "background-image: url(\""+legendPngs[elementIndex%3]+".png\");\n" +
-                    "background-size: 100% 100%;\n" +
-                    "height: 15px;\n" +
-                    "width: 15px;" ;
-            if(elementIndex%3==2)
-                Style+= "margin-bottom:100px";
-            element.attr("style" , Style) ;
-        }
-
-
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
