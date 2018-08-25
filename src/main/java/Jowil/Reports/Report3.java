@@ -185,38 +185,50 @@ public class Report3 extends Report {
 
     }
 
-    @Override
-    public void generateCsvReport() {
-        final int  PADDING_BETWEEN_TABLES = 2 ;
+    private String generateCharSeparatedValuesString(char separator) {
 
-        String outputCsv = "" ;
 
-        char separator = ',';
+        final int PADDING_BETWEEN_TABLES = 2;
 
-        String [] tablesTitles = {"Test Insights","Test Data" , "Basic Statistics" , "Dispersion" , "Confidence Intervals" , "Test Reliability"} ;
+        String outputCsv = "";
 
-        ArrayList<Map<String, String> > reprot3Maps = Statistics.report3Stats() ;
-        for (int mapIndex=  0 ; mapIndex <reprot3Maps.size() ; mapIndex++ ) {
+        String[] tablesTitles = {"Test Insights", "Test Data", "Basic Statistics", "Dispersion", "Confidence Intervals", "Test Reliability"};
+
+        ArrayList<Map<String, String>> reprot3Maps = Statistics.report3Stats();
+        for (int mapIndex = 0; mapIndex < reprot3Maps.size(); mapIndex++) {
 
             ArrayList<ArrayList<ArrayList<String>>> tables = processMap(reprot3Maps.get(mapIndex));
 
             int pageWidth = CsvUtils.calcPageWidth(tables);
 
-            String form = "" ;
-            if(mapIndex>0) {
-                form = "Form " + mapIndex;;
+            String form = "";
+            if (mapIndex > 0) {
+                form = "Form " + mapIndex;
+                ;
             }
-            String txtTitle = CsvUtils.generateTitleLine(form +" Test Statistics Report", separator ,
+            String txtTitle = CsvUtils.generateTitleLine(form + " Test Statistics Report", separator,
                     pageWidth, 2);
 
             outputCsv += txtTitle;
             ArrayList<String> txtTables = new ArrayList<>();
             for (int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
-                txtTables.add(CsvUtils.generateTable(tables.get(tableIndex),separator , tablesTitles[tableIndex])) ;
+                txtTables.add(CsvUtils.generateTable(tables.get(tableIndex), separator, tablesTitles[tableIndex]));
             }
             outputCsv += CsvUtils.stackTablesV(txtTables, PADDING_BETWEEN_TABLES);
         }
-        CsvUtils.writeCsvToFile(outputCsv, outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv" );
+        return  outputCsv ;
+    }
+    @Override
+    public void generateCsvReport() {
+        String outputCsv = generateCharSeparatedValuesString(',') ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+
+    }
+
+    @Override
+    public void generateTsvReprot() {
+        String outputCsv = generateCharSeparatedValuesString('\t') ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
 
     }
 

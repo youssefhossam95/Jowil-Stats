@@ -354,11 +354,9 @@ public class Report2 extends Report {
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
-    @Override
-    public void generateCsvReport() {
+    private String generateCharSeparatedValuesString(char separator) {
         final int PADDING_BETWEEN_TABLES = 2 ;
 
-        char separator = ',' ;
         String outputCsv="" ;
 
 
@@ -404,8 +402,14 @@ public class Report2 extends Report {
             outputCsv += CsvUtils.stackTablesV(csvTables, PADDING_BETWEEN_TABLES) ;
         }
 //        String outputCsv = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
-        System.out.println(outputCsv);
+//        System.out.println(outputCsv);
 
+        return outputCsv ;
+    }
+        @Override
+    public void generateCsvReport() {
+
+        String outputCsv = generateCharSeparatedValuesString(',') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
 
 
@@ -413,7 +417,8 @@ public class Report2 extends Report {
 
     @Override
     public void generateTsvReprot() {
-
+        String outputCsv = generateCharSeparatedValuesString('\t') ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
     }
 
     @Override

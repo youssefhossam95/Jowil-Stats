@@ -267,11 +267,8 @@ public class Report5 extends Report {
         return headers ;
     }
 
-    @Override
-    public void generateCsvReport() {
-        final int CHP = 2 ;
 
-        char separator = ',' ;
+    private String generateCharSeparatedValuesString(char separator) {
         ArrayList<String> headers = getHeaders() ;
 
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.TXT) ;
@@ -300,7 +297,23 @@ public class Report5 extends Report {
             outputCsv+= CsvUtils.stackTablesV(formTxtTables , 2) ;
         }
 
+        return outputCsv;
+    }
+        @Override
+    public void generateCsvReport() {
+
+        String outputCsv = generateCharSeparatedValuesString(',') ;
+
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+
+    }
+
+    @Override
+    public void generateTsvReprot() {
+
+        String outputCsv = generateCharSeparatedValuesString('\t') ;
+
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
 
     }
 
