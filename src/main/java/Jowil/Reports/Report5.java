@@ -2,6 +2,7 @@ package Jowil.Reports;
 
 import Jowil.CSVHandler;
 import Jowil.Group;
+import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
@@ -148,9 +149,7 @@ public class Report5 extends Report {
 
         final int CHP = 2 ;
 
-        ArrayList<String> headers = new ArrayList<>( );
-        headers.add("Response") ;headers.add("Count") ; headers.add("Percent"); headers.add("info") ;
-
+        ArrayList<String>headers= getHeaders() ;
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.TXT) ;
         String outputTxt = "" ;
 
@@ -195,34 +194,36 @@ public class Report5 extends Report {
             addedData = "!";
        else
            addedData="" ;
+        tableRow.remove(tableRow.size()-1);
         tableRow.set(tableRow.size()-1 , addedData) ; // replace the bar cell with the info cell
+
 
     }
 
     private void editRowForPrintablePdf (ArrayList<String> tableRow) {
-        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
+//        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
         int numberOfSolvers = Integer.valueOf(tableRow.get(1));
-        String addedImgName;
-        if(rowClass.equals("greenBar"))
-            addedImgName = "correct" ;
-        else if(numberOfSolvers == 0)
-            addedImgName = "nonDistractor";
-        else if(rowClass.equals("distBar"))
-            addedImgName = "distractor";
-        else {
-            addedImgName= null ;
-        }
-        String addedData = addedImgName!=null?
-                "<img src='"+addedImgName+".png' height='15px' class='type-img'> </img>":" " ;
-
-//                                            tableRow.set(tableRow.size()-1 , "printable-bar");
+//        String addedImgName;
+//        if(rowClass.equals("greenBar"))
+//            addedImgName = "correct" ;
+//        else if(numberOfSolvers == 0)
+//            addedImgName = "nonDistractor";
+//        else if(rowClass.equals("distBar"))
+//            addedImgName = "distractor";
+//        else {
+//            addedImgName= null ;
+//        }
+//        String addedData = addedImgName!=null?
+//                "<img src='"+addedImgName+".png' height='15px' class='type-img'> </img>":" " ;
+//
+////                                            tableRow.set(tableRow.size()-1 , "printable-bar");
 
         if(numberOfSolvers!=0)
             tableRow.set(tableRow.size()-1 , "printable-bar");
         else
             tableRow.set(tableRow.size()-1 , "");
 
-        tableRow.add(3 , addedData) ;
+//        tableRow.add(3 , addedData) ;
 
     }
 
@@ -239,7 +240,7 @@ public class Report5 extends Report {
                             editRowForTxt(tableRow);
                 }
             }
-            printableFormsStatsTables.add(tables);
+            printableFormsStatsTables.add(clonedTables);
         }
         return  printableFormsStatsTables ;
     }
@@ -249,7 +250,7 @@ public class Report5 extends Report {
 
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.PRINTABLE_PDF);
         Document doc = generatePdfHtml(printableFormsStatsTables) ;
-        doc.select("th.percent").after("<th>  </th>") ;
+//        doc.select("th.percent").after("<th>  </th>") ;
         //change border color of empty bar
         doc.select("div.emptyBar").attr("style" , "border-color: #999999") ;
 
@@ -277,8 +278,47 @@ public class Report5 extends Report {
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
+    private ArrayList<String> getHeaders (){
+        ArrayList<String> headers = new ArrayList<>( );
+        headers.add("Response") ;headers.add("Count") ; headers.add("Percent"); headers.add("info") ;
+
+        return headers ;
+    }
+
     @Override
     public void generateCsvReport() {
+        final int CHP = 2 ;
+
+        char separator = ',' ;
+        ArrayList<String> headers = getHeaders() ;
+
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.TXT) ;
+        String outputCsv = "" ;
+
+        int pageWidth = CsvUtils.calcTableWidth(printableFormsStatsTables.get(0).get(0));
+
+        for(int formIndex = 0  ;formIndex <Statistics.getNumberOfForms() ; formIndex++) {
+
+            String reportTitle = "Condenced Test Report"  ;
+            if(Statistics.getNumberOfForms()>1)
+                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+
+            String txtTitle = CsvUtils.generateTitleLine(reportTitle,separator,
+                    pageWidth,2) ;
+
+            outputCsv+= txtTitle ;
+            ArrayList<String> formTxtTables = new ArrayList<>() ;
+            ArrayList<ArrayList<ArrayList<String>>> formTables = printableFormsStatsTables.get(formIndex);
+            for(int tableIndex = 0; tableIndex < formTables.size() ; tableIndex++) {
+                ArrayList<ArrayList<String>> table = cleanTable(formTables.get(tableIndex)) ;
+                table.add(0,headers) ;
+                String questionName = Statistics.getQuestionNames().get(tableIndex);
+                formTxtTables.add( CsvUtils.generateTable(table,separator,questionName));
+            }
+            outputCsv+= CsvUtils.stackTablesV(formTxtTables , 2) ;
+        }
+
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
 
     }
 

@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
@@ -150,12 +151,33 @@ public class Report4 extends Report{
         Document doc = generatePdfHtml() ;
         doc.select("th.bar-header").remove() ;
         doc.select("td.bar").remove() ;
+        styleTitlePrintable(doc) ;
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
     @Override
     public void generateCsvReport() {
+        final int CHP = 2  ;
+
+        char separator = ',';
+        ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders();
+
+        String outputCsv = "" ;
+        int pageWidth = CsvUtils.calcTableWidth(tableWithHeaders) ;
+
+        String txtTitle = CsvUtils.generateTitleLine("Studets Grades Report",separator,
+                pageWidth,2) ;
+
+        outputCsv+= txtTitle ;
+
+//        String tableTxt = CsvUtils.generateTxtTableAlignCenter((ArrayList)tableWithHeaders.subList(0 ,tableWithHeaders.size()-1 ) , "" , CHP ) ;
+
+        String tableTxt = CsvUtils.generateTable(tableWithHeaders , separator) ;
+
+        outputCsv += tableTxt ;
+
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
 
     }
 

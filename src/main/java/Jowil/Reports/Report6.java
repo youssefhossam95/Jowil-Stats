@@ -113,7 +113,6 @@ public class Report6 extends Report {
         bc.setAnimated(false);
         Scene scene  = new Scene(bc,800,600);
 
-
         scene.getStylesheets().add("reports/report6/style.css");
         bc.applyCss();
         bc.layout();
@@ -239,15 +238,6 @@ public class Report6 extends Report {
 
     @Override
     public void generateCsvReport() throws IOException {
-        String csvFile = "abc.csv";
-        FileWriter writer = new FileWriter(csvFile);
-
-        ArrayList<String> hi = new ArrayList<>();
-        CsvUtils.writeLine(writer, hi );
-        hi.add("w") ; hi .add("r") ;
-        CsvUtils.writeLine(writer , hi);
-        writer.flush();
-        writer.close();
 
     }
 

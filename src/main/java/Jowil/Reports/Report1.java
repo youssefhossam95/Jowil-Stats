@@ -161,17 +161,20 @@ public class Report1 extends Report{
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
     }
-    @Override
-    public void generateTxtReport() {
-
-        int cellHorizontalPadding = 3 ;
+    private ArrayList<ArrayList<String>> getTableWithHeaders (){
         ArrayList<String>tableHeaders = new ArrayList<>();
         tableHeaders.add("Grade") ; tableHeaders.add("Percent Score") ;
         tableHeaders.add("Raw Score") ; tableHeaders.add("Frequency") ; tableHeaders.add("Percentage");
 
         ArrayList<ArrayList<String>>tableWithHeaders = Utils.cloneTable(statsTable) ;
         tableWithHeaders.add(0 , tableHeaders) ;
+        return tableWithHeaders ;
+    }
+    @Override
+    public void generateTxtReport() {
 
+        int cellHorizontalPadding = 3 ;
+        ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
         String txtTitle = TxtUtils.generateTitleLine("Grades Distribution Report",
                 TxtUtils.calcTableWidth(tableWithHeaders,cellHorizontalPadding),2) ;
         String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding , false) ;
@@ -185,21 +188,29 @@ public class Report1 extends Report{
     @Override
     public void generatePrintablePdfReport() throws IOException, DocumentException {
         Document doc = generatePdfHtml() ;
+        styleTitlePrintable(doc);
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
     @Override
     public void generateCsvReport() throws IOException {
-        String csvFile = "abc.csv";
-        FileWriter writer = new FileWriter(csvFile);
+        char separator = ',';
 
-        ArrayList<String> hi = new ArrayList<>();
-        CsvUtils.writeLine(writer, hi );
-        hi.add("w") ; hi .add("r") ;
-        CsvUtils.writeLine(writer , hi);
-        writer.flush();
-        writer.close();
+        String outputCsv = "";
+        int pageWidth = CsvUtils.calcTableWidth(statsTable);
+        String titleCsv = CsvUtils.generateTitleLine("Grades Distribution Report",separator ,pageWidth , 2) ;
+        String tableCsv = CsvUtils.generateTable(getTableWithHeaders() , separator) ;
+
+        outputCsv = titleCsv + tableCsv ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+
+//        ArrayList<String> hi = new ArrayList<>();
+//        CsvUtils.writeLine(writer, hi );
+//        hi.add("w") ; hi .add("r") ;
+//        CsvUtils.writeLine(writer , hi);
+//        writer.flush();
+//        writer.close();
 
     }
 

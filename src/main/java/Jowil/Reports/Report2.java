@@ -1,5 +1,7 @@
 package Jowil.Reports;
 
+import Jowil.CSVHandler;
+import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
@@ -51,7 +53,7 @@ public class Report2 extends Report {
                     doc.select("table").last().after(pageBreakHtml);
                     doc.select("div.page-break").last().after(templateBodyHtml) ;
                     doc.select("div.divTitle").addClass("second-page-header") ;
-                    doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                    doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
                 }
                 fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
                 ArrayList<ArrayList<ArrayList<String>>> statsTables ;
@@ -86,7 +88,6 @@ public class Report2 extends Report {
                     int startIndex = 0;
                     int endIndex = (int) Utils.getNumberWithinLimits(table.size(), 0, remainingRows);
                     do {
-                        System.out.println("in the while looop");
                         //create html table
                         ArrayList<ArrayList<String>> pageTable = new ArrayList<ArrayList<String>>(table.subList(startIndex, endIndex));
                         String rowsHtml = createRowsHtml(pageTable, ";grayRow", "");
@@ -153,7 +154,7 @@ public class Report2 extends Report {
             if(formIndex>0) {
                 doc.select("table").last().after(templateBodyHtml);
                 doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("h2").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                doc.select("div.DivTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
             }
             fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
             ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
@@ -237,6 +238,7 @@ public class Report2 extends Report {
             tableWithHeaders = cleanTable(tableWithHeaders) ;
             firstFormTables.add(tableWithHeaders) ;
             tabelsChp.add(chpCenterTable) ;
+            questionIndex+= tableWithHeaders.size() - 1 ;
         }
         firstFormTables.add( preprocessMap( formsStatsMaps.get(0)) )  ;
         tabelsChp.add(chpLRTable) ;
@@ -304,35 +306,90 @@ public class Report2 extends Report {
 
     @Override
     public void generatePrintablePdfReport() throws IOException, DocumentException {
-        Document doc = generatePdfHtml(true) ;
-        updateTemplateDate(doc); // updates the date of the footer to the current date
+        Document doc = generatePdfHtml(false) ;
 
-        String printableLegendHtml = "<div class=\"wrapper\">\n" +
-                "            <span><strong> * : </strong></span>\n" +
-                "            <span class=\" second\"> Distractor</span>\n" +
-                "        </div>\n" +
-                "       \n" +
-                "        <div class=\"wrapper\" style=\"margin-bottom: 30px\">\n" +
-                "            <span>\n" +
-                "                <strong>\n" +
-                "                    <u>under Line</u>:\n" +
-                "                </strong>\n" +
-                "            </span>\n" +
-                "            <span class=\" second\"> Correct Answer</span>\n" +
-                "        </div>\n" ;
-        String correctAnswerHtml = "<th rowspan='2' >Correct <br> Answer</th>" ;
-        String nonDistractorHtml = "<th rowspan='2' >Non <br> Distractors</th>" ;
+//        String printableLegendHtml = "<div class=\"wrapper\">\n" +
+//                "            <span><strong> * : </strong></span>\n" +
+//                "            <span class=\" second\"> Distractor</span>\n" +
+//                "        </div>\n" +
+//                "       \n" +
+//                "        <div class=\"wrapper\" style=\"margin-bottom: 30px\">\n" +
+//                "            <span>\n" +
+//                "                <strong>\n" +
+//                "                    <u>under Line</u>:\n" +
+//                "                </strong>\n" +
+//                "            </span>\n" +
+//                "            <span class=\" second\"> Correct Answer</span>\n" +
+//                "        </div>\n" ;
+//        String correctAnswerHtml = "<th rowspan='2' >Correct <br> Answer</th>" ;
+//        String nonDistractorHtml = "<th rowspan='2' >Non <br> Distractors</th>" ;
+//
+//        doc.select("div.legend").html(printableLegendHtml) ;
+//        doc.select("th.question").after(correctAnswerHtml) ;
+//        doc.select("th.point-biserial").before(nonDistractorHtml) ;
 
-        doc.select("div.legend").html(printableLegendHtml) ;
-        doc.select("th.question").after(correctAnswerHtml) ;
-        doc.select("th.point-biserial").before(nonDistractorHtml) ;
-
+        doc.select("td.green").removeClass("green") ;
+        doc.select("td.red").removeClass("red");
+        doc.select("td.gold").removeClass("gold") ;
+        styleTitlePrintable(doc);
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
     @Override
     public void generateCsvReport() {
+        final int PADDING_BETWEEN_TABLES = 2 ;
+
+        char separator = ',' ;
+        String outputCsv="" ;
+
+
+        int pageWidth = CsvUtils.calcPageWidth(formsStatsPrintableTables.get(0)); // calc page width based on first form tables
+
+        for(int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            Map<String, String> statsMap = formsStatsMaps.get(formIndex);
+            ArrayList<ArrayList<ArrayList<String>>> formsStatsTables = formsStatsPrintableTables.get(formIndex);
+
+
+            ArrayList<ArrayList<String>> mapAsTable = preprocessMap(statsMap);
+            String generalStatsTxt = CsvUtils.generateTable(mapAsTable, separator);
+
+            String reportTitle = "Condenced Test Report"  ;
+            if(Statistics.getNumberOfForms()>1)
+                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+
+            String txtTitle = CsvUtils.generateTitleLine(reportTitle, separator,
+                    pageWidth,2) ;
+
+
+            outputCsv+= txtTitle ;
+
+            outputCsv+= generalStatsTxt  ;
+
+            String legend = "* : Distractor"+CsvUtils.NEW_LINE ;
+
+            outputCsv+= Utils.generatePattern(TxtUtils.newLine , 2 ) + legend ;
+
+            ArrayList<String> csvTables = new ArrayList<>();
+
+
+            int questionIndex = 0;
+
+            for(int tableIndex = 0 ; tableIndex< formsStatsTables.size() ; tableIndex++ ) {
+                ArrayList<ArrayList<String>> statsTable = cleanTable(formsStatsTables.get(tableIndex));
+                ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);
+                tableWithHeaders.add(0, getHeaders(questionIndex));
+                csvTables.add(CsvUtils.generateTable(tableWithHeaders, separator));
+                questionIndex += statsTable.size() ;
+            }
+
+            outputCsv += CsvUtils.stackTablesV(csvTables, PADDING_BETWEEN_TABLES) ;
+        }
+//        String outputCsv = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
+        System.out.println(outputCsv);
+
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+
 
     }
 

@@ -19,7 +19,7 @@ abstract public class Report {
 
 
     public final static String [] formatDirNames={"\\PDF Reports\\","\\HTML Reports\\","\\TXT Reports\\",
-            "\\Word Reports\\","\\XLS Reports\\" , "\\Printable PDF Reports\\"};
+            "\\Word Reports\\","\\XLS Reports\\" , "\\Printable PDF Reports\\" , "\\CSV Reports\\"};
 
     protected String templatePath ;
     protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
