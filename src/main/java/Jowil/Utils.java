@@ -72,4 +72,19 @@ public class Utils {
         return output ;
     }
 
+    public static ArrayList<ArrayList<String>> removeTableCol (ArrayList<ArrayList<String>> table , int colIndex) {
+        ArrayList<ArrayList<String>> outputTable = cloneTable(table) ;
+        for(ArrayList<String> tableRow : outputTable) {
+            tableRow.remove(colIndex) ;
+        }
+        return outputTable ;
+    }
+    public static String removeLastChar(String input ) {
+       String output = "";
+        if(!input.equals(""))
+            output = input.substring(0 , input.length()-1) ;
+
+        return output ;
+    }
+
 }
