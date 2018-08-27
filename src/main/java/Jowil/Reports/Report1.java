@@ -193,25 +193,30 @@ public class Report1 extends Report{
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
-    @Override
-    public void generateCsvReport() throws IOException {
-        char separator = ',';
 
+    private String generateCharSeparatedValuesString(char separator){
         String outputCsv = "";
         int pageWidth = CsvUtils.calcTableWidth(statsTable);
         String titleCsv = CsvUtils.generateTitleLine("Grades Distribution Report",separator ,pageWidth , 2) ;
         String tableCsv = CsvUtils.generateTable(getTableWithHeaders() , separator) ;
 
         outputCsv = titleCsv + tableCsv ;
+
+        return outputCsv ;
+    }
+    @Override
+    public void generateCsvReport() throws IOException {
+
+        String outputCsv = generateCharSeparatedValuesString(',') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+    }
 
-//        ArrayList<String> hi = new ArrayList<>();
-//        CsvUtils.writeLine(writer, hi );
-//        hi.add("w") ; hi .add("r") ;
-//        CsvUtils.writeLine(writer , hi);
-//        writer.flush();
-//        writer.close();
+    @Override
+    public void generateTsvReprot() {
 
+        String outputCsv = generateCharSeparatedValuesString('\t') ;
+        System.out.println(outputCsv);
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
     }
 
 }

@@ -156,28 +156,39 @@ public class Report4 extends Report{
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
-    @Override
-    public void generateCsvReport() {
-        final int CHP = 2  ;
-
-        char separator = ',';
+    private String generateCharSeparatedValuesString(char separator) {
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders();
 
-        String outputCsv = "" ;
-        int pageWidth = CsvUtils.calcTableWidth(tableWithHeaders) ;
+        String outputCsv = "";
+        int pageWidth = CsvUtils.calcTableWidth(tableWithHeaders);
 
-        String txtTitle = CsvUtils.generateTitleLine("Studets Grades Report",separator,
-                pageWidth,2) ;
+        String txtTitle = CsvUtils.generateTitleLine("Studets Grades Report", separator,
+                pageWidth, 2);
 
-        outputCsv+= txtTitle ;
+        outputCsv += txtTitle;
 
 //        String tableTxt = CsvUtils.generateTxtTableAlignCenter((ArrayList)tableWithHeaders.subList(0 ,tableWithHeaders.size()-1 ) , "" , CHP ) ;
 
-        String tableTxt = CsvUtils.generateTable(tableWithHeaders , separator) ;
+        String tableTxt = CsvUtils.generateTable(tableWithHeaders, separator);
 
-        outputCsv += tableTxt ;
+        outputCsv += tableTxt;
 
+        return outputCsv ;
+    }
+
+    @Override
+    public void generateCsvReport() {
+
+        String outputCsv = generateCharSeparatedValuesString(',') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+
+    }
+
+    @Override
+    public void generateTsvReprot() {
+
+        String outputCsv = generateCharSeparatedValuesString('\t') ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
 
     }
 

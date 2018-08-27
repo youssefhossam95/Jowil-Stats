@@ -182,10 +182,10 @@ public class Report6 extends Report {
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
 
     }
-    @Override
-    public void generateTxtReport() {
 
-        int CHP = 3 ;
+    private ArrayList<ArrayList<String>> getTableWithHeaders ( ArrayList<ArrayList<String>> table) {
+
+        ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table);
         ArrayList<String>tableHeaders = new ArrayList<>();
         tableHeaders.add("Section Name") ; tableHeaders.add("Hardest Question") ;
         tableHeaders.add("Easiest Question") ; tableHeaders.add("Average Correct ") ;
@@ -197,17 +197,23 @@ public class Report6 extends Report {
         secondHeaders.add("Percentage") ; secondHeaders.add("with Distractors");
         secondHeaders.add("Biserial") ; secondHeaders.add("(0-10)") ;
 
+        tableWithHeaders.add(0,tableHeaders);
+        tableWithHeaders.add(1,secondHeaders) ;
+        return  tableWithHeaders ;
+    }
+    @Override
+    public void generateTxtReport() {
+
+        int CHP = 3 ;
+
         String outputTxt = "" ;
 
         ArrayList<ArrayList<String>> temp = new ArrayList<>( );
-        temp.add(tableHeaders) ;
+        temp = getTableWithHeaders(temp ) ;
         int pageWidth = TxtUtils.calcTableWidth(temp , CHP) ;
         for(int formIndex=  0 ; formIndex<formsStatsTables.size() ; formIndex++) {
 
-            ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(formsStatsTables.get(formIndex));
-            tableWithHeaders.add(0, tableHeaders);
-            tableWithHeaders.add(1, secondHeaders);
-
+          ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(formsStatsTables.get(formIndex)) ;
 
 
             String reportTitle = "Section Details Report"  ;
@@ -236,8 +242,45 @@ public class Report6 extends Report {
         generatePDF(pdfHtmlPath,outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
-    @Override
+    private String generateCharSeparatedValuesString(char separator) {
+        String outputCsv = "" ;
+
+        ArrayList<ArrayList<String>> temp = new ArrayList<>( );
+        temp = getTableWithHeaders(temp ) ;
+        int pageWidth = CsvUtils.calcTableWidth(temp) ;
+        for(int formIndex=  0 ; formIndex<formsStatsTables.size() ; formIndex++) {
+
+            ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(formsStatsTables.get(formIndex)) ;
+
+
+            String reportTitle = "Section Details Report"  ;
+            if(Statistics.getNumberOfForms()>1)
+                reportTitle = "Form "+(formIndex+1) + " " + reportTitle ;
+
+//            if(formIndex > 0 )
+//                outputCsv+= CsvUtils.newLine+Utils.generatePattern("*" , pageWidth)+CsvUtils.newLine;
+
+            String txtTitle = CsvUtils.generateTitleLine(reportTitle, separator ,
+                    pageWidth , 2);
+
+            String txtTable = CsvUtils.generateTable(tableWithHeaders, separator);
+
+            outputCsv+= txtTitle + txtTable;
+        }
+        return  outputCsv ;
+    }
+        @Override
     public void generateCsvReport() throws IOException {
+
+        String outputCsv = generateCharSeparatedValuesString(',') ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
+
+    }
+
+    @Override
+    public void generateTsvReprot() {
+        String outputCsv = generateCharSeparatedValuesString('\t') ;
+        CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
 
     }
 
