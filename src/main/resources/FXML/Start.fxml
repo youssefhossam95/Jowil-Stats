@@ -14,6 +14,27 @@
     <center>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
             <children>
+
+                <HBox spacing="0" AnchorPane.rightAnchor="7">
+                    <StackPane fx:id="minusButton" styleClass="toolBarButton" prefWidth="40" prefHeight="40">
+                        <children>
+                            <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="25" fitHeight="25">
+                                <image>
+                                    <Image url="@../Images/blackMinus.png" />
+                                </image>
+                            </ImageView>
+                        </children>
+                    </StackPane>
+                <StackPane fx:id="closeButton" styleClass="toolBarButton" prefWidth="40" prefHeight="40" >
+                    <children>
+                        <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="25" fitHeight="25">
+                            <image>
+                                <Image url="@../Images/blackClose.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
+                </HBox>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../Images/logo.png" />

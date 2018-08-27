@@ -1,6 +1,7 @@
 package Jowil;
 
 import com.jfoenix.controls.JFXListView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -63,12 +64,18 @@ public class StartController extends Controller{
 
     @FXML
     ImageView newImageView;
-    
+
     final static double scalingFactor=1.03;
 
     ArrayList<String> projectsNames;
 
     JSONObject projectsJson;
+
+    @FXML
+    StackPane closeButton;
+
+    @FXML
+    StackPane minusButton;
 
 
 
@@ -86,7 +93,7 @@ public class StartController extends Controller{
         //lowerAncPane.setStyle("-fx-background-color:transparent;-fx-border-width:1 0 0 0;-fx-border-color:#626365"); //anchor pane not white
 
         newStack.setOnMouseEntered(event -> {
-            
+
             newRect.setScaleX(scalingFactor);
             newRect.setScaleY(scalingFactor);
             newImageView.setScaleX(scalingFactor);
@@ -131,6 +138,9 @@ public class StartController extends Controller{
 
         newStack.setOnMouseClicked(event -> showNewProjectNameDialog(""));
         openStack.setOnMouseClicked(event -> showExistingProjects());
+
+        closeButton.setOnMouseClicked(event -> Platform.exit());
+        minusButton.setOnMouseClicked(event -> stage.setIconified(true));
 
     }
 

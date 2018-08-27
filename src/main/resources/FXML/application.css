@@ -294,3 +294,13 @@ JFXListView:focused {
 -fx-background-repeat: no-repeat;
 -fx-background-size: stretch;
 }
+
+.toolBarButton{
+-fx-background-color:transparent;
+-fx-border-width:0
+}
+
+.toolBarButton:hover{
+-fx-background-color:#DCDCDC;
+-fx-opacity:0.2
+}

@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -164,7 +165,9 @@ public abstract class Controller {
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
 
-            if(!(this instanceof StartController))
+            if(this instanceof StartController)
+                stage.initStyle(StageStyle.UNDECORATED);
+            else
                 stage.initModality(Modality.APPLICATION_MODAL);
             stage.setOnCloseRequest(event -> {
                 if(!showConfirmationDialog("Cancel Project","Are you sure you want to cancel this project?",stage.getOwner()))
