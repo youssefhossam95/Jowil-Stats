@@ -290,9 +290,7 @@ JFXListView:focused {
 }
 
 .lowerAncStart{
--fx-background-image:url("../Images/chalk-board-with-math-blur-50.png");
--fx-background-repeat: no-repeat;
--fx-background-size: stretch;
+-fx-background-color:transparent;
 }
 
 .toolBarButton{

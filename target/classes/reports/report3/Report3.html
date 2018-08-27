@@ -1,5 +1,6 @@
 <html>
  <head> 
+  <meta charset="UTF-8" /> 
   <style type="text/css">
     @page {
 
@@ -57,7 +58,10 @@
       height: 30px;
       background-color: #08436b;
       margin-bottom: 100px;
-
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
 
     }
 
@@ -113,12 +117,20 @@
       border-bottom-color: #08436b;
       text-align: left
     }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .second-page-header {
+      margin-top: 20px;
+    }
   </style> 
  </head> 
  <body> 
   <div id="footer"> 
    <div id="footerLeft">
-    24/08/2018
+    27/08/2018
    </div> 
    <div id="footerRight">
     Page 
@@ -129,157 +141,312 @@
      Test Statistics Report 
    </div> 
   </div> 
-  <div class="divTitle" style="text-align:center"> 
-   <h2 style="color:white"> Test Statistics Report </h2> 
-  </div> 
-  <table class="tg"> 
-   <tbody>
-    <tr> 
-     <th class="tg-i13m">Test Data</th> 
-     <th class="tg-i13m"></th> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711" style="padding-top:0.8%">Number Of Graded Questions</td> 
-     <td class="tg-l711" id="NumberOfGradedQuestions" style="text-align:right">60</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Maximum Possible Score</td> 
-     <td class="tg-l711" id="MaximumPossibleScore" style="text-align:right">60</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Benchmark</td> 
-     <td class="tg-l711" id="Benchmark" style="text-align:right">75</td> 
-    </tr> 
-   </tbody>
-  </table> 
-  <table class="tg"> 
-   <tbody>
-    <tr> 
-     <th class="tg-i13m">Test insights</th> 
-     <th class="tg-i13m"></th> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711" style="padding-top:0.8%">Hardest Question</td> 
-     <td class="tg-l711" id="hardestQuestion" style="text-align:right">14.3</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Easiest Question</td> 
-     <td class="tg-l711" id="EasiestQuestion" style="text-align:right">71.7%</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Hardest Section</td> 
-     <td class="tg-l711" id="Hardest Section" style="text-align:right">19.5</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Easiest Section</td> 
-     <td class="tg-l711" id="EasiestSection" style="text-align:right">4.8</td> 
-    </tr> 
-   </tbody>
-  </table> 
-  <table class="tg"> 
-   <tbody>
-    <tr> 
-     <th class="tg-i13m">Basic Statistics</th> 
-     <th class="tg-i13m"></th> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711" style="padding-top:0.8%">Mean</td> 
-     <td class="tg-l711" id="Mean" style="text-align:right">37.7</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Mean Percent Score</td> 
-     <td class="tg-l711" id="MeanPercentScore" style="text-align:right">0.6</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Highest Score</td> 
-     <td class="tg-l711" id="HighestScore" style="text-align:right">58</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Lowest Score</td> 
-     <td class="tg-l711" id="LowestScore" style="text-align:right">6</td> 
-    </tr> 
-   </tbody>
-  </table> 
-  <table class="tg"> 
-   <tbody>
-    <tr> 
-     <th class="tg-i13m">Dispersion</th> 
-     <th class="tg-i13m"></th> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711" style="padding-top:0.8%">Standard Deviation</td> 
-     <td class="tg-l711" id="StandardDeviation" style="text-align:right">10.5</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Variance</td> 
-     <td class="tg-l711" id="Variance" style="text-align:right">111.2</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Range</td> 
-     <td class="tg-l711" id="Range" style="text-align:right">52</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Median</td> 
-     <td class="tg-l711" id="Median" style="text-align:right">40</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">25th Percentile</td> 
-     <td class="tg-l711" id="25thPercentile" style="text-align:right">32</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">75th Percentile</td> 
-     <td class="tg-l711" id="75thPercentile" style="text-align:right">46</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Interquartile Range</td> 
-     <td class="tg-l711" id="InterquartileRange" style="text-align:right">14</td> 
-    </tr> 
-   </tbody>
-  </table> 
-  <table class="tg"> 
-   <tbody>
-    <tr> 
-     <th class="tg-i13m">Confidence Intervals</th> 
-     <th class="tg-i13m"></th> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711" style="padding-top:0.8%">90%</td> 
-     <td class="tg-l711" id="90" style="text-align:right">37.2 - 38.2</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">95%</td> 
-     <td class="tg-l711" id="95" style="text-align:right">37.1 - 38.3</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">99%</td> 
-     <td class="tg-l711" id="99" style="text-align:right">37 - 38.5</td> 
-    </tr> 
-   </tbody>
-  </table> 
-  <table class="tg"> 
-   <tbody>
-    <tr> 
-     <th class="tg-i13m">Test Reliability</th> 
-     <th class="tg-i13m"></th> 
-    </tr> 
-    <!-- <tr>
+  <div id="template"> 
+   <div class="divTitle second-page-header" style="text-align:center">
+     Test Statistics Report 
+   </div> 
+   <table class="tg"> 
+    <tbody>
+     <tr> 
+      <th class="tg-i13m">Test Data</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Number Of Graded Questions</td> 
+      <td class="tg-l711 NumberOfGradedQuestions" style="text-align:right">60</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Maximum Possible Score</td> 
+      <td class="tg-l711 MaximumPossibleScore" style="text-align:right">60</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Benchmark</td> 
+      <td class="tg-l711 Benchmark" style="text-align:right">75</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <table class="tg"> 
+    <tbody>
+     <tr> 
+      <th class="tg-i13m">Test insights</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Hardest Question</td> 
+      <td class="tg-l711 HardestQuestion" style="text-align:right">G5-11</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Easiest Question</td> 
+      <td class="tg-l711 EasiestQuestion" style="text-align:right">G1-2</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Hardest Section</td> 
+      <td class="tg-l711 HardestSection" style="text-align:right">G5</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Easiest Section</td> 
+      <td class="tg-l711 EasiestSection" style="text-align:right">G1</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <table class="tg"> 
+    <tbody>
+     <tr> 
+      <th class="tg-i13m">Basic Statistics</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Mean</td> 
+      <td class="tg-l711 Mean" style="text-align:right">37.7</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Mean Percent Score</td> 
+      <td class="tg-l711 MeanPercentScore" style="text-align:right">0.6</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Highest Score</td> 
+      <td class="tg-l711 HighestScore" style="text-align:right">58</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Lowest Score</td> 
+      <td class="tg-l711 LowestScore" style="text-align:right">6</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <table class="tg"> 
+    <tbody>
+     <tr> 
+      <th class="tg-i13m">Dispersion</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Standard Deviation</td> 
+      <td class="tg-l711 StandardDeviation" style="text-align:right">10.5</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Variance</td> 
+      <td class="tg-l711 Variance" style="text-align:right">111.2</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Range</td> 
+      <td class="tg-l711 Range" style="text-align:right">52.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Median</td> 
+      <td class="tg-l711 Median" style="text-align:right">40.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">25th Percentile</td> 
+      <td class="tg-l711 25thPercentile" style="text-align:right">32.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">75th Percentile</td> 
+      <td class="tg-l711 75thPercentile" style="text-align:right">46.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Interquartile Range</td> 
+      <td class="tg-l711 InterquartileRange" style="text-align:right">14.0</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <table class="tg"> 
+    <tbody>
+     <tr> 
+      <th class="tg-i13m">Confidence Intervals</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">90%</td> 
+      <td class="tg-l711 90" style="text-align:right">37.2 - 38.2</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">95%</td> 
+      <td class="tg-l711 95" style="text-align:right">37.1 - 38.3</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">99%</td> 
+      <td class="tg-l711 99" style="text-align:right">37.0 - 38.5</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <table class="tg"> 
+    <tbody>
+     <tr> 
+      <th class="tg-i13m">Test Reliability</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <!-- <tr>
       <td class="tg-l711" style="padding-top:0.8%">Standard Error of Measurement
       </td>
       <td class="tg-l711" style="text-align:right">14.3</td>
     </tr> --> 
-    <!-- <tr>
+     <!-- <tr>
       <td class="tg-l711">Cronbach's Alpha</td>
-      <td class="tg-l711" id="CronbachsAlpha" style="text-align:right">71.7%</td>
+      <td class="tg-l711 CronbachsAlpha" style="text-align:right">71.7%</td>
     </tr> --> 
-    <tr> 
-     <td class="tg-l711">Kuder-Richardson Formula 20</td> 
-     <td class="tg-l711" id="Kuder-RichardsonFormula20" style="text-align:right">0.9</td> 
-    </tr> 
-    <tr> 
-     <td class="tg-l711">Kuder-Richardson Formula 21</td> 
-     <td class="tg-l711" id="Kuder-RichardsonFormula21" style="text-align:right">0.7</td> 
-    </tr> 
-   </tbody>
-  </table>  
+     <tr> 
+      <td class="tg-l711">Kuder-Richardson Formula 20</td> 
+      <td class="tg-l711 Kuder-RichardsonFormula20" style="text-align:right">0.9</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Kuder-Richardson Formula 21</td> 
+      <td class="tg-l711 Kuder-RichardsonFormula21" style="text-align:right">0.7</td> 
+     </tr> 
+    </tbody>
+   </table>
+   <div class="page-break"></div>
+   <div class="divTitle second-page-header" style="text-align:center">
+    Form 1 Test Statistics Report
+   </div> 
+   <table class="tg"> 
+    <tbody> 
+     <tr> 
+      <th class="tg-i13m">Test Data</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Number Of Graded Questions</td> 
+      <td class="tg-l711 NumberOfGradedQuestions" style="text-align:right">60</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Maximum Possible Score</td> 
+      <td class="tg-l711 MaximumPossibleScore" style="text-align:right">60</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Benchmark</td> 
+      <td class="tg-l711 Benchmark" style="text-align:right">75</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <table class="tg"> 
+    <tbody> 
+     <tr> 
+      <th class="tg-i13m">Test insights</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Hardest Question</td> 
+      <td class="tg-l711 HardestQuestion" style="text-align:right">G5-11</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Easiest Question</td> 
+      <td class="tg-l711 EasiestQuestion" style="text-align:right">G1-2</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Hardest Section</td> 
+      <td class="tg-l711 HardestSection" style="text-align:right">G5</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Easiest Section</td> 
+      <td class="tg-l711 EasiestSection" style="text-align:right">G1</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <table class="tg"> 
+    <tbody> 
+     <tr> 
+      <th class="tg-i13m">Basic Statistics</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Mean</td> 
+      <td class="tg-l711 Mean" style="text-align:right">37.7</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Mean Percent Score</td> 
+      <td class="tg-l711 MeanPercentScore" style="text-align:right">0.6</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Highest Score</td> 
+      <td class="tg-l711 HighestScore" style="text-align:right">58</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Lowest Score</td> 
+      <td class="tg-l711 LowestScore" style="text-align:right">6</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <table class="tg"> 
+    <tbody> 
+     <tr> 
+      <th class="tg-i13m">Dispersion</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">Standard Deviation</td> 
+      <td class="tg-l711 StandardDeviation" style="text-align:right">10.5</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Variance</td> 
+      <td class="tg-l711 Variance" style="text-align:right">111.2</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Range</td> 
+      <td class="tg-l711 Range" style="text-align:right">52.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Median</td> 
+      <td class="tg-l711 Median" style="text-align:right">40.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">25th Percentile</td> 
+      <td class="tg-l711 25thPercentile" style="text-align:right">32.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">75th Percentile</td> 
+      <td class="tg-l711 75thPercentile" style="text-align:right">46.0</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Interquartile Range</td> 
+      <td class="tg-l711 InterquartileRange" style="text-align:right">14.0</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <table class="tg"> 
+    <tbody> 
+     <tr> 
+      <th class="tg-i13m">Confidence Intervals</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711" style="padding-top:0.8%">90%</td> 
+      <td class="tg-l711 90" style="text-align:right">37.2 - 38.2</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">95%</td> 
+      <td class="tg-l711 95" style="text-align:right">37.1 - 38.3</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">99%</td> 
+      <td class="tg-l711 99" style="text-align:right">37.0 - 38.5</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <table class="tg"> 
+    <tbody> 
+     <tr> 
+      <th class="tg-i13m">Test Reliability</th> 
+      <th class="tg-i13m"></th> 
+     </tr> 
+     <!-- <tr>
+      <td class="tg-l711" style="padding-top:0.8%">Standard Error of Measurement
+      </td>
+      <td class="tg-l711" style="text-align:right">14.3</td>
+    </tr> --> 
+     <!-- <tr>
+      <td class="tg-l711">Cronbach's Alpha</td>
+      <td class="tg-l711 CronbachsAlpha" style="text-align:right">71.7%</td>
+    </tr> --> 
+     <tr> 
+      <td class="tg-l711">Kuder-Richardson Formula 20</td> 
+      <td class="tg-l711 Kuder-RichardsonFormula20" style="text-align:right">0.9</td> 
+     </tr> 
+     <tr> 
+      <td class="tg-l711">Kuder-Richardson Formula 21</td> 
+      <td class="tg-l711 Kuder-RichardsonFormula21" style="text-align:right">0.7</td> 
+     </tr> 
+    </tbody> 
+   </table>  
+  </div>  
  </body>
 </html>
