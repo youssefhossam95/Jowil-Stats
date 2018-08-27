@@ -78,12 +78,12 @@ public class StartController extends Controller{
 
     @Override
     protected void initComponents() {
-        Font jowilLabelFont=new Font("System Bold",resX*0.04);
+        Font jowilLabelFont=new Font("System Bold",resX*0.059);
         jowilLabel.setFont(jowilLabelFont);
         Font buttonsFont=new Font("System Bold",resX*0.011);
         openLabel.setFont(buttonsFont);
         newLabel.setFont(buttonsFont);
-        lowerAncPane.setStyle("-fx-background-color:transparent;-fx-border-width:1 0 0 0;-fx-border-color:#626365"); //anchor pane not white
+        //lowerAncPane.setStyle("-fx-background-color:transparent;-fx-border-width:1 0 0 0;-fx-border-color:#626365"); //anchor pane not white
 
         newStack.setOnMouseEntered(event -> {
             
@@ -167,25 +167,27 @@ public class StartController extends Controller{
         double lowerHeight=1-upperHeight;
 
 
-        upperImageView.setFitWidth(rootWidth);
-        upperImageView.setFitHeight(upperHeight);
+//        upperImageView.setFitWidth(rootWidth);
+//        upperImageView.setFitHeight(upperHeight);
 
         lowerAncPane.setPrefWidth(rootWidth);
         //lowerAncPane.setPrefHeight(lowerHeight);
 
+        jowilLabel.setLayoutX(0.353*rootWidth);
+        jowilLabel.setLayoutY(0.12*rootHeight);
+
+
+        double vSpacing=rootHeight*0.15;
+
         logoImageView.setFitWidth(0.08*resX);
         logoImageView.setFitHeight(0.11*resY);
-        logoImageView.setLayoutX(0.47*rootWidth);
-        logoImageView.setLayoutY(0.12*rootHeight);
+        logoImageView.setLayoutX(0.474*rootWidth);
+        //logoImageView.setLayoutY(jowilLabel.getLayoutY()+rootHeight*0.09);
+        logoImageView.setLayoutY(jowilLabel.getLayoutY()+vSpacing);
 
 
-
-        jowilLabel.setLayoutX(0.4*rootWidth);
-        jowilLabel.setLayoutY(0.03*rootHeight);
-
-
-        openStack.setLayoutX(0.24*rootWidth);
-        openStack.setLayoutY(0.24*rootHeight);
+        openStack.setLayoutX(0.25*rootWidth);
+        openStack.setLayoutY(logoImageView.getLayoutY()+vSpacing);
 
         openRect.setWidth(0.15*resX); // kant 0.173
         openRect.setHeight(0.34*resY); //kant 0.4
@@ -199,7 +201,7 @@ public class StartController extends Controller{
         StackPane.setMargin(openImageView,buttonImagesMargin);
 
 
-        newStack.setLayoutX(0.575*rootWidth);
+        newStack.setLayoutX(0.595*rootWidth);
         newStack.setLayoutY(openStack.getLayoutY());
 
         newRect.setWidth(openRect.getWidth());
