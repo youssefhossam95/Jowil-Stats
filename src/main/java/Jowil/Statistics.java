@@ -12,6 +12,7 @@ import org.apache.commons.math3.distribution.TDistribution ;
 
 
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class Statistics {
     private static ArrayList<ArrayList<Double>> formsScors ;
     private static ArrayList<ArrayList<ArrayList<Integer>>> pointBiserialTables;
     private static ArrayList<ArrayList<Integer>> pointBiserialTotalTable ;
+
+    private static DecimalFormat format  = new DecimalFormat("0.#");
+    private static DecimalFormat format2  = new DecimalFormat("0.##");
 
     ////////////////////setters
 //    public static void setIdentifierMode(int identifierMode) {
@@ -352,6 +356,11 @@ public class Statistics {
         initCorrectAnswersPercent();
     }
 
+    private static String formatNumber (DecimalFormat format, double number){
+        String numberString = format.format(number);
+        return  numberString.contains(".")?numberString: numberString+".0" ;
+
+    }
 
     //helper functions
     private static void calcformAnswerStats(ArrayList<ArrayList<Double>> formAnswerStats , int formIndex){
@@ -585,25 +594,25 @@ public class Statistics {
         statsMap.put("Maximum Possible Score" , format.format(maxScore)) ; // assuming all Forms should have the same weight sum
         statsMap.put("Benchmark" ,  format.format(benchMark) ) ;
 
-        statsMap.put("Mean" , format.format(mean));
-        statsMap.put("Mean Percent Score" , format.format(mean/maxScore) ) ;
+        statsMap.put("Mean" , formatNumber(format , mean));
+        statsMap.put("Mean Percent Score" , formatNumber(format , mean/maxScore) ) ;
         statsMap.put("Highest Score" ,format.format(HightestScore) ) ;
         statsMap.put("Lowest Score" , format.format(LowestScore)) ;
 
-        statsMap.put("Standard Deviation" , format.format(std) ) ;
-        statsMap.put("Variance" , format.format(variance)) ;
-        statsMap.put("Range" , format.format(HightestScore - LowestScore))  ;
-        statsMap.put("Median" , format.format(median));
-        statsMap.put("25th Percentile" , format.format(firstQ)) ;
-        statsMap.put("75th Percentile" , format.format(thirtQ)) ;
-        statsMap.put("Interquartile Range" , format.format(thirtQ-firstQ)) ;
+        statsMap.put("Standard Deviation" , formatNumber(format , std) ) ;
+        statsMap.put("Variance" , formatNumber(format , variance)) ;
+        statsMap.put("Range" , formatNumber(format , HightestScore - LowestScore))  ;
+        statsMap.put("Median" , formatNumber(format , median));
+        statsMap.put("25th Percentile" , formatNumber(format , firstQ)) ;
+        statsMap.put("75th Percentile" , formatNumber(format , thirtQ)) ;
+        statsMap.put("Interquartile Range" , formatNumber(format , thirtQ-firstQ)) ;
 
-        statsMap.put("90" , format.format(CI90Lower) + " - " + format.format(CI90Higher)) ;
-        statsMap.put("95" , format.format(CI95Lower) + " - " + format.format(CI95Higher)) ;
-        statsMap.put("99" , format.format(CI99Lower) + " - " + format.format(CI99Higher)) ;
+        statsMap.put("90" , formatNumber(format , CI90Lower) + " - " + formatNumber(format , CI90Higher)) ;
+        statsMap.put("95" , formatNumber(format , CI95Lower) + " - " + formatNumber(format , CI95Higher)) ;
+        statsMap.put("99" , formatNumber(format , CI99Lower) + " - " + formatNumber(format , CI99Higher)) ;
 
-        statsMap.put("Kuder-Richardson Formula 20" ,  format.format(kr20))  ;
-        statsMap.put("Kuder-Richardson Formula 21" ,  format.format(kr21)) ;
+        statsMap.put("Kuder-Richardson Formula 20" ,  formatNumber(format , kr20))  ;
+        statsMap.put("Kuder-Richardson Formula 21" ,  formatNumber(format , kr21)) ;
 
 
         return statsMap ;
@@ -704,7 +713,7 @@ public class Statistics {
         }
         int numberOfStudents  = studentEndIndex - studentStartIndex ;
 
-        return format.format((double)count/(double)numberOfStudents *100)+"%" ;
+        return formatNumber(format , (double)count/(double)numberOfStudents *100)+"%" ;
     }
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
@@ -800,7 +809,7 @@ public class Statistics {
             String nonDistractors ="" ;
             for(int answerIndex = 0 ; answerIndex < questionStats.size() ; answerIndex ++ ) {
                 String addedClass = "" ;
-                String percentOfSolvers = format.format(questionStats.get(answerIndex) * 100) ;
+                String percentOfSolvers = formatNumber(format,questionStats.get(answerIndex) * 100) ;
                 if(answerIndex== correctAnswerIndex)
                     addedClass=";green bold";
                 else if(questionStats.get(answerIndex)> correctAnswerPrecentage) {
@@ -818,8 +827,8 @@ public class Statistics {
             if(nonDistractors.equals(""))
                 nonDistractors= "-" ;
             tableRow.add(nonDistractors);
-            tableRow.add(format2.format(calcPointBiserial(formIndex, questionIndex))) ; // Point Biserial
-            tableRow.add(format.format(correctAnswerPrecentage * 100)+"%") ; // Total
+            tableRow.add(formatNumber(format,calcPointBiserial(formIndex, questionIndex))) ; // Point Biserial
+            tableRow.add(formatNumber(format,correctAnswerPrecentage * 100)+"%") ; // Total
             tableRow.add(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex)); //upper 27
             tableRow.add(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)); // lower 27
             table.add(tableRow);
@@ -859,7 +868,7 @@ public class Statistics {
                 }
                 tableRow.add(questionChoices.get(choiceIndex) + addedClass) ;
                 tableRow.add(format.format(questionStats.get(choiceIndex)*numberOfStudents)) ;
-                tableRow.add(format.format(questionStats.get(choiceIndex)*100)) ;
+                tableRow.add(formatNumber(format,questionStats.get(choiceIndex)*100)) ;
                 if(questionStats.get(choiceIndex)> correctAnswerPrecentage) {
                     barClass = "redBar";
                     imgName = "distractorColored";
@@ -903,7 +912,7 @@ public class Statistics {
             tableRow.add(studentIdentifier.get(studentIndex)) ;
             tableRow.add(getGrade(scorePrecentage)) ;
             tableRow.add(format.format(studentScores.get(studentIndex))+"/"+ format.format(maxScore)) ;
-            tableRow.add(format.format(scorePrecentage*100)+"%") ;
+            tableRow.add(formatNumber(format , scorePrecentage*100)+"%") ;
 
             statsTable.add(tableRow);
         }
@@ -913,7 +922,7 @@ public class Statistics {
         meanRow.add("mean;bold");
         meanRow.add(getGrade(meanScorePercentage)) ;
         meanRow.add(format.format(meanScore)+"/"+format.format(maxScore)) ;
-        meanRow.add(format.format(meanScorePercentage*100) +"%") ;
+        meanRow.add(formatNumber(format , meanScorePercentage*100) +"%") ;
 
         statsTable.add(meanRow);
         return statsTable ;
@@ -1014,7 +1023,7 @@ public class Statistics {
 
                 double[] percents = groupCorrectPercents.stream().mapToDouble(d -> d).toArray();
                 double avgCorrectPercent = sum(percents) / percents.length;
-                tableRow.add(format.format(avgCorrectPercent * 100) + "%"); // average correct percent
+                tableRow.add(formatNumber(format , avgCorrectPercent * 100) + "%"); // average correct percent
 
                 Double pointBiserialSum = 0.0;
                 int questionsWithDistractorCount = 0;
@@ -1041,11 +1050,138 @@ public class Statistics {
         return  report6FormTables ;
     }
 
+    private static  String getSmartDistractors (int formIndex , int questionIndex) {
+        String smartDist = "" ;
+
+        int totalNumberOfStudents = formsScors.get(formIndex).size();
+
+        if(totalNumberOfStudents<3)
+            return "-" ;
+
+        ArrayList<ArrayList<String> > formSortedStudentAnswers = sortedStudentAnswers.get(formIndex);
+        String correctAnswer = correctAnswers.get(formIndex).get(questionIndex);
+
+        int studentStartIndex = (int)Math.round(.75*totalNumberOfStudents) ;
+        int studentEndIndex = totalNumberOfStudents ;
+
+        Set<String> smartDistSet = new HashSet<>() ;
+        for (int studentIndex =  studentStartIndex ; studentIndex<  studentEndIndex  ; studentIndex++) {
+            String stundentAnswer = formSortedStudentAnswers.get(studentIndex).get(questionIndex) ;
+            if (!stundentAnswer.equals(correctAnswer))
+                smartDistSet.add(stundentAnswer);
+
+        }
+        for (String dist: smartDistSet)
+            smartDist+= dist +"-" ;
+
+        smartDist = Utils.removeLastChar(smartDist) ;
+        return  smartDist ;
+    }
+
+    public static ArrayList<ArrayList<ArrayList<ArrayList<String>>>> report7Stats () {
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsTableStats =  new ArrayList<>() ;
+
+        for (int formIndex = 0 ; formIndex < getNumberOfForms() ; formIndex++) {
+            ArrayList<ArrayList<ArrayList<String>>> oneFormTables = new ArrayList<>();
+
+            ArrayList<ArrayList<String>> badQuestionsTable = new ArrayList<>();
+            ArrayList<ArrayList<String>> questionsTable = new ArrayList<>();
+
+            for (int questionIndex = 0; questionIndex < questionsChoices.size(); questionIndex++) {
+                String correctAnswer = correctAnswers.get(formIndex).get(questionIndex);
+
+                int correctAnswerIndex = questionsChoices.get(questionIndex).indexOf(correctAnswer);
+
+                ArrayList<Double> questionStats = answersStats.get(formIndex).get(questionIndex);
+
+                double correctAnswerPrecentage = questionStats.get(correctAnswerIndex);
+
+                double pointBiserial = calcPointBiserial(formIndex, questionIndex);
+                if (pointBiserial < 0) {
+
+                    ArrayList<String> tableRow = new ArrayList<>();
+
+
+                    tableRow.add(questionNames.get(questionIndex));
+                    tableRow.add(formatNumber(format2, pointBiserial));
+                    tableRow.add(getSmartDistractors(formIndex, questionIndex));
+                    tableRow.add(formatNumber(format, correctAnswerPrecentage * 100) + "%"); // Total
+                    tableRow.add(calcPrecentOfSolvers(.75, 1.0, formIndex, questionIndex)); //upper 27
+                    tableRow.add(calcPrecentOfSolvers(0, .25, formIndex, questionIndex)); // lower 27
+                    badQuestionsTable.add(tableRow);
+                }
+
+                ArrayList<String> questionsRow = new ArrayList<>();
+                questionsRow.add(questionNames.get(questionIndex));
+                questionsRow.add(formatNumber(format, (1 - correctAnswerPrecentage) * 10));
+                questionsRow.add(formatNumber(format, correctAnswerPrecentage * 100));
+                String distractors = "";
+                String nonDistractors = "";
+                for (int responseIndex = 0; responseIndex < questionStats.size(); responseIndex++) {
+                    double responsePercent = questionStats.get(responseIndex);
+                    if (responsePercent > correctAnswerPrecentage)
+                        distractors += questionsChoices.get(questionIndex).get(responseIndex) + "-";
+                    if (responsePercent == 0)
+                        nonDistractors += questionsChoices.get(questionIndex).get(responseIndex) + "-";
+                }
+                questionsRow.add(Utils.removeLastChar(distractors));
+                questionsRow.add(Utils.removeLastChar(nonDistractors));
+
+                questionsTable.add(questionsRow);
+            }
+
+            SortByDiffAsc sorterAsc = new SortByDiffAsc();
+            Collections.sort(questionsTable, sorterAsc);
+            ArrayList<ArrayList<String>> easiestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 3).subList(0, 10));
+
+            SortByDiffDesc sorterDesc = new SortByDiffDesc();
+            Collections.sort(questionsTable, sorterDesc);
+            ArrayList<ArrayList<String>> hardestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 4).subList(0, 10));
+
+            oneFormTables.add(badQuestionsTable);
+            oneFormTables.add(hardestQuestionsTable);
+            oneFormTables.add(easiestQuestionsTable);
+
+            formsTableStats.add(oneFormTables) ;
+        }
+        return formsTableStats ;
+    }
 }
+
 class SortByScore implements Comparator<ArrayList<String>>
 {
     public int compare(ArrayList<String> a, ArrayList<String> b)
     {
-        return (int)Math.round(Double.parseDouble(a.get(a.size()-1))-Double.parseDouble(b.get(b.size()-1)));
+        double diff = Double.parseDouble(a.get(a.size()-1))-Double.parseDouble(b.get(b.size()-1)) ;
+        if(diff<0)
+            return -1 ;
+        else if( diff == 0)
+            return 0 ;
+        else
+            return 1 ;     }
+}
+class SortByDiffAsc implements Comparator<ArrayList<String>>
+{
+    public int compare(ArrayList<String> a, ArrayList<String> b)
+    {
+        double diff = Double.parseDouble(a.get(1))-Double.parseDouble(b.get(1)) ;
+        if(diff<0)
+            return -1 ;
+        else if( diff == 0)
+            return 0 ;
+        else
+            return 1 ;     }
+}
+class SortByDiffDesc implements Comparator<ArrayList<String>>
+{
+    public int compare(ArrayList<String> a, ArrayList<String> b)
+    {
+        double diff = Double.parseDouble(b.get(1))-Double.parseDouble(a.get(1)) ;
+        if(diff<0)
+            return -1 ;
+        else if( diff == 0)
+            return 0 ;
+        else
+            return 1 ;
     }
 }
