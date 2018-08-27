@@ -14,6 +14,7 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.math3.stat.StatUtils.* ;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static org.apache.commons.math3.stat.StatUtils.max;
@@ -46,18 +47,22 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
-        ArrayList<Double> hardness = new ArrayList<>( );
-        for(int i = 0 ; i < 40 ; i ++)
-            hardness.add(0.0);hardness.add(10.0);
-//       hardness.add(0.0);hardness.add(10.0);
-//        hardness.add(0.0); hardness.add(10.0) ;  hardness.add(0.0) ;  hardness.add(10.0) ;
-//        hardness.add(0.0) ; hardness.add(10.0) ; hardness.add(0.0); hardness.add(10.0);
-        Pair<Double , Double> pair = getTrendData(hardness ) ;
-        double slope = pair.getKey();
-        double Rss = pair.getValue() ;
-        System.out.println("slope: " + slope);
-        System.out.println("standard Error: " + Rss);
+//        ArrayList<Double> hardness = new ArrayList<>( );
+//        for(int i = 0 ; i < 40 ; i ++)
+//            hardness.add(0.0);hardness.add(10.0);
+////       hardness.add(0.0);hardness.add(10.0);
+////        hardness.add(0.0); hardness.add(10.0) ;  hardness.add(0.0) ;  hardness.add(10.0) ;
+////        hardness.add(0.0) ; hardness.add(10.0) ; hardness.add(0.0); hardness.add(10.0);
+//        Pair<Double , Double> pair = getTrendData(hardness ) ;
+//        double slope = pair.getKey();
+//        double Rss = pair.getValue() ;
+//        System.out.println("slope: " + slope);
+//        System.out.println("standard Error: " + Rss);
 
+        double x = -0.1 ;
+
+        System.out.println(Math.floor(x));
+//
 
 
 

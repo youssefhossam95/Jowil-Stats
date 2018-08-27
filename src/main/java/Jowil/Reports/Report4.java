@@ -42,7 +42,7 @@ public class Report4 extends Report{
 
         String headerHtml = doc.select("tr.headerRow").outerHtml();
 
-
+        doc.select("th#identifier").last().text(Statistics.getIdentifierName()) ;
         ArrayList<ArrayList<String>> tempStatsTable = Utils.cloneTable(statsTable) ;
 
         // separate the maean row (last row)
@@ -107,7 +107,7 @@ public class Report4 extends Report{
     private ArrayList<ArrayList<String>> getTableWithHeaders () {
 
         ArrayList<String>tableHeaders = new ArrayList<>();
-        tableHeaders.add("Student"); tableHeaders.add("Grade") ;
+        tableHeaders.add(Statistics.getIdentifierName()); tableHeaders.add("Grade") ;
         tableHeaders.add("Score") ; tableHeaders.add("Percentage");
         ArrayList<ArrayList<String>> tableWithHeaders = cleanTable(Utils.cloneTable(statsTable)) ;
         tableWithHeaders.add(0,tableHeaders) ;
