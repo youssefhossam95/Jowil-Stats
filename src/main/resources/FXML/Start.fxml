@@ -18,7 +18,7 @@
                 <HBox spacing="0" AnchorPane.rightAnchor="7">
                     <StackPane fx:id="minusButton" styleClass="toolBarButton" prefWidth="40" prefHeight="40">
                         <children>
-                            <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="25" fitHeight="25">
+                            <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
                                 <image>
                                     <Image url="@../Images/blackMinus.png" />
                                 </image>
@@ -27,7 +27,7 @@
                     </StackPane>
                 <StackPane fx:id="closeButton" styleClass="toolBarButton" prefWidth="40" prefHeight="40" >
                     <children>
-                        <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="25" fitHeight="25">
+                        <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
                             <image>
                                 <Image url="@../Images/blackClose.png" />
                             </image>
