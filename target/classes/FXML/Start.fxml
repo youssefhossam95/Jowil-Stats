@@ -11,31 +11,19 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-    <top>
-
-                <ImageView fx:id="upperImageView" pickOnBounds="true">
-                    <image>
-                        <Image url="@../Images/chalk-board-with-mathhh.jpg" />
-                    </image>
-                    <viewport>
-                        <Rectangle2D />
-                    </viewport>
-                </ImageView>
-
-    </top>
     <center>
-        <AnchorPane fx:id="lowerAncPane" BorderPane.alignment="CENTER" >
+        <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
             <children>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../Images/logo.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="jowilLabel" text="Jowil Stats" textFill="#626365">
+                <Label fx:id="jowilLabel" text="Jowil Stats" >
                 </Label>
                 <StackPane fx:id="openStack" >
                     <children>
-                        <Rectangle fx:id="openRect" stroke="#989898" strokeLineCap="ROUND" strokeLineJoin="ROUND" opacity="0.2" strokeType="OUTSIDE" strokeWidth="6.0" style="-fx-fill: #989898;"  />
+                        <Rectangle fx:id="openRect" stroke="#989898" strokeLineCap="ROUND" strokeLineJoin="ROUND" opacity="0.7" strokeType="OUTSIDE" strokeWidth="6.0" style="-fx-fill: #989898;"  />
                         <Label fx:id="openLabel" alignment="CENTER" contentDisplay="CENTER" text="Open Existing Project" textAlignment="CENTER">
                         </Label>
                         <ImageView fx:id="openImageView" pickOnBounds="true" preserveRatio="true">
@@ -47,8 +35,8 @@
                 </StackPane>
                 <StackPane fx:id="newStack">
                     <children>
-                        <Rectangle fx:id="newRect"  stroke="#989898" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="6.0" opacity="0.2" style="-fx-fill: #989898;" />
-                        <Label fx:id="newLabel" alignment="CENTER" contentDisplay="CENTER" text="New Project" textAlignment="CENTER">
+                        <Rectangle fx:id="newRect"  stroke="#989898" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="6.0" opacity="0.7" style="-fx-fill: #989898;" />
+                        <Label fx:id="newLabel" alignment="CENTER" contentDisplay="CENTER" text="New Project" textAlignment="CENTER" >
                         </Label>
                         <ImageView fx:id="newImageView" pickOnBounds="true" preserveRatio="true">
                             <image>
