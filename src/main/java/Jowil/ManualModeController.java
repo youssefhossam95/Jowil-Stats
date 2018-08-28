@@ -106,7 +106,7 @@ public class ManualModeController extends Controller{
 
 
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null);
+        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null,false,false);
         this.caller=caller;
 
     }

@@ -10,13 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -26,6 +26,7 @@ import javafx.stage.Window;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -66,11 +67,24 @@ public abstract class Controller {
     protected final double headersFontSize=resX/64;
     private boolean isMaximizedChanged=false;
     boolean isWait=false;
+    BorderPane outerBorderPane=new BorderPane();
+    HBox topBarHbox=new HBox();
+    AnchorPane topWrapperPane=new AnchorPane();
+    ImageView progressImage=new ImageView();
+    boolean isBeginMaximised;
+    boolean isStepWindow;
 
 
 
     //Main methods
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back){
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName){
+        this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false);
+        progressImage=new ImageView(new Image("Images/"+progressImageName));
+    }
+
+
+
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back, boolean isStepWindow,boolean isMaximised){
 
         this.myFXML="/FXML/"+fxmlName;
         this.myTitle=myTitle;
@@ -80,8 +94,11 @@ public abstract class Controller {
         if(back==null)
             backButton.setVisible(false);
         this.back=back;
+        this.isBeginMaximised=isMaximised;
+        this.isStepWindow=isStepWindow;
 
     }
+
 
 
 
@@ -90,8 +107,15 @@ public abstract class Controller {
 
     public void initialize() {
 
-        rootPane.prefHeightProperty().bind(stage.heightProperty());
+        if(isStepWindow)
+            outerBorderPane.prefHeightProperty().bind(stage.heightProperty());
+        else
+            rootPane.prefHeightProperty().bind(stage.heightProperty());
+
         rootPane.prefWidthProperty().bind(stage.widthProperty());
+        topWrapperPane.getChildren().add(topBarHbox);
+        outerBorderPane.setTop(topWrapperPane);
+        initTopBarHBox();
         initBackButton();
         initNextButton();
         initButtonsHBox();
@@ -105,6 +129,7 @@ public abstract class Controller {
 
 
     }
+
 
     public void showWindow(){
         stage.show();
@@ -121,12 +146,20 @@ public abstract class Controller {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(myFXML));
             stage = new Stage();
             loader.setController(this);
-            Pane root = loader.load();
 
-            if(XSCALE==1 && YSCALE==1) {
-                stage.setMaximized(true);
+            Pane root =loader.load();
+
+
+
+            if(isStepWindow){
+                outerBorderPane.setCenter(rootPane);
+                scene = new Scene(outerBorderPane, resX / XSCALE, resY / YSCALE);
             }
-            scene = new Scene(root, resX / XSCALE, resY / YSCALE);
+            else
+                scene=new Scene(root,resX / XSCALE, resY / YSCALE);
+
+
+
 
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
@@ -174,6 +207,7 @@ public abstract class Controller {
                     event.consume();
             });
             stage.show();
+            stage.setMaximized(isBeginMaximised);
 
         }
         catch (IOException e) {
@@ -199,8 +233,21 @@ public abstract class Controller {
             }
         }
 
-        rootHeight=rootPane.getPrefHeight();
+        topBarHbox.setPrefHeight(outerBorderPane.getPrefHeight()*0.1);
+        topBarHbox.setPrefWidth(rootWidth*0.9);
+        topBarHbox.setLayoutX(rootWidth*0.05);
 
+        if(isStepWindow) {
+            rootHeight = outerBorderPane.getPrefHeight() - topBarHbox.getPrefHeight();
+            rootPane.setPrefHeight(rootHeight);
+        }
+        else
+            rootHeight=rootPane.getPrefHeight();
+        System.out.println("habebna"+rootHeight);
+
+
+
+        progressImage.setFitHeight(topBarHbox.getPrefHeight());
 
         backButton.setPrefWidth(navWidth);
         backButton.setPrefHeight(navHeight);
@@ -211,16 +258,22 @@ public abstract class Controller {
         nextButton.setPadding(navPadding);
         buttonsHbox.setLayoutX(rootWidth*0.05);
 
-        buttonsHbox.setPrefHeight(resY*680/35);
 
-        if(rootHeight<=resY/1.25)
+        //AnchorPane.setBottomAnchor(buttonsHbox,0.0);
+        //buttonsHbox.setPrefHeight(resY*0.12);
+        //buttonsHbox.setPrefHeight(rootHeight*0.15);
+
+        if(rootHeight<=resY/1.34)
             buttonsHbox.setLayoutY(rootHeight/1.14);
         else
             buttonsHbox.setLayoutY(rootHeight-resY*(1-1/1.14));
 
+
+
         buttonsHbox.setSpacing(resX/100);
         buttonsHbox.setPrefWidth(rootWidth*0.9);
         buttonsHbox.setPadding(new Insets(resY/100, 0, 0, 0));
+
 
 
         buttonsHbox.setAlignment(Pos.TOP_RIGHT);
@@ -282,6 +335,15 @@ public abstract class Controller {
 
     }
 
+    private void initTopBarHBox() {
+        topBarHbox.setAlignment(Pos.CENTER);
+        //topBarHbox.setStyle("-fx-border-width:0 0 1 0;-fx-border-color:#A9A9A9");
+        topBarHbox.getChildren().add(progressImage);
+        //topBarHbox.setStyle("-fx-border-width:0 0 1 0;-fx-border-color:#A9A9A9");
+
+    }
+
+
     private void initBackButton(){
         //backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
         rootPane.getChildren().add(backButton);
@@ -333,7 +395,7 @@ public abstract class Controller {
 
         buttonsHbox.getChildren().add(backButton);
         buttonsHbox.getChildren().add(nextButton);
-        rootPane.getChildren().add(buttonsHbox);
+        rootPane.getChildren().addAll(buttonsHbox);
     }
 
     protected double resXToPixels(double relativeVal){

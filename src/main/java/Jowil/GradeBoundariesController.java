@@ -46,7 +46,7 @@ public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back);
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"1.jpg");
 
 
     }
