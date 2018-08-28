@@ -139,10 +139,10 @@ public class WeightsController extends Controller{
         super.updateSizes();
         objTableVbox.setSpacing(rootHeightToPixels(0.019));
         objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, rootWidthToPixels(0.05)));
-        objTable.setPrefHeight(rootHeightToPixels(0.67));
+        objTable.setPrefHeight(rootHeightToPixels(0.64));
         objHBox.setSpacing(rootWidthToPixels(0.00625));
         subjHBox.setSpacing(resXToPixels(0.005));
-        subjTable.setPrefHeight(rootHeightToPixels(0.67));
+        subjTable.setPrefHeight(objTable.getPrefHeight());
         subjTableVbox.setSpacing(resYToPixels(0.015));
         tablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
         subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04),0, 0, 0));

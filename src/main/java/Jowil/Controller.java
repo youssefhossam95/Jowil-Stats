@@ -263,10 +263,11 @@ public abstract class Controller {
         //buttonsHbox.setPrefHeight(resY*0.12);
         //buttonsHbox.setPrefHeight(rootHeight*0.15);
 
+        double hpos=0.877;
         if(rootHeight<=resY/1.34)
-            buttonsHbox.setLayoutY(rootHeight/1.14);
+            buttonsHbox.setLayoutY(rootHeight*hpos);
         else
-            buttonsHbox.setLayoutY(rootHeight-resY*(1-1/1.14));
+            buttonsHbox.setLayoutY(rootHeight-resY*(1-hpos));
 
 
 
