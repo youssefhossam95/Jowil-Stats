@@ -73,7 +73,7 @@ public abstract class Controller {
     ImageView progressImage=new ImageView();
     boolean isBeginMaximised;
     boolean isStepWindow;
-
+  
 
 
     //Main methods

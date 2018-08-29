@@ -90,7 +90,7 @@ public class GroupsController  extends Controller{
     //main methods
     GroupsController(Controller back){
 
-        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back,"3.jpg");
+        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back,"prog.jpg");
         CSVHandler.initQuestionsChoices();
     }
 
