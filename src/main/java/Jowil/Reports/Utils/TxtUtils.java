@@ -40,6 +40,13 @@ public class TxtUtils {
         }
         return pageWidth ;
     }
+    public static int calcPageWidth (ArrayList<ArrayList<ArrayList<String>>> pageTables , int CHP) {
+      ArrayList<Integer> CHPs = new ArrayList<>();
+        for(int i = 0 ; i < pageTables.size() ; i++){
+            CHPs.add(CHP) ;
+        }
+        return  calcPageWidth(pageTables , CHPs) ;
+    }
 
     public static String generateTitleLine (String title , int pageWidth , int paddingBelow) {
         String padding = Utils.generatePattern(newLine , paddingBelow) ;
