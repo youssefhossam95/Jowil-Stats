@@ -21,12 +21,14 @@ import java.util.Map;
 public class Report5 extends Report {
 
     private ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsTables ;
+    String imagesFolderFullPath ;
 
     public Report5(){
         workSpacePath = reportsPath + "report5\\" ;
         templatePath = workSpacePath + "report5Template.html";
         outputFileName = "Report5" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
+        imagesFolderFullPath = "file://"+System.getProperty("user.dir") + workSpacePath  ;
     }
 
     private Document generatePdfHtml (ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsTables) throws IOException {
@@ -128,10 +130,25 @@ public class Report5 extends Report {
 //        writeHtmlFile(pdfHtmlPath , doc);
     }
 
+    public void changeLegendImgPath (Document doc , String imagesFolderFullPath ) {
+        Elements legendImgs = doc.select("span.legend-img") ;
+        for (Element img : legendImgs) {
+            String x = img.attr("style");
+            String[] parts = x.split("url");
+            String imgOldUrl = parts[1].substring(2, parts[1].length() - 2);
+//            System.out.println(x);
+            System.out.println(imgOldUrl);
+            String imgNewUrl = imagesFolderFullPath + imgOldUrl  ;
+            img.attr("style" , "background-image: url('"+imgNewUrl+"')" ) ;
+        }
+    }
+
     @Override
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml(formsStatsTables) ;
         doc.select("div#footer").remove() ;
+        changeImgPath(doc, imagesFolderFullPath);
+//        changeLegendImgPath(doc , imagesFolderFullPath);
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
