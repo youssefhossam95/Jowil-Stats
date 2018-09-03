@@ -1,0 +1,250 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <style type="text/css">
+        @page {
+
+            margin: 50px 25px 40px 25px;
+            /* margin:0px ;  */
+            /* size: A3; */
+            @bottom-left {
+                content: element(footerLeft);
+            }
+            @bottom-right {
+                content: element(footerRight);
+            }
+            @bottom-center {
+                content: element(footerCenter);
+            }
+        }
+
+
+
+        #pagenumber:before {
+            content: counter(page);
+        }
+
+        #pagecount:before {
+            content: counter(pages);
+        }
+
+        #footerCenter {
+            position: running(footerCenter);
+            text-align: center;
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+
+        }
+
+        #footerLeft {
+            position: running(footerLeft);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: left;
+        }
+
+        #footerRight {
+            position: running(footerRight);
+            border-top: 1px solid #2e6a92;
+            padding-top: 5px;
+            text-align: right;
+            /* padding-right: 50px ;   */
+        }
+
+     
+
+        .divTitle {
+            top: 28px;
+            margin-left: 5%;
+            margin-right: 5%;
+            height: 30px;
+            background-color: #08436b;
+            margin-bottom: 120px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+
+        }
+
+        .t {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        th {
+            border-width: 0px;
+            background-color: #efefef;
+            border-style: solid;
+            border-top-width: 2px;
+            border-top-color: #08436b;
+            padding: 5px;
+            font-size: 15px;
+        }
+
+        td {
+            border-width: 0px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .tableTitle {
+            width: 100%;
+            text-align: center;
+            background-color: #efefef;
+            height: 20px;
+            border-top: 2px solid #08436b;
+        }
+
+        
+        .wrapper {
+            margin-left: 5%;
+            width: 90%;
+            margin-left: 5%;
+            overflow: hidden;
+            margin-bottom: 150px;
+
+        }
+
+        /* .left {
+            width: 12px;
+            height: 12px;
+            float: left;
+            margin-right: 8px;
+            margin-top: 2px;
+        }
+
+        .right {
+            width: 300px;
+            overflow: hidden;
+            vertical-align: top;
+            font-weight: bold;
+        } */
+        .page-break {
+            page-break-after: always;
+            /* margin-bottom: 300px ;   */
+        }
+
+        .second-page-header {
+            margin-top: 20px;
+        }
+
+        .gray-row {
+            background-color: #efefef;
+        }
+
+
+        .line {
+            width: 100%;
+            height: 18px;
+            border-bottom:  solid #4c4c4c;
+            ;
+            text-align: center;
+            margin: auto;
+            margin-bottom: 30px
+        }
+
+        .group-title {
+            background-color: white;
+            padding: 0 15px;
+            font-weight: bold;
+            font-size: 24px ;
+            color: #4d4c4c  
+        }
+
+        .left-td {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .right-td {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .right-td,
+        .left-td {
+            padding: 3px;
+        }
+
+        img {
+            width: 50%;
+            height: auto;
+            margin: auto;
+            float: right;
+        }
+
+
+        .graph-title {
+            padding-bottom: 40px;
+            /* padding-left: 66px ;  */
+            width: 100%;
+            margin: auto;
+            text-align: center;
+        }
+
+        .data-table {
+            width: 45%;
+            float: left;
+        }
+
+        .give-me-space { 
+            padding-bottom: 70px ; 
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id='footer'>
+        <div id="footerLeft"> 25/7/2018 </div>
+        <div id="footerRight">Page
+            <span id="pagenumber"></span> of
+            <span id="pagecount"></span>
+        </div>
+
+        <div id="footerCenter">Hardness Graduality Report</div>
+    </div>
+    <div id='template'>
+        <div class="divTitle">
+            Hardness Graduality Report
+        </div>
+
+        <div class="wrapper">
+            <div class="line">
+                <span class="group-title">All Test</span>
+            </div>
+            <img src="GradualityChart00.png" />
+
+            <div class='data-table'>
+                <div class="tableTitle">
+                </div>
+                <table class="t">
+                    <tbody>
+                        <tr>
+                            <td class="left-td header-row"> slope </td>
+                            <td class="right-td header-row">0.9</td>
+                        </tr>
+                        <tr>
+                            <td class="left-td"> error </td>
+                            <td class="right-td">0.1</td>
+                        </tr>
+                        <tr>
+                            <td class="left-td"> jowil </td>
+                            <td class="right-td">14.5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

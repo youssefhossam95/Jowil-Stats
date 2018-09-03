@@ -43,8 +43,8 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
-        Statistics.report7Stats();
-
+        Report5 report8 = new Report5() ;
+        report8.generateHtmlReport() ;
 //        ArrayList<Report> reports = new ArrayList<>();
 //
 //        reports.add(new Report1()) ;

@@ -6,6 +6,7 @@ import Jowil.Reports.ReportsHandler;
 import com.lowagie.text.DocumentException;
 
 
+import javafx.scene.chart.StackedAreaChart;
 import javafx.util.Pair;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -45,6 +46,16 @@ public class Test {
 //        ols.
         return new Pair<Double, Double>(slope , Rss) ;
         }
+
+        public static char getReplacement (char char1 , char char2 ){
+            int shiftedDiff = Math.abs(char1 - char2) ;
+            if(shiftedDiff == 2)
+                return 'b' ;
+            else if(Math.min(char1 , char2)-'a' == 0)
+                return 'c';
+            else
+                return 'a';
+        }
     public static void main(String [] args) throws IOException, DocumentException {
 
 //        ArrayList<Double> hardness = new ArrayList<>( );
@@ -57,12 +68,7 @@ public class Test {
 //        double slope = pair.getKey();
 //        double Rss = pair.getValue() ;
 //        System.out.println("slope: " + slope);
-//        System.out.println("standard Error: " + Rss);
-
-        double x = -0.1 ;
-
-        System.out.println(Math.floor(x));
-//
+//        System.out.println("standard Error: " + Rss)
 
 
 
@@ -144,11 +150,14 @@ public class Test {
 
 
 
-//        //////////////////////// to create pdf from html //////////////////////////////////
-//
+        //////////////////////// to create pdf from html //////////////////////////////////
+
 //         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
 //        ReportsHandler reportsHandler = new ReportsHandler();
-//        reportsHandler.generatePDF(reportsPath + "report5\\Report5.html", reportsPath + "report5\\test.pdf");
+//        reportsHandler.generatePDF(reportsPath + "report8\\Report8.html", reportsPath + "report8\\test.pdf");
+//
+
+
 
     }
 }

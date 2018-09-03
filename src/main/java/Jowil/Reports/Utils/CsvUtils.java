@@ -70,7 +70,7 @@ public class CsvUtils {
         if(!title.equals(""))
             tableCsv += title+NEW_LINE ;
         for (ArrayList<String> tableRow : table)
-            tableCsv += generateLine(tableRow, separator);
+            tableCsv += generateLine(tableRow, separator,'"');
         return tableCsv;
     }
     public static  String generateTable(ArrayList<ArrayList<String>> table, char separator)  {
@@ -81,6 +81,7 @@ public class CsvUtils {
 
        return Utils.generatePattern(String.valueOf(separator), pageWidth/2-numberOfTitleWords/2)+title+Utils.generatePattern(NEW_LINE , paddingBelow);
     }
+
     public static int calcTableWidth (ArrayList<ArrayList<String>> table){
         return table.get(0).size() ;
     }

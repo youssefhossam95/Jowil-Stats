@@ -22,50 +22,65 @@ public class ReportChartsTest extends Application {
 
 
     @Override public void start(Stage stage) throws IOException, CSVHandler.InConsistentAnswerKeyException, CSVHandler.EmptyCSVException, CSVHandler.InvalidFormNumberException, DocumentException, CSVHandler.IllFormedCSVException {
-        String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Treads");
+                try {
+                String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
 
 
-        CSVHandler.setResponsesFilePath(inputFilesFolderPath+"StudentAnswers.csv");
-        CSVHandler.setFormColIndex(3);
-        CSVHandler.setIdentifierColStartIndex(0);
-        CSVHandler.setIdentifierColEndIndex(1);
-        boolean isHeaders=CSVHandler.processHeaders(false);
-        CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
-        CSVHandler.processHeaders(true);
-        Jowil.CSVHandler.loadCsv(isHeaders);
+                CSVHandler.setResponsesFilePath(inputFilesFolderPath+"StudentAnswers.csv");
+                CSVHandler.setFormColIndex(3);
+                CSVHandler.setIdentifierColStartIndex(0);
+                CSVHandler.setIdentifierColEndIndex(1);
+                boolean isHeaders=CSVHandler.processHeaders(false);
+                CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
+                CSVHandler.processHeaders(true);
+                Jowil.CSVHandler.loadCsv(isHeaders);
 
 
-        TestUtils.setQuestionChoicesFromFile(inputFilesFolderPath+"QuestionChoices.csv");
-        TestUtils.setQuestionsWeights(Statistics.getQuestionsChoices().size() , Statistics.getNumberOfForms());
-        TestUtils.fillGradeRanges() ;
+                TestUtils.setQuestionChoicesFromFile(inputFilesFolderPath+"QuestionChoices.csv");
+                TestUtils.setQuestionsWeights(Statistics.getQuestionsChoices().size() , Statistics.getNumberOfForms());
+                TestUtils.fillGradeRanges() ;
 
-        Statistics.initFormsScores();
-        Jowil.Statistics.init();
-        Jowil.Statistics.printBasicInfo();
-        Jowil.Statistics.printCalculations();
+                Statistics.initFormsScores();
+                Jowil.Statistics.init();
+                Jowil.Statistics.printBasicInfo();
+                Jowil.Statistics.printCalculations();
 
-//        Report2 report = new Report2();
-//        report.generatePrintablePdf();
-        ArrayList<Report> reports = new ArrayList<>();
-        Report.initOutputFolderPaths("E:\\work\\Jowil\\output folder test\\Jowil");
+                ArrayList<Report> reports = new ArrayList<>();
+                Report.initOutputFolderPaths("E:\\work\\Jowil\\output folder test\\Jowil");
 //
-//        reports.add(new Report1()) ;
-//        reports.add(new Report2()) ;
-//        reports.add(new Report3());
-//        reports.add(new Report4()) ;
-//        reports.add(new Report5()) ;
-//        reports.add(new Report6()) ;
-        reports.add(new Report7()) ;
-        ArrayList<Integer> formats = new ArrayList<>() ;
-//        formats.add(ReportsHandler.HTML) ;
-//        formats.add(ReportsHandler.PDF);
-//        formats.add(ReportsHandler.PRINTABLE_PDF) ;
-        formats.add(ReportsHandler.TXT) ;
-//        formats.add(ReportsHandler.CSV);
-//        formats.add(ReportsHandler.TSV) ;
-        ReportsHandler reportsHandler = new ReportsHandler(true);
-        reportsHandler.generateReports(reports , formats);
+//                reports.add(new Report1()) ;
+//                reports.add(new Report2()) ;
+//                reports.add(new Report3());
+//                reports.add(new Report4()) ;
+                reports.add(new Report5()) ;
+//                reports.add(new Report6()) ;
+//                reports.add(new Report7()) ;
+//                reports.add(new Report8()) ;
+                ArrayList<Integer> formats = new ArrayList<>() ;
+//                formats.add(ReportsHandler.HTML) ;
+                formats.add(ReportsHandler.PDF);
+//                formats.add(ReportsHandler.PRINTABLE_PDF) ;
+//                formats.add(ReportsHandler.TXT) ;
+//                formats.add(ReportsHandler.CSV);
+//                formats.add(ReportsHandler.TSV) ;
+                ReportsHandler reportsHandler = new ReportsHandler(true);
 
+                reportsHandler.generateReports(reports , formats);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        Thread thread =new Thread(runnable);
+
+        thread.start();
     }
 
     public static void main(String[] args) {
