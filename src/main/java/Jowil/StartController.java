@@ -77,6 +77,9 @@ public class StartController extends Controller{
     @FXML
     StackPane minusButton;
 
+    @FXML
+    ImageView backImageView;
+
 
 
     StartController() {
@@ -181,6 +184,8 @@ public class StartController extends Controller{
 //        upperImageView.setFitHeight(upperHeight);
 
         lowerAncPane.setPrefWidth(rootWidth);
+        backImageView.setFitWidth(rootWidth);
+        backImageView.setFitHeight(rootHeight);
         //lowerAncPane.setPrefHeight(lowerHeight);
 
         jowilLabel.setLayoutX(0.353*rootWidth);
@@ -370,7 +375,6 @@ public class StartController extends Controller{
         dialog.showAndWait();
 
     }
-
 
 
 
