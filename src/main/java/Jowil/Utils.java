@@ -79,10 +79,13 @@ public class Utils {
         }
         return outputTable ;
     }
+    // if emptyString return -
     public static String removeLastChar(String input ) {
        String output = "";
         if(!input.equals(""))
             output = input.substring(0 , input.length()-1) ;
+        else
+            output ="-" ;
 
         return output ;
     }

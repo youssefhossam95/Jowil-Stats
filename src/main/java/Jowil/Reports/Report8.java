@@ -108,49 +108,57 @@ public class Report8 extends Report {
             image.attr("src" , imagesFullPath + imgName) ;
         }
     }
-    private void generateReport8Chart () throws IOException {
+    public void generateReport8Chart () throws IOException {
 
-        int maxIndex = 0 ;
-        int max = 0  ;
         for(int formIndex = 0 ; formIndex < formsData.size() ; formIndex ++) {
             ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
+
             for (int graphIndex = 0; graphIndex < formGraphsData.size(); graphIndex++) {
                 ArrayList<Double> graphData = formGraphsData.get(graphIndex);
+
                 Stage stage = new Stage() ;
 
                 stage.setTitle("Hardness Graduality");
 
                 final NumberAxis xAxis = new NumberAxis();
-                final NumberAxis yAxis = new NumberAxis();
+                final NumberAxis yAxis = new NumberAxis(0 , 10 , 1);
+//                yAxis.setLowerBound(0);
+//                yAxis.setUpperBound(10);
                 final LineChart<Number,Number> lc =
                         new LineChart<>(xAxis,yAxis);
-
-//                lc.setTitle("Hardness Graduality");
 
                 xAxis.setLabel("Question Number");
                 yAxis.setLabel("Hardness");
 
-                XYChart.Series series1 = new XYChart.Series();
                 lc.setLegendVisible(false);
                 lc.setCreateSymbols(false);
+
+                lc.setPrefSize(800 , 500);
+                lc.setAnimated(false) ;
+
+                XYChart.Series series1 = new XYChart.Series();
 
                 for (int questionIndex = 0; questionIndex < graphData.size() - 3; questionIndex++) {
                     series1.getData().add(new XYChart.Data(questionIndex + 1, graphData.get(questionIndex)));
                 }
                 lc.getData().add(series1);
 
-                lc.setPrefSize(800 , 500);
-                lc.setAnimated(false);
                 Scene scene = new Scene(lc);
-
                 scene.getStylesheets().add("reports/report8/style.css");
                 lc.applyCss();
                 lc.layout();
                 stage.setScene(scene);
+
+
+//                scene.getStylesheets().add("reports/report8/style.css");
+//                lc.applyCss();
+//                lc.layout();
+//                stage.setScene(scene);
                 WritableImage snapShot = lc.snapshot(new SnapshotParameters(), null);
                 String imgName = workSpacePath + "GradualityChart" + formIndex + graphIndex + ".png";
                 ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(imgName));
                 System.out.println("hello");
+                lc.getData().removeAll() ;
             }
         }
     }
