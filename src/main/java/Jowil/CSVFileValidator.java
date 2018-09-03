@@ -69,15 +69,20 @@ public class CSVFileValidator extends ValidatorBase {
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
         String text = textField.getText();
-        File csvFile = new File(text);
+        File csvFile=null;
+        if(!Controller.isOpenMode)
+            csvFile= new File(text);
+
         messageType=ERROR;
         switch (textFieldID){
             case MAINFILETEXTFIELD:
-                validateMainCSV(csvFile);
+                if(!Controller.isOpenMode)
+                    validateMainCSV(csvFile);
                 setSuccessIcon(mainSuccessIcon);
                 break;
             case ANSWERSFILETEXTFIELD:
-                validateAnswersCSV(csvFile);
+                if(!Controller.isOpenMode)
+                    validateAnswersCSV(csvFile);
                 setSuccessIcon(answersSuccessIcon);
                 break;
         }
@@ -200,12 +205,15 @@ public class CSVFileValidator extends ValidatorBase {
         catch(CSVHandler.IllFormedCSVException e){
             setMessage(String.format(ILLFORMED_CSV_MESSAGE,e.getRowNumber()));
             hasErrors.set(true);
+            return;
         }  catch(IOException e) {
             setMessage(ERROR_READING_MESSAGE);
             hasErrors.set(true);
+            return;
         } catch (CSVHandler.InConsistentAnswerKeyException e) {
             setMessage(INCONSISTENT_ANSWER_KEY_MESSAGE);
             hasErrors.set(true);
+            return;
         }
 
         if(!isHeadersExist){

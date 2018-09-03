@@ -81,6 +81,7 @@ public class Statistics {
         Statistics.questionNames = questionNames;
     }
 
+
     public static void setCorrectAnswers(ArrayList<ArrayList<String>> correctAnswers) {
         Statistics.correctAnswers = correctAnswers;
     }
@@ -173,6 +174,9 @@ public class Statistics {
     }
     public static ArrayList<ArrayList<String>> getQuestionsChoices(){
         return questionsChoices;
+    }
+    public static ArrayList<ArrayList<Double>> getQuestionWeights() {
+        return questionWeights;
     }
 
     public static int getNumberOfStudents (){
@@ -348,6 +352,7 @@ public class Statistics {
 
 
     public static void init(){
+        questionNames=CSVHandler.getDetectedQHeaders();
         initFormsScores();
         initScores();
         initPointBiserialTables();

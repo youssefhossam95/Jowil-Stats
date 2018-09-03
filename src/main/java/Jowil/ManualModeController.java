@@ -106,7 +106,7 @@ public class ManualModeController extends Controller{
 
 
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null);
+        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null,false,false);
         this.caller=caller;
 
     }
@@ -287,6 +287,8 @@ public class ManualModeController extends Controller{
 
         ArrayList<ColumnSet> objColSets=new ArrayList<>();
 
+        String identifierName="None",formColName="None";
+
         int index=0;
         for(ColumnSet columnSet:columnSets){
             String type=columnSet.getType();
@@ -304,9 +306,11 @@ public class ManualModeController extends Controller{
                 subjStartIndex=columnSet.getStartIndex();
                 subjEndIndex=columnSet.getEndIndex();
             }else if(type.equals(ID_TYPE)){ //only one id group col set exist
+                identifierName=columnSet.getName();
                 IDStartIndex=columnSet.getStartIndex();
                 IDEndIndex=columnSet.getEndIndex();
             }else{ //form type must be only one column
+                formColName=columnSet.getName();
                 formIndex=columnSet.getStartIndex();
             }
             index++;
@@ -354,6 +358,8 @@ public class ManualModeController extends Controller{
         if(!saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,objColSets))
             return false;
 
+        Controller.selectedIdentifierName=identifierName.equals("None")?"None":identifierName+MANUAL_MODE_INDICATOR;
+        Controller.selectedFormColName=formColName.equals("None")?"None":formColName+MANUAL_MODE_INDICATOR;
         return true;
     }
 
@@ -445,7 +451,7 @@ public class ManualModeController extends Controller{
 
         int start=0,end;
 
-        if(CSVHandler.isIsSkipRowInManual()) { //headers exist
+        if(CSVHandler.isIsResponsesContainsHeaders()) { //headers exist
             tableHeaders=content.get(0);
             start=1;
         }
@@ -685,7 +691,7 @@ public class ManualModeController extends Controller{
         }
 
         try {
-            CSVHandler.loadCsv(CSVHandler.isIsSkipRowInManual());
+            CSVHandler.loadCsv(CSVHandler.isIsResponsesContainsHeaders());
         } catch (CSVHandler.IllFormedCSVException e) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                     "Error in students responses file at row "+e.getRowNumber()+". File must contain the same number of columns in all rows.");

@@ -68,9 +68,10 @@ public class CSVHandler {
 
     private static String responsesFilePath;
     private static String answerKeyFilePath; //used in manual mode
-    private static ArrayList<String> detectedQHeaders=new ArrayList<String>();
-    private static ArrayList<String> detectedInfoHeaders=new ArrayList<String>();
-    private static ArrayList<Group> detectedGroups= new ArrayList<Group>();
+    private static ArrayList<String> detectedQHeaders;
+    private static ArrayList<String> detectedInfoHeaders;
+    private static ArrayList<Group> detectedGroups;
+    private static ArrayList<String[]> savedResponsesCSV;
     private static int scoresStartIndex; //index of column where score columns (subj and non subj) start
     private static int subjStartIndex;
     private static int subjEndIndex;
@@ -86,9 +87,11 @@ public class CSVHandler {
     private static ArrayList<Group> realIDGroups;//groups in the beginning that start with "id".
     private static int responsesColsCount;
     private static int answersColsCount;
-    private static boolean isSkipRowInManual;
+    private static boolean isResponsesContainsHeaders;
     public final static int NOT_AVAILABLE=-1;
-    private static String formColName;
+
+
+
 
 
 
@@ -144,12 +147,13 @@ public class CSVHandler {
         return isAnswerKeyContainsBlanks;
     }
 
-    public static boolean isIsSkipRowInManual() {
-        return isSkipRowInManual;
+
+    public static boolean isIsResponsesContainsHeaders() {
+        return isResponsesContainsHeaders;
     }
 
-    public static void setIsSkipRowInManual(boolean isSkipRowInManual) {
-        CSVHandler.isSkipRowInManual = isSkipRowInManual;
+    public static void setIsResponsesContainsHeaders(boolean isResponsesContainsHeaders) {
+        CSVHandler.isResponsesContainsHeaders = isResponsesContainsHeaders;
     }
 
     public static void setRealIDGroups(ArrayList<Group> realIDGroups) {
@@ -164,9 +168,6 @@ public class CSVHandler {
         return answersColsCount;
     }
 
-    public static void setScoresStartIndex(int scoresStartIndex) {
-        CSVHandler.scoresStartIndex = scoresStartIndex;
-    }
 
     public static void setSubjStartIndex(int subjStartIndex) {
         CSVHandler.subjStartIndex = subjStartIndex;
@@ -184,6 +185,12 @@ public class CSVHandler {
         CSVHandler.subjQuestionsCount = subjQuestionsCount;
     }
 
+
+    public static void setDetectedQHeaders(ArrayList<String> detectedQHeaders) {
+        CSVHandler.detectedQHeaders = detectedQHeaders;
+    }
+
+
     public static int getIdentifierColStartIndex() {
         return identifierColStartIndex;
     }
@@ -196,12 +203,71 @@ public class CSVHandler {
         return formColIndex;
     }
 
-    public static String getFormColName() {
-        return formColName;
+
+    public static int getSubjStartIndex() {
+        return subjStartIndex;
     }
 
-    public static void setFormColName(String formColName) {
-        CSVHandler.formColName = formColName;
+    public static int getSubjEndIndex() {
+        return subjEndIndex;
+    }
+
+    public static int getQuestionsColStartIndex() {
+        return questionsColStartIndex;
+    }
+
+    public static int getQuestionsColEndIndex() {
+        return questionsColEndIndex;
+    }
+
+
+    public static String getResponsesFilePath() {
+        return responsesFilePath;
+    }
+
+    public static String getAnswerKeyFilePath() {
+        return answerKeyFilePath;
+    }
+
+    public static ArrayList<String[]> getSavedResponsesCSV() {
+        return savedResponsesCSV;
+    }
+
+    public static ArrayList<Boolean> getIsQuestionsIgnored() {
+        return isQuestionsIgnored;
+    }
+
+    public static void setIsQuestionsIgnored(ArrayList<Boolean> isQuestionsIgnored) {
+        CSVHandler.isQuestionsIgnored = isQuestionsIgnored;
+    }
+
+
+
+    public static void setFormsCount(int formsCount) {
+        CSVHandler.formsCount = formsCount;
+    }
+
+    public static void setAnswerKeyFilePath(String answerKeyFilePath) {
+        CSVHandler.answerKeyFilePath = answerKeyFilePath;
+    }
+
+    public static void setDetectedInfoHeaders(ArrayList<String> detectedInfoHeaders) {
+        CSVHandler.detectedInfoHeaders = detectedInfoHeaders;
+    }
+
+
+    public static void setSavedResponsesCSV(ArrayList<ArrayList<String>> saved) {
+        savedResponsesCSV=new ArrayList<>();
+
+        for(ArrayList<String> arrList: saved) {
+            String[] arr = new String[arrList.size()];
+
+            for (int i=0;i<arrList.size();i++)
+                arr[i]=arrList.get(i);
+
+            savedResponsesCSV.add(arr);
+        }
+
     }
 
     //public methods
@@ -222,6 +288,7 @@ public class CSVHandler {
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
         Statistics.setSubjMaxScores(new ArrayList<Double>());
 
+        savedResponsesCSV=new ArrayList<>();
 
         if (isHeadersExist) {//ignore headers
              input.readLine();
@@ -234,9 +301,10 @@ public class CSVHandler {
         //parse students data
         while ((line = input.readLine()) != null) {
             String[] row = line.split(",",-1);
-
             if(row.length==0) //ignore empty lines
                 continue;
+
+            savedResponsesCSV.add(row);
 
             if(row.length!=responsesColsCount) //equals zero if no headers
                 throw new IllFormedCSVException(rowNumber);
@@ -253,6 +321,28 @@ public class CSVHandler {
     }
 
 
+    public static void loadSavedCSV() throws InvalidFormNumberException {
+
+        //initialization
+        Statistics.setStudentIdentifier(new ArrayList<String>());
+        Statistics.setStudentAnswers(new ArrayList<ArrayList<String>>());
+        Statistics.setStudentForms(new ArrayList<Integer>());
+        Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
+        Statistics.setSubjMaxScores(new ArrayList<Double>());
+
+        boolean isHeadersExist=isResponsesContainsHeaders;
+        int rowNumber=1;
+        if(isHeadersExist)
+            rowNumber=2;
+
+        for(String [] row: savedResponsesCSV){
+            Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
+            updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
+            updateStudentForms(row,rowNumber);
+            updateSubjScores(row);
+            rowNumber++;
+        }
+    }
 
     //if loading mode off, it will be used only to check if csv is valid
     public static boolean loadAnswerKeys(String answersFilePath,boolean isLoadingMode) throws IOException, IllFormedCSVException, InConsistentAnswerKeyException {
@@ -343,7 +433,6 @@ public class CSVHandler {
         else
             throw new EmptyCSVException();
 
-        Statistics.setQuestionNames(detectedQHeaders);
         return true;
     }
 
@@ -718,7 +807,7 @@ public class CSVHandler {
             detectedGroups.add(new Group(groupName,groupQCount));
         }
 
-        Statistics.setQuestionNames(detectedQHeaders);
+
     }
 
 

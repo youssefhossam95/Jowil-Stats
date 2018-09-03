@@ -118,7 +118,6 @@ public class WeightsController extends Controller{
 
     ///data fields
     ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
-    ArrayList<String> headers=CSVHandler.getDetectedQHeaders();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
 
 
@@ -464,8 +463,10 @@ public class WeightsController extends Controller{
         for(int i=0;i<CSVHandler.getDetectedQHeaders().size();i++){
             ObservableList<StringProperty> row= FXCollections.observableArrayList();
             row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
-            for(int j=0;j<CSVHandler.getFormsCount();j++)
-                row.add(new SimpleStringProperty("1.0"));
+            for(int j=0;j<CSVHandler.getFormsCount();j++) {
+                String weight=isOpenMode?String.format("%.1f",Statistics.getQuestionWeights().get(j).get(i)):"1.0";
+                row.add(new SimpleStringProperty(weight));
+            }
             objQuestions.add(row);
         }
 
