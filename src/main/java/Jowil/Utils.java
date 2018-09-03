@@ -1,9 +1,14 @@
 package Jowil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+
+    private static DecimalFormat format1 = new DecimalFormat("0.#");
+    private static DecimalFormat format2 = new DecimalFormat( "0.##");
+
     public static  double getNumberWithinLimits(double number , double lowerLimit , double upperLimit) {
         if(number < lowerLimit)
             return lowerLimit;
@@ -88,6 +93,21 @@ public class Utils {
             output ="-" ;
 
         return output ;
+    }
+
+    public static String formatNumber ( double number , int numberOfDecimals ){
+        String numberString = "" ;
+        if(numberOfDecimals>1) {
+            numberString =   format2.format(number) ;
+            numberString =  numberString.contains(".")?numberString: numberString+".0" ;
+        }else if (numberOfDecimals == 1) {
+            numberString =   format1.format(number) ;
+            numberString =  numberString.contains(".")?numberString: numberString+".0" ;
+        }else
+            numberString =   format1.format(number) ;
+
+        return numberString ;
+
     }
 
 }

@@ -79,7 +79,7 @@ public class Report8 extends Report {
                graphData = new ArrayList<>(graphData.subList(graphData.size() - 3, graphData.size()));
                Elements tableCells = doc.select("table.t").last().select("td.right-td");
                for (int i = 0; i < tableCells.size(); i++) {
-                   String cellText = Statistics.formatNumber(Statistics.format, graphData.get(i));
+                   String cellText = Utils.formatNumber( graphData.get(i) , 1);
                    tableCells.get(i).text(cellText);
                }
                String imgName = "GradualityChart" + formIndex + graphIndex + ".png";
@@ -101,13 +101,7 @@ public class Report8 extends Report {
     }
 
 
-    protected void changeImgPath (Document doc , String imagesFullPath) {
-       Elements images =  doc.select("img") ;
-        for (Element image: images) {
-            String imgName = image.attr("src");
-            image.attr("src" , imagesFullPath + imgName) ;
-        }
-    }
+
     public void generateReport8Chart () throws IOException {
 
         for(int formIndex = 0 ; formIndex < formsData.size() ; formIndex ++) {
@@ -174,13 +168,13 @@ public class Report8 extends Report {
         ArrayList<ArrayList<String>> table = new ArrayList<>( );
         ArrayList<String> tableRow = new ArrayList<>( );
 
-        tableRow.add("slope") ; tableRow.add(Statistics.formatNumber(Statistics.format , data.get(0))) ;
+        tableRow.add("slope") ; tableRow.add(Utils.formatNumber( data.get(0) , 1 )) ;
         table.add(tableRow );
         tableRow = new ArrayList<>( );
-        tableRow.add("error") ; tableRow.add(Statistics.formatNumber(Statistics.format , data.get(1))) ;
+        tableRow.add("error") ; tableRow.add(Utils.formatNumber( data.get(1) , 1 )) ;
         table.add(tableRow );
         tableRow = new ArrayList<>( );
-        tableRow.add("Jowil") ; tableRow.add(Statistics.formatNumber(Statistics.format , data.get(2))) ;
+        tableRow.add("Jowil") ; tableRow.add(Utils.formatNumber( data.get(2) , 1 )) ;
         table.add(tableRow) ;
 
         return table ;

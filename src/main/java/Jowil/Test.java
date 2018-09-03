@@ -70,8 +70,6 @@ public class Test {
 //        System.out.println("slope: " + slope);
 //        System.out.println("standard Error: " + Rss)
 
-        double number=  5.236;
-        System.out.println(Statistics.formatNumber(number , 2) );
 
 
 //        System.out.println(URLDecoder.decode(getResource("/reports/report1/report1template.html").getFile(),"utf-8"));
