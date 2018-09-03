@@ -3,6 +3,8 @@ package Jowil.Reports;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.*;
@@ -177,6 +179,14 @@ abstract public class Report {
             }
         }
         return cleanedTable ;
+    }
+
+    protected void changeImgPath (Document doc , String imagesFullPath) {
+        Elements images =  doc.select("img") ;
+        for (Element image: images) {
+            String imgName = image.attr("src");
+            image.attr("src" , imagesFullPath + imgName) ;
+        }
     }
 
 

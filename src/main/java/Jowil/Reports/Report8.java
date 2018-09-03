@@ -38,7 +38,6 @@ public class Report8 extends Report {
         outputFileName = "Report8" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         imagesFullPath = "file://"+System.getProperty("user.dir") + workSpacePath  ;
-        System.out.println("in Constructor");
         while (!chartsReady) ;
     }
 
@@ -151,7 +150,6 @@ public class Report8 extends Report {
                 WritableImage snapShot = lc.snapshot(new SnapshotParameters(), null);
                 String imgName = workSpacePath + "GradualityChart" + formIndex + graphIndex + ".png";
                 ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(imgName));
-                System.out.println("hello");
                 lc.getData().removeAll() ;
             }
         }
@@ -218,7 +216,6 @@ public class Report8 extends Report {
             outputTxt += TxtUtils.stackTablesV(txtTables , 2) ;
         }
 
-        System.out.println(outputTxt);
         TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
 
@@ -259,7 +256,6 @@ public class Report8 extends Report {
             outputCsv += CsvUtils.stackTablesV(txtTables , 2) ;
         }
 
-        System.out.println(outputCsv);
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
 
     }
@@ -272,13 +268,11 @@ public class Report8 extends Report {
     @Override
     public void init() {
 
-        System.out.println("in init");
         formsData = Statistics.report8Stats();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 try {
-                    System.out.println("fuck this shit am out");
                     generateReport8Chart();
                     chartsReady = true ;
                 } catch (IOException e) {

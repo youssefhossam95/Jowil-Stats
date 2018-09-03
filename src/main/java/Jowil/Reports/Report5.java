@@ -207,7 +207,7 @@ public class Report5 extends Report {
             addedData = "<--" ;
         else if(numberOfSolvers == 0)
             addedData = "-";
-        else if(rowClass.equals("distBar"))
+        else if(rowClass.equals("redBar"))
             addedData = "!";
        else
            addedData="" ;

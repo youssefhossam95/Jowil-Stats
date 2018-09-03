@@ -74,16 +74,17 @@ public class Report7 extends Report {
         ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
         ArrayList<String> headers = new ArrayList<>();
         if(tableIndex ==0 ) {
-            headers.add("Question Name");  headers.add("Point Biserial"); headers.add("Smart Distractors");
-            headers.add("total"); headers.add("Upper 25%"); headers.add("Lower 25%");
+            headers.add("Question Name"); headers.add("Difficulity (0-10)"); headers.add("Correct Response Percentage");
+            headers.add("Distractors") ;
+
         }
         else if (tableIndex == 1) {
             headers.add("Question Name"); headers.add("Difficulity (0-10)"); headers.add("Correct Response Percentage");
-            headers.add("Distractors") ;
+            headers.add("Non Distractors") ;
         }
         else if (tableIndex == 2 ) {
-            headers.add("Question Name"); headers.add("Difficulity (0-10)"); headers.add("Correct Response Percentage");
-            headers.add("Non Distractors") ;
+            headers.add("Question Name");  headers.add("Point Biserial"); headers.add("Smart Distractors");
+            headers.add("total"); headers.add("Upper 25%"); headers.add("Lower 25%");
         }
         tableWithHeaders.add(0,headers);
         return  tableWithHeaders ;
