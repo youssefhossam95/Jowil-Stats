@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import javafx.util.Callback;
-import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -106,6 +105,7 @@ public class FileConfigController extends Controller {
     int manualColsCounter = 0;
     int manualIDIndex;
     int manualFormIndex;
+    boolean isMainTextFieldValidated;
 
 
     //getters and setters
@@ -172,6 +172,7 @@ public class FileConfigController extends Controller {
         initIdentifierCombo();
         initFormCombo();
         initManualModeToggle();
+        isMainTextFieldValidated=false;
         if (isOpenMode) {
             mainFileTextField.setText((String) currentOpenedProjectJson.get(RESPONSES_FILE_PATH_JSON_KEY));
             answersFileTextField.setText((String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY));
@@ -248,7 +249,10 @@ public class FileConfigController extends Controller {
             rootPane.requestFocus();
 
 
-            validateMainTextField();
+            if(!isMainTextFieldValidated)
+                validateMainTextField();
+
+
             validateAnswersTextField();
 
 
@@ -525,6 +529,7 @@ public class FileConfigController extends Controller {
 
         mainFileTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             isContentEdited = true;
+            isMainTextFieldValidated=false;
         });
 
         mainFileTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -644,7 +649,6 @@ public class FileConfigController extends Controller {
 
     private void populateCombos() {
         ArrayList<String> infoHeaders = CSVHandler.getDetectedInfoHeaders();
-        Pattern digitsPattern = Pattern.compile("d+");
         manualColsCounter = 0;
 
         if(!isOpenMode)
@@ -797,14 +801,17 @@ public class FileConfigController extends Controller {
         int identifierSelectedIndex = identifierComboSelectedIndex - 1; //remove None effect
 
         if (isOpenMode && manualColsCounter > 0 && identifierSelectedIndex != NOT_AVAILABLE) {
+            String idName=(String)identifierCombo.getSelectionModel().getSelectedItem();
             if (identifierSelectedIndex == manualIDIndex) { //the id col set chosen in manual mode was selected
                 CSVHandler.setIdentifierColStartIndex(Integer.parseInt((String) currentOpenedProjectJson.get(ID_COL_START_INDEX_JSON_KEY)));
                 CSVHandler.setIdentifierColEndIndex(Integer.parseInt((String) currentOpenedProjectJson.get(ID_COL_END_INDEX_JSON_KEY)));
+                Statistics.setIdentifierName(idName.replace(MANUAL_MODE_INDICATOR,""));
                 return;
             } else if (identifierSelectedIndex == manualFormIndex) { //the form col set chosen in manual mode was selected
                 int index;
                 CSVHandler.setIdentifierColStartIndex(index = Integer.parseInt((String) currentOpenedProjectJson.get(FORM_COL_INDEX_JSON_KEY)));
                 CSVHandler.setIdentifierColEndIndex(index + 1);
+                Statistics.setIdentifierName(idName.replace(MANUAL_MODE_INDICATOR,""));
                 return;
             } else //remove the extra manual cols effect
                 identifierSelectedIndex -= manualColsCounter;
@@ -909,6 +916,8 @@ public class FileConfigController extends Controller {
 
     private void validateMainTextField() {
 
+        isMainTextFieldValidated=true;
+
         CSVFileValidator validator = new CSVFileValidator(mainFileTextField, CSVFileValidator.MAINFILETEXTFIELD);
         mainFileTextField.getValidators().clear();
         mainFileTextField.getValidators().add(validator);
@@ -919,6 +928,7 @@ public class FileConfigController extends Controller {
         mainTextFieldMessage = validator.getMessage();
 
         if (validator.getMessageType() == ValidatorBase.SUCCESS) {
+
             populateCombos();
             manualModeToggle.setSelected(false);
             formCombo.setDisable(false);
@@ -932,6 +942,7 @@ public class FileConfigController extends Controller {
     }
 
     private void validateAnswersTextField() {
+
         CSVFileValidator validator = new CSVFileValidator(answersFileTextField, CSVFileValidator.ANSWERSFILETEXTFIELD);
         answersFileTextField.getValidators().clear();
         answersFileTextField.getValidators().add(validator);
