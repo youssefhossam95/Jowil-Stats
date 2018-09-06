@@ -115,6 +115,29 @@ public class GroupsController  extends Controller{
             back.showWindow();
             stage.close();
         });
+
+
+        nextButton.setOnMouseClicked(event -> {
+
+            rootPane.requestFocus();
+
+            if(!saveTreeViewGroups())
+                return;
+
+            CSVHandler.updateQuestionsChoices();
+
+            if(next==null || isContentEdited) { //if first time or edit manually has been pressed
+                next = getNextController();
+                next.startWindow();
+            }
+            else
+                next.showWindow();
+
+            isContentEdited=false;
+            stage.close();
+
+        });
+
         treeLabel.setFont(new Font("Arial", headersFontSize));
 
     }
@@ -179,12 +202,6 @@ public class GroupsController  extends Controller{
     protected void saveChanges() {
 
 
-        saveTreeViewGroups();
-        for(Group group : CSVHandler.getDetectedGroups())
-            System.out.println(group.getPossibleAnswers());
-
-        CSVHandler.updateQuestionsChoices();
-
     }
 
     @Override
@@ -219,7 +236,7 @@ public class GroupsController  extends Controller{
 
     }
 
-    public static void saveTreeViewGroups(){
+    public boolean saveTreeViewGroups(){
 
         ArrayList<Group> newDetectedGroups=new ArrayList<>();
 
@@ -227,11 +244,18 @@ public class GroupsController  extends Controller{
             newDetectedGroups.add(new Group(group));
 
 
-        for(int i=0;i<newDetectedGroups.size();i++)
-            newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i));
+        for(int i=0;i<newDetectedGroups.size();i++) {
+            String invalid=null;
+            if ((invalid=newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i)))!=null) {
+                showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Groups Choices Error",
+                        "Removing choice \""+invalid+"\" in group \""+newDetectedGroups.get(i).getCleanedName()+
+                "\" is not allowed. \""+invalid+"\" is set as the correct answer for one or more of the questions in this group.");
+                return false;
+            }
+        }
 
         CSVHandler.setDetectedGroups(newDetectedGroups);
-
+        return true;
     }
 
     public static boolean isChoicePossible(String groupName,String choiceName){

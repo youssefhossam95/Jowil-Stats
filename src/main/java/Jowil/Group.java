@@ -4,6 +4,8 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class Group extends RecursiveTreeObject<Group> {
 
@@ -14,6 +16,7 @@ public class Group extends RecursiveTreeObject<Group> {
     final private SimpleStringProperty qCountProp;
     private ArrayList<String> possibleAnswers;
     private boolean isNumeric;
+    private HashSet<String>correctAnswers;//set of all correct choices in the group
 
 
 
@@ -22,6 +25,7 @@ public class Group extends RecursiveTreeObject<Group> {
         this.qCount=qCount;
         nameProp=new SimpleStringProperty(name);
         qCountProp=new SimpleStringProperty(Integer.toString(qCount));
+        correctAnswers=new HashSet<>();
     }
 
     Group(Group original){
@@ -33,6 +37,8 @@ public class Group extends RecursiveTreeObject<Group> {
         this.possibleAnswers=new ArrayList<String>();
         for(String answer:original.possibleAnswers)
             this.possibleAnswers.add(answer);
+
+        this.correctAnswers=(HashSet<String>)original.correctAnswers.clone();
     }
 
 
@@ -85,6 +91,15 @@ public class Group extends RecursiveTreeObject<Group> {
         return possibleAnswers;
     }
 
+    public HashSet<String> getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+
+    public void setCorrectAnswers(HashSet<String> correctAnswers) {
+        this.correctAnswers = correctAnswers;
+    }
+
     public void setPossibleAnswers(ArrayList<String> possibleAnswers) {
         this.possibleAnswers = possibleAnswers;
     }
@@ -131,7 +146,8 @@ public class Group extends RecursiveTreeObject<Group> {
 
     }
 
-    public void updatePossibleAnswers(ArrayList<Boolean> isPossible){
+    //returns null on success, otherwise returns the string that cannot be removed.
+    public String updatePossibleAnswers(ArrayList<Boolean> isPossible){
 
         ArrayList<String> newPossibleAnswers=new ArrayList<String>();
 
@@ -139,10 +155,13 @@ public class Group extends RecursiveTreeObject<Group> {
 
             if(isPossible.get(i))
                 newPossibleAnswers.add(possibleAnswers.get(i));
+            else if(correctAnswers.contains(possibleAnswers.get(i)))
+                return possibleAnswers.get(i);
 
         }
 
         possibleAnswers=newPossibleAnswers;
+        return null;
     }
 
 

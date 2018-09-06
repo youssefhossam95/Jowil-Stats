@@ -6,6 +6,7 @@ import sun.swing.plaf.synth.DefaultSynthStyle;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -451,11 +452,14 @@ public class CSVHandler {
         int i=0;
         for(Group group : detectedGroups){
 
-            String groupMax=getGroupMax(group,i);
-            i+=group.getqCount();
+            int qCount=group.getqCount();
+            String groupMax=getGroupMax(qCount,i);
+            group.setCorrectAnswers(getGroupCorrectAnswers(qCount,i));
+            i+=qCount;
             group.generatePossibleAnswers(groupMax);
 
-            for(int j=0;j<group.getqCount();j++)
+
+            for(int j=0;j<qCount;j++)
                 Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
 
         }
@@ -585,7 +589,19 @@ public class CSVHandler {
 
     }
 
-    private static String getGroupMax(Group group,int groupStartCol) {
+
+    private static HashSet<String> getGroupCorrectAnswers(int qCount,int groupStartCol){
+
+        HashSet<String> groupCorrectAnswers=new HashSet<>();
+
+        for(int i=0;i<Statistics.getCorrectAnswers().size();i++){
+            for(int j=groupStartCol;j<groupStartCol+qCount;j++)
+                groupCorrectAnswers.add(Statistics.getCorrectAnswers().get(i).get(j));
+        }
+
+        return groupCorrectAnswers;
+    }
+    private static String getGroupMax(int qCount,int groupStartCol) {
 
         boolean isAnswersNumeric=false;
         boolean isUpperCase=false;
@@ -602,9 +618,9 @@ public class CSVHandler {
         String currentMaxChoice=firstAnswer;
 
 
-        currentMaxChoice=get2DArrayMax(Statistics.getCorrectAnswers(),isAnswersNumeric,groupStartCol,group.getqCount(),currentMaxChoice,isUpperCase);
+        currentMaxChoice=get2DArrayMax(Statistics.getCorrectAnswers(),isAnswersNumeric,groupStartCol,qCount,currentMaxChoice,isUpperCase);
 
-        currentMaxChoice=get2DArrayMax(Statistics.getStudentAnswers(),isAnswersNumeric,groupStartCol,group.getqCount(),currentMaxChoice,isUpperCase);
+        currentMaxChoice=get2DArrayMax(Statistics.getStudentAnswers(),isAnswersNumeric,groupStartCol,qCount,currentMaxChoice,isUpperCase);
 
         return currentMaxChoice;
 
