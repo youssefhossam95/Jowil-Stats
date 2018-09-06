@@ -15,8 +15,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -156,6 +154,7 @@ public abstract class Controller {
                 stage.setMaximized(true);
             }
             scene = new Scene(root, resX / XSCALE, resY / YSCALE);
+
 
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
