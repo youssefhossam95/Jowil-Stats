@@ -35,7 +35,7 @@ public class CSVFileValidator extends ValidatorBase {
             REQUIRED_FIELD_MESSAGE="Required field.",CSV_EXTENSION_MESSAGE="File must have a \".csv\" extension.",
             ERROR_READING_MESSAGE="Error in reading file.",NO_HEADERS_MESSAGE="No headers detected.",
             INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.",
-            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d",HEADERS_ONLY_MESSAGE="File contains headers only.";
+            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d.",HEADERS_ONLY_MESSAGE="File contains headers only.";
 
 
 
@@ -204,7 +204,8 @@ public class CSVFileValidator extends ValidatorBase {
             isHeadersExist=CSVHandler.loadAnswerKeys(file.getPath(),false);
         }
         catch(CSVHandler.IllFormedCSVException e){
-            setMessage(String.format(ILLFORMED_CSV_MESSAGE,e.getRowNumber()));
+            int rowNumber=e.getRowNumber();
+            setMessage(String.format(ILLFORMED_CSV_MESSAGE,rowNumber)+(rowNumber==2?" Make sure that the CSV headers have no commas.":""));
             hasErrors.set(true);
             return;
         }  catch(IOException e) {

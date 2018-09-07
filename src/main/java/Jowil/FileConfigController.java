@@ -297,7 +297,7 @@ public class FileConfigController extends Controller {
             int responsesColCount = CSVHandler.getResponsesColsCount();
             int answersColCount = CSVHandler.getAnswersColsCount();
 
-            if (responsesColCount != answersColCount) { //check if columns count doesn't match
+            if (responsesColCount != answersColCount) { //check if columns count doesn't match -> in open mode both will be zero
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", "Student responses file contains " +
                         responsesColCount + " columns, while the answer key file contains " + answersColCount + " columns.");
                 return;
@@ -425,8 +425,10 @@ public class FileConfigController extends Controller {
             try {
                 CSVHandler.loadCsv(true);
             } catch (CSVHandler.IllFormedCSVException e) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file at row " + e.getRowNumber() + ". File must contain the same number of columns in all rows.");
+                String message="Error in students responses file at row " + e.getRowNumber() +
+                        ". File must contain the same number of columns in all rows."+(e.getRowNumber()==2?" Make sure that the CSV headers have no commas.":"");
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",message);
+
                 return;
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",

@@ -74,7 +74,7 @@ public class CSVHandler {
     private static ArrayList<String> detectedQHeaders;
     private static ArrayList<String> detectedInfoHeaders;
     private static ArrayList<Group> detectedGroups;
-    private static ArrayList<String[]> savedResponsesCSV;
+    private static ArrayList<String[]> savedResponsesCSV; //both saved arrays contains headers if they exist
     private static ArrayList<String[]> savedAnswerKeyCSV;
     private static int scoresStartIndex; //index of column where score columns (subj and non subj) start
     private static int subjStartIndex;
@@ -322,9 +322,9 @@ public class CSVHandler {
 
         savedResponsesCSV=new ArrayList<>();
 
-        if (isHeadersExist) {//ignore headers
-             input.readLine();
-             rowNumber=2;
+        if (isHeadersExist) {
+            savedResponsesCSV.add(removeDoubleQuotes(input.readLine().split(",",-1)));
+            rowNumber=2;
         }
 
 
@@ -374,7 +374,8 @@ public class CSVHandler {
         if(isHeadersExist)
             rowNumber=2;
 
-        for(String [] row: savedResponsesCSV){
+        for(int i=(isHeadersExist?1:0);i<savedResponsesCSV.size();i++){
+            String [] row=savedResponsesCSV.get(i);
             Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
             updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
             updateStudentForms(row,rowNumber);
@@ -382,6 +383,9 @@ public class CSVHandler {
             rowNumber++;
         }
     }
+
+
+
 
     //if loading mode off, it will be used only to check if csv is valid
     public static boolean loadAnswerKeys(String answersFilePath,boolean isLoadingMode) throws IOException, IllFormedCSVException, InConsistentAnswerKeyException {

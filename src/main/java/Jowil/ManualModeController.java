@@ -17,10 +17,7 @@ import javafx.util.Callback;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
 
@@ -443,16 +440,25 @@ public class ManualModeController extends Controller{
     //utility functions
     private void loadTableContents() {
 
-        ArrayList<ArrayList<String>> content;
+        ArrayList<ArrayList<String>> content=new ArrayList<>();
 
-        try {
-            content=CSVHandler.readResponsesFile(MAX_ROWS_COUNT+1); //+1 to include headers
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"CSV Reloading Error","Error in " +
-                    "reloading student responses file.");
-            return;
+        if(isOpenMode) {
+            for (int i = 0; i < Math.min(MAX_ROWS_COUNT + 1, CSVHandler.getSavedResponsesCSV().size()); i++)
+                content.add(new ArrayList<>(Arrays.asList(CSVHandler.getSavedResponsesCSV().get(i))));
         }
+        else{
+            try {
+                content=CSVHandler.readResponsesFile(MAX_ROWS_COUNT+1); //+1 to include headers
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "CSV Reloading Error", "Error in " +
+                        "reloading student responses file.");
+                return;
+            }
+        }
+
+
+
 
         int start=0,end;
 
