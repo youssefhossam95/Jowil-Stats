@@ -16,6 +16,8 @@ import javafx.scene.text.Font;
 import javafx.util.Callback;
 import java.util.ArrayList;
 
+import static Jowil.ManualModeController.isIgnoreSavedObjectiveWeights;
+
 public class WeightsController extends Controller{
 
 
@@ -462,7 +464,7 @@ public class WeightsController extends Controller{
             ObservableList<StringProperty> row= FXCollections.observableArrayList();
             row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
             for(int j=0;j<CSVHandler.getFormsCount();j++) {
-                String weight=isOpenMode?String.format("%.1f",Statistics.getQuestionWeights().get(j).get(i)):"1.0";
+                String weight=isOpenMode && !isIgnoreSavedObjectiveWeights?String.format("%.1f",Statistics.getQuestionWeights().get(j).get(i)):"1.0";
                 row.add(new SimpleStringProperty(weight));
             }
             objQuestions.add(row);

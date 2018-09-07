@@ -103,6 +103,7 @@ public class ManualModeController extends Controller{
 //    int IDStartIndex,IDEndIndex,formIndex;
     int columnSetComboSelectedIndex;
     Controller caller;
+    static boolean isIgnoreSavedObjectiveWeights;
 
 
     ManualModeController(Controller caller){
@@ -355,8 +356,11 @@ public class ManualModeController extends Controller{
 
 
 
-        if(!saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,objColSets))
+        if(!saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,objColSets)){
+            isIgnoreSavedObjectiveWeights=false;
             return false;
+        }
+
 
         Statistics.setIdentifierName(identifierName);
         Controller.selectedIdentifierName=identifierName.equals("None")?"None":identifierName+MANUAL_MODE_INDICATOR;
@@ -694,6 +698,21 @@ public class ManualModeController extends Controller{
 
         if(isOpenMode){
 
+            if(CSVHandler.getDetectedQHeaders().size()==Statistics.getQuestionWeights().get(0).size()){
+
+                if(showWeightsResetConfirmationDialog())
+                    isIgnoreSavedObjectiveWeights=true;
+                else
+                    isIgnoreSavedObjectiveWeights=false;
+
+            }
+            else{
+                if(showWeightsWarningDialog())
+                    isIgnoreSavedObjectiveWeights=true;
+                else
+                    return false;
+            }
+
             try {
                 CSVHandler.loadSavedCSV();
             } catch (CSVHandler.InvalidFormNumberException e) {
@@ -724,6 +743,8 @@ public class ManualModeController extends Controller{
 
     }
 
+
+
     private ArrayList<String> getUnExpectedColSet(int firstObjCS, int lastObjCS) {
 
         for(int i=firstObjCS;i<=lastObjCS;i++){
@@ -739,6 +760,44 @@ public class ManualModeController extends Controller{
         return null;
     }
 
+
+    private boolean showWeightsWarningDialog() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Number of Objective Questions Changed");
+        alert.setHeaderText(null);
+        alert.setContentText("The number of objective questions has changed. All the saved objective weights for this project will be lost.");
+        //alert.setOnCloseRequest(t->alert.hide());
+        alert.getButtonTypes().setAll(ButtonType.OK,ButtonType.CLOSE);
+        Button closeButt=((Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE));
+        closeButt.setText("Cancel");
+
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        return result.get()==ButtonType.OK;
+
+    }
+
+    private boolean showWeightsResetConfirmationDialog() {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle( "Reset Question Weights");
+        alert.setHeaderText(null);
+        alert.setContentText("Objective questions was just edited. Would you like to reset the existing objective weights?");
+        Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        okButt.setText("Yes, Reset Weights");
+
+        Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButt.setText("No, Load Saved Weights");
+
+        alert.initOwner(stage.getOwner());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.get() == ButtonType.OK;
+
+
+    }
 
     class ColumnSetSorter implements Comparator<ColumnSet> {
 

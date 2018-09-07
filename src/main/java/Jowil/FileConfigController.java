@@ -245,13 +245,12 @@ public class FileConfigController extends Controller {
         nextButton.setOnMouseClicked(t -> {
 
 
-            boolean isManualMode = manualModeToggle.isSelected();
             rootPane.requestFocus();
-
 
             if(!isMainTextFieldValidated)
                 validateMainTextField();
 
+            boolean isManualMode = manualModeToggle.isSelected();
 
             validateAnswersTextField();
 
@@ -280,9 +279,10 @@ public class FileConfigController extends Controller {
                 return;
             }
 
-            int formsCount = CSVHandler.getFormsCount();
+            int formsCount = isOpenMode?((JSONArray)currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size():CSVHandler.getFormsCount();
 
-            if (formsCount > 1 && formComboSelectedIndex == 0 && mainTextFieldResult != CSVFileValidator.WARNING) {
+
+            if (formsCount > 1 && formComboSelectedIndex == 0 && !isManualMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
                         formsCount + " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.");
                 return;
@@ -290,7 +290,7 @@ public class FileConfigController extends Controller {
 
             if(formsCount==0){
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                         "No forms detected. Answer key file must contain the answers for at least one form");
+                         "Answer key file must contain the answers for at least one form");
                 return;
             }
 
@@ -349,7 +349,7 @@ public class FileConfigController extends Controller {
                 CSVHandler.setIsAnswerKeyContainsHeaders(selectedAction == SKIPROW);
                 if(selectedAction==SKIPROW && formsCount==1){ //the forms count includes the headers row
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                            "No forms detected. Answer key file must contain the answers for at least one form");
+                            "Answer key file must contain the answers for at least one form");
                     return;
                 }
 

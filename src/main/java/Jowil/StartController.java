@@ -401,6 +401,7 @@ public class StartController extends Controller{
 
         Controller.projectName = projName;
         Controller.isOpenMode=true;
+        ManualModeController.isIgnoreSavedObjectiveWeights=false;
 
         int projIndex=projectsNames.indexOf(projName);
         JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
