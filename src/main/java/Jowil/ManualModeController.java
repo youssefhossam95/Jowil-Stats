@@ -691,22 +691,35 @@ public class ManualModeController extends Controller{
             e.printStackTrace(); //mynf3sh yhsl
         }
 
-        try {
-            CSVHandler.loadCsv(CSVHandler.isIsResponsesContainsHeaders());
-        } catch (CSVHandler.IllFormedCSVException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                    "Error in students responses file at row "+e.getRowNumber()+". File must contain the same number of columns in all rows.");
-            return false;
-        }catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                    "Error in reading students responses file.");
-            return false;
-        } catch (CSVHandler.InvalidFormNumberException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                    "Error in students responses file: "+e.getMessage());
-            return false;
-        }
 
+        if(isOpenMode){
+
+            try {
+                CSVHandler.loadSavedCSV();
+            } catch (CSVHandler.InvalidFormNumberException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: " + e.getMessage()+". Make sure that you have selected a valid form column.");
+                return false;
+            }
+        }
+        else {
+
+            try {
+                CSVHandler.loadCsv(CSVHandler.isIsResponsesContainsHeaders());
+            } catch (CSVHandler.IllFormedCSVException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file at row " + e.getRowNumber() + ". File must contain the same number of columns in all rows.");
+                return false;
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in reading students responses file.");
+                return false;
+            } catch (CSVHandler.InvalidFormNumberException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: " + e.getMessage());
+                return false;
+            }
+        }
         return true;
 
     }

@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 public class CSVHandler {
 
 
@@ -73,6 +75,7 @@ public class CSVHandler {
     private static ArrayList<String> detectedInfoHeaders;
     private static ArrayList<Group> detectedGroups;
     private static ArrayList<String[]> savedResponsesCSV;
+    private static ArrayList<String[]> savedAnswerKeyCSV;
     private static int scoresStartIndex; //index of column where score columns (subj and non subj) start
     private static int subjStartIndex;
     private static int subjEndIndex;
@@ -89,6 +92,7 @@ public class CSVHandler {
     private static int responsesColsCount;
     private static int answersColsCount;
     private static boolean isResponsesContainsHeaders;
+    private static boolean isAnswerKeyContainsHeaders;
     public final static int NOT_AVAILABLE=-1;
 
 
@@ -271,6 +275,33 @@ public class CSVHandler {
 
     }
 
+    public static ArrayList<String[]> getSavedAnswerKeyCSV() {
+        return savedAnswerKeyCSV;
+    }
+
+    public static void setSavedAnswerKeyCSV(ArrayList<ArrayList<String>> saved) {
+        savedAnswerKeyCSV=new ArrayList<>();
+
+        for(ArrayList<String> arrList: saved) {
+            String[] arr = new String[arrList.size()];
+
+            for (int i=0;i<arrList.size();i++)
+                arr[i]=arrList.get(i);
+
+            savedAnswerKeyCSV.add(arr);
+        }
+    }
+
+    public static boolean isIsAnswerKeyContainsHeaders() {
+        return isAnswerKeyContainsHeaders;
+    }
+
+    public static void setIsAnswerKeyContainsHeaders(boolean isAnswerKeyContainsHeaders) {
+        CSVHandler.isAnswerKeyContainsHeaders = isAnswerKeyContainsHeaders;
+    }
+
+
+
     //public methods
     /**
      *
@@ -354,10 +385,15 @@ public class CSVHandler {
         String line;
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
         ArrayList<ArrayList<String>> cleanedCorrectAnswers=new ArrayList<>(); //without ignored questions
+        savedAnswerKeyCSV=new ArrayList<>();
 
         String firstLine=input.readLine(); //can't be null because empty csv check is already called in CSVFileValidator
 
-        boolean isHeadersExist=isAllCellsLarge(firstLine.split(",",-1));
+        String[] firstRow;
+        boolean isHeadersExist=isAllCellsLarge(firstRow=firstLine.split(",",-1)) || isAnswerKeyContainsHeaders;
+
+        savedAnswerKeyCSV.add(firstRow);
+
 
 
 
@@ -366,11 +402,12 @@ public class CSVHandler {
         while ((line = (rowNumber==1?firstLine:input.readLine())) != null) { //read saved first line if no headers exist
             String [] answers=line.split(",",-1);
 
-
             if(answers.length!=colsCount && colsCount!=0)
                 throw new IllFormedCSVException(rowNumber);
             else
                 colsCount=answers.length;
+
+            savedAnswerKeyCSV.add(answers);
 
             if(isLoadingMode)
                 updateCleanedCorrectAnswers(cleanedCorrectAnswers,answers,questionsColStartIndex,questionsColEndIndex);
@@ -410,6 +447,19 @@ public class CSVHandler {
     }
 
 
+    public static void loadSavedAnswerKey(){
+
+
+        ArrayList<ArrayList<String>> cleanedCorrectAnswers=new ArrayList<>(); //without ignored questions
+
+        boolean isHeadersExist=isAnswerKeyContainsHeaders;
+
+        for(int i=(isHeadersExist?1:0);i<savedAnswerKeyCSV.size();i++)
+            updateCleanedCorrectAnswers(cleanedCorrectAnswers,savedAnswerKeyCSV.get(i),questionsColStartIndex,questionsColEndIndex);
+
+
+        Statistics.setCorrectAnswers(cleanedCorrectAnswers);
+    }
 
     public static boolean processHeaders(boolean isIgnoreBlanks ) throws IOException, EmptyCSVException {
 
@@ -581,7 +631,7 @@ public class CSVHandler {
             else
                 isAnswerKeyContainsBlanks=true;
 
-            isQuestionsIgnored.add(answer.isEmpty()); //blank answers must be consistent -> any form can be used
+            isQuestionsIgnored.add(answer.trim().isEmpty()); //blank answers must be consistent -> any form can be used
 
         }
 
@@ -805,7 +855,13 @@ public class CSVHandler {
         detectedQHeaders=new ArrayList<>();
 
 
-        loadAnswerKeys(answerKeyFilePath,true);
+        if(Controller.isOpenMode)
+            loadSavedAnswerKey();
+
+        else
+            loadAnswerKeys(answerKeyFilePath,true);
+
+
 
         int qIndex=0;
         for(ColumnSet columnSet:objColSets){

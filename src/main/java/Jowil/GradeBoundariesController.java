@@ -403,6 +403,7 @@ public class GradeBoundariesController extends Controller {
         projObject.put(FORM_COL_NAME_JSON_KEY,Controller.selectedFormColName);
 
         projObject.put(IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsResponsesContainsHeaders());
+        projObject.put(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsAnswerKeyContainsHeaders());
         projObject.put(RESPONSES_FILE_PATH_JSON_KEY,CSVHandler.getResponsesFilePath());
         projObject.put(ANSWERS_FILE_PATH_JSON_KEY,CSVHandler.getAnswerKeyFilePath());
 
@@ -412,9 +413,8 @@ public class GradeBoundariesController extends Controller {
         saveQuestionsChoices(projObject);
         saveObjWeights(projObject);
         saveSubjWeights(projObject);
-        saveCorrectAnswers(projObject);
-        saveIsIgnoreQuestions(projObject);
         saveSavedResponsesCSV(projObject);
+        saveSavedAnswerKeyCSV(projObject);
         saveInfoHeaders(projObject);
 
         projObject.put(SELECTED_SCALE_JSON_KEY,selectedIndex);
@@ -431,31 +431,6 @@ public class GradeBoundariesController extends Controller {
         stage.close();
     }
 
-    private void saveInfoHeaders(JSONObject projObject) {
-
-        if(isOpenMode) //info headers are never affected in open mode
-            return;
-
-        JSONArray jsonInfoHeaders=new JSONArray();
-
-        for(String header :CSVHandler.getDetectedInfoHeaders())
-            jsonInfoHeaders.add(header);
-
-        projObject.put(SAVED_INFO_HEADERS_JSON_KEY,jsonInfoHeaders);
-    }
-
-    private void saveSavedResponsesCSV(JSONObject projObject) {
-
-        JSONArray jsonOuterArr=new JSONArray();
-
-        for(String [] row: CSVHandler.getSavedResponsesCSV()){
-            JSONArray jsonRow=new JSONArray();
-            for(String cell : row)
-                jsonRow.add(cell);
-            jsonOuterArr.add(jsonRow);
-        }
-        projObject.put(SAVED_RESPONSES_CSV_JSON_KEY,jsonOuterArr);
-    }
 
 
     @Override
@@ -1020,26 +995,6 @@ public class GradeBoundariesController extends Controller {
         projObject.put(OBJ_WEIGHTS_JSON_KEY,objWeightsOuterArr);
     }
 
-    private void saveIsIgnoreQuestions(JSONObject projObject) {
-        JSONArray jsonIsIgnore=new JSONArray();
-
-        for(boolean isIgnored:CSVHandler.getIsQuestionsIgnored())
-            jsonIsIgnore.add(isIgnored);
-
-        projObject.put(IS_QUESTIONS_IGNORED_JSON_KEY,jsonIsIgnore);
-    }
-
-    private void saveCorrectAnswers(JSONObject projObject) {
-
-        JSONArray outerArr=new JSONArray();
-        for(ArrayList<String> arr:Statistics.getCorrectAnswers()){
-            JSONArray answers=new JSONArray();
-            for(String answer : arr)
-                answers.add(answer);
-            outerArr.add(answers);
-        }
-        projObject.put(CORRECT_ANSWERS_JSON_KEY,outerArr);
-    }
 
     private void saveSubjWeights(JSONObject projObject) {
         JSONArray jsonSubjWeights=new JSONArray();
@@ -1048,6 +1003,45 @@ public class GradeBoundariesController extends Controller {
             jsonSubjWeights.add(weight);
 
         projObject.put(SUBJ_WEIGHTS_JSON_KEY,jsonSubjWeights);
+    }
+
+    private void saveSavedAnswerKeyCSV(JSONObject projObject) {
+
+        JSONArray jsonOuterArr=new JSONArray();
+
+        for(String [] row: CSVHandler.getSavedAnswerKeyCSV()){
+            JSONArray jsonRow=new JSONArray();
+            for(String cell : row)
+                jsonRow.add(cell);
+            jsonOuterArr.add(jsonRow);
+        }
+        projObject.put(SAVED_ANSWER_KEY_CSV_JSON_KEY,jsonOuterArr);
+    }
+
+    private void saveInfoHeaders(JSONObject projObject) {
+
+        if(isOpenMode) //info headers are never affected in open mode
+            return;
+
+        JSONArray jsonInfoHeaders=new JSONArray();
+
+        for(String header :CSVHandler.getDetectedInfoHeaders())
+            jsonInfoHeaders.add(header);
+
+        projObject.put(SAVED_INFO_HEADERS_JSON_KEY,jsonInfoHeaders);
+    }
+
+    private void saveSavedResponsesCSV(JSONObject projObject) {
+
+        JSONArray jsonOuterArr=new JSONArray();
+
+        for(String [] row: CSVHandler.getSavedResponsesCSV()){
+            JSONArray jsonRow=new JSONArray();
+            for(String cell : row)
+                jsonRow.add(cell);
+            jsonOuterArr.add(jsonRow);
+        }
+        projObject.put(SAVED_RESPONSES_CSV_JSON_KEY,jsonOuterArr);
     }
 
 

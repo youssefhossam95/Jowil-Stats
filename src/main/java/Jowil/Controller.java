@@ -80,10 +80,10 @@ public abstract class Controller {
             Q_COL_START_INDEX_JSON_KEY="qColStartIndex",Q_COL_END_INDEX_JSON_KEY="qColEndIndex",SUBJ_COL_START_INDEX_JSON_KEY="subjColStartIndex",
             SUBJ_COL_END_INDEX_JSON_KEY="subjColEndIndex", SUBJ_Q_COUNT_JSON_KEY="subjQuestionsCount",FORM_COL_INDEX_JSON_KEY="formColIndex",
             ID_COL_START_INDEX_JSON_KEY="idStartIndex",ID_COL_END_INDEX_JSON_KEY="idEndIndex",IS_MANUAL_MODE_JSON_KEY="isManualModeUsed",
-            IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY="isResponsesContainsHeaders",RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath",
-            ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName",FORM_COL_NAME_JSON_KEY="formColName"
-            ,CORRECT_ANSWERS_JSON_KEY="correctAnswers",IS_QUESTIONS_IGNORED_JSON_KEY="isQuestionsIgnored",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV"
-            ,SAVED_INFO_HEADERS_JSON_KEY="infoHeaders";
+            IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY="isResponsesContainsHeaders",IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY="isAnswerKeyContainsHeaders",
+            RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
+            ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
+            SAVED_INFO_HEADERS_JSON_KEY="infoHeaders";
 
 
 

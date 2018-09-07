@@ -288,6 +288,12 @@ public class FileConfigController extends Controller {
                 return;
             }
 
+            if(formsCount==0){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
+                         "No forms detected. Answer key file must contain the answers for at least one form");
+                return;
+            }
+
             int responsesColCount = CSVHandler.getResponsesColsCount();
             int answersColCount = CSVHandler.getAnswersColsCount();
 
@@ -299,8 +305,11 @@ public class FileConfigController extends Controller {
 
             ManualModeController.setIsManualModeUsedBefore(false);
 
+
             if (isOpenMode) {
                 CSVHandler.setIsResponsesContainsHeaders((boolean) currentOpenedProjectJson.get(IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY));
+                CSVHandler.setIsAnswerKeyContainsHeaders((boolean)currentOpenedProjectJson.get(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY));
+                CSVHandler.setSavedAnswerKeyCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_ANSWER_KEY_CSV_JSON_KEY));
                 if(isManualMode){
                     openManualMode();
                 }
@@ -313,15 +322,14 @@ public class FileConfigController extends Controller {
                     CSVHandler.setSubjEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_COL_END_INDEX_JSON_KEY)));
                     CSVHandler.setSubjQuestionsCount(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_Q_COUNT_JSON_KEY)));
                     loadSavedProjectJson();
-                    Statistics.setCorrectAnswers((ArrayList<ArrayList<String>>) currentOpenedProjectJson.get(CORRECT_ANSWERS_JSON_KEY));
-                    CSVHandler.setIsQuestionsIgnored((ArrayList<Boolean>)currentOpenedProjectJson.get(IS_QUESTIONS_IGNORED_JSON_KEY));
+                    CSVHandler.loadSavedAnswerKey();
                     CSVHandler.setSavedResponsesCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_RESPONSES_CSV_JSON_KEY));
                     CSVHandler.setFormsCount(Statistics.getCorrectAnswers().size());
                     try {
                         CSVHandler.loadSavedCSV();
                     } catch (CSVHandler.InvalidFormNumberException e) {
                         showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                                "Error in students responses file: " + e.getMessage());
+                                "Error in students responses file: " + e.getMessage()+". Make sure that you have selected the form column correctly.");
                         return;
                     }
 
@@ -331,12 +339,32 @@ public class FileConfigController extends Controller {
                 return;
             }
 
+
+            if(answersTextFieldResult==CSVFileValidator.WARNING){
+
+                int selectedAction = showHeadersWarningDialog("answer key");
+                if (selectedAction == CANCEL)
+                    return;
+
+                CSVHandler.setIsAnswerKeyContainsHeaders(selectedAction == SKIPROW);
+                if(selectedAction==SKIPROW && formsCount==1){ //the forms count includes the headers row
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
+                            "No forms detected. Answer key file must contain the answers for at least one form");
+                    return;
+                }
+
+            }
+            else
+                CSVHandler.setIsAnswerKeyContainsHeaders(true);
+
+
+
             if (isManualMode) {
                 //if no headers in responses
 
                 if (mainTextFieldResult == CSVFileValidator.WARNING) {
 
-                    int selectedAction = showHeadersWarningDialog();
+                    int selectedAction = showHeadersWarningDialog("students responses");
                     if (selectedAction == CANCEL)
                         return;
                     CSVHandler.setIsResponsesContainsHeaders(selectedAction == SKIPROW);
@@ -884,26 +912,33 @@ public class FileConfigController extends Controller {
 
     }
 
-    private int showHeadersWarningDialog() {
+    private int showHeadersWarningDialog(String fileName) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("No Headers Detected");
-        alert.setHeaderText("Students Responses file doesn't contain headers");
-        alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\". Both of these options will direct you to the manual mode.");
+        alert.setHeaderText(null);
+        alert.setContentText("No headers were detected in "+fileName+" file. Does the file contain headers?");
         //alert.setOnCloseRequest(t->alert.hide());
-        ButtonType skipRowButton = new ButtonType("Skip First Row");
-        ButtonType continueButton = new ButtonType("Continue Anyway");
+        ButtonType skipRowButton= new ButtonType("Yes, the first line contains headers");
+        ButtonType  noButton= new ButtonType("No");
         ButtonType close = ButtonType.CLOSE;
 
 
-        alert.getButtonTypes().setAll(skipRowButton, continueButton, close);
+
+        alert.getButtonTypes().setAll(skipRowButton,noButton, close);
+
+        Button closeButt=((Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE));
+
+        closeButt.setVisible(false);
+        closeButt.setMaxWidth(0);
+        closeButt.setPrefWidth(0);
         Optional<ButtonType> result = alert.showAndWait();
 
         int selected;
         if (result.get() == skipRowButton)
             selected = SKIPROW;
-        else if (result.get() == continueButton)
+        else if (result.get() == noButton)
             selected = CONTINUE;
         else
             selected = CANCEL;

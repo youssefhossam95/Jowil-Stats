@@ -199,6 +199,7 @@ public class CSVFileValidator extends ValidatorBase {
         if(hasErrors.get())
             return;
 
+        CSVHandler.setIsAnswerKeyContainsHeaders(false); //so that the next loadAnswerKeys call will not be affected by this variable
         try {
             isHeadersExist=CSVHandler.loadAnswerKeys(file.getPath(),false);
         }
