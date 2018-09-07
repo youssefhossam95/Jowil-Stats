@@ -332,7 +332,7 @@ public class CSVHandler {
 
         //parse students data
         while ((line = input.readLine()) != null) {
-            String[] row = line.split(",",-1);
+            String[] row = removeDoubleQuotes(line.split(",",-1));
             if(row.length==0) //ignore empty lines
                 continue;
 
@@ -350,6 +350,13 @@ public class CSVHandler {
         }
 
 
+    }
+
+    private static String[] removeDoubleQuotes(String[] arr) {
+        for(int i=0;i<arr.length;i++)
+            arr[i]=arr[i].replace("\"","");
+
+        return arr;
     }
 
 
@@ -390,7 +397,7 @@ public class CSVHandler {
         String firstLine=input.readLine(); //can't be null because empty csv check is already called in CSVFileValidator
 
         String[] firstRow;
-        boolean isHeadersExist=isAllCellsLarge(firstRow=firstLine.split(",",-1)) || isAnswerKeyContainsHeaders;
+        boolean isHeadersExist=isAllCellsLarge(firstRow=removeDoubleQuotes(firstLine.split(",",-1))) || isAnswerKeyContainsHeaders;
 
         savedAnswerKeyCSV.add(firstRow);
 
@@ -400,7 +407,7 @@ public class CSVHandler {
         int rowNumber=isHeadersExist?2:1;
         int colsCount=0;
         while ((line = (rowNumber==1?firstLine:input.readLine())) != null) { //read saved first line if no headers exist
-            String [] answers=line.split(",",-1);
+            String [] answers=removeDoubleQuotes(line.split(",",-1));
 
             if(answers.length!=colsCount && colsCount!=0)
                 throw new IllFormedCSVException(rowNumber);
@@ -475,7 +482,7 @@ public class CSVHandler {
         BufferedReader input = new BufferedReader(new FileReader(responsesFilePath));
         String line;
         if((line = input.readLine()) != null){
-            String headers[]=line.split(",",-1);
+            String headers[]=removeDoubleQuotes(line.split(",",-1));
             responsesColsCount=headers.length;
             if(!isAllCellsLarge(headers))
                 return false;
@@ -527,8 +534,8 @@ public class CSVHandler {
     }
 
     public static boolean isFilesHeadersMismatched(File first,File second) throws IOException {
-        String[] firstHeaders=new BufferedReader(new FileReader(first)).readLine().split(",",-1);
-        String [] secondHeaders=new BufferedReader(new FileReader(second)).readLine().split(",",-1);
+        String[] firstHeaders=removeDoubleQuotes(new BufferedReader(new FileReader(first)).readLine().split(",",-1));
+        String [] secondHeaders=removeDoubleQuotes(new BufferedReader(new FileReader(second)).readLine().split(",",-1));
 
         if(firstHeaders.length!=secondHeaders.length)
             return true;
@@ -822,7 +829,7 @@ public class CSVHandler {
     //true if csv file contains headers only
     public static boolean isFileContainsNoRows(File file) throws IOException {
         BufferedReader input = new BufferedReader(new FileReader(file));
-        boolean isHeadersExist=isAllCellsLarge(input.readLine().split(",",-1));
+        boolean isHeadersExist=isAllCellsLarge(removeDoubleQuotes(input.readLine().split(",",-1)));
 
         if(!isHeadersExist)
             return false;
@@ -839,7 +846,7 @@ public class CSVHandler {
         int rowsCount=0;
 
         while( (line = input.readLine()) != null && rowsCount!=maxRowsCount) {
-            String[] row = line.split(",",-1);
+            String[] row = removeDoubleQuotes(line.split(",",-1));
             ArrayList<String> rowList = new ArrayList<String>() ;
             for(int i = 0 ; i < row.length ; i++)
                 rowList.add(row[i]);
