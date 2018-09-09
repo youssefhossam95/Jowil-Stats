@@ -43,6 +43,7 @@ public class Report4 extends Report{
         String headerHtml = doc.select("tr.headerRow").outerHtml();
 
         doc.select("th#identifier").last().text(Statistics.getIdentifierName()) ;
+
         ArrayList<ArrayList<String>> tempStatsTable = Utils.cloneTable(statsTable) ;
 
         // separate the maean row (last row)
@@ -189,6 +190,11 @@ public class Report4 extends Report{
 
         String outputCsv = generateCharSeparatedValuesString('\t') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
+
+    }
+
+    @Override
+    public void generateWordReport() {
 
     }
 

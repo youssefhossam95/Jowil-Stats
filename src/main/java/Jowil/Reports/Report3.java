@@ -2,13 +2,16 @@ package Jowil.Reports;
 
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.ArabicLigaturizer;
 import com.sun.xml.internal.ws.api.databinding.MappingInfo;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +22,9 @@ import java.util.Map;
 
 public class Report3 extends Report {
 
+
+    ArrayList<Map<String , String>> report3Maps ;
+    String[] tablesTitles = {"Test Insights", "Test Data", "Basic Statistics", "Dispersion", "Confidence Intervals", "Test Reliability"};
 
     public Report3(){
         workSpacePath = reportsPath + "report3\\" ;
@@ -74,7 +80,7 @@ public class Report3 extends Report {
         final String pageBreakHtml= "<div class='page-break'></div>\n" ;
 
 
-        ArrayList<Map<String, String >> report3Maps = Statistics.report3Stats() ;
+//        ArrayList<Map<String, String >> report3Maps = Statistics.report3Stats() ;
 
         for(int mapIndex = 0 ; mapIndex < report3Maps.size() ; mapIndex ++) {
             if(mapIndex>0) {
@@ -145,10 +151,10 @@ public class Report3 extends Report {
 
         String [] tablesTitles = {"Test Insights","Test Data" , "Basic Statistics" , "Dispersion" , "Confidence Intervals" , "Test Reliability"} ;
 
-        ArrayList<Map<String, String> > reprot3Maps = Statistics.report3Stats() ;
-        for (int mapIndex=  0 ; mapIndex <reprot3Maps.size() ; mapIndex++ ) {
+//        ArrayList<Map<String, String> > reprot3Maps = Statistics.report3Stats() ;
+        for (int mapIndex=  0 ; mapIndex <report3Maps.size() ; mapIndex++ ) {
 
-            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(reprot3Maps.get(mapIndex));
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex));
             ArrayList<Integer> CHPS = new ArrayList<>();
             for (ArrayList<ArrayList<String>> table : tables)
                 CHPS.add(CHP);
@@ -192,12 +198,10 @@ public class Report3 extends Report {
 
         String outputCsv = "";
 
-        String[] tablesTitles = {"Test Insights", "Test Data", "Basic Statistics", "Dispersion", "Confidence Intervals", "Test Reliability"};
 
-        ArrayList<Map<String, String>> reprot3Maps = Statistics.report3Stats();
-        for (int mapIndex = 0; mapIndex < reprot3Maps.size(); mapIndex++) {
+        for (int mapIndex = 0; mapIndex < report3Maps.size(); mapIndex++) {
 
-            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(reprot3Maps.get(mapIndex));
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex));
 
             int pageWidth = CsvUtils.calcPageWidth(tables);
 
@@ -233,7 +237,33 @@ public class Report3 extends Report {
     }
 
     @Override
-    public void init() {
+    public void generateWordReport() throws IOException {
 
+        XWPFDocument document = WordUtils.createDocument() ;
+
+        for(int mapIndex = 0 ; mapIndex < report3Maps.size() ; mapIndex++) {
+            String title = " Test Statistics Report";
+            if(mapIndex>0) {
+                WordUtils.addPageBreak(document);
+                title = "Form " + mapIndex + title;
+            }
+            WordUtils.addTitle(document , title);
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex)) ;
+            for(int tableIndex = 0 ; tableIndex<tables.size() ; tableIndex++) {
+                ArrayList<ArrayList<String>> table = tables.get(tableIndex);
+                if(tableIndex==3)
+                    WordUtils.addPageBreak(document);
+                WordUtils.addTable(document , table , WordUtils.TABLE_ALIGN_LR , tablesTitles[tableIndex] , 14);
+            }
+        }
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+
+
+
+    }
+
+    @Override
+    public void init() {
+        report3Maps = Statistics.report3Stats() ;
     }
 }
