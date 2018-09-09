@@ -15,8 +15,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -66,11 +64,39 @@ public abstract class Controller {
     protected final double headersFontSize=resX/64;
     private boolean isMaximizedChanged=false;
     boolean isWait=false;
+    static boolean isOpenMode;
+    boolean isBeginMaximised;
+    boolean isStepWindow;
+    static String projectName;
+    static String SAVED_PROJECTS_FILE_NAME="Projects.json";
+    static JSONObject savedProjectsJson;
+    static JSONObject currentOpenedProjectJson;
+    static String selectedIdentifierName;
+    static String selectedFormColName;
+    static final String MANUAL_MODE_INDICATOR=" (Manual Mode)";
+    static final String Q_NAMES_JSON_KEY="qNames",OBJ_GROUPS_JSON_KEY="objGroups",Q_CHOICES_JSON_KEY="questionsChoices",
+            OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="SelectedScaleIndex",
+            REPORTS_CHOSEN_JSON_KEY="reportsChosen",FORMATS_CHOSEN_JSON_KEY="formatsChosen",REPORTS_OUT_PATH_JSON_KEY="reportsOutputDir",
+            Q_COL_START_INDEX_JSON_KEY="qColStartIndex",Q_COL_END_INDEX_JSON_KEY="qColEndIndex",SUBJ_COL_START_INDEX_JSON_KEY="subjColStartIndex",
+            SUBJ_COL_END_INDEX_JSON_KEY="subjColEndIndex", SUBJ_Q_COUNT_JSON_KEY="subjQuestionsCount",FORM_COL_INDEX_JSON_KEY="formColIndex",
+            ID_COL_START_INDEX_JSON_KEY="idStartIndex",ID_COL_END_INDEX_JSON_KEY="idEndIndex",IS_MANUAL_MODE_JSON_KEY="isManualModeUsed",
+            IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY="isResponsesContainsHeaders",IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY="isAnswerKeyContainsHeaders",
+            RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
+            ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
+            SAVED_INFO_HEADERS_JSON_KEY="infoHeaders";
 
 
 
     //Main methods
+
     Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back){
+        this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false);
+        //progressImage=new ImageView(new Image("Images/"+progressImageName));
+    }
+
+
+
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back, boolean isStepWindow,boolean isMaximised){
 
         this.myFXML="/FXML/"+fxmlName;
         this.myTitle=myTitle;
@@ -80,9 +106,10 @@ public abstract class Controller {
         if(back==null)
             backButton.setVisible(false);
         this.back=back;
+        this.isBeginMaximised=isMaximised;
+        this.isStepWindow=isStepWindow;
 
     }
-
 
 
     protected abstract void initComponents();
@@ -127,6 +154,7 @@ public abstract class Controller {
                 stage.setMaximized(true);
             }
             scene = new Scene(root, resX / XSCALE, resY / YSCALE);
+
 
             stage.setTitle(myTitle);
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
@@ -174,6 +202,7 @@ public abstract class Controller {
                     event.consume();
             });
             stage.show();
+            stage.setMaximized(isBeginMaximised);
 
         }
         catch (IOException e) {
@@ -402,7 +431,7 @@ public abstract class Controller {
         String file = "";
         JSONObject jsonObj = null;
         try {
-            file = URLDecoder.decode(getClass().getResource("/" + path).getFile(), "utf-8");
+            file = URLDecoder.decode(getClass().getResource("/UserData/" + path).getFile(), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -428,7 +457,7 @@ public abstract class Controller {
         PrintWriter pw = null;
         String file = "";
         try {
-            file = URLDecoder.decode(getClass().getResource("/" + path).getFile(), "utf-8");
+            file = URLDecoder.decode(getClass().getResource("/UserData/" + path).getFile(), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

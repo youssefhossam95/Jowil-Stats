@@ -1,5 +1,6 @@
 package Jowil;
 
+import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -7,19 +8,22 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
+import javafx.util.Callback;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.pdfsam.ui.RingProgressIndicator;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -69,7 +73,6 @@ public class StartController extends Controller{
 
     ArrayList<String> projectsNames;
 
-    JSONObject projectsJson;
 
     @FXML
     StackPane closeButton;
@@ -80,11 +83,14 @@ public class StartController extends Controller{
     @FXML
     ImageView backImageView;
 
+    long lastClick;
 
 
     StartController() {
-        super("Start.fxml", "Jowil Stats", 1,1 , true, null);
+        super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true);
     }
+
+
 
     @Override
     protected void initComponents() {
@@ -234,6 +240,7 @@ public class StartController extends Controller{
     }
 
 
+
     private void showNewProjectNameDialog(String initialText){
 
 
@@ -253,29 +260,35 @@ public class StartController extends Controller{
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
-            if(result.get().trim().isEmpty()){
+            String projName=result.get();
+            if(projName.trim().isEmpty()){
                 showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Project Name Error","Project name cannot be empty.");
-                showNewProjectNameDialog(result.get());
+                showNewProjectNameDialog(projName);
             }
-            else if(isProjectExists(result.get())) {
+            else if(isProjectExists(projName)) {
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Project Name Error", "" +
-                        "A project with the name \"" + result.get() + "\" already exists.");
-                showNewProjectNameDialog(result.get());
+                        "A project with the name \"" + projName + "\" already exists.");
+                showNewProjectNameDialog(projName);
             }
 
-            else if(isProjectNameInvalid(result.get())){
+            else if(isProjectNameInvalid(projName)){
                 showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Project Name Error","Invalid project name. Project Name cannot" +
                         " contain any of the following characters: "+"< > : \" / \\ | ? *");
-                showNewProjectNameDialog(result.get());
+                showNewProjectNameDialog(projName);
             }
-            else
+            else {
+                Controller.projectName=projName;
+                Controller.isOpenMode=false;
+                Controller.currentOpenedProjectJson=null;
                 new FileConfigController().startWindow();
+            }
 
         }
 
     }
 
     private boolean isProjectExists(String s) {
+        loadProjectNames();
         return projectsNames.contains(s);
     }
 
@@ -286,20 +299,13 @@ public class StartController extends Controller{
 
     private void loadProjectsJson(){
 
-        projectsJson=loadJsonObj("projects.json");
-        if(projectsJson==null){
+        savedProjectsJson=loadJsonObj(SAVED_PROJECTS_FILE_NAME);
+        if(savedProjectsJson==null){
             if(showJsonError())
                 new StartController().startWindow();
 
             stage.close();
             return;
-        }
-        JSONArray projectsArr=(JSONArray)projectsJson.get("projects");
-        projectsNames=new ArrayList<>();
-
-        for(int i=0;i<projectsArr.size();i++){
-            JSONObject project=(JSONObject)projectsArr.get(i);
-            projectsNames.add((String)project.get("name"));
         }
     }
 
@@ -338,19 +344,20 @@ public class StartController extends Controller{
         butt.setVisible(false);
 
         JFXListView projectsList=new JFXListView();
-        ObservableList<HBox> listItems=FXCollections.observableArrayList();
+
+
+
+        ObservableList<String> listItems=FXCollections.observableArrayList();
+        loadProjectNames();
+
+
+        projectsList.setCellFactory(event->OpenProjectCell.createManualModeCell(dialog,this));
+
+
 
         for(String name:projectsNames){
-            HBox hbox=new HBox(5);
-            ImageView imageView=new ImageView();
-            imageView.setImage(new Image("Images/Folder_96px.png"));
-            imageView.setFitWidth(20);
-            imageView.setFitHeight(20);
-            Label label =new Label(name);
-            label.setFont(new Font(15));
-            label.setAlignment(Pos.CENTER);
-            hbox.getChildren().addAll(imageView,label);
-            listItems.add(hbox);
+
+            listItems.add(name);
             System.out.println(name);
         }
 
@@ -375,6 +382,42 @@ public class StartController extends Controller{
         dialog.showAndWait();
 
     }
+
+
+    /*
+    used to refresh project names 3shn if it was changed anywhere in the app.
+     */
+    void loadProjectNames(){
+        JSONArray projectsArr=(JSONArray)savedProjectsJson.get("projects");
+        projectsNames=new ArrayList<>();
+
+        for(int i=0;i<projectsArr.size();i++){
+            JSONObject project=(JSONObject)projectsArr.get(i);
+            projectsNames.add((String)project.get("name"));
+        }
+    }
+
+    public void startOpenMode(String projName,Dialog dialog) {
+
+        Controller.projectName = projName;
+        Controller.isOpenMode=true;
+        ManualModeController.isIgnoreSavedObjectiveWeights=false;
+
+        int projIndex=projectsNames.indexOf(projName);
+        JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
+        currentOpenedProjectJson= (JSONObject)projects.get(projIndex);
+
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("proj: " + Controller.projectName);
+        dialog.close();
+        new FileConfigController().startWindow();
+    }
+
+
 
 
 

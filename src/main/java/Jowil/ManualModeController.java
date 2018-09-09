@@ -17,10 +17,7 @@ import javafx.util.Callback;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
 
@@ -103,10 +100,11 @@ public class ManualModeController extends Controller{
 //    int IDStartIndex,IDEndIndex,formIndex;
     int columnSetComboSelectedIndex;
     Controller caller;
+    static boolean isIgnoreSavedObjectiveWeights;
 
 
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null);
+        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null,false,false);
         this.caller=caller;
 
     }
@@ -287,6 +285,8 @@ public class ManualModeController extends Controller{
 
         ArrayList<ColumnSet> objColSets=new ArrayList<>();
 
+        String identifierName="None",formColName="None";
+
         int index=0;
         for(ColumnSet columnSet:columnSets){
             String type=columnSet.getType();
@@ -304,9 +304,11 @@ public class ManualModeController extends Controller{
                 subjStartIndex=columnSet.getStartIndex();
                 subjEndIndex=columnSet.getEndIndex();
             }else if(type.equals(ID_TYPE)){ //only one id group col set exist
+                identifierName=columnSet.getName();
                 IDStartIndex=columnSet.getStartIndex();
                 IDEndIndex=columnSet.getEndIndex();
             }else{ //form type must be only one column
+                formColName=columnSet.getName();
                 formIndex=columnSet.getStartIndex();
             }
             index++;
@@ -351,9 +353,15 @@ public class ManualModeController extends Controller{
 
 
 
-        if(!saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,objColSets))
+        if(!saveToCSVHandler(objStartIndex,objEndIndex,subjStartIndex,subjEndIndex,IDStartIndex,IDEndIndex,formIndex,objColSets)){
+            isIgnoreSavedObjectiveWeights=false;
             return false;
+        }
 
+
+        Statistics.setIdentifierName(identifierName);
+        Controller.selectedIdentifierName=identifierName.equals("None")?"None":identifierName+MANUAL_MODE_INDICATOR;
+        Controller.selectedFormColName=formColName.equals("None")?"None":formColName+MANUAL_MODE_INDICATOR;
         return true;
     }
 
@@ -432,20 +440,29 @@ public class ManualModeController extends Controller{
     //utility functions
     private void loadTableContents() {
 
-        ArrayList<ArrayList<String>> content;
+        ArrayList<ArrayList<String>> content=new ArrayList<>();
 
-        try {
-            content=CSVHandler.readResponsesFile(MAX_ROWS_COUNT+1); //+1 to include headers
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"CSV Reloading Error","Error in " +
-                    "reloading student responses file.");
-            return;
+        if(isOpenMode) {
+            for (int i = 0; i < Math.min(MAX_ROWS_COUNT + 1, CSVHandler.getSavedResponsesCSV().size()); i++)
+                content.add(new ArrayList<>(Arrays.asList(CSVHandler.getSavedResponsesCSV().get(i))));
         }
+        else{
+            try {
+                content=CSVHandler.readResponsesFile(MAX_ROWS_COUNT+1); //+1 to include headers
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "CSV Reloading Error", "Error in " +
+                        "reloading student responses file.");
+                return;
+            }
+        }
+
+
+
 
         int start=0,end;
 
-        if(CSVHandler.isIsSkipRowInManual()) { //headers exist
+        if(CSVHandler.isIsResponsesContainsHeaders()) { //headers exist
             tableHeaders=content.get(0);
             start=1;
         }
@@ -684,25 +701,55 @@ public class ManualModeController extends Controller{
             e.printStackTrace(); //mynf3sh yhsl
         }
 
-        try {
-            CSVHandler.loadCsv(CSVHandler.isIsSkipRowInManual());
-        } catch (CSVHandler.IllFormedCSVException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                    "Error in students responses file at row "+e.getRowNumber()+". File must contain the same number of columns in all rows.");
-            return false;
-        }catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                    "Error in reading students responses file.");
-            return false;
-        } catch (CSVHandler.InvalidFormNumberException e) {
-            showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                    "Error in students responses file: "+e.getMessage());
-            return false;
-        }
 
+        if(isOpenMode){
+
+            if(CSVHandler.getDetectedQHeaders().size()==Statistics.getQuestionWeights().get(0).size()){
+
+                if(showWeightsResetConfirmationDialog())
+                    isIgnoreSavedObjectiveWeights=true;
+                else
+                    isIgnoreSavedObjectiveWeights=false;
+
+            }
+            else{
+                if(showWeightsWarningDialog())
+                    isIgnoreSavedObjectiveWeights=true;
+                else
+                    return false;
+            }
+
+            try {
+                CSVHandler.loadSavedCSV();
+            } catch (CSVHandler.InvalidFormNumberException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: " + e.getMessage()+". Make sure that you have selected a valid form column.");
+                return false;
+            }
+        }
+        else {
+
+            try {
+                CSVHandler.loadCsv(CSVHandler.isIsResponsesContainsHeaders());
+            } catch (CSVHandler.IllFormedCSVException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file at row " + e.getRowNumber() + ". File must contain the same number of columns in all rows.");
+                return false;
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in reading students responses file.");
+                return false;
+            } catch (CSVHandler.InvalidFormNumberException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: " + e.getMessage());
+                return false;
+            }
+        }
         return true;
 
     }
+
+
 
     private ArrayList<String> getUnExpectedColSet(int firstObjCS, int lastObjCS) {
 
@@ -719,6 +766,44 @@ public class ManualModeController extends Controller{
         return null;
     }
 
+
+    private boolean showWeightsWarningDialog() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Number of Objective Questions Changed");
+        alert.setHeaderText(null);
+        alert.setContentText("The number of objective questions has changed. All the saved objective weights for this project will be lost.");
+        //alert.setOnCloseRequest(t->alert.hide());
+        alert.getButtonTypes().setAll(ButtonType.OK,ButtonType.CLOSE);
+        Button closeButt=((Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE));
+        closeButt.setText("Cancel");
+
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        return result.get()==ButtonType.OK;
+
+    }
+
+    private boolean showWeightsResetConfirmationDialog() {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle( "Reset Question Weights");
+        alert.setHeaderText(null);
+        alert.setContentText("Objective questions was just edited. Would you like to reset the existing objective weights?");
+        Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        okButt.setText("Yes, Reset Weights");
+
+        Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButt.setText("No, Load Saved Weights");
+
+        alert.initOwner(stage.getOwner());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.get() == ButtonType.OK;
+
+
+    }
 
     class ColumnSetSorter implements Comparator<ColumnSet> {
 

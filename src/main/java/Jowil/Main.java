@@ -42,9 +42,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static void updateQuestionHeaders(ArrayList<String> qHeaders){
-        Statistics.setQuestionNames(qHeaders);
-    }
+
 }
 
 

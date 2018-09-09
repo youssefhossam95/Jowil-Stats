@@ -5,18 +5,18 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import java.util.ArrayList;
+
+import static Jowil.ManualModeController.isIgnoreSavedObjectiveWeights;
 
 public class WeightsController extends Controller{
 
@@ -118,7 +118,6 @@ public class WeightsController extends Controller{
 
     ///data fields
     ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
-    ArrayList<String> headers=CSVHandler.getDetectedQHeaders();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
 
 
@@ -464,8 +463,10 @@ public class WeightsController extends Controller{
         for(int i=0;i<CSVHandler.getDetectedQHeaders().size();i++){
             ObservableList<StringProperty> row= FXCollections.observableArrayList();
             row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
-            for(int j=0;j<CSVHandler.getFormsCount();j++)
-                row.add(new SimpleStringProperty("1.0"));
+            for(int j=0;j<CSVHandler.getFormsCount();j++) {
+                String weight=isOpenMode && !isIgnoreSavedObjectiveWeights?String.format("%.1f",Statistics.getQuestionWeights().get(j).get(i)):"1.0";
+                row.add(new SimpleStringProperty(weight));
+            }
             objQuestions.add(row);
         }
 

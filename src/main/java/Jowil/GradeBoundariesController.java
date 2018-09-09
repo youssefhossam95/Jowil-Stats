@@ -4,43 +4,33 @@ import Jowil.Reports.*;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import com.lowagie.text.DocumentException;
-import com.sun.org.apache.regexp.internal.REProgram;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.pdfsam.ui.FillProgressIndicator;
-import org.pdfsam.ui.RingProgressIndicator;
+
 
 import java.io.*;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static Jowil.CSVHandler.NOT_AVAILABLE;
+import static Jowil.CSVHandler.readPartialCSVFile;
+
+/*Note: when storing in json files all integer variables are stored as strings to avoid a bug in jsonSimple library that
+causes an inconsistent behaviour while dealing with int variables
+*/
 
 public class GradeBoundariesController extends Controller {
 
@@ -109,11 +99,12 @@ public class GradeBoundariesController extends Controller {
 
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
-    private final static String USER_PREFS_FILE_NAME = "UserPrefs.json", GRADE_SCALE_FILE_NAME = "GradeScales.json";
+    private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json", GRADE_SCALE_FILE_NAME = "GradeScales.json";
     int gradesConfigComboSelectedIndex;
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
     private int reportsCount;
+
 
     Font gradesLabelsFonts = new Font("Arial", resX / 100);
 
@@ -302,6 +293,10 @@ public class GradeBoundariesController extends Controller {
             counter++;
         }
 
+        ArrayList<Pair<String,Double>> origScale=new ArrayList<>();
+        for(Pair<String,Double> pair:scale)
+            origScale.add(pair);
+
         Collections.sort(scale,new PairSorter());
 
         if(scale.get(0).getValue()!=0)
@@ -319,21 +314,23 @@ public class GradeBoundariesController extends Controller {
         Statistics.setGrades(gradeNames);
         Statistics.setGradesLowerRange(gradeMins);
 
+        String selectedIndex;
+
+        gradeScalesJsonObj.put("lastSelectedScaleIndex",selectedIndex=Integer.toString(gradesConfigComboSelectedIndex));
         //save new changes if user wants to
 
         if (isContentEdited) {
             String result = showSaveChangesDialog();
             if (result != null) {
-                saveNewConfig(result, scale);
+                saveNewConfig(result,origScale);
+                gradeScalesJsonObj.put("lastSelectedScaleIndex",selectedIndex=Integer.toString(comboItems.size()));
             }
         }
 
+
         saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
 
-
-
-
-
+        
         //generate Reports
 
         ArrayList<Report> reportsOut = new ArrayList<>();
@@ -367,28 +364,72 @@ public class GradeBoundariesController extends Controller {
             i++;
         }
 
-
-
-
-        prefsJsonObj.put("reportsChosen", reportsConfig);
-        prefsJsonObj.put("formatsChosen", formatsConfig);
+        
+        prefsJsonObj.put(REPORTS_CHOSEN_JSON_KEY, reportsConfig);
+        prefsJsonObj.put(FORMATS_CHOSEN_JSON_KEY, formatsConfig);
         savePrefsJsonObj();
 
 
+        //save project to json
+
+        JSONObject projObject=new JSONObject();
+        if(isOpenMode){
+            projObject=currentOpenedProjectJson;
+        }
+        else {
+            ((JSONArray) savedProjectsJson.get("projects")).add(projObject);
+            projObject.put("name", Controller.projectName);
+        }
 
 
+
+
+        projObject.put(Q_COL_START_INDEX_JSON_KEY,Integer.toString(CSVHandler.getQuestionsColStartIndex()));
+        projObject.put(Q_COL_END_INDEX_JSON_KEY,Integer.toString(CSVHandler.getQuestionsColEndIndex()));
+
+        projObject.put(SUBJ_COL_START_INDEX_JSON_KEY,Integer.toString(CSVHandler.getSubjStartIndex()));
+        projObject.put(SUBJ_COL_END_INDEX_JSON_KEY,Integer.toString(CSVHandler.getSubjEndIndex()));
+        projObject.put(SUBJ_Q_COUNT_JSON_KEY,Integer.toString(CSVHandler.getSubjQuestionsCount()));
+
+
+        projObject.put(IS_MANUAL_MODE_JSON_KEY,ManualModeController.isIsManualModeUsedBefore());
+
+
+
+        projObject.put(ID_COL_START_INDEX_JSON_KEY,Integer.toString(CSVHandler.getIdentifierColStartIndex()));
+        projObject.put(ID_COL_END_INDEX_JSON_KEY,Integer.toString(CSVHandler.getIdentifierColEndIndex()));
+        projObject.put(FORM_COL_INDEX_JSON_KEY,Integer.toString(CSVHandler.getFormColIndex()));
+        projObject.put(IDENTIFIER_NAME_JSON_KEY,Controller.selectedIdentifierName);
+        projObject.put(FORM_COL_NAME_JSON_KEY,Controller.selectedFormColName);
+
+        projObject.put(IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsResponsesContainsHeaders());
+        projObject.put(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsAnswerKeyContainsHeaders());
+        projObject.put(RESPONSES_FILE_PATH_JSON_KEY,CSVHandler.getResponsesFilePath());
+        projObject.put(ANSWERS_FILE_PATH_JSON_KEY,CSVHandler.getAnswerKeyFilePath());
+
+
+        saveObjectiveGroups(projObject);
+        saveQNames(projObject);
+        saveQuestionsChoices(projObject);
+        saveObjWeights(projObject);
+        saveSubjWeights(projObject);
+        saveSavedResponsesCSV(projObject);
+        saveSavedAnswerKeyCSV(projObject);
+        saveInfoHeaders(projObject);
+
+        projObject.put(SELECTED_SCALE_JSON_KEY,selectedIndex);
+        projObject.put(REPORTS_CHOSEN_JSON_KEY,reportsConfig);
+        projObject.put(FORMATS_CHOSEN_JSON_KEY,formatsConfig);
+        projObject.put(REPORTS_OUT_PATH_JSON_KEY, reportsDirTextField.getText());
+
+        saveJsonObj(SAVED_PROJECTS_FILE_NAME,savedProjectsJson);
 
         Report.initOutputFolderPaths(outPath+projectDirName);
-
-
-
-
         showProgressDialog(reportsOut,formatsOut);
 
 
         stage.close();
     }
-
 
 
 
@@ -490,8 +531,10 @@ public class GradeBoundariesController extends Controller {
             return cell;
         });
 
+        //System.out.println(gradeScalesJsonObj.get("lastSelectedScaleIndex")+" ya joeeeee");
+        int index=Integer.parseInt((String)gradeScalesJsonObj.get("lastSelectedScaleIndex"));
+        gradesConfigCombo.getSelectionModel().select(index);
 
-        gradesConfigCombo.getSelectionModel().select(0);
     }
 
 
@@ -559,7 +602,7 @@ public class GradeBoundariesController extends Controller {
                     reportsDirTextField.requestFocus();
                     reportsDirTextField.deselect();
                     if (isJsonSuccess && !newDir.getAbsolutePath().equals(lastDir)) {
-                        prefsJsonObj.put("reportsOutputDir", newDir.getAbsolutePath());
+                        prefsJsonObj.put(REPORTS_OUT_PATH_JSON_KEY, newDir.getAbsolutePath());
                     }
                 }
             }
@@ -612,6 +655,7 @@ public class GradeBoundariesController extends Controller {
         formatsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         formatsVBox.getChildren().add(formatsLabel);
 
+
         formatsCheckBoxes.add(new JFXCheckBox("PDF"));
         formatsCheckBoxes.add(new JFXCheckBox("HTML"));
         formatsCheckBoxes.add(new JFXCheckBox("TXT"));
@@ -650,12 +694,12 @@ public class GradeBoundariesController extends Controller {
 
     private boolean loadPrefsJsonObj() {
 
-        return (prefsJsonObj = loadJsonObj("UserPrefs.json")) != null;
+        return (prefsJsonObj = loadJsonObj(REPORTS_PREFS_FILE_NAME)) != null;
     }
 
 
     private void savePrefsJsonObj() {
-        saveJsonObj(USER_PREFS_FILE_NAME, prefsJsonObj);
+        saveJsonObj(REPORTS_PREFS_FILE_NAME, prefsJsonObj);
     }
 
     private void deleteCurrentConfig() {
@@ -668,6 +712,9 @@ public class GradeBoundariesController extends Controller {
             scales.remove(gradesConfigComboSelectedIndex);
             gradeScalesJsonObj.put("scales", scales);
             comboItems.remove(gradesConfigComboSelectedIndex);
+            gradeScalesJsonObj.put("lastSelectedScaleIndex",Integer.toString(gradesConfigComboSelectedIndex));
+            saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
+
 
         }
     }
@@ -700,7 +747,7 @@ public class GradeBoundariesController extends Controller {
     private void loadGradeConfigs() {
 
 
-        if ((gradeScalesJsonObj = loadJsonObj("GradeScales.json")) == null) {
+        if ((gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null) {
             showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
                     "Error in loading Grade Scale Configurations");
             return;
@@ -836,7 +883,7 @@ public class GradeBoundariesController extends Controller {
 
     private String getProjectDirName(){
         //return new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
-        return "Jowil";
+        return Controller.projectName;
     }
 
     private boolean createOutDirs(String outPath,String projectName) {
@@ -902,6 +949,101 @@ public class GradeBoundariesController extends Controller {
         return formatsValid && reportsValid;
 
     }
+
+    private void saveObjectiveGroups(JSONObject projObject) {
+
+        JSONArray jsonGroups=new JSONArray();
+        for(Group group:CSVHandler.getDetectedGroups()){
+            JSONObject groupObj=new JSONObject();
+            groupObj.put("name",group.getName());
+            groupObj.put("qCount",Integer.toString(group.getqCount()));
+            jsonGroups.add(groupObj);
+        }
+        projObject.put(OBJ_GROUPS_JSON_KEY,jsonGroups);
+    }
+
+    private void saveQNames(JSONObject projObject) {
+        JSONArray jsonQNames=new JSONArray();
+
+        for(String qName :CSVHandler.getDetectedQHeaders())
+            jsonQNames.add(qName);
+
+        projObject.put(Q_NAMES_JSON_KEY,jsonQNames);
+    }
+
+    private void saveQuestionsChoices(JSONObject projObject) {
+        JSONArray qChoicesOuterArr=new JSONArray();
+        for(ArrayList<String> innerArr:Statistics.getQuestionsChoices()){
+            JSONArray choices=new JSONArray();
+            for(String choice : innerArr)
+                choices.add(choice);
+            qChoicesOuterArr.add(choices);
+        }
+        projObject.put(Q_CHOICES_JSON_KEY,qChoicesOuterArr);
+    }
+
+    private void saveObjWeights(JSONObject projObject) {
+        JSONArray objWeightsOuterArr=new JSONArray();
+
+        for(ArrayList<Double> formWeights:Statistics.getQuestionWeights()){
+            JSONArray innerArr=new JSONArray();
+            for(Double weight:formWeights)
+                innerArr.add(weight);
+
+            objWeightsOuterArr.add(innerArr);
+        }
+        projObject.put(OBJ_WEIGHTS_JSON_KEY,objWeightsOuterArr);
+    }
+
+
+    private void saveSubjWeights(JSONObject projObject) {
+        JSONArray jsonSubjWeights=new JSONArray();
+
+        for(Double weight:Statistics.getSubjMaxScores())
+            jsonSubjWeights.add(weight);
+
+        projObject.put(SUBJ_WEIGHTS_JSON_KEY,jsonSubjWeights);
+    }
+
+    private void saveSavedAnswerKeyCSV(JSONObject projObject) {
+
+        JSONArray jsonOuterArr=new JSONArray();
+
+        for(String [] row: CSVHandler.getSavedAnswerKeyCSV()){
+            JSONArray jsonRow=new JSONArray();
+            for(String cell : row)
+                jsonRow.add(cell);
+            jsonOuterArr.add(jsonRow);
+        }
+        projObject.put(SAVED_ANSWER_KEY_CSV_JSON_KEY,jsonOuterArr);
+    }
+
+    private void saveInfoHeaders(JSONObject projObject) {
+
+        if(isOpenMode) //info headers are never affected in open mode
+            return;
+
+        JSONArray jsonInfoHeaders=new JSONArray();
+
+        for(String header :CSVHandler.getDetectedInfoHeaders())
+            jsonInfoHeaders.add(header);
+
+        projObject.put(SAVED_INFO_HEADERS_JSON_KEY,jsonInfoHeaders);
+    }
+
+    private void saveSavedResponsesCSV(JSONObject projObject) {
+
+        JSONArray jsonOuterArr=new JSONArray();
+
+        for(String [] row: CSVHandler.getSavedResponsesCSV()){
+            JSONArray jsonRow=new JSONArray();
+            for(String cell : row)
+                jsonRow.add(cell);
+            jsonOuterArr.add(jsonRow);
+        }
+        projObject.put(SAVED_RESPONSES_CSV_JSON_KEY,jsonOuterArr);
+    }
+
 
     class PairSorter implements Comparator<Pair<String, Double>> {
 

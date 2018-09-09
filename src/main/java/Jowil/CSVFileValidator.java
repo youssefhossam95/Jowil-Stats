@@ -35,7 +35,7 @@ public class CSVFileValidator extends ValidatorBase {
             REQUIRED_FIELD_MESSAGE="Required field.",CSV_EXTENSION_MESSAGE="File must have a \".csv\" extension.",
             ERROR_READING_MESSAGE="Error in reading file.",NO_HEADERS_MESSAGE="No headers detected.",
             INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.",
-            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d",HEADERS_ONLY_MESSAGE="File contains headers only.";
+            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d.",HEADERS_ONLY_MESSAGE="File contains headers only.";
 
 
 
@@ -69,15 +69,20 @@ public class CSVFileValidator extends ValidatorBase {
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
         String text = textField.getText();
-        File csvFile = new File(text);
+        File csvFile=null;
+        if(!Controller.isOpenMode)
+            csvFile= new File(text);
+
         messageType=ERROR;
         switch (textFieldID){
             case MAINFILETEXTFIELD:
-                validateMainCSV(csvFile);
+                if(!Controller.isOpenMode)
+                    validateMainCSV(csvFile);
                 setSuccessIcon(mainSuccessIcon);
                 break;
             case ANSWERSFILETEXTFIELD:
-                validateAnswersCSV(csvFile);
+                if(!Controller.isOpenMode)
+                    validateAnswersCSV(csvFile);
                 setSuccessIcon(answersSuccessIcon);
                 break;
         }
@@ -194,18 +199,23 @@ public class CSVFileValidator extends ValidatorBase {
         if(hasErrors.get())
             return;
 
+        CSVHandler.setIsAnswerKeyContainsHeaders(false); //so that the next loadAnswerKeys call will not be affected by this variable
         try {
             isHeadersExist=CSVHandler.loadAnswerKeys(file.getPath(),false);
         }
         catch(CSVHandler.IllFormedCSVException e){
-            setMessage(String.format(ILLFORMED_CSV_MESSAGE,e.getRowNumber()));
+            int rowNumber=e.getRowNumber();
+            setMessage(String.format(ILLFORMED_CSV_MESSAGE,rowNumber)+(rowNumber==2?" Make sure that the CSV headers have no commas.":""));
             hasErrors.set(true);
+            return;
         }  catch(IOException e) {
             setMessage(ERROR_READING_MESSAGE);
             hasErrors.set(true);
+            return;
         } catch (CSVHandler.InConsistentAnswerKeyException e) {
             setMessage(INCONSISTENT_ANSWER_KEY_MESSAGE);
             hasErrors.set(true);
+            return;
         }
 
         if(!isHeadersExist){

@@ -1,4 +1,5 @@
 package Jowil;
+
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.collections.FXCollections;
@@ -19,14 +20,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
+
 import javafx.util.Callback;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
 
 
-public class FileConfigController extends Controller{
+public class FileConfigController extends Controller {
 
- //components
+    //components
 
     @FXML
     private JFXTextField mainFileTextField;
@@ -75,53 +79,47 @@ public class FileConfigController extends Controller{
     private VBox contentVbox;
 
 
-
-
-
     JFXToggleButton toggleButton = new JFXToggleButton();
     VBox subjVBox = new VBox();
-    JFXSlider slider= new JFXSlider();
+    JFXSlider slider = new JFXSlider();
     final Popup popup = new Popup();
 
 
-
- //data fields
+    //data fields
     private String lastDir;
     File csvFile;
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
     private ArrayList<String> filteredInfoHeaders;
-    private ObservableList<String> combosItems=FXCollections.observableArrayList();
+    private ObservableList<String> combosItems = FXCollections.observableArrayList();
     private int identifierComboSelectedIndex; //including none at index zero
     private int formComboSelectedIndex; //including none at index zero
-    private int mainTextFieldResult=CSVFileValidator.ERROR,answersTextFieldResult=CSVFileValidator.ERROR;
-    private String mainTextFieldMessage="", answersTextFieldMessage="";
-    private boolean isComplexIDAdded=false;
-    private int complexIDSize=0;
+    private int mainTextFieldResult = CSVFileValidator.ERROR, answersTextFieldResult = CSVFileValidator.ERROR;
+    private String mainTextFieldMessage = "", answersTextFieldMessage = "";
+    private boolean isComplexIDAdded = false;
+    private int complexIDSize = 0;
     private int complexIdStartIndex;
-    private final static int SKIPROW=0,CONTINUE=1,CANCEL=2,DECLARESUBJ=3;
+    private final static int SKIPROW = 0, CONTINUE = 1, CANCEL = 2, DECLARESUBJ = 3;
 
-
-
-
-
-
-
-
+    int manualColsCounter = 0;
+    int manualIDIndex;
+    int manualFormIndex;
+    boolean isMainTextFieldValidated;
 
 
     //getters and setters
 
-   
 
     //Main methods
-    FileConfigController(){
-        super("FileConfig.fxml","File configuration",1.6,1.45,true,null);
+    FileConfigController() {
+
+        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null);
+
     }
-    
-    
-    protected void updateSizes(){
+
+
+    protected void updateSizes() {
         super.updateSizes();
 
         contentVbox.setLayoutX(rootWidthToPixels(0.072));
@@ -131,12 +129,11 @@ public class FileConfigController extends Controller{
 
         mainHBox.setSpacing(resXToPixels(0.005));
         answersHBox.setSpacing(resXToPixels(0.005));
-        
-        
+
+
         mainFileTextField.setPrefWidth(rootWidthToPixels(0.5));
         mainFileTextField.setPrefHeight(resYToPixels(0.04));
         mainFileTextField.setPadding(Insets.EMPTY);
-
 
 
         answersFileTextField.setPrefWidth(rootWidthToPixels(0.5));
@@ -144,14 +141,10 @@ public class FileConfigController extends Controller{
         answersFileTextField.setPadding(Insets.EMPTY);
 
 
-
-
-
-
         formCombo.setPadding(Insets.EMPTY);
         formCombo.setPrefWidth(rootWidthToPixels(0.227));
         identifierCombo.setPrefWidth(rootWidthToPixels(0.227));
-        manualModeToggle.setPadding(new Insets(rootHeightToPixels(0.03),0,0,0));
+        manualModeToggle.setPadding(new Insets(rootHeightToPixels(0.03), 0, 0, 0));
 
 
         nextButton.setPrefWidth(resXToPixels(0.07));
@@ -161,16 +154,16 @@ public class FileConfigController extends Controller{
 
 
         combosAnchor.setPrefWidth(rootWidthToPixels(0.4));
-        AnchorPane.setLeftAnchor(identifierCombo,0.0);
-        AnchorPane.setRightAnchor(formCombo,0.0);
-        combosAnchor.setPadding(new Insets(0,answersFileChooser.getLayoutBounds().getWidth()+answersHBox.getSpacing(),0,0));
+        AnchorPane.setLeftAnchor(identifierCombo, 0.0);
+        AnchorPane.setRightAnchor(formCombo, 0.0);
+        combosAnchor.setPadding(new Insets(0, answersFileChooser.getLayoutBounds().getWidth() + answersHBox.getSpacing(), 0, 0));
 
         subjVBox.setLayoutX(rootWidthToPixels(0.11));
         subjVBox.setLayoutY(rootHeightToPixels(0.5));
 
     }
 
-    protected void initComponents(){
+    protected void initComponents() {
         initAnswersFileChooser();
         initMainFileChooser();
         initNextButton();
@@ -179,8 +172,26 @@ public class FileConfigController extends Controller{
         initIdentifierCombo();
         initFormCombo();
         initManualModeToggle();
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+        isMainTextFieldValidated=false;
+        if (isOpenMode) {
+            mainFileTextField.setText((String) currentOpenedProjectJson.get(RESPONSES_FILE_PATH_JSON_KEY));
+            answersFileTextField.setText((String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY));
+            mainFileTextField.setEditable(false);
+            answersFileTextField.setEditable(false);
+            CSVHandler.setResponsesFilePath(mainFileTextField.getText()); //because the csv loading functions are not called in openMode so these strings will be equal to null.
+            CSVHandler.setAnswerKeyFilePath(answersFileTextField.getText()); //same as above
+            validateMainTextField();
+            validateAnswersTextField();
+            answersFileChooser.setOpacity(0.3);
+            mainFileChooser.setOpacity(0.3);
+            answersFileChooser.addEventFilter(MouseEvent.ANY,event -> event.consume()); //block all mouse events on choosers in open mode
+            mainFileChooser.addEventFilter(MouseEvent.ANY,event -> event.consume());
+
+        }
+
+
+//        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+//        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
     }
 
@@ -190,8 +201,10 @@ public class FileConfigController extends Controller{
     }
 
     @Override
-    protected void saveChanges(){
+    protected void saveChanges() {
 
+        selectedIdentifierName = (String) identifierCombo.getSelectionModel().getSelectedItem();
+        selectedFormColName = (String) formCombo.getSelectionModel().getSelectedItem();
         saveIdentifierColumn();
         saveFormColumn();
 
@@ -199,14 +212,26 @@ public class FileConfigController extends Controller{
     }
 
     @Override
-    protected void buildComponentsGraph(){
+    public void startWindow() {
+        super.startWindow();
+
+        if (savedProjectsJson == null) {
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Loading Preferences Error",
+                    "An error has occurred while loading the preferences file.");
+            stage.close();
+        }
+
+    }
+
+    @Override
+    protected void buildComponentsGraph() {
 
 //        subjVBox.getChildren().add(toggleButton);
 //        subjVBox.getChildren().add(slider);
 //        rootPane.getChildren().add(subjVBox);
 
         //super.buildComponentsGraph();
-        Label label=new Label();
+        Label label = new Label();
         label.setText("This is an error message");
         label.getStyleClass().add("chat-bubble");
         popup.getContent().add(label);
@@ -214,53 +239,65 @@ public class FileConfigController extends Controller{
     }
 
     //helper methods
-    protected void initNextButton(){
+    protected void initNextButton() {
 
 //
-        nextButton.setOnMouseClicked(t->{
+        nextButton.setOnMouseClicked(t -> {
 
 
-            boolean isManualMode=manualModeToggle.isSelected();
             rootPane.requestFocus();
-            validateMainTextField();
+
+            if(!isMainTextFieldValidated)
+                validateMainTextField();
+
+            boolean isManualMode = manualModeToggle.isSelected();
+
             validateAnswersTextField();
 
-            if(mainTextFieldResult==CSVFileValidator.WARNING)
-                isManualMode=true;
+
+            if (mainTextFieldResult == CSVFileValidator.WARNING)
+                isManualMode = true;
 
             //check for errors
-            if(mainFileTextField.getText().length()==0){
+            if (mainFileTextField.getText().length() == 0) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "No students responses file provided.");
                 return;
             }
 
-            if(answersFileTextField.getText().length()==0){
+            if (answersFileTextField.getText().length() == 0) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "No answer key file provided.");
                 return;
             }
 
-            if(mainTextFieldResult==CSVFileValidator.ERROR){
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "Error in students responses file: "+mainTextFieldMessage);
+            if (mainTextFieldResult == CSVFileValidator.ERROR) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "Error in students responses file: " + mainTextFieldMessage);
                 return;
             }
 
-            if(answersTextFieldResult==CSVFileValidator.ERROR){
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "Error in answer key file: "+answersTextFieldMessage);
+            if (answersTextFieldResult == CSVFileValidator.ERROR) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "Error in answer key file: " + answersTextFieldMessage);
                 return;
             }
 
-            int formsCount=CSVHandler.getFormsCount();
+            int formsCount = isOpenMode?((JSONArray)currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size():CSVHandler.getFormsCount();
 
-            if(formsCount>1 && formComboSelectedIndex==0 &&mainTextFieldResult!=CSVFileValidator.WARNING){
+
+            if (formsCount > 1 && formComboSelectedIndex == 0 && !isManualMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                        formsCount+" answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.");
+                        formsCount + " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.");
                 return;
             }
 
-            int responsesColCount=CSVHandler.getResponsesColsCount();
-            int answersColCount=CSVHandler.getAnswersColsCount();
+            if(formsCount==0){
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
+                         "Answer key file must contain the answers for at least one form");
+                return;
+            }
 
-            if(responsesColCount!=answersColCount){ //check if columns count doesn't match
+            int responsesColCount = CSVHandler.getResponsesColsCount();
+            int answersColCount = CSVHandler.getAnswersColsCount();
+
+            if (responsesColCount != answersColCount) { //check if columns count doesn't match -> in open mode both will be zero
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", "Student responses file contains " +
                         responsesColCount + " columns, while the answer key file contains " + answersColCount + " columns.");
                 return;
@@ -268,18 +305,71 @@ public class FileConfigController extends Controller{
 
             ManualModeController.setIsManualModeUsedBefore(false);
 
-            if(isManualMode) {
 
-                //if no headers in responses
-                if(mainTextFieldResult==CSVFileValidator.WARNING){
-
-                    int selectedAction=showHeadersWarningDialog();
-                    if(selectedAction==CANCEL)
-                        return;
-                    CSVHandler.setIsSkipRowInManual(selectedAction==SKIPROW);
+            if (isOpenMode) {
+                CSVHandler.setIsResponsesContainsHeaders((boolean) currentOpenedProjectJson.get(IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY));
+                CSVHandler.setIsAnswerKeyContainsHeaders((boolean)currentOpenedProjectJson.get(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY));
+                CSVHandler.setSavedAnswerKeyCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_ANSWER_KEY_CSV_JSON_KEY));
+                if(isManualMode){
+                    openManualMode();
                 }
-                else //manual mode set by the user
-                    CSVHandler.setIsSkipRowInManual(true);
+                else {
+
+                    saveChanges();
+                    CSVHandler.setQuestionsColStartIndex(Integer.parseInt((String)currentOpenedProjectJson.get(Q_COL_START_INDEX_JSON_KEY)));
+                    CSVHandler.setQuestionsColEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(Q_COL_END_INDEX_JSON_KEY)));
+                    CSVHandler.setSubjStartIndex(Integer.parseInt((String) currentOpenedProjectJson.get(SUBJ_COL_START_INDEX_JSON_KEY)));
+                    CSVHandler.setSubjEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_COL_END_INDEX_JSON_KEY)));
+                    CSVHandler.setSubjQuestionsCount(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_Q_COUNT_JSON_KEY)));
+                    loadSavedProjectJson();
+                    CSVHandler.loadSavedAnswerKey();
+                    CSVHandler.setSavedResponsesCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_RESPONSES_CSV_JSON_KEY));
+                    CSVHandler.setFormsCount(Statistics.getCorrectAnswers().size());
+                    try {
+                        CSVHandler.loadSavedCSV();
+                    } catch (CSVHandler.InvalidFormNumberException e) {
+                        showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                                "Error in students responses file: " + e.getMessage()+". Make sure that you have selected the form column correctly.");
+                        return;
+                    }
+
+                    new GroupsController(this).startWindow();
+                    stage.close();
+                }
+                return;
+            }
+
+
+            if(answersTextFieldResult==CSVFileValidator.WARNING){
+
+                int selectedAction = showHeadersWarningDialog("answer key");
+                if (selectedAction == CANCEL)
+                    return;
+
+                CSVHandler.setIsAnswerKeyContainsHeaders(selectedAction == SKIPROW);
+                if(selectedAction==SKIPROW && formsCount==1){ //the forms count includes the headers row
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
+                            "Answer key file must contain the answers for at least one form");
+                    return;
+                }
+
+            }
+            else
+                CSVHandler.setIsAnswerKeyContainsHeaders(true);
+
+
+
+            if (isManualMode) {
+                //if no headers in responses
+
+                if (mainTextFieldResult == CSVFileValidator.WARNING) {
+
+                    int selectedAction = showHeadersWarningDialog("students responses");
+                    if (selectedAction == CANCEL)
+                        return;
+                    CSVHandler.setIsResponsesContainsHeaders(selectedAction == SKIPROW);
+                } else //manual mode set by the user && not open mode
+                    CSVHandler.setIsResponsesContainsHeaders(true);
 
                 openManualMode();
                 return;
@@ -287,20 +377,20 @@ public class FileConfigController extends Controller{
 
 
             //auto mode->contains headers->ignore headers if switched later to manual mode
-            CSVHandler.setIsSkipRowInManual(true);
+            CSVHandler.setIsResponsesContainsHeaders(true);
 
 
-            if(answersTextFieldResult==CSVFileValidator.SUCCESS){ //both files contain headers -> check for headers mismatch
+            if (answersTextFieldResult == CSVFileValidator.SUCCESS) { //both files contain headers -> check for headers mismatch
                 boolean isMismatched;
                 try {
-                    isMismatched=CSVHandler.isFilesHeadersMismatched(new File(mainFileTextField.getText()),new File(answersFileTextField.getText()));
+                    isMismatched = CSVHandler.isFilesHeadersMismatched(new File(mainFileTextField.getText()), new File(answersFileTextField.getText()));
                 } catch (IOException e) {
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
                             "Error in reloading files.");
                     return;
                 }
-                if(isMismatched){
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Headers Mismatch Error","Headers of " +
+                if (isMismatched) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Headers Mismatch Error", "Headers of " +
                             "answers and student responses files are not identical.");
                     return;
                 }
@@ -308,7 +398,7 @@ public class FileConfigController extends Controller{
 
 
             try {
-                CSVHandler.loadAnswerKeys(answersFileTextField.getText(),true);
+                CSVHandler.loadAnswerKeys(answersFileTextField.getText(), true);
             } catch (IOException e) {
 
             } catch (CSVHandler.IllFormedCSVException e) {
@@ -317,11 +407,12 @@ public class FileConfigController extends Controller{
                 e.printStackTrace(); //nafs el kalam zy el fo2eha
             }
 
-            if(CSVHandler.isIsAnswerKeyContainsBlanks()){ //questions counts matching in auto mode but correct answers contain blanks
+
+            if (CSVHandler.isIsAnswerKeyContainsBlanks()) { //questions counts matching in auto mode but correct answers contain blanks
                 try {
 
                     CSVHandler.processHeaders(true); //clean the blanks
-                } catch(Exception e){
+                } catch (Exception e) {
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
                             "Error in reloading responses file.");
                     return;
@@ -334,34 +425,69 @@ public class FileConfigController extends Controller{
             try {
                 CSVHandler.loadCsv(true);
             } catch (CSVHandler.IllFormedCSVException e) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file at row "+e.getRowNumber()+". File must contain the same number of columns in all rows.");
+                String message="Error in students responses file at row " + e.getRowNumber() +
+                        ". File must contain the same number of columns in all rows."+(e.getRowNumber()==2?" Make sure that the CSV headers have no commas.":"");
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",message);
+
                 return;
-            }catch (IOException e) {
+            } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in reading students responses file.");
                 return;
             } catch (CSVHandler.InvalidFormNumberException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file: "+e.getMessage());
+                        "Error in students responses file: " + e.getMessage());
                 return;
             }
-
 
 
             new GroupsController(this).startWindow();
             stage.close();
 
-            });
-
-
+        });
 
 
     }
 
+    private void loadSavedProjectJson() {
+        loadObjectiveGroups();
+        loadQNames();
+        loadQuestionsChoices();
+        loadObjWeights();
+        loadSubjWeights();
+    }
 
 
-    private void initMainFileChooser(){
+    private void loadObjectiveGroups() {
+        JSONArray jsonGroups = (JSONArray) currentOpenedProjectJson.get(OBJ_GROUPS_JSON_KEY);
+        ArrayList<Group> groups = new ArrayList<>();
+        for (Object group : jsonGroups) {
+            String name = (String) ((JSONObject) group).get("name");
+            String qCount = (String) ((JSONObject) group).get("qCount");
+            groups.add(new Group(name, Integer.parseInt(qCount)));
+        }
+        CSVHandler.setDetectedGroups(groups);
+    }
+
+    private void loadQNames() {
+        CSVHandler.setDetectedQHeaders((JSONArray) currentOpenedProjectJson.get(Q_NAMES_JSON_KEY));
+    }
+
+    private void loadQuestionsChoices() {
+        Statistics.setQuestionsChoices((JSONArray) currentOpenedProjectJson.get(Q_CHOICES_JSON_KEY));
+    }
+
+    private void loadObjWeights() {
+        Statistics.setQuestionWeights((JSONArray) currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY));
+    }
+
+
+    private void loadSubjWeights() {
+        Statistics.setSubjMaxScores((JSONArray) currentOpenedProjectJson.get(SUBJ_WEIGHTS_JSON_KEY));
+    }
+
+
+    private void initMainFileChooser() {
 
 
         Tooltip tooltip = new Tooltip("Open CSV file");
@@ -373,10 +499,10 @@ public class FileConfigController extends Controller{
                 mainFileChooser.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
-                fileChooser.setInitialDirectory(new File((lastDir==null?System.getProperty("user.home"):lastDir)));
+                fileChooser.setInitialDirectory(new File((lastDir == null ? System.getProperty("user.home") : lastDir)));
                 fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
-                csvFile =fileChooser.showOpenDialog(stage);
-                if(csvFile!=null) {
+                csvFile = fileChooser.showOpenDialog(stage);
+                if (csvFile != null) {
                     lastDir = csvFile.getParent();
                     mainFileTextField.setText(csvFile.getPath());
                     validateMainTextField();
@@ -388,14 +514,12 @@ public class FileConfigController extends Controller{
         });
 
 
-
     }
 
-    private void initAnswersFileChooser(){
+    private void initAnswersFileChooser() {
 
         Tooltip tooltip = new Tooltip("Open CSV file");
         Tooltip.install(answersFileChooser, tooltip);
-
 
 
         answersFileChooser.setOnMouseClicked(new EventHandler<MouseEvent>
@@ -404,10 +528,10 @@ public class FileConfigController extends Controller{
                 //answersFileChooser.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
-                fileChooser.setInitialDirectory(new File((lastDir==null?System.getProperty("user.home"):lastDir)));
+                fileChooser.setInitialDirectory(new File((lastDir == null ? System.getProperty("user.home") : lastDir)));
                 fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
-                csvFile =fileChooser.showOpenDialog(stage);
-                if(csvFile!=null) {
+                csvFile = fileChooser.showOpenDialog(stage);
+                if (csvFile != null) {
                     lastDir = csvFile.getParent();
                     answersFileTextField.setText(csvFile.getPath());
                     answersFileTextField.requestFocus();
@@ -420,11 +544,9 @@ public class FileConfigController extends Controller{
         });
 
 
-
-
     }
 
-    private void initToggleButton(){
+    private void initToggleButton() {
 
         toggleButton.setText("Subjective Questions");
         toggleButton.setStyle("-fx-font-weight: bold;-jfx-toggle-color: #00BFFF");
@@ -432,16 +554,17 @@ public class FileConfigController extends Controller{
         slider.setMin(0);
     }
 
-    private void initMainFileTextField(){
+    private void initMainFileTextField() {
 
 
-        mainFileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-            isContentEdited=true;
+        mainFileTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            isContentEdited = true;
+            isMainTextFieldValidated=false;
         });
 
-        mainFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
+        mainFileTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 
-            if(!newValue){
+            if (!newValue) {
                 validateMainTextField();
 
 
@@ -452,49 +575,54 @@ public class FileConfigController extends Controller{
     }
 
 
-    private void initAnswersFileTextField(){
+    private void initAnswersFileTextField() {
 
-        answersFileTextField.textProperty().addListener((observable,oldValue,newValue)-> {
-            isContentEdited=true;
+        answersFileTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            isContentEdited = true;
         });
 
-        answersFileTextField.focusedProperty().addListener((observable,oldValue,newValue)-> {
+        answersFileTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 
-            if(!newValue){
+            if (!newValue) {
                 validateAnswersTextField();
             }
 
         });
     }
 
-    private void initIdentifierCombo(){
+    private void initIdentifierCombo() {
         identifierCombo.setDisable(true);
         identifierCombo.setItems(combosItems);
         identifierCombo.setVisibleRowCount(3);
-        identifierCombo.setOnShown(t->identifierCombo.getSelectionModel().clearSelection());
-        identifierCombo.setOnHidden(t->{identifierCombo.getSelectionModel().select(identifierComboSelectedIndex); System.out.println("easy"+identifierComboSelectedIndex);});
-        identifierCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
+        identifierCombo.setOnShown(t -> identifierCombo.getSelectionModel().clearSelection());
+        identifierCombo.setOnHidden(t -> {
+            identifierCombo.getSelectionModel().select(identifierComboSelectedIndex);
+            System.out.println("easy" + identifierComboSelectedIndex);
+        });
+        identifierCombo.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 
-            if((Integer)newValue!=-1)
-                identifierComboSelectedIndex=(Integer)newValue;
+            if ((Integer) newValue != -1)
+                identifierComboSelectedIndex = (Integer) newValue;
 
         });
-        
+
         identifierCombo.setCellFactory(
                 new Callback<ListView<String>, ListCell<String>>() {
-                    @Override public ListCell<String> call(ListView<String> param) {
+                    @Override
+                    public ListCell<String> call(ListView<String> param) {
                         final ListCell<String> cell = new ListCell<String>() {
                             {
-                                this.setPrefHeight(rootHeight*0.06);
+                                this.setPrefHeight(rootHeight * 0.06);
                                 //this.setFont(new Font("Arial",resY/30));
                             }
-                            @Override public void updateItem(String item,
-                                                             boolean empty) {
+
+                            @Override
+                            public void updateItem(String item,
+                                                   boolean empty) {
                                 super.updateItem(item, empty);
                                 if (item != null) {
                                     setText(item);
-                                }
-                                else {
+                                } else {
                                     setText(null);
                                 }
                             }
@@ -506,34 +634,39 @@ public class FileConfigController extends Controller{
     }
 
 
-    private void initFormCombo(){
+    private void initFormCombo() {
         formCombo.setDisable(true);
         formCombo.setItems(combosItems);
         formCombo.setVisibleRowCount(3);
-        formCombo.setOnShown(t->formCombo.getSelectionModel().clearSelection());
-        formCombo.setOnHidden(t->{formCombo.getSelectionModel().select(formComboSelectedIndex); System.out.println("easy"+formComboSelectedIndex);});
-        formCombo.getSelectionModel().selectedIndexProperty().addListener((observable,oldValue,newValue)-> {
+        formCombo.setOnShown(t -> formCombo.getSelectionModel().clearSelection());
+        formCombo.setOnHidden(t -> {
+            formCombo.getSelectionModel().select(formComboSelectedIndex);
+            System.out.println("easy" + formComboSelectedIndex);
+        });
+        formCombo.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 
-            if((Integer)newValue!=-1)
-                formComboSelectedIndex=(Integer)newValue;
+            if ((Integer) newValue != -1)
+                formComboSelectedIndex = (Integer) newValue;
 
         });
 
 
         formCombo.setCellFactory(
                 new Callback<ListView<String>, ListCell<String>>() {
-                    @Override public ListCell<String> call(ListView<String> param) {
+                    @Override
+                    public ListCell<String> call(ListView<String> param) {
                         final ListCell<String> cell = new ListCell<String>() {
                             {
                                 //super.setPrefHeight(identifierCombo.getPrefHeight());
                             }
-                            @Override public void updateItem(String item,
-                                                             boolean empty) {
+
+                            @Override
+                            public void updateItem(String item,
+                                                   boolean empty) {
                                 super.updateItem(item, empty);
                                 if (item != null) {
                                     setText(item);
-                                }
-                                else {
+                                } else {
                                     setText(null);
                                 }
                             }
@@ -544,24 +677,61 @@ public class FileConfigController extends Controller{
                 });
     }
 
-    private void populateCombos(){
-        ArrayList<String> infoHeaders=CSVHandler.getDetectedInfoHeaders();
-        Pattern digitsPattern = Pattern.compile("d+");
-        int countIDs=0;
+    private void populateCombos() {
+        ArrayList<String> infoHeaders = CSVHandler.getDetectedInfoHeaders();
+        manualColsCounter = 0;
 
-        processInfoHeaders(infoHeaders);
+        if(!isOpenMode)
+            processInfoHeaders(infoHeaders);
+        else
+            filteredInfoHeaders=(ArrayList<String>)currentOpenedProjectJson.get(SAVED_INFO_HEADERS_JSON_KEY);
 
         combosItems.clear();
         combosItems.add("None");
+        manualIDIndex = -1;
+        manualFormIndex = -1;
+
+        String idName = "";
+        String formName = "";
+
+
+        if (isOpenMode) {
+
+            idName = (String) currentOpenedProjectJson.get(IDENTIFIER_NAME_JSON_KEY);
+            formName = (String) currentOpenedProjectJson.get(FORM_COL_NAME_JSON_KEY);
+
+
+            if (idName.contains(MANUAL_MODE_INDICATOR)) {
+                combosItems.add(idName);
+                manualIDIndex = manualColsCounter;
+                manualColsCounter++;
+            }
+            if (formName.contains(MANUAL_MODE_INDICATOR)) {
+                combosItems.add(formName);
+                manualFormIndex = manualColsCounter;
+                manualColsCounter++;
+            }
+
+
+        }
+
         identifierCombo.getSelectionModel().selectFirst();
         formCombo.getSelectionModel().selectFirst();
 
-        for(String header: filteredInfoHeaders){
+
+        for (String header : filteredInfoHeaders) {
             combosItems.add(header);
-            if(header.toLowerCase().trim().contains("id"))
-                identifierCombo.getSelectionModel().select(combosItems.size()-1);
-            else if(header.toLowerCase().trim().contains("form") || header.toLowerCase().trim().contains("model"))
-                formCombo.getSelectionModel().select(combosItems.size()-1);
+            if (!isOpenMode) {
+                if (header.toLowerCase().trim().contains("id"))
+                    identifierCombo.getSelectionModel().select(combosItems.size() - 1);
+                else if (header.toLowerCase().trim().contains("form") || header.toLowerCase().trim().contains("model"))
+                    formCombo.getSelectionModel().select(combosItems.size() - 1);
+            }
+        }
+
+        if (isOpenMode) {
+            identifierCombo.getSelectionModel().select(idName);
+            formCombo.getSelectionModel().select(formName);
         }
 
 
@@ -574,50 +744,47 @@ public class FileConfigController extends Controller{
     private void processInfoHeaders(ArrayList<String> infoHeaders) {
 
         filteredInfoHeaders = new ArrayList<>();
-        int expectedIndex = 1, digitBegin = 0, lastNumberedHeader=-2;
+        int expectedIndex = 1, digitBegin = 0, lastNumberedHeader = -2;
         String currentGroup = "";
         Pattern groupsPattern = Pattern.compile(".*\\d+");
-        ArrayList <Group> idGroups=new ArrayList<Group>();
-        isComplexIDAdded=false;
-
+        ArrayList<Group> idGroups = new ArrayList<Group>();
+        isComplexIDAdded = false;
 
 
         //remove any header having an index and starting with keyword "id" from info headers and add it to IdGroups
-        for (int i=0;i<infoHeaders.size();i++) {
+        for (int i = 0; i < infoHeaders.size(); i++) {
             if (!groupsPattern.matcher(infoHeaders.get(i)).matches()) { //no groups pattern -> normal header
-                if(lastNumberedHeader==i-1){
-                    int groupSize=expectedIndex-1;
-                    processGroup(groupSize,currentGroup,idGroups,i);
+                if (lastNumberedHeader == i - 1) {
+                    int groupSize = expectedIndex - 1;
+                    processGroup(groupSize, currentGroup, idGroups, i);
                     expectedIndex = 1;
-                    currentGroup="";
+                    currentGroup = "";
                 }
                 filteredInfoHeaders.add(infoHeaders.get(i));
 
-            }
-            else { //groups pattern
-                lastNumberedHeader=i;
+            } else { //groups pattern
+                lastNumberedHeader = i;
                 if ((digitBegin = infoHeaders.get(i).lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found or end of array-> end of group
 
-                    int groupSize=expectedIndex-1;
-                    processGroup(groupSize,currentGroup,idGroups,i);
+                    int groupSize = expectedIndex - 1;
+                    processGroup(groupSize, currentGroup, idGroups, i);
                     expectedIndex = 2;
-                    currentGroup="";
+                    currentGroup = "";
 
-                }
-                else { //still inside same group
+                } else { //still inside same group
                     currentGroup = infoHeaders.get(i).substring(0, digitBegin);
                     expectedIndex++;
                 }
             }
         }
 
-        if(currentGroup.length()!=0) //process last group if exists
-            processGroup(expectedIndex-1,currentGroup,idGroups,lastNumberedHeader+1);
+        if (currentGroup.length() != 0) //process last group if exists
+            processGroup(expectedIndex - 1, currentGroup, idGroups, lastNumberedHeader + 1);
 
 
         //add idGroups to detected groups
 
-        if(idGroups.isEmpty())
+        if (idGroups.isEmpty())
             CSVHandler.setRealIDGroups(null);
         else
             CSVHandler.setRealIDGroups(idGroups);
@@ -625,34 +792,31 @@ public class FileConfigController extends Controller{
     }
 
 
-    private void processGroup(int groupSize,String currentGroup,ArrayList<Group> idGroups, int idEnd){
-        if(groupSize>3 || isComplexIDAdded) { //if a complexID occurred before or consider this a questions group
-            if(idGroups.size()==0) //start of questions groups
-                CSVHandler.setQuestionsColStartIndex(idEnd-groupSize);
+    private void processGroup(int groupSize, String currentGroup, ArrayList<Group> idGroups, int idEnd) {
+        if (groupSize > 3 || isComplexIDAdded) { //if a complexID occurred before or consider this a questions group
+            if (idGroups.size() == 0) //start of questions groups
+                CSVHandler.setQuestionsColStartIndex(idEnd - groupSize);
             idGroups.add(new Group(currentGroup, groupSize));
-        }
-        else{
-            isComplexIDAdded=true;
-            complexIdStartIndex=idEnd-groupSize;
-            complexIDSize=groupSize;
-            filteredInfoHeaders.add(constructComplexIDString(currentGroup,groupSize));
+        } else {
+            isComplexIDAdded = true;
+            complexIdStartIndex = idEnd - groupSize;
+            complexIDSize = groupSize;
+            filteredInfoHeaders.add(constructComplexIDString(currentGroup, groupSize));
         }
     }
 
-    private void initManualModeToggle(){
+    private void initManualModeToggle() {
         manualModeToggle.setStyle("-jfx-untoggle-color:#3184c9;-jfx-toggle-color:#3184c9");
-        manualModeToggle.selectedProperty().addListener((observable,oldValue,newValue)->
+        manualModeToggle.selectedProperty().addListener((observable, oldValue, newValue) ->
         {
-            if(newValue) {
+            if (newValue) {
                 identifierCombo.setDisable(true);
                 formCombo.setDisable(true);
-            }
-            else{
-                if(mainTextFieldResult==CSVFileValidator.SUCCESS) {
-                identifierCombo.setDisable(false);
-                formCombo.setDisable(false);
-                }
-                else if(mainTextFieldResult==CSVFileValidator.WARNING){
+            } else {
+                if (mainTextFieldResult == CSVFileValidator.SUCCESS) {
+                    identifierCombo.setDisable(false);
+                    formCombo.setDisable(false);
+                } else if (mainTextFieldResult == CSVFileValidator.WARNING) {
                     manualModeToggle.setSelected(true);
                 }
             }
@@ -661,87 +825,125 @@ public class FileConfigController extends Controller{
 
     }
 
-    private void saveIdentifierColumn(){
+    private void saveIdentifierColumn() {
 
-        int identifierSelectedIndex=identifierComboSelectedIndex-1; //remove None effect
-        String idenfierName=identifierSelectedIndex==-1?"ID":filteredInfoHeaders.get(identifierSelectedIndex);
-        Statistics.setIdentifierName(idenfierName);
 
-        if(identifierSelectedIndex==-1) { //none chosen
+        int identifierSelectedIndex = identifierComboSelectedIndex - 1; //remove None effect
+
+        if (isOpenMode && manualColsCounter > 0 && identifierSelectedIndex != NOT_AVAILABLE) {
+            String idName=(String)identifierCombo.getSelectionModel().getSelectedItem();
+            if (identifierSelectedIndex == manualIDIndex) { //the id col set chosen in manual mode was selected
+                CSVHandler.setIdentifierColStartIndex(Integer.parseInt((String) currentOpenedProjectJson.get(ID_COL_START_INDEX_JSON_KEY)));
+                CSVHandler.setIdentifierColEndIndex(Integer.parseInt((String) currentOpenedProjectJson.get(ID_COL_END_INDEX_JSON_KEY)));
+                Statistics.setIdentifierName(idName.replace(MANUAL_MODE_INDICATOR,""));
+                return;
+            } else if (identifierSelectedIndex == manualFormIndex) { //the form col set chosen in manual mode was selected
+                int index;
+                CSVHandler.setIdentifierColStartIndex(index = Integer.parseInt((String) currentOpenedProjectJson.get(FORM_COL_INDEX_JSON_KEY)));
+                CSVHandler.setIdentifierColEndIndex(index + 1);
+                Statistics.setIdentifierName(idName.replace(MANUAL_MODE_INDICATOR,""));
+                return;
+            } else //remove the extra manual cols effect
+                identifierSelectedIndex -= manualColsCounter;
+
+        }
+
+        String idenfierName = identifierSelectedIndex == -1 ? "ID" : filteredInfoHeaders.get(identifierSelectedIndex);
+        Statistics.setIdentifierName(idenfierName.replace(MANUAL_MODE_INDICATOR, ""));
+
+        if (identifierSelectedIndex == -1) { //none chosen
             CSVHandler.setIdentifierColStartIndex(NOT_AVAILABLE);
             CSVHandler.setIdentifierColEndIndex(NOT_AVAILABLE);
             return;
         }
 
 
-
-        int idStartIndex=getUnFilteredIndex(identifierSelectedIndex);
+        int idStartIndex = getUnFilteredIndex(identifierSelectedIndex);
         CSVHandler.setIdentifierColStartIndex(idStartIndex);
 
 
         int idEndIndex;
 
-        if(identifierSelectedIndex==complexIdStartIndex && isComplexIDAdded)
-            idEndIndex=complexIDSize+idStartIndex;
+        if (identifierSelectedIndex == complexIdStartIndex && isComplexIDAdded)
+            idEndIndex = complexIDSize + idStartIndex;
         else
-            idEndIndex=idStartIndex+1;
+            idEndIndex = idStartIndex + 1;
 
         CSVHandler.setIdentifierColEndIndex(idEndIndex);
 
     }
 
-    private void saveFormColumn(){
+    private void saveFormColumn() {
 
-        int formSelectedIndex=CSVHandler.getFormsCount()==1?NOT_AVAILABLE:formComboSelectedIndex-1; //remove None effect
+        int formSelectedIndex = CSVHandler.getFormsCount() == 1 ? NOT_AVAILABLE : formComboSelectedIndex - 1; //-1 ->remove None effect
+        if (formSelectedIndex != NOT_AVAILABLE && isOpenMode && manualColsCounter > 0) {
+            int idStart = Integer.parseInt((String)currentOpenedProjectJson.get(ID_COL_START_INDEX_JSON_KEY));
+            int idEnd = Integer.parseInt((String)currentOpenedProjectJson.get(ID_COL_END_INDEX_JSON_KEY));
+
+            if (formSelectedIndex == manualFormIndex || (idEnd - idStart > 1 && formSelectedIndex == manualIDIndex)) {
+                CSVHandler.setFormColIndex(Integer.parseInt((String)currentOpenedProjectJson.get(FORM_COL_INDEX_JSON_KEY)));
+                return;
+            } else if (formSelectedIndex == manualIDIndex) {
+                CSVHandler.setFormColIndex(Integer.parseInt((String) currentOpenedProjectJson.get(ID_COL_START_INDEX_JSON_KEY)));
+                return;
+            } else //remove the extra manual cols effect
+                formSelectedIndex -= manualColsCounter;
+        }
         CSVHandler.setFormColIndex(getUnFilteredIndex(formSelectedIndex));
-        CSVHandler.setFormColName(combosItems.get(formComboSelectedIndex));
     }
 
 
-    private String constructComplexIDString(String groupName, int groupSize){
-        String complexIDString=groupName+" ";
-        for(int i=1;i<groupSize;i++) {
+    private String constructComplexIDString(String groupName, int groupSize) {
+        String complexIDString = groupName + " ";
+        for (int i = 1; i < groupSize; i++) {
             complexIDString += Integer.toString(i) + "-";
         }
-        complexIDString+=Integer.toString(groupSize);
-        
+        complexIDString += Integer.toString(groupSize);
+
         return complexIDString;
-        
+
     }
 
-    private int getUnFilteredIndex(int filteredIndex){
+    private int getUnFilteredIndex(int filteredIndex) {
 
-        if(!isComplexIDAdded || filteredIndex<=complexIdStartIndex)  //still one to one mapping between filtered and unfiltered info headers
+        if (!isComplexIDAdded || filteredIndex <= complexIdStartIndex)  //still one to one mapping between filtered and unfiltered info headers
             return filteredIndex;
 
-        return filteredIndex+(complexIDSize-1);
+        return filteredIndex + (complexIDSize - 1);
 
 
     }
 
-    private int showHeadersWarningDialog(){
+    private int showHeadersWarningDialog(String fileName) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("No Headers Detected");
-        alert.setHeaderText("Students Responses file doesn't contain headers");
-        alert.setContentText("Choose the \"Skip First Row\" option if the students responses file contains headers, otherwise click \"Continue Anyway\". Both of these options will direct you to the manual mode.");
+        alert.setHeaderText(null);
+        alert.setContentText("No headers were detected in "+fileName+" file. Does the file contain headers?");
         //alert.setOnCloseRequest(t->alert.hide());
-        ButtonType skipRowButton = new ButtonType("Skip First Row");
-        ButtonType continueButton = new ButtonType("Continue Anyway");
-        ButtonType close =ButtonType.CLOSE;
+        ButtonType skipRowButton= new ButtonType("Yes, the first line contains headers");
+        ButtonType  noButton= new ButtonType("No");
+        ButtonType close = ButtonType.CLOSE;
 
 
-        alert.getButtonTypes().setAll(skipRowButton,continueButton,close);
+
+        alert.getButtonTypes().setAll(skipRowButton,noButton, close);
+
+        Button closeButt=((Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE));
+
+        closeButt.setVisible(false);
+        closeButt.setMaxWidth(0);
+        closeButt.setPrefWidth(0);
         Optional<ButtonType> result = alert.showAndWait();
 
         int selected;
-        if(result.get()==skipRowButton)
-            selected=SKIPROW;
-        else if(result.get()==continueButton)
-            selected=CONTINUE;
+        if (result.get() == skipRowButton)
+            selected = SKIPROW;
+        else if (result.get() == noButton)
+            selected = CONTINUE;
         else
-            selected=CANCEL;
+            selected = CANCEL;
 
         return selected;
 
@@ -749,48 +951,48 @@ public class FileConfigController extends Controller{
     }
 
 
+    private void validateMainTextField() {
 
+        isMainTextFieldValidated=true;
 
-    private void validateMainTextField(){
-
-        CSVFileValidator validator= new CSVFileValidator(mainFileTextField,CSVFileValidator.MAINFILETEXTFIELD);
+        CSVFileValidator validator = new CSVFileValidator(mainFileTextField, CSVFileValidator.MAINFILETEXTFIELD);
         mainFileTextField.getValidators().clear();
         mainFileTextField.getValidators().add(validator);
 
         mainFileTextField.validate();
 
-        mainTextFieldResult=validator.getMessageType();
-        mainTextFieldMessage=validator.getMessage();
+        mainTextFieldResult = validator.getMessageType();
+        mainTextFieldMessage = validator.getMessage();
 
-        if(validator.getMessageType()==ValidatorBase.SUCCESS){
+        if (validator.getMessageType() == ValidatorBase.SUCCESS) {
+
             populateCombos();
             manualModeToggle.setSelected(false);
             formCombo.setDisable(false);
             identifierCombo.setDisable(false);
-        }
-        else{
-            if(validator.getMessageType()==ValidatorBase.WARNING)
+        } else {
+            if (validator.getMessageType() == ValidatorBase.WARNING)
                 manualModeToggle.setSelected(true);
             formCombo.setDisable(true);
             identifierCombo.setDisable(true);
         }
     }
 
-    private void validateAnswersTextField(){
-        CSVFileValidator validator= new CSVFileValidator(answersFileTextField,CSVFileValidator.ANSWERSFILETEXTFIELD);
+    private void validateAnswersTextField() {
+
+        CSVFileValidator validator = new CSVFileValidator(answersFileTextField, CSVFileValidator.ANSWERSFILETEXTFIELD);
         answersFileTextField.getValidators().clear();
         answersFileTextField.getValidators().add(validator);
         answersFileTextField.validate();
-        answersTextFieldResult=validator.getMessageType();
-        answersTextFieldMessage=validator.getMessage();
+        answersTextFieldResult = validator.getMessageType();
+        answersTextFieldMessage = validator.getMessage();
     }
 
-    private void openManualMode(){
+    private void openManualMode() {
         new ManualModeController(this).startWindow();
         CSVHandler.setRealIDGroups(null);//populate combos wasn't called -> reintialize realIDGroups
 
     }
-
 
 
 }

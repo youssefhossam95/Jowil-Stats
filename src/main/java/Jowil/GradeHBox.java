@@ -171,6 +171,9 @@ public class GradeHBox extends HBox {
             }
 
         });
+
+        percentScoreTextField.textProperty().addListener(t->parentController.setContentEdited(true));
+
     }
 
 
@@ -188,7 +191,6 @@ public class GradeHBox extends HBox {
         });
 
 
-        rawScoreTextField.textProperty().addListener(t->parentController.setContentEdited(true));
     }
 
 
