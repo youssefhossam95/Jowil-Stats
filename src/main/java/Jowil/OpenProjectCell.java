@@ -25,7 +25,7 @@ class OpenProjectCell extends JFXListCell {
     private long lastClick;
     String myText;
     Dialog dialog;
-    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).size(Double.toString(resX/80)).styleClass("gradesMinusIcon").build();
+    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).size(Double.toString(resX/80)).styleClass("projectRemoveIcon").build();
 
 
     StartController parentController;
@@ -77,7 +77,9 @@ class OpenProjectCell extends JFXListCell {
             deleteButton.getChildren().add(removeIcon);
             Tooltip tooltipRemove = new Tooltip("Delete Project");
             Tooltip.install(deleteButton, tooltipRemove);
-            deleteButton.setOnMouseClicked(event -> parentController.deleteProject(myText));
+            deleteButton.setOnMouseClicked(event ->{
+                lastClick=0;
+                parentController.deleteProject(myText);});
 
             hbox.getChildren().addAll(imageView, label);
             cellPane.getChildren().addAll(hbox,deleteButton);

@@ -378,7 +378,7 @@ public class GradeBoundariesController extends Controller {
         }
         else {
             ((JSONArray) savedProjectsJson.get("projects")).add(projObject);
-            projObject.put("name", Controller.projectName);
+            projObject.put(PROJECT_NAME_JSON_KEY, Controller.projectName);
         }
 
 
