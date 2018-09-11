@@ -18,18 +18,15 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
+
 
 import javax.imageio.ImageIO;
 import java.io.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 import static org.apache.commons.math3.stat.StatUtils.sum;
 

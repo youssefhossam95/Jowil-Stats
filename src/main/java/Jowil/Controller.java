@@ -198,7 +198,10 @@ public abstract class Controller {
             else
                 stage.initModality(Modality.APPLICATION_MODAL);
             stage.setOnCloseRequest(event -> {
-                if(!showConfirmationDialog("Cancel Project","Are you sure you want to cancel this project?",stage.getOwner()))
+                String small=isOpenMode?"close":"cancel";
+                String capital=isOpenMode?"Close":"Cancel";
+                String extra=isOpenMode?"Changes you made will not be saved. ":"";
+                if(!showConfirmationDialog(capital+" Project",extra+"Are you sure you want to "+small+" this project?",stage.getOwner()))
                     event.consume();
             });
             stage.show();
