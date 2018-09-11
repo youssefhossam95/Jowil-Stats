@@ -25,7 +25,7 @@ class OpenProjectCell extends JFXListCell {
     private long lastClick;
     String myText;
     Dialog dialog;
-    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).size(Double.toString(resX/80)).styleClass("projectRemoveIcon").build();
+    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size(Double.toString(resX/80)).styleClass("projectRemoveIcon").build();
 
 
     StartController parentController;

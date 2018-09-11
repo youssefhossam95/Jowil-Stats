@@ -620,8 +620,9 @@ public class CSVHandler {
         for(int i=identifierColStartIndex;i<identifierColEndIndex;i++)
             identifier.append(row[i]);
 
-        Statistics.getStudentIdentifier().add(identifier.toString());
+        Statistics.getStudentIdentifier().add(cleanID(identifier.toString()));
     }
+
 
     private static void updateCleanedCorrectAnswers(ArrayList<ArrayList<String>> cleanedCorrectAnswers,String[] formAnswers,int start,int end) {
 
@@ -722,6 +723,17 @@ public class CSVHandler {
     }
 
 
+    private static String cleanID(String s) {
+
+        try{
+            String cleanedStr;
+            Integer.parseInt(cleanedStr=s.replace(" ",""));
+            return cleanedStr;
+        }
+        catch(NumberFormatException e){
+            return s;
+        }
+    }
 
     private static boolean isAllCellsLarge(String [] cells){
         for(String cell: cells){

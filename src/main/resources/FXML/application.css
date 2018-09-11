@@ -306,7 +306,7 @@ JFXListView:focused {
 }
 
 .projectRemoveIcon{
--fx-fill:red;
+-fx-fill:grey;
 }
 
 .projectRemoveIcon:hover{
