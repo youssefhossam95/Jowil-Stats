@@ -83,7 +83,7 @@ public abstract class Controller {
             IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY="isResponsesContainsHeaders",IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY="isAnswerKeyContainsHeaders",
             RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
             ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
-            SAVED_INFO_HEADERS_JSON_KEY="infoHeaders";
+            SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount";
 
 
 

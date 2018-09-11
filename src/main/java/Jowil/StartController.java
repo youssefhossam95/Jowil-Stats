@@ -351,7 +351,7 @@ public class StartController extends Controller{
         loadProjectNames();
 
 
-        projectsList.setCellFactory(event->OpenProjectCell.createManualModeCell(dialog,this));
+        projectsList.setCellFactory(event->OpenProjectCell.createOpenProjectCell(dialog,this));
 
 
 
@@ -418,7 +418,12 @@ public class StartController extends Controller{
     }
 
 
+    public void deleteProject(String projName) {
 
+        if(!showConfirmationDialog("Delete Project", "Are you sure you want to delete \""+projName+"\"",stage.getOwner()))
+            return;
+        JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
+        projects.remove(projName);
 
-
+    }
 }

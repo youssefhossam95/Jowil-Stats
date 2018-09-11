@@ -1,8 +1,5 @@
 package Jowil;
 
-import org.omg.CORBA.DynAnyPackage.Invalid;
-import sun.swing.plaf.synth.DefaultSynthStyle;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -254,10 +251,6 @@ public class CSVHandler {
 
     public static void setAnswerKeyFilePath(String answerKeyFilePath) {
         CSVHandler.answerKeyFilePath = answerKeyFilePath;
-    }
-
-    public static void setDetectedInfoHeaders(ArrayList<String> detectedInfoHeaders) {
-        CSVHandler.detectedInfoHeaders = detectedInfoHeaders;
     }
 
 
@@ -903,9 +896,65 @@ public class CSVHandler {
     }
 
 
+    public static String getObjColumnSetErrorMessage(ColumnSet columnSet) {
+
+        if(isInconsistentAnswerTypes(columnSet))
+            return "Invalid objective column set \""+columnSet.getName()+"\". Choices in an objective column set must be of the same type.";
+
+        if(isContainsInvalidChoices(columnSet))
+            return "Invalid choices at column set \""+columnSet.getName()+"\". A valid choice must be either a number in range (0-99) or an english letter.";
+
+        return null;
+    }
 
 
+    private static boolean isInconsistentAnswerTypes(ColumnSet columnSet) {
 
+        int start=columnSet.getStartIndex();
+        int end=columnSet.getMySize()+start;
+
+        String[] answers=savedAnswerKeyCSV.get(savedAnswerKeyCSV.size()-1); //to avoid checking on headers just consider the last form's answers.
+
+        Boolean isNumeric=null;
+
+        for(int i=start;i<end;i++){
+
+            if(!answers[i].trim().isEmpty()) { //if empty answer ignore check
+
+                boolean isCurrentNumeric = true;
+                try {
+                    Integer.parseInt(answers[i]);
+                } catch (NumberFormatException e) {
+                    isCurrentNumeric = false;
+                }
+                if(isNumeric==null) //first non empty answer
+                    isNumeric=isCurrentNumeric;
+
+                else if (isCurrentNumeric != isNumeric) //inconsistency
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isContainsInvalidChoices(ColumnSet columnSet) {
+
+        int start=columnSet.getStartIndex();
+        int end=columnSet.getMySize()+start;
+
+        for(int i=(isResponsesContainsHeaders?1:0);i<savedResponsesCSV.size();i++){
+
+            for(int j=start;j<end;j++) {
+                if (savedResponsesCSV.get(i)[j].length() > 2)
+                    return true;
+            }
+
+        }
+
+        return false;
+
+    }
 
 
 

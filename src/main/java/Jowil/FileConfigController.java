@@ -101,6 +101,7 @@ public class FileConfigController extends Controller {
     private int complexIDSize = 0;
     private int complexIdStartIndex;
     private final static int SKIPROW = 0, CONTINUE = 1, CANCEL = 2, DECLARESUBJ = 3;
+    final static String NONE_OPTION="None";
 
     int manualColsCounter = 0;
     int manualIDIndex;
@@ -204,7 +205,7 @@ public class FileConfigController extends Controller {
     protected void saveChanges() {
 
         selectedIdentifierName = (String) identifierCombo.getSelectionModel().getSelectedItem();
-        selectedFormColName = (String) formCombo.getSelectionModel().getSelectedItem();
+        selectedFormColName = CSVHandler.getFormsCount()==1?NONE_OPTION:(String) formCombo.getSelectionModel().getSelectedItem();
         saveIdentifierColumn();
         saveFormColumn();
 
@@ -310,6 +311,8 @@ public class FileConfigController extends Controller {
                 CSVHandler.setIsResponsesContainsHeaders((boolean) currentOpenedProjectJson.get(IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY));
                 CSVHandler.setIsAnswerKeyContainsHeaders((boolean)currentOpenedProjectJson.get(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY));
                 CSVHandler.setSavedAnswerKeyCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_ANSWER_KEY_CSV_JSON_KEY));
+                CSVHandler.setSavedResponsesCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_RESPONSES_CSV_JSON_KEY));
+                CSVHandler.setFormsCount(Integer.parseInt((String)currentOpenedProjectJson.get(FORMS_COUNT_JSON_KEY)));
                 if(isManualMode){
                     openManualMode();
                 }
@@ -323,8 +326,6 @@ public class FileConfigController extends Controller {
                     CSVHandler.setSubjQuestionsCount(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_Q_COUNT_JSON_KEY)));
                     loadSavedProjectJson();
                     CSVHandler.loadSavedAnswerKey();
-                    CSVHandler.setSavedResponsesCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_RESPONSES_CSV_JSON_KEY));
-                    CSVHandler.setFormsCount(Statistics.getCorrectAnswers().size());
                     try {
                         CSVHandler.loadSavedCSV();
                     } catch (CSVHandler.InvalidFormNumberException e) {
@@ -687,7 +688,7 @@ public class FileConfigController extends Controller {
             filteredInfoHeaders=(ArrayList<String>)currentOpenedProjectJson.get(SAVED_INFO_HEADERS_JSON_KEY);
 
         combosItems.clear();
-        combosItems.add("None");
+        combosItems.add(NONE_OPTION);
         manualIDIndex = -1;
         manualFormIndex = -1;
 

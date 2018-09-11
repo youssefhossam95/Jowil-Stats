@@ -51,41 +51,7 @@
             /* padding-right: 50px ;   */
         }
 
-        .group-name {
-            line-height: 0.5;
-            text-align: center;
-        }
-
-        .group-name span {
-            display: inline-block;
-            position: relative;
-            margin-bottom: 50px;
-
-        }
-
-        .group-name span:before,
-        .group-name span:after {
-            content: "";
-            position: absolute;
-            height: 1px;
-            border-bottom: 2px solid #08436b;
-            /* border-top: 1px solid white; */
-            top: 0;
-            width: 575px;
-            padding-top: 4px;
-
-        }
-
-        .group-name span:before {
-            right: 100%;
-            margin-right: 15px;
-        }
-
-        .group-name span:after {
-            left: 100%;
-            margin-left: 15px;
-        }
-
+     
         .divTitle {
             top: 28px;
             margin-left: 5%;
@@ -183,7 +149,7 @@
         .left {
             width: 12px;
             height: 12px;
-            float: left;
+            /* float: left; */
             /* add this */
             margin-right: 8px;
             margin-top: 2px;
@@ -198,9 +164,10 @@
         }
 
         .wrapperSmall {
-            margin-left: 5%;
+            /* margin-left: 5%; */
             width: 90%;
-            margin-left: 5%;
+            margin:auto;
+            /* margin-left: 5%; */
             overflow: hidden;
             margin-bottom: 5px;
 
@@ -247,7 +214,6 @@
         }
 
         .legend-img {
-            background-size: 100% 100%;
             height: 15px;
             width: 15px;
         }
@@ -256,7 +222,7 @@
  <body> 
   <div id="footer"> 
    <div id="footerLeft">
-    27/08/2018
+    09/09/2018
    </div> 
    <div id="footerRight">
     Page 
@@ -273,15 +239,18 @@
    </div> 
    <div class="legend"> 
     <div class="wrapperSmall"> 
-     <span class="left legend-img" style="background-image: url('correctColored.png');"></span> 
+     <!-- <span class="left legend-img" style="background-image: url('correctColored.png')"></span> --> 
+     <img class="left legend-img" src="correctColored.png" /> 
      <span class=" right"> Correct Answer</span> 
     </div> 
     <div class="wrapperSmall"> 
-     <span class="left legend-img" style="background-image: url('nonDistractorColored.png');"></span> 
+     <!-- <span class="left legend-img" style="background-image: url('nonDistractorColored.png')"></span> --> 
+     <img class="left legend-img" src="nonDistractorColored.png" /> 
      <span class=" right">Non Distractor</span> 
     </div> 
     <div class="wrapperSmall"> 
-     <span class="left legend-img" style="background-image: url('distractorColored.png')"></span> 
+     <!-- <span class="left legend-img" style="background-image: url('distractorColored.png')"></span> --> 
+     <img class="left legend-img" src="distractorColored.png" /> 
      <span class=" right"> Distractor</span> 
     </div> 
    </div> 
