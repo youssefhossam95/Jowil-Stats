@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.pdfsam.ui.FillProgressIndicator;
 import org.pdfsam.ui.RingProgressIndicator;
 
@@ -196,6 +197,8 @@ public class ReportProgressController {
                     if(!Thread.currentThread().isInterrupted()) //not caused by interruption
                         showReportsErrorMessage("");
 
+                } catch (InvalidFormatException e) {
+                    e.printStackTrace();
                 }
 
         };

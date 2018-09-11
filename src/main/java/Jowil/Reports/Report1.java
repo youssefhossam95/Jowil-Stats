@@ -2,6 +2,7 @@ package Jowil.Reports;
 
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -16,13 +17,17 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,7 +44,7 @@ public class Report1 extends Report{
         templatePath = workSpacePath + "report1Template.html";
         outputFileName = "Report1" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
-        report1ImgFullPath = "file://"+System.getProperty("user.dir") + workSpacePath + "GradesDistributionHistogram.png" ;
+        report1ImgFullPath = System.getProperty("user.dir") + workSpacePath.replace("." , "") + "GradesDistributionHistogram.png" ;
     }
 
 
@@ -149,7 +154,7 @@ public class Report1 extends Report{
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml() ;
         doc.select("div#footer").remove() ;
-        doc.select("img").attr("src" , report1ImgFullPath);
+        doc.select("img").attr("src" ,"file://"+ report1ImgFullPath);
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
@@ -217,6 +222,20 @@ public class Report1 extends Report{
         String outputCsv = generateCharSeparatedValuesString('\t') ;
         System.out.println(outputCsv);
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
+    }
+
+    @Override
+    public void generateWordReport() throws IOException, InvalidFormatException {
+        XWPFDocument document = new XWPFDocument();
+        WordUtils.addTitle(document , "Grades Distribution Report" );
+
+
+        WordUtils.addTable(document, getTableWithHeaders());
+
+        WordUtils.addImage(document , report1ImgFullPath);
+
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+
     }
 
 }

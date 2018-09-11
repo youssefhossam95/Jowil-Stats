@@ -2,8 +2,11 @@ package Jowil.Reports;
 
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jsoup.nodes.Document;
 import com.lowagie.text.DocumentException;
 import org.jsoup.Jsoup;
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 public class Report7 extends Report {
 
     ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsTableStats ;
-    String [] tableTitles = {"Bad Questions" , "Hardest Questions" , "Easyiest Questions"} ;
+    String [] tableTitles = {"Bad Questions" , "Hardest Questions" , "Easiest Questions"} ;
     String congratsMsg = "Congrats your Exam Doesn't have any Bag Questions";
 
     public Report7(){
@@ -74,12 +77,12 @@ public class Report7 extends Report {
         ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
         ArrayList<String> headers = new ArrayList<>();
         if(tableIndex ==0 ) {
-            headers.add("Question Name"); headers.add("Difficulity (0-10)"); headers.add("Correct Response Percentage");
+            headers.add("Question Name"); headers.add("Difficulty (0-10)"); headers.add("Correct Response Percentage");
             headers.add("Distractors") ;
 
         }
         else if (tableIndex == 1) {
-            headers.add("Question Name"); headers.add("Difficulity (0-10)"); headers.add("Correct Response Percentage");
+            headers.add("Question Name"); headers.add("Difficulty (0-10)"); headers.add("Correct Response Percentage");
             headers.add("Non Distractors") ;
         }
         else if (tableIndex == 2 ) {
@@ -193,6 +196,33 @@ public class Report7 extends Report {
     public void generateTsvReprot() {
         String outputCsv = generateCharSeparatedValuesString('\t') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
+    }
+
+    @Override
+    public void generateWordReport() throws IOException {
+
+        XWPFDocument document = WordUtils.createDocument() ; // landscape size
+
+        for(int formIndex = 0 ; formIndex < formsTableStats.size() ; formIndex++) {
+            String title = " Question Insights Report";
+            if( formsTableStats.size() >1) {
+                title = "Form " + (formIndex+1) + title;
+            }
+            if(formIndex>0)
+                WordUtils.addPageBreak(document);
+            WordUtils.addTitle(document , title);
+
+
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = formsTableStats.get(formIndex);
+
+            for(int tableIndex = 0 ; tableIndex<statsTables.size() ; tableIndex++) {
+                ArrayList<ArrayList<String>> table = statsTables.get(tableIndex);
+                ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(table , tableIndex) ;
+                WordUtils.addTable(document , tableWithHeaders , WordUtils.TABLE_ALIGN_CENTER , tableTitles[tableIndex] , 18 , true);
+           }
+        }
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+
     }
 
     @Override

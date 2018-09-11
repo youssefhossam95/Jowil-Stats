@@ -4,11 +4,16 @@ import Jowil.CSVHandler;
 import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Table;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -208,7 +213,7 @@ public class Report2 extends Report {
 
     }
 
-    private ArrayList<ArrayList<String>> preprocessMap (Map<String , String> statsMap){
+    private ArrayList<ArrayList<String>> processMap (Map<String , String> statsMap){
         ArrayList<ArrayList<String>> mapAsTable  = new ArrayList<>();
         ArrayList<String> tableRow = new ArrayList<>() ;
 
@@ -263,7 +268,7 @@ public class Report2 extends Report {
             tabelsChp.add(chpCenterTable) ;
             questionIndex+= tableWithHeaders.size() - 1 ;
         }
-        firstFormTables.add( preprocessMap( formsStatsMaps.get(0)) )  ;
+        firstFormTables.add(processMap( formsStatsMaps.get(0)) )  ;
         tabelsChp.add(chpLRTable) ;
         return  TxtUtils.calcPageWidth(firstFormTables , tabelsChp) ;
     }
@@ -284,7 +289,7 @@ public class Report2 extends Report {
 
 
 
-            ArrayList<ArrayList<String>> mapAsTable = preprocessMap(statsMap);
+            ArrayList<ArrayList<String>> mapAsTable = processMap(statsMap);
             String generalStatsTxt = TxtUtils.generateTxtTableAlignLR(mapAsTable, "", CHP_LR_TABLE);
 
             String reportTitle = "Condenced Test Report"  ;
@@ -367,7 +372,7 @@ public class Report2 extends Report {
             ArrayList<ArrayList<ArrayList<String>>> formsStatsTables = formsStatsPrintableTables.get(formIndex);
 
 
-            ArrayList<ArrayList<String>> mapAsTable = preprocessMap(statsMap);
+            ArrayList<ArrayList<String>> mapAsTable = processMap(statsMap);
             String generalStatsTxt = CsvUtils.generateTable(mapAsTable, separator);
 
             String reportTitle = "Condenced Test Report"  ;
@@ -419,6 +424,61 @@ public class Report2 extends Report {
     public void generateTsvReprot() {
         String outputCsv = generateCharSeparatedValuesString('\t') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
+    }
+    private void addWordLegend(XWPFDocument document) throws IOException, InvalidFormatException {
+        ArrayList<ArrayList<String>> legends = new ArrayList<>();
+        ArrayList<String> legend = new ArrayList<>( );
+
+        legend.add(workSpacePath+"redLegend.png") ; //legend img path
+        legend.add("Distractors*") ; //legend txt
+        legends.add(legend);
+
+        legend = new ArrayList<>();
+        legend.add(workSpacePath+"goldLegend.png") ; //legend img path
+        legend.add("Non Distractors") ; //legend txt
+        legends.add(legend);
+
+        legend = new ArrayList<>();
+        legend.add(workSpacePath+"greenLegend.png") ; //legend img path
+        legend.add("Correct Answer") ; //legend txt
+        legends.add(legend) ;
+
+
+        WordUtils.addLegend(document , legends);
+    }
+    @Override
+    public void generateWordReport() throws IOException, InvalidFormatException {
+
+        XWPFDocument document = WordUtils.createDocument(WordUtils.LANDSCAPE_PAGE_WIDHT , WordUtils.LANDSCAPE_PAGE_HEIGHT) ; // landscape size
+
+        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
+            String title = " Test Statistics Report";
+            if( formsStatsTables.size() >1) {
+                title = "Form " + (formIndex+1) + title;
+            }
+            if(formIndex>0)
+                WordUtils.addPageBreak(document);
+
+            WordUtils.addTitle(document , title);
+
+            addWordLegend(document);
+
+            ArrayList<ArrayList<String>> mapTable = processMap(formsStatsMaps.get(formIndex)) ;
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
+
+            WordUtils.addTable(document , mapTable , WordUtils.TABLE_ALIGN_LR , "" , 14);
+
+            int questionIndex = 0 ;
+            for(int tableIndex = 0 ; tableIndex<statsTables.size() ; tableIndex++) {
+                ArrayList<ArrayList<String>> table = statsTables.get(tableIndex);
+                ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
+                tableWithHeaders.add(0, getHeaders(questionIndex)) ;
+                WordUtils.addTable(document , tableWithHeaders , true);
+                questionIndex+= table.size() ;
+            }
+        }
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+
     }
 
     @Override

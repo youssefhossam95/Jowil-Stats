@@ -2,6 +2,7 @@ package Jowil.Reports;
 
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -196,6 +197,7 @@ abstract public class Report {
     abstract public void generatePrintablePdfReport() throws IOException, DocumentException;
     abstract public void generateCsvReport() throws IOException;
     abstract public void generateTsvReprot() ;
+    abstract public void generateWordReport() throws FileNotFoundException, IOException, InvalidFormatException;
     abstract public void init(); // function to get the abrobriate statistics from the statistics class
 
 

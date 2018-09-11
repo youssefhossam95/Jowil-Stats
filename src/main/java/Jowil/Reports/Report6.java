@@ -284,4 +284,9 @@ public class Report6 extends Report {
 
     }
 
+    @Override
+    public void generateWordReport() {
+
+    }
+
 }

@@ -16,6 +16,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 //import org.jfree.io.FileUtilities;
@@ -71,32 +72,35 @@ public class ReportsHandler {
     }
 
 
-    public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException {
+    public void generateReports(ArrayList<Report>Reports , ArrayList<Integer> formats  ) throws IOException, DocumentException, InvalidFormatException {
 
-        boolean isPDFExists= (formats.indexOf(PDF)!=-1);
+        boolean isPDFExists= (formats.contains(PDF));
 
         for(Report report:Reports) {
 
-            if (formats.indexOf(PDF)!=-1)
+            if (formats.contains(PDF))
                 report.generatePdfReport();
 
-            if(formats.indexOf(HTML) !=-1)
+            if(formats.contains(HTML))
                 report.generateHtmlReport();
 
-            if (formats.indexOf(TXT)!=-1)
+            if (formats.contains(TXT))
                 report.generateTxtReport();
 
-            if(formats.indexOf(PRINTABLE_PDF) !=-1)
+            if(formats.contains(WORD))
+                report.generateWordReport();
+
+            if(formats.contains(PRINTABLE_PDF))
                 report.generatePrintablePdfReport();
 
-            if(formats.indexOf(CSV)!=-1)
+            if(formats.contains(CSV))
                 report.generateCsvReport();
-            if(formats.indexOf(TSV)!=-1)
+            if(formats.contains(TSV))
                 report.generateTsvReprot();
 
+            System.out.println("Finished Generating Reports...");
             if(!isPDFExists)
                 handleNoPDF();
-
 
             if(!isTestMode)
                 ReportProgressController.incrementProgressCount();

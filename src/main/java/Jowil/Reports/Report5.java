@@ -335,6 +335,11 @@ public class Report5 extends Report {
     }
 
     @Override
+    public void generateWordReport() {
+
+    }
+
+    @Override
     public void init() {
         formsStatsTables = new ArrayList<>();
         for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
