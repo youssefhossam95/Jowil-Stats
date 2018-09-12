@@ -203,7 +203,7 @@ public abstract class Controller {
             else
                 stage.setTitle(myTitle);
 
-            
+
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(isResizable);
