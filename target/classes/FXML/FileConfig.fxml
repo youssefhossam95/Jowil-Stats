@@ -36,7 +36,7 @@
         <JFXToggleButton fx:id="manualModeToggle" text="Manual Mode"  />
         </VBox>
 
-        <JFXButton fx:id="nextButton" text="Start">
+        <JFXButton fx:id="nextButton" text="Next">
         </JFXButton>
 
    </children>
