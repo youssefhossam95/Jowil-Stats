@@ -378,7 +378,7 @@ public class GradeBoundariesController extends Controller {
         }
         else {
             ((JSONArray) savedProjectsJson.get("projects")).add(projObject);
-            projObject.put("name", Controller.projectName);
+            projObject.put(PROJECT_NAME_JSON_KEY, Controller.projectName);
         }
 
 
@@ -399,8 +399,11 @@ public class GradeBoundariesController extends Controller {
         projObject.put(ID_COL_START_INDEX_JSON_KEY,Integer.toString(CSVHandler.getIdentifierColStartIndex()));
         projObject.put(ID_COL_END_INDEX_JSON_KEY,Integer.toString(CSVHandler.getIdentifierColEndIndex()));
         projObject.put(FORM_COL_INDEX_JSON_KEY,Integer.toString(CSVHandler.getFormColIndex()));
+        projObject.put(FORMS_COUNT_JSON_KEY,Integer.toString(CSVHandler.getFormsCount()));
         projObject.put(IDENTIFIER_NAME_JSON_KEY,Controller.selectedIdentifierName);
         projObject.put(FORM_COL_NAME_JSON_KEY,Controller.selectedFormColName);
+
+
 
         projObject.put(IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsResponsesContainsHeaders());
         projObject.put(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsAnswerKeyContainsHeaders());

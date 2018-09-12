@@ -85,6 +85,8 @@ public class StartController extends Controller{
 
     long lastClick;
 
+    ObservableList<String> existingProjectsListItems;
+
 
     StartController() {
         super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true);
@@ -347,17 +349,17 @@ public class StartController extends Controller{
 
 
 
-        ObservableList<String> listItems=FXCollections.observableArrayList();
+        existingProjectsListItems=FXCollections.observableArrayList();
         loadProjectNames();
 
 
-        projectsList.setCellFactory(event->OpenProjectCell.createManualModeCell(dialog,this));
+        projectsList.setCellFactory(event->OpenProjectCell.createOpenProjectCell(dialog,this));
 
 
 
         for(String name:projectsNames){
 
-            listItems.add(name);
+            existingProjectsListItems.add(name);
             System.out.println(name);
         }
 
@@ -368,15 +370,14 @@ public class StartController extends Controller{
 
 
 
-        if(listItems.isEmpty())
+        if(existingProjectsListItems.isEmpty())
             projectsList.setPrefHeight(0); //prevents enlargement of listView
 
         projectsList.setPrefWidth(dialog.getWidth());
 
 
         dialog.getDialogPane().setPadding(new Insets(20,20,0,20));
-        projectsList.setItems(listItems);
-
+        projectsList.setItems(existingProjectsListItems);
 
         dialog.getDialogPane().setContent(projectsList);
         dialog.showAndWait();
@@ -418,7 +419,22 @@ public class StartController extends Controller{
     }
 
 
+    public void deleteProject(String projName) {
+
+
+        if(!showConfirmationDialog("Delete Project", "Are you sure you want to delete project \""+projName+"\" ?",stage.getOwner()))
+            return;
+        JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
+        for(int i=0;i<projects.size();i++){
+            if(((JSONObject)projects.get(i)).get(PROJECT_NAME_JSON_KEY).equals(projName)){
+                projects.remove(i);
+                break;
+            }
+        }
+        existingProjectsListItems.remove(projName);
+        saveJsonObj(SAVED_PROJECTS_FILE_NAME,savedProjectsJson);
 
 
 
+    }
 }

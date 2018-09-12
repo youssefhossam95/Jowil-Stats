@@ -292,6 +292,12 @@ public class ManualModeController extends Controller{
             String type=columnSet.getType();
 
             if(type.equals(OBJECTIVE_TYPE)){
+                String errorMessage="";
+                if((errorMessage=CSVHandler.getObjColumnSetErrorMessage(columnSet))!=null){
+                    showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Questions Error",errorMessage);
+                    deleteColumnSet(columnSet);
+                    return false;
+                }
                 if(objStartIndex==NOT_AVAILABLE) { //first objective group
                     objStartIndex = columnSet.getStartIndex();
                     firstObjCS=index;
@@ -344,7 +350,7 @@ public class ManualModeController extends Controller{
         }
 
 
-        if(CSVHandler.getFormsCount()>1 && formIndex==-1){
+        if(CSVHandler.getFormsCount()!=1 && formIndex==-1){
             showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Form Number Column Set Error","" +
                     CSVHandler.getFormsCount()+" forms were detected. A form number column must be added.");
             return false;
@@ -721,6 +727,7 @@ public class ManualModeController extends Controller{
 
             try {
                 CSVHandler.loadSavedCSV();
+                System.out.println("3malt el maslaha");
             } catch (CSVHandler.InvalidFormNumberException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file: " + e.getMessage()+". Make sure that you have selected a valid form column.");

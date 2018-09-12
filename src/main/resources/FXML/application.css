@@ -229,6 +229,8 @@ JFXCheckBox {
 -fx-fill:#ff9999;
 }
 
+
+
 .trashIcon{
 -fx-fill:#3184c9;
 }
@@ -301,4 +303,12 @@ JFXListView:focused {
 .toolBarButton:hover{
 -fx-background-color:#DCDCDC;
 -fx-opacity:0.2
+}
+
+.projectRemoveIcon{
+-fx-fill:grey;
+}
+
+.projectRemoveIcon:hover{
+-fx-fill:#ff9999;
 }
