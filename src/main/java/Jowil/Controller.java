@@ -198,9 +198,12 @@ public abstract class Controller {
                 scene=new Scene(root,resX / XSCALE, resY / YSCALE);
 
 
-//            stage.setTitle(myTitle);
+            if(isStepWindow)
+                stage.setTitle(isOpenMode?projectName:"New Project");
+            else
+                stage.setTitle(myTitle);
 
-            stage.setTitle(isOpenMode?projectName:"New Project");
+            
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(isResizable);
