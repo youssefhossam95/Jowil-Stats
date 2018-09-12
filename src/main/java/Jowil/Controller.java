@@ -15,6 +15,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -59,6 +63,13 @@ public abstract class Controller {
     boolean isHeightCalling;
 
 
+
+    BorderPane outerBorderPane=new BorderPane();
+    AnchorPane topWrapperPane=new AnchorPane();
+    ImageView progressImage=new ImageView();
+
+
+
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
     protected final double headersFontSize=resX/64;
@@ -89,9 +100,9 @@ public abstract class Controller {
 
     //Main methods
 
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back){
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName){
         this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false);
-        //progressImage=new ImageView(new Image("Images/"+progressImageName));
+        progressImage=new ImageView(new Image("Images/"+progressImageName));
     }
 
 
@@ -117,8 +128,19 @@ public abstract class Controller {
 
     public void initialize() {
 
-        rootPane.prefHeightProperty().bind(stage.heightProperty());
+
+        if(isStepWindow)
+            outerBorderPane.prefHeightProperty().bind(stage.heightProperty());
+        else
+            rootPane.prefHeightProperty().bind(stage.heightProperty());
+
+
         rootPane.prefWidthProperty().bind(stage.widthProperty());
+
+        topWrapperPane.getChildren().add(progressImage);
+        topWrapperPane.setStyle("-fx-background-color:white;-fx-border-width: 0 0 1 0;-fx-border-color:#A9A9A9");
+        outerBorderPane.setTop(topWrapperPane);
+
         initBackButton();
         initNextButton();
         initButtonsHBox();
@@ -150,10 +172,12 @@ public abstract class Controller {
             loader.setController(this);
             Pane root = loader.load();
 
-            if(XSCALE==1 && YSCALE==1) {
-                stage.setMaximized(true);
+            if(isStepWindow){
+                outerBorderPane.setCenter(rootPane);
+                scene = new Scene(outerBorderPane, resX / XSCALE, resY / YSCALE);
             }
-            scene = new Scene(root, resX / XSCALE, resY / YSCALE);
+            else
+                scene=new Scene(root,resX / XSCALE, resY / YSCALE);
 
 
             stage.setTitle(myTitle);
@@ -231,7 +255,26 @@ public abstract class Controller {
             }
         }
 
-        rootHeight=rootPane.getPrefHeight();
+
+
+
+
+
+
+
+        progressImage.setFitWidth(resX*0.25);
+        progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
+
+        AnchorPane.setLeftAnchor(progressImage,(rootWidth-progressImage.getFitWidth())/2);
+
+        topWrapperPane.setPrefHeight(progressImage.getFitHeight());
+
+        if(isStepWindow) {
+            rootHeight = outerBorderPane.getPrefHeight() - topWrapperPane.getPrefHeight();
+            rootPane.setPrefHeight(rootHeight);
+        }
+        else
+            rootHeight=rootPane.getPrefHeight();
 
 
         backButton.setPrefWidth(navWidth);
@@ -241,17 +284,23 @@ public abstract class Controller {
         nextButton.setPrefWidth(navWidth);
         nextButton.setPrefHeight(navHeight);
         nextButton.setPadding(navPadding);
-        buttonsHbox.setLayoutX(rootWidth*0.05);
+
+        double buttonsHBoxShift=0.03;
+
+        buttonsHbox.setLayoutX(rootWidth*buttonsHBoxShift);
 
         buttonsHbox.setPrefHeight(resY*680/35);
 
-        if(rootHeight<=resY/1.25)
-            buttonsHbox.setLayoutY(rootHeight/1.14);
+        double hpos=0.877;
+        if(rootHeight<=resY/1.34)
+            buttonsHbox.setLayoutY(rootHeight*hpos);
         else
-            buttonsHbox.setLayoutY(rootHeight-resY*(1-1/1.14));
+            buttonsHbox.setLayoutY(rootHeight-resY*(1-hpos));
+
+
 
         buttonsHbox.setSpacing(resX/100);
-        buttonsHbox.setPrefWidth(rootWidth*0.9);
+        buttonsHbox.setPrefWidth(rootWidth*(1-buttonsHBoxShift*2));
         buttonsHbox.setPadding(new Insets(resY/100, 0, 0, 0));
 
 
@@ -315,7 +364,7 @@ public abstract class Controller {
     }
 
     private void initBackButton(){
-        //backButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
+
         rootPane.getChildren().add(backButton);
         backButton.setOnMouseClicked(t->{
             rootPane.requestFocus();
@@ -323,8 +372,7 @@ public abstract class Controller {
             stage.close();
         });
 
-//        backButton.setOnMouseEntered(t->backButton.setStyle("-fx-background-color:#878a8a;"));
-//        backButton.setOnMouseExited(t->backButton.setStyle("-fx-background-color:transparent"));
+
     }
 
     private void initButtonsHBox(){
@@ -343,6 +391,10 @@ public abstract class Controller {
             goToNextWindow();});
 
     }
+
+
+
+
 
     protected abstract Controller getNextController();
 

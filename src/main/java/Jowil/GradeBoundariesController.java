@@ -36,7 +36,7 @@ public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back);
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png");
 
 
     }
@@ -158,7 +158,7 @@ public class GradeBoundariesController extends Controller {
 
         //left half
         scrollPane.setLayoutY((int)(rootHeightToPixels(0.25)));
-        scrollPane.setLayoutX((int)(rootWidthToPixels(0.05)));
+        scrollPane.setLayoutX((int)(buttonsHbox.getLayoutX()));
         scrollPane.setPrefWidth((int)(scrollPaneWidth));
         scrollPane.setPrefHeight((int)(scrollPaneHeight));
         gradesConfigCombo.setPrefWidth(rootWidthToPixels(0.25));
@@ -194,7 +194,7 @@ public class GradeBoundariesController extends Controller {
         reportsDirHBox.setSpacing(resXToPixels(0.005));
         reportsDirHBox.setLayoutY(comboHBox.getLayoutY());
         reportsDirHBox.setLayoutX(reportsConfigTitle.getLayoutX());
-        reportsDirHBox.setPrefWidth(rootWidthToPixels(0.95) - reportsDirHBox.getLayoutX());
+        reportsDirHBox.setPrefWidth(buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()- reportsDirHBox.getLayoutX());
         HBox.setHgrow(reportsDirTextField, Priority.ALWAYS);
 
 

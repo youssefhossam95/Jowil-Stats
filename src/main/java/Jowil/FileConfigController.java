@@ -115,7 +115,7 @@ public class FileConfigController extends Controller {
     //Main methods
     FileConfigController() {
 
-        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null);
+        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"4.png");
 
     }
 
@@ -191,8 +191,8 @@ public class FileConfigController extends Controller {
         }
 
 
-//        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-//        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
     }
 
