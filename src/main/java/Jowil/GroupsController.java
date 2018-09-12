@@ -97,6 +97,9 @@ public class GroupsController  extends Controller{
 
     @Override
     protected void initComponents() {
+
+        groupsLabel.setAlignment(Pos.CENTER);
+        treeLabel.setAlignment(Pos.CENTER);
         initGroupsTableVBox();
         initManualButton();
         initTreeView();
@@ -154,8 +157,10 @@ public class GroupsController  extends Controller{
         choicesTreeVBox.setPadding(groupsTableVbox.getPadding());
         groupsTable.setPrefHeight(rootHeightToPixels(0.67));
         groupsTable.setPrefWidth(rootWidthToPixels(0.27));
-        choicesTreeView.setPrefHeight(rootHeightToPixels(0.67));
-        choicesTreeView.setPrefWidth(rootWidthToPixels(0.27));
+        groupsLabel.setPrefWidth(groupsTable.getPrefWidth());
+        treeLabel.setPrefWidth(groupsTable.getPrefWidth());
+        choicesTreeView.setPrefHeight(groupsTable.getPrefHeight());
+        choicesTreeView.setPrefWidth(groupsTable.getPrefWidth());
 
         //infoVBox.setLayoutX(groupsTableVbox.getLayoutX()+groupsTable.getPrefWidth()+rootWidthToPixels(0.03));
 
@@ -167,8 +172,9 @@ public class GroupsController  extends Controller{
         manualButton.setPrefHeight(navHeight);
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
         manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
-        groupsTableVbox.setLayoutX(rootWidthToPixels(0.05));
-        choicesTreeVBox.setLayoutX(rootWidthToPixels(0.95)-choicesTreeView.getPrefWidth());
+        double tablesShift=0.13;
+        groupsTableVbox.setLayoutX(rootWidthToPixels(tablesShift));
+        choicesTreeVBox.setLayoutX(rootWidthToPixels(1-tablesShift)-choicesTreeView.getPrefWidth());
         choicesTreeView.setLayoutY(groupsTable.getLayoutY());
 
         midSeparator.setLayoutX(rootWidthToPixels(0.5));
