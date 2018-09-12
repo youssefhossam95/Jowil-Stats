@@ -130,7 +130,7 @@ public class WeightsController extends Controller{
     //Main methods
 
     WeightsController(Controller back){
-        super("Weights.fxml","Weights",1.25,1.25,true,back,"4.png");
+        super("Weights.fxml","Weights",1.25,1.25,true,back,"4.png",2,"Questions Weights");
     }
 
 

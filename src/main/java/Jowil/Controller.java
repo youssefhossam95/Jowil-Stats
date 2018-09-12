@@ -11,10 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -28,6 +25,7 @@ import javafx.stage.Window;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -67,6 +65,15 @@ public abstract class Controller {
     BorderPane outerBorderPane=new BorderPane();
     AnchorPane topWrapperPane=new AnchorPane();
     ImageView progressImage=new ImageView();
+    ImageView logoImage=new ImageView(new Image("Images/logoo.png"));
+    RingProgressIndicator stepCounterIndicator=new RingProgressIndicator(4);
+    Label stepLabel;
+
+
+    int stepIndex;
+    String stepName="";
+
+
 
 
 
@@ -100,9 +107,14 @@ public abstract class Controller {
 
     //Main methods
 
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName){
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName,int stepIndex,String stepName){
         this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false);
         progressImage=new ImageView(new Image("Images/"+progressImageName));
+        this.stepIndex=stepIndex;
+        this.stepCounterIndicator.setProgress((int)(stepIndex/4.0*100));
+        this.stepName=stepName;
+
+
     }
 
 
@@ -128,6 +140,12 @@ public abstract class Controller {
 
     public void initialize() {
 
+        stepCounterIndicator.setScaleX(0.2);
+        stepCounterIndicator.setScaleY(0.2);
+        this.stepLabel=new Label("Step "+Integer.toString(stepIndex+1)+" of 4: "+stepName);
+        //this.stepLabel=new Label(stepName);
+        stepLabel.setStyle("-fx-font-weight: bold;");
+
 
         if(isStepWindow)
             outerBorderPane.prefHeightProperty().bind(stage.heightProperty());
@@ -137,8 +155,8 @@ public abstract class Controller {
 
         rootPane.prefWidthProperty().bind(stage.widthProperty());
 
-        topWrapperPane.getChildren().add(progressImage);
-        topWrapperPane.setStyle("-fx-background-color:white;-fx-border-width: 0 0 1 0;-fx-border-color:#A9A9A9");
+        topWrapperPane.getChildren().addAll(progressImage,logoImage,stepLabel);
+        topWrapperPane.setStyle("-fx-background-color:white;-fx-border-width: 0 0 1 0;-fx-border-color:#e8e8e8");
         outerBorderPane.setTop(topWrapperPane);
 
         initBackButton();
@@ -180,7 +198,9 @@ public abstract class Controller {
                 scene=new Scene(root,resX / XSCALE, resY / YSCALE);
 
 
-            stage.setTitle(myTitle);
+//            stage.setTitle(myTitle);
+
+            stage.setTitle(isOpenMode?projectName:"New Project");
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(isResizable);
@@ -265,9 +285,25 @@ public abstract class Controller {
         progressImage.setFitWidth(resX*0.25);
         progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
 
-        AnchorPane.setLeftAnchor(progressImage,(rootWidth-progressImage.getFitWidth())/2);
 
         topWrapperPane.setPrefHeight(progressImage.getFitHeight());
+
+
+        logoImage.setFitHeight(progressImage.getFitHeight()*0.6);
+        logoImage.setFitWidth(logoImage.getFitHeight());
+
+        double topSpace=topWrapperPane.getPrefHeight()*0.2;
+        double sideSpace=resX*0.015;
+        AnchorPane.setLeftAnchor(progressImage,(rootWidth-progressImage.getFitWidth())/2);
+        AnchorPane.setRightAnchor(logoImage,sideSpace);
+        AnchorPane.setTopAnchor(logoImage,topSpace);
+
+        AnchorPane.setLeftAnchor(stepLabel,6.0);
+        AnchorPane.setTopAnchor(stepLabel,topSpace);
+
+
+
+
 
         if(isStepWindow) {
             rootHeight = outerBorderPane.getPrefHeight() - topWrapperPane.getPrefHeight();
