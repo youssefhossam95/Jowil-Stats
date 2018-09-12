@@ -23,7 +23,7 @@ public class RectGenerator  extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        generateRects(primaryStage,"#08436b","green");
+//        generateRects(primaryStage,"#08436b","green");
         generateRoundRects(primaryStage,"#08436b","#157880");
         Platform.exit();
     }
@@ -49,7 +49,7 @@ public class RectGenerator  extends Application {
             empty.setWidth(100-i);
             WritableImage snapShot = wrapper.snapshot(new SnapshotParameters() , null);
             ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
-                    new File("../../resources/RectImages/Report5"+COLOR_FOLDER_NAME+Integer.toString(i)+".png"));
+                    new File("./src/main/resources/RectImages/Report5"+COLOR_FOLDER_NAME+Integer.toString(i)+".png"));
         }
 
     }
@@ -88,11 +88,11 @@ public class RectGenerator  extends Application {
 
 
         for(int i=0;i<=100;i++){
-            filled.setWidth(70*widthFactor);
+            filled.setWidth(i*widthFactor);
             empty.setWidth(wrapper.getWidth()-filled.getWidth());
             WritableImage snapShot = stack.snapshot(new SnapshotParameters() , null);
             ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
-                    new File("../../resources/RectImages/Report4"+Integer.toString(i)+".png"));
+                    new File("./src/main/resources/RectImages/Report4/"+Integer.toString(i)+".png"));
         }
 
 

@@ -25,7 +25,8 @@ abstract public class Report {
             "\\Word Reports\\","\\XLS Reports\\" , "\\Printable PDF Reports\\" , "\\CSV Reports\\" , "\\TSV Reports\\"};
 
     protected String templatePath ;
-    protected final String reportsPath=  ".\\src\\main\\resources\\reports\\";
+    protected final String resourcesPath=  ".\\src\\main\\resources\\";
+    protected final String reportsPath=  resourcesPath+ "reports\\";
 //    protected final String ReportsPath = "\\reports" ;
 //    URLDecoder.decode(getClass().getResource("/GradeConfigs").getFile(),"utf-8")
     protected static String [] outputFormatsFolderPaths;  //same order as ReportsHandler formats Constants
@@ -186,7 +187,7 @@ abstract public class Report {
         Elements images =  doc.select("img") ;
         for (Element image: images) {
             String imgName = image.attr("src");
-            image.attr("src" , imagesFullPath + imgName) ;
+            image.attr("src" , "file://"+imagesFullPath + imgName) ;
         }
     }
 

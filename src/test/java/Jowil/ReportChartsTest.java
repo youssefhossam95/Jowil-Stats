@@ -57,17 +57,19 @@ public class ReportChartsTest extends Application {
 //                reports.add(new Report2()) ;
 //                reports.add(new Report3());
 //                reports.add(new Report4()) ;
-                reports.add(new Report5()) ;
+//                reports.add(new Report5()) ;
 //                reports.add(new Report6()) ;
 //                reports.add(new Report7()) ;
-//                reports.add(new Report8()) ;
+                reports.add(new Report8()) ;
                 ArrayList<Integer> formats = new ArrayList<>() ;
 //                formats.add(ReportsHandler.HTML) ;
-                formats.add(ReportsHandler.PDF);
+//                formats.add(ReportsHandler.PDF);
 //                formats.add(ReportsHandler.PRINTABLE_PDF) ;
 //                formats.add(ReportsHandler.TXT) ;
 //                formats.add(ReportsHandler.CSV);
-//                formats.add(ReportsHandler.TSV) ;
+//                formats.add(ReportsHandler.TSV)
+                formats.add(ReportsHandler.WORD) ;
+
                 ReportsHandler reportsHandler = new ReportsHandler(true);
 
                 reportsHandler.generateReports(reports , formats);

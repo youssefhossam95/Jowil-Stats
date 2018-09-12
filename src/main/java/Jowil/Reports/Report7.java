@@ -5,6 +5,7 @@ import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jsoup.nodes.Document;
@@ -199,7 +200,7 @@ public class Report7 extends Report {
     }
 
     @Override
-    public void generateWordReport() throws IOException {
+    public void generateWordReport() throws IOException, InvalidFormatException {
 
         XWPFDocument document = WordUtils.createDocument() ; // landscape size
 

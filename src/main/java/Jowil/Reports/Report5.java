@@ -28,7 +28,7 @@ public class Report5 extends Report {
         templatePath = workSpacePath + "report5Template.html";
         outputFileName = "Report5" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
-        imagesFolderFullPath = "file://"+System.getProperty("user.dir") + workSpacePath  ;
+        imagesFolderFullPath = System.getProperty("user.dir") + workSpacePath  ;
     }
 
     private Document generatePdfHtml (ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsTables) throws IOException {
@@ -129,20 +129,6 @@ public class Report5 extends Report {
         return doc ;
 //        writeHtmlFile(pdfHtmlPath , doc);
     }
-
-    public void changeLegendImgPath (Document doc , String imagesFolderFullPath ) {
-        Elements legendImgs = doc.select("span.legend-img") ;
-        for (Element img : legendImgs) {
-            String x = img.attr("style");
-            String[] parts = x.split("url");
-            String imgOldUrl = parts[1].substring(2, parts[1].length() - 2);
-//            System.out.println(x);
-            System.out.println(imgOldUrl);
-            String imgNewUrl = imagesFolderFullPath + imgOldUrl  ;
-            img.attr("style" , "background-image: url('"+imgNewUrl+"')" ) ;
-        }
-    }
-
     @Override
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml(formsStatsTables) ;

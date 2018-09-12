@@ -18,9 +18,9 @@ public class WordUtils {
     final static int TITLE_FONT_SIZE = 24 ;
     final static String REPORTS_COLOR = "157880" ;
     final static String GRAY_ROW_COLOR = "EFEFEF" ;
-    final static int  A4_PAGE_WIDTH = (int)(6.5 * inch) ;
-    public final static int LANDSCAPE_PAGE_WIDHT = 15840 ;
-    public final static int LANDSCAPE_PAGE_HEIGHT = 12240;
+    public final static int  A4_PAGE_WIDTH = (int)(6.5 * inch) ; // used width of the A4 page
+    public final static int LANDSCAPE_PAGE_WIDHT = 15840 ; // total width of the land scape page
+    public final static int LANDSCAPE_PAGE_HEIGHT = 12240; // total height of the land scape page
     public final static int TABLE_ALIGN_CENTER = 0 ;
     public final static int TABLE_ALIGN_LR = 1 ;
     static int pageWidth = A4_PAGE_WIDTH ;
@@ -67,10 +67,15 @@ public class WordUtils {
         return document ;
     }
     public static void changeTableWidth(XWPFTable table){
+        changeTableWidth(table , pageWidth);
+    }
+
+    public static void changeTableWidth(XWPFTable table , int tableWidth ){
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
-        width.setW(BigInteger.valueOf(pageWidth));
+        width.setW(BigInteger.valueOf(tableWidth));
     }
+
     public static void addPageBreak (XWPFDocument document) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setPageBreak(true);
@@ -95,20 +100,20 @@ public class WordUtils {
         borders.getTop().setColor(REPORTS_COLOR);
 
     }
-    public static void addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable ) {
-        addTable(document , dataTable, TABLE_ALIGN_CENTER , "" , 12 , false );
+    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable ) throws IOException, InvalidFormatException {
+        return addTable(document , dataTable, TABLE_ALIGN_CENTER , "" , 12 , false );
     }
 
-    public static void addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , boolean hasBorders ) {
-        addTable(document , dataTable, TABLE_ALIGN_CENTER , "" , 12 , hasBorders );
+    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , boolean hasBorders ) throws IOException, InvalidFormatException {
+        return addTable(document , dataTable, TABLE_ALIGN_CENTER , "" , 12 , hasBorders );
 
     }
-    public static void addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize) {
-        addTable(document , dataTable, alignment , title , titleFontSize , false );
+    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize) throws IOException, InvalidFormatException {
+       return addTable(document , dataTable, alignment , title , titleFontSize , false );
     }
 
 
-    public static void addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean hasBorders) {
+    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean hasBorders) throws IOException, InvalidFormatException {
 
         if(title != "") {
             XWPFParagraph titleParagraph = document.createParagraph() ;
@@ -121,8 +126,8 @@ public class WordUtils {
 
         int numberOfRows = dataTable.size();
         int numberOfCols = dataTable.get(0).size() ;
+//        XWPFTable docTable = new XWPFTable() ;
         XWPFTable docTable = document.createTable(numberOfRows , numberOfCols);
-
         int cellRightMargin = 0 ;
         if(alignment== TABLE_ALIGN_LR && numberOfCols > 2)
             cellRightMargin = 200 ;
@@ -130,7 +135,7 @@ public class WordUtils {
 
         docTable.setCellMargins(50 , 0 ,50 , cellRightMargin);
         setTableAlign(docTable,ParagraphAlignment.CENTER);
-        changeTableWidth(docTable);
+        changeTableWidth(docTable , pageWidth);
         if(!hasBorders)
             removeBorders(docTable);
 
@@ -160,6 +165,7 @@ public class WordUtils {
             }
         }
         document.createParagraph().createRun().addBreak();
+        return docTable ;
     }
 
     private static void parseCellClass( XWPFTableCell cell ,  String cellClassesString) {
@@ -180,10 +186,14 @@ public class WordUtils {
      * @param cell cell object to be filled
      * @param cellData string containing class and text of the cell
      */
-    private static XWPFRun processCellData (XWPFTableCell cell , XWPFParagraph cellParagraph , String cellData ) {
+    private static XWPFRun processCellData (XWPFTableCell cell , XWPFParagraph cellParagraph , String cellData ) throws IOException, InvalidFormatException {
 
         String cellText = cellData ; // the normal case no classes
-        if(cellData.contains(";")) {
+        if(cellData.length()>7 && cellData.substring(0 , 7).equals("<<img>>")){
+            String imgPath = cellData.substring(7 , cellData.length());
+            addImage(cellParagraph , imgPath , 100 , 10) ;
+            return cellParagraph.createRun();
+        }else if(cellData.contains(";")) {
             String [] parts = cellData.split(";");
             cellText = parts[0] ;
             String cellClass= parts[1] ;
@@ -236,20 +246,27 @@ public class WordUtils {
     }
 
     public static XWPFParagraph addLegendImage(XWPFDocument document , String imgPath) throws IOException, InvalidFormatException {
-        return  addImage( document , imgPath , ParagraphAlignment.LEFT,  10 , 10 , false);
+        return  addImage( document ,null ,imgPath , ParagraphAlignment.LEFT,  10 , 10 , false);
     }
 
     public static XWPFParagraph addImage (XWPFDocument document , String imgPath) throws IOException, InvalidFormatException {
-      return  addImage( document , imgPath , ParagraphAlignment.CENTER , 400 , 300 , true );
+      return  addImage( document , null,  imgPath , ParagraphAlignment.CENTER , 400 , 300 , true );
+    }
+    public static XWPFParagraph addImage (XWPFParagraph paragraph , String imgPath , int width , int height) throws IOException, InvalidFormatException {
+        return  addImage( null , paragraph,  imgPath , ParagraphAlignment.CENTER , width , height , false );
     }
 
-    public static XWPFParagraph addImage (XWPFDocument document , String imgPath , ParagraphAlignment alignment , int width , int height , boolean addBreak) throws IOException, InvalidFormatException {
 
-        XWPFParagraph p =  document.createParagraph();
+
+    public static XWPFParagraph addImage (XWPFDocument document, XWPFParagraph p , String imgPath , ParagraphAlignment alignment , int width , int height , boolean addBreak ) throws IOException, InvalidFormatException {
+
+        if(p == null)
+            p =  document.createParagraph();
         XWPFRun run = p.createRun() ;
         p.setAlignment(alignment);
         FileInputStream is = new FileInputStream(imgPath);
-//        run.addBreak();
+        if(addBreak)
+            run.addBreak();
         run.addPicture(is, XWPFDocument.PICTURE_TYPE_PNG, imgPath, Units.toEMU(width), Units.toEMU(height));
         is.close();
         return p ;

@@ -2,9 +2,14 @@ package Jowil.Reports;
 
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -194,7 +199,28 @@ public class Report4 extends Report{
     }
 
     @Override
-    public void generateWordReport() {
+    public void generateWordReport() throws IOException, InvalidFormatException {
+
+        XWPFDocument document = new XWPFDocument();
+        WordUtils.addTitle(document , "Grades Distribution Report" );
+
+        ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
+        tableWithHeaders.get(0).add("") ;
+        for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
+            ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
+            int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
+            tableRow.add("<<img>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
+        }
+
+        XWPFTable docTable = WordUtils.addTable(document, tableWithHeaders);
+//        docTable.setCellMargins(50 ,200 , 50 , 200);
+//        WordUtils.removeBorders(docTable);
+//        docTable.addNewCol();
+//        XWPFParagraph par = docTable.getRow(0).getCell(3).getParagraphArray(0);
+//        WordUtils.addImage(par , resourcesPath +"RectImages\\Report4\\5.png",50 , 10) ;
+
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+
 
     }
 

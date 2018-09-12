@@ -2,6 +2,7 @@ package Jowil.Reports;
 
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -16,6 +17,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -26,7 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Report6 extends Report {
-    String report6ImgFullPath  ;
+    String imgsDirectoryFullPath  ;
+    String imgName = "DifficultyHistogram" ;
     ArrayList<ArrayList<ArrayList<String>>>  formsStatsTables ;
 
 
@@ -35,7 +39,8 @@ public class Report6 extends Report {
         templatePath = workSpacePath + "report6Template.html";
         outputFileName = "Report6" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
-        report6ImgFullPath = "file://"+System.getProperty("user.dir") + workSpacePath + "DifficulityHistogram.png" ;
+        imgsDirectoryFullPath = System.getProperty("user.dir") + workSpacePath ;
+
     }
 
 
@@ -120,7 +125,7 @@ public class Report6 extends Report {
 
         WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
         ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
-                new File(workSpacePath+"DifficulityHistogram"+formIndex+".png"));
+                new File(workSpacePath+imgName+formIndex+".png"));
     }
 
     /**
@@ -161,16 +166,19 @@ public class Report6 extends Report {
             if (statsTable.size() > MAX_NUMBER_OF_1PAGE_ROWS)
                 doc.select("img").addClass("new-page-img");
 
-            doc.select("img").last().attr("src" , "DifficulityHistogram"+(formIndex+1)+".png");
+            doc.select("img").last().attr("src" , imgName+(formIndex+1)+".png");
         }
         return doc  ;
     }
+
+
 
     @Override
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml() ;
         doc.select("div#footer").remove() ;
-        doc.select("img").attr("src" , report6ImgFullPath);
+        changeImgPath(doc , imgsDirectoryFullPath);
+//        doc.select("img").attr("src" , "file://"+report6ImgFullPath);
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
@@ -199,6 +207,19 @@ public class Report6 extends Report {
 
         tableWithHeaders.add(0,tableHeaders);
         tableWithHeaders.add(1,secondHeaders) ;
+        return  tableWithHeaders ;
+    }
+
+    private ArrayList<ArrayList<String>> getTableWithHeadersWord ( ArrayList<ArrayList<String>> table) {
+
+        ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table);
+        ArrayList<String>tableHeaders = new ArrayList<>();
+        tableHeaders.add("Section Name") ; tableHeaders.add("Hardest Question") ;
+        tableHeaders.add("Easiest Question") ; tableHeaders.add("Average Correct Percentage") ;
+        tableHeaders.add("Percentage Of Questions with Distractors"); tableHeaders.add("Average Point Biserial");
+        tableHeaders.add("Difficulity (0-10)");
+
+        tableWithHeaders.add(0,tableHeaders);
         return  tableWithHeaders ;
     }
     @Override
@@ -285,8 +306,29 @@ public class Report6 extends Report {
     }
 
     @Override
-    public void generateWordReport() {
+    public void generateWordReport() throws IOException, InvalidFormatException {
+        XWPFDocument document = new XWPFDocument();
 
+
+        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
+
+
+            String title = " Section Details Report" ;
+            if( formsStatsTables.size() >1) {
+                title = "Form " + (formIndex+1) + title;
+            }
+            if(formIndex>0)
+                WordUtils.addPageBreak(document);
+
+
+            WordUtils.addTitle(document , title );
+
+            WordUtils.addTable(document, getTableWithHeadersWord(formsStatsTables.get(formIndex)));
+
+            WordUtils.addImage(document , imgsDirectoryFullPath+imgName+(formIndex+1)+".png");
+
+        }
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
     }
 
 }

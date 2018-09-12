@@ -58,6 +58,9 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
+        String x = "7.5";
+        System.out.println(Math.round(Double.valueOf(x)));
+
 //        ArrayList<Double> hardness = new ArrayList<>( );
 //        for(int i = 0 ; i < 40 ; i ++)
 //            hardness.add(0.0);hardness.add(10.0);

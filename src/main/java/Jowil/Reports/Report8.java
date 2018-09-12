@@ -4,6 +4,7 @@ import Jowil.CSVHandler;
 import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import javafx.application.Platform;
@@ -14,15 +15,20 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.*;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.nodes.Document;
 import com.lowagie.text.DocumentException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,13 +37,14 @@ public class Report8 extends Report {
     ArrayList<ArrayList<ArrayList<Double>>> formsData ;
     volatile boolean chartsReady = false ;
     String imagesFullPath ;
+    String imgName ="GradualityChart";
 
     public Report8(){
         workSpacePath = reportsPath + "report8\\" ;
         templatePath = workSpacePath + "report8Template.html";
         outputFileName = "Report8" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
-        imagesFullPath = "file://"+System.getProperty("user.dir") + workSpacePath  ;
+        imagesFullPath = System.getProperty("user.dir") + workSpacePath  ;
         while (!chartsReady) ;
     }
 
@@ -81,7 +88,7 @@ public class Report8 extends Report {
                    String cellText = Utils.formatNumber( graphData.get(i) , 1);
                    tableCells.get(i).text(cellText);
                }
-               String imgName = "GradualityChart" + formIndex + graphIndex + ".png";
+               String imgName = this.imgName + formIndex + graphIndex + ".png";
                doc.select("img").last().attr("src", imgName);
            }
         }
@@ -148,7 +155,7 @@ public class Report8 extends Report {
 //                lc.layout();
 //                stage.setScene(scene);
                 WritableImage snapShot = lc.snapshot(new SnapshotParameters(), null);
-                String imgName = workSpacePath + "GradualityChart" + formIndex + graphIndex + ".png";
+                String imgName = workSpacePath + this.imgName + formIndex + graphIndex + ".png";
                 ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(imgName));
                 lc.getData().removeAll() ;
             }
@@ -266,7 +273,69 @@ public class Report8 extends Report {
     }
 
     @Override
-    public void generateWordReport() {
+    public void generateWordReport() throws IOException, InvalidFormatException {
+
+        XWPFDocument document = WordUtils.createDocument();
+        int formIndex = 0 ;
+        ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex) ;
+        int graphIndex = 0;
+        ArrayList<Double> graphData = formGraphsData.get(graphIndex) ;
+        ArrayList<ArrayList<String>> table  = getTableWithHeaders(graphData) ;
+
+//
+//        XWPFTable table = document.createTable();
+//
+//        //create first row
+//        XWPFTableRow tableRowOne = table.getRow(0);
+//        tableRowOne.getCell(0).setText("col one, row one");
+//        tableRowOne.addNewTableCell().setText("col two, row one");
+//        tableRowOne.addNewTableCell().setText("col three, row one");
+//
+//        //create second row
+//        XWPFTableRow tableRowTwo = table.createRow();
+//        tableRowTwo.getCell(0).setText("col one, row two");
+//        tableRowTwo.getCell(1).setText("col two, row two");
+//        tableRowTwo.getCell(2).setText("col three, row two");
+//
+//        //create third row
+//        XWPFTableRow tableRowThree = table.createRow();
+//        tableRowThree.getCell(0).setText("col one, row three");
+//        tableRowThree.getCell(1).setText("col two, row three");
+//        tableRowThree.getCell(2).setText("col three, row three");
+//        XWPFParagraph par = document.createParagraph() ;
+//        XWPFRun run = par.createRun() ;
+//        run.add
+
+//        XWPFTable lineTable = document.createTable();
+//        XWPFTableRow tableRowOne = lineTable.getRow(0);
+//        XWPFTableCell cell1 =  tableRowOne.getCell(0);
+//        XWPFTableCell cell2 =  tableRowOne.addNewTableCell();
+//        cell2.setText("hell");
+
+        XWPFParagraph par = document.createParagraph();
+        par.setAlignment(ParagraphAlignment.CENTER);
+        par.setBorderTop(Borders.THICK);
+        XWPFRun run = par.createRun();
+        run.setBold(true);
+        run.setText("Q");
+        run.setFontSize(18);
+        run.addBreak();
+        run.addBreak();
+//        CTPPr parPro = par.getCTP().getPPr();
+//        parPro
+//        borders.getTop().setSz(BigInteger.valueOf(15));
+//        par.setSpacingAfter(10);
+        XWPFTable wordTable = WordUtils.addTable(document , table) ;
+        WordUtils.addImage(document,null , imagesFullPath + this.imgName + formIndex + graphIndex + ".png"
+                ,ParagraphAlignment.CENTER,400 , 250 , true) ;
+//        document.removeBodyElement(document.getBodyElements().size()-1) ;
+
+//        cell1.insertTable(0 , wordTable);
+
+//        WordUtils.changeTableWidth(wordTable , WordUtils.A4_PAGE_WIDTH / 2 - WordUtils.A4_PAGE_WIDTH/20);
+//        WordUtils.setTableAlign(wordTable  , ParagraphAlignment.LEFT);
+
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
 
     }
 
