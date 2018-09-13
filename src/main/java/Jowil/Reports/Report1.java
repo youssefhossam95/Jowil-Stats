@@ -76,7 +76,7 @@ public class Report1 extends Report{
      * @param numberOfStudents the number of students that got the corresponding grade
      * @throws IOException if it couldn't store the img in the spicified path
      */
-    private void generateReport1Chart( ArrayList<String> grades , double[] numberOfStudents) throws IOException {
+    public BarChart<String, Number> generateReport1Chart( ArrayList<String> grades , double[] numberOfStudents) throws IOException {
         Stage stage = new Stage() ;
         stage.setTitle("Student Grades");
         final CategoryAxis xAxis = new CategoryAxis();
@@ -121,6 +121,7 @@ public class Report1 extends Report{
 
         WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
         ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath+"GradesDistributionHistogram.png"));
+        return bc ;
     }
 
     /**

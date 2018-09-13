@@ -16,7 +16,7 @@ public class WordUtils {
 
     final static int inch = 1440 ;
     final static int TITLE_FONT_SIZE = 24 ;
-    final static String REPORTS_COLOR = "157880" ;
+    public final static String REPORTS_COLOR = "157880" ;
     final static String GRAY_ROW_COLOR = "EFEFEF" ;
     public final static int  A4_PAGE_WIDTH = (int)(6.5 * inch) ; // used width of the A4 page
     public final static int LANDSCAPE_PAGE_WIDHT = 15840 ; // total width of the land scape page
@@ -84,6 +84,10 @@ public class WordUtils {
 
 
     public static void removeBorders (XWPFTable docTable ) {
+        removeBorders(docTable, true);
+    }
+
+        public static void removeBorders (XWPFTable docTable , boolean addTopBorder ) {
         docTable.setInsideHBorder(XWPFTable.XWPFBorderType.NONE,0 , 0 , "FFFFFF");
         docTable.setInsideVBorder(XWPFTable.XWPFBorderType.NONE , 0 , 0 , "FFFFFF");
 
@@ -94,22 +98,25 @@ public class WordUtils {
         borders.addNewBottom().setVal(STBorder.NONE);
         borders.addNewLeft().setVal(STBorder.NONE);
         borders.addNewRight().setVal(STBorder.NONE);
-        borders.addNewTop().setVal(STBorder.THICK);
-        borders.getTop().setSz(BigInteger.valueOf(15));
-        borders.getTop().setSpace(BigInteger.valueOf(0));
-        borders.getTop().setColor(REPORTS_COLOR);
-
+        if(addTopBorder) {
+            borders.addNewTop().setVal(STBorder.THICK);
+            borders.getTop().setSz(BigInteger.valueOf(15));
+            borders.getTop().setSpace(BigInteger.valueOf(0));
+            borders.getTop().setColor(REPORTS_COLOR);
+        }
+        else
+            borders.addNewTop().setVal(STBorder.NONE);
     }
     public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable ) throws IOException, InvalidFormatException {
-        return addTable(document , dataTable, TABLE_ALIGN_CENTER , "" , 12 , false );
+        return addTable(document,dataTable, TABLE_ALIGN_CENTER , "" , 12 , false );
     }
 
     public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , boolean hasBorders ) throws IOException, InvalidFormatException {
-        return addTable(document , dataTable, TABLE_ALIGN_CENTER , "" , 12 , hasBorders );
+        return addTable(document, dataTable, TABLE_ALIGN_CENTER , "" , 12 , hasBorders );
 
     }
     public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize) throws IOException, InvalidFormatException {
-       return addTable(document , dataTable, alignment , title , titleFontSize , false );
+       return addTable(document ,  dataTable, alignment , title , titleFontSize , false );
     }
 
 
@@ -127,7 +134,8 @@ public class WordUtils {
         int numberOfRows = dataTable.size();
         int numberOfCols = dataTable.get(0).size() ;
 //        XWPFTable docTable = new XWPFTable() ;
-        XWPFTable docTable = document.createTable(numberOfRows , numberOfCols);
+        XWPFTable docTable =document.createTable(numberOfRows , numberOfCols);
+
         int cellRightMargin = 0 ;
         if(alignment== TABLE_ALIGN_LR && numberOfCols > 2)
             cellRightMargin = 200 ;
@@ -165,6 +173,79 @@ public class WordUtils {
             }
         }
         document.createParagraph().createRun().addBreak();
+        return docTable ;
+    }
+
+
+    public static XWPFTable createTableInCell (XWPFTableCell wrapperCell, ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean addHeaderRow ) throws IOException, InvalidFormatException {
+
+
+        wrapperCell.removeParagraph(0);
+
+        if(title != "") {
+            XWPFParagraph titleParagraph = wrapperCell.addParagraph() ;
+            if(alignment==TABLE_ALIGN_LR)
+                titleParagraph.setSpacingAfter(0);
+            XWPFRun titleRun = titleParagraph.createRun() ;
+            titleRun.setText(title);
+            titleRun.setFontSize(titleFontSize);
+        }
+
+        XWPFParagraph paragraph = wrapperCell.addParagraph();
+        XWPFTable docTable = wrapperCell.insertNewTbl(paragraph.getCTP().newCursor());
+
+        int numberOfRows = dataTable.size();
+        int numberOfCols = dataTable.get(0).size() ;
+
+
+        docTable.setCellMargins(50 , 0 ,50 , 0);
+        setTableAlign(docTable,ParagraphAlignment.CENTER);
+        changeTableWidth(docTable , (int)(pageWidth/2.8));
+
+        removeBorders(docTable);
+
+        if(addHeaderRow) {
+            XWPFTableRow firstRow = docTable.createRow();
+            for (int i = 0; i < numberOfCols; i++) {
+                XWPFTableCell headerCell = firstRow.createCell();
+//                headerCell.removeParagraph(0);
+//                headerCell.getParagraphArray(0).setSpacingAfter(0);
+                headerCell.setColor(GRAY_ROW_COLOR) ;
+//                headerCell
+                }
+            firstRow.setHeight(250);
+            firstRow.getCtRow().getTrPr().getTrHeightArray(0).setHRule(STHeightRule.EXACT); //set w:hRule="exact"
+
+        }
+
+        for(int rowIndex = 0 ; rowIndex< numberOfRows ; rowIndex++) {
+            ArrayList<String> dataTableRow = dataTable.get(rowIndex) ;
+            XWPFTableRow docTableRow = docTable.createRow();
+            for(int colIndex = 0 ; colIndex < numberOfCols  ; colIndex++) {
+                String data = dataTableRow.get(colIndex);
+                XWPFTableCell cell ;
+                if(rowIndex>0 || addHeaderRow)
+                   cell= docTableRow.getCell(colIndex);
+                else
+                    cell=docTableRow.createCell() ;
+                XWPFParagraph par = cell.getParagraphArray(0) ;
+                par.setSpacingAfter(0);
+                if(rowIndex%2==0 && alignment!= TABLE_ALIGN_LR) {
+                    cell.setColor(GRAY_ROW_COLOR);
+                }
+                if(alignment == TABLE_ALIGN_LR) {
+                    if(colIndex%2==0)
+                        par.setAlignment(ParagraphAlignment.LEFT);
+                    else
+                        par.setAlignment(ParagraphAlignment.RIGHT);
+                }else
+                    par.setAlignment(ParagraphAlignment.CENTER);
+                XWPFRun run = processCellData(cell , par , data );
+                if(alignment == TABLE_ALIGN_CENTER && rowIndex==0)
+                    run.setBold(true);
+
+            }
+        }
         return docTable ;
     }
 
