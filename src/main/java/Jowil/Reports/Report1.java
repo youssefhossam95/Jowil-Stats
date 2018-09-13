@@ -85,7 +85,7 @@ public class Report1 extends Report{
                 new BarChart<String,Number>(xAxis,yAxis);
         bc.setTitle("Grades Distribution");
         xAxis.setLabel("Grade");
-        yAxis.setLabel("Number Of students");
+        yAxis.setLabel("Number of Students");
 
         XYChart.Series series1 = new XYChart.Series();
         bc.setLegendVisible(false);

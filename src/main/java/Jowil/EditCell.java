@@ -47,7 +47,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
         textField.setOnAction(evt -> {
             commitEdit(this.converter.fromString(textField.getText()));
             if(parentController!=null)
-                parentController.refreshGradesFreq();
+                parentController.refreshGradesDistribution();
 
             System.out.println("ana called action");
         });
@@ -55,7 +55,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
             if (! isNowFocused) {
                 commitEdit(this.converter.fromString(textField.getText()));
                 if(parentController!=null)
-                    parentController.refreshGradesFreq();
+                    parentController.refreshGradesDistribution();
                 System.out.println("ana called focused");
             }
         });

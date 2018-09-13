@@ -12,22 +12,34 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -190,9 +202,16 @@ public class WeightsController extends Controller {
     final Label subjLabel = new Label("Subjective Questions");
     final Label objLabel = new Label("Objective Questions");
     Separator midSeparator = new Separator();
+    CategoryAxis xAxis ;
+    NumberAxis yAxis ;
+    BarChart<String,Number> barChart ;
+    XYChart.Series barChartSeries = new XYChart.Series();
+
     JFXTreeTableView gradesFreqTable = new JFXTreeTableView();
 
     ObservableList<Grade> gradesFreqData = FXCollections.observableArrayList();
+
+
 
 
     ///data fields
@@ -213,13 +232,16 @@ public class WeightsController extends Controller {
         double tablesShift = 0.13;
 
         objTableVbox.setSpacing(rootHeightToPixels(0.019));
-        objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, 0));
+        objTableVbox.setLayoutY(rootHeight*0.04);
+        subjTableVbox.setLayoutY(objTableVbox.getLayoutY());
+        objTableVbox.setPadding(new Insets(0, 0, 0, 0));
         objTable.setPrefHeight(rootHeightToPixels(0.63));
         objHBox.setSpacing(rootWidthToPixels(0.00625));
         subjHBox.setSpacing(resXToPixels(0.005));
         subjTable.setPrefHeight(objTable.getPrefHeight());
         subjTableVbox.setSpacing(resYToPixels(0.015));
-        subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, 0));
+        subjTableVbox.setPadding(new Insets(0));
+
         objTableVbox.setPrefWidth(rootWidthToPixels(0.27));
         subjTableVbox.setPrefWidth(rootWidthToPixels(0.27));
         objTable.setPrefWidth(objTableVbox.getPrefWidth());
@@ -243,8 +265,18 @@ public class WeightsController extends Controller {
 
         gradesFreqTable.setPrefWidth(objTable.getPrefWidth());
         gradesFreqTable.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-gradesFreqTable.getPrefWidth());
-        gradesFreqTable.setLayoutY(midSeparator.getLayoutY()+rootHeight*0.05);
+        gradesFreqTable.setLayoutY(objTableVbox.getLayoutY());
         gradesFreqTable.setPrefHeight(objTable.getPrefHeight()*0.6);
+
+
+
+
+        initBarChart();
+        double shift=resX*30.0/1280;
+        barChart.setLayoutX(gradesFreqTable.getLayoutX()-shift);
+        barChart.setLayoutY(gradesFreqTable.getLayoutY()+gradesFreqTable.getPrefHeight()+rootHeight*0.05);
+        barChart.setPrefHeight(buttonsHbox.getLayoutY()-barChart.getLayoutY()-rootHeight*0.01);
+        barChart.setPrefWidth(gradesFreqTable.getPrefWidth()+shift);
 
         if (objTable.getPrefWidth() > getObjTableColumnsWidth())
             objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -261,11 +293,15 @@ public class WeightsController extends Controller {
 //        objLabel.setAlignment(Pos.CENTER);
         initObjTableVBox();
         initSubjTableVBox();
+        refreshGradesDistribution();
         initGradesFreqTable();
+        initBarChart();
+
 
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
     }
+
 
 
     @Override
@@ -376,7 +412,7 @@ public class WeightsController extends Controller {
                 }
 
                 objTable.refresh();
-                refreshGradesFreq();
+                refreshGradesDistribution();
             }
         });
 
@@ -398,7 +434,7 @@ public class WeightsController extends Controller {
                     ((SubjQuestion) subjTable.getItems().get(selected.get(i).getRow())).setMaxScore(w);
 
                 subjTable.refresh();
-                refreshGradesFreq();
+                refreshGradesDistribution();
 
             }
         });
@@ -461,7 +497,6 @@ public class WeightsController extends Controller {
 
     private void initGradesFreqTable() {
 
-        refreshGradesFreq();
         JFXTreeTableColumn<Grade,String> gradeNamesCol = new JFXTreeTableColumn<>("Grade");
 
         JFXTreeTableColumn<Grade,String> gradeFreqCol = new JFXTreeTableColumn<>("Frequency");
@@ -501,6 +536,28 @@ public class WeightsController extends Controller {
 
 
     }
+
+    private void initBarChart() {
+
+        xAxis = new CategoryAxis();
+        yAxis = new NumberAxis();
+        rootPane.getChildren().remove(barChart);
+        barChart = new BarChart<String,Number>(xAxis,yAxis);
+
+        rootPane.getChildren().add(barChart);
+
+        barChart.setTitle(null);
+        xAxis.setLabel("Grade");
+        yAxis.setLabel("Number of Students");
+
+        barChart.setLegendVisible(false);
+        barChart.setAnimated(true);
+        barChart.getStyleClass().add("weightsBarChart");
+        barChart.getData().add(barChartSeries);
+        barChart.layout();
+
+    }
+
 
 
     private void populateObjTable() {
@@ -674,11 +731,37 @@ public class WeightsController extends Controller {
 
     }
 
-    public void refreshGradesFreq(){
+    public void refreshGradesDistribution(){
+        refreshGradeFreqTable();
+        refreshBarChart();
+
+    }
+
+    private void refreshGradeFreqTable(){
         saveChanges();
         if(gradeScalesJsonObj==null)
             loadGradeScale();
         loadGradesFreqData();
+    }
+
+    private void refreshBarChart(){
+
+        int max = 0  ;
+
+        barChartSeries.getData().clear();
+        for(Grade grade:gradesFreqData) {
+            int freq = Integer.parseInt(grade.getFrequency());
+            max=Math.max(max,freq);
+            barChartSeries.getData().add(new XYChart.Data(grade.getGradeName(), freq));
+        }
+
+//        for(int gradeIndex = 0 ;  gradeIndex<gradesFreqData.size() ; gradeIndex++) {
+//            String addedClass = "normal" ;
+//            Node n = barChart.lookup(".data"+gradeIndex+".chart-bar");
+//            n.getStyleClass().add(addedClass);
+//        }
+
+
 
     }
 

@@ -8,9 +8,6 @@ AnchorPane{
 #fffcfc
 */
 
-
-
-
 }
 JFXButton{
 -fx-border-color: #3184c9;
@@ -320,4 +317,28 @@ JFXListView:focused {
 
 .projectRemoveIcon:hover{
 -fx-fill:#ff9999;
+}
+
+.weightsBarChart{
+-fx-background-color:transparent;
+-fx-alternative-column-fill-visible:true;
+-fx-alternative-row-fill-visible:false;
+-fx-horizontal-grid-lines-visible:false;
+-fx-horizontal-zero-line-visible:false;
+-fx-vertical-grid-lines-visible:false;
+-fx-vertical-zero-line-visible:false;
+-fx-padding:0;
+}
+
+.weightsBarChart .chart-content{
+    -fx-padding: 0px;
+}
+
+.weightsBarChart .chart-bar {
+-fx-bar-fill: #157880;
+}
+
+.weightsBarChart .axis-label { -fx-font-size: 0.9em ; }
+.weightsBarChart .axis{
+-fx-tick-label-font-size: 0.6em;
 }
