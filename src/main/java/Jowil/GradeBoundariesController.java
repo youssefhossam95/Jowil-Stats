@@ -99,7 +99,7 @@ public class GradeBoundariesController extends Controller {
 
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
-    private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json", GRADE_SCALE_FILE_NAME = "GradeScales.json";
+    private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json";
     int gradesConfigComboSelectedIndex;
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
@@ -115,7 +115,7 @@ public class GradeBoundariesController extends Controller {
 
 
     JSONObject prefsJsonObj;
-    JSONObject gradeScalesJsonObj;
+    
 
     ArrayList<ArrayList<GradeHBox>> configs = new ArrayList<>();
 
@@ -299,7 +299,7 @@ public class GradeBoundariesController extends Controller {
 
         Collections.sort(scale,new PairSorter());
 
-        if(scale.get(0).getValue()!=0)
+        if(scale.get(0).getValue()!=0) //last grade must have min =0
             scale.add(0,new Pair<String,Double>("F",0.0));
 
 
@@ -316,14 +316,14 @@ public class GradeBoundariesController extends Controller {
 
         String selectedIndex;
 
-        gradeScalesJsonObj.put("lastSelectedScaleIndex",selectedIndex=Integer.toString(gradesConfigComboSelectedIndex));
+        gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedIndex=Integer.toString(gradesConfigComboSelectedIndex));
         //save new changes if user wants to
 
         if (isContentEdited) {
             String result = showSaveChangesDialog();
             if (result != null) {
                 saveNewConfig(result,origScale);
-                gradeScalesJsonObj.put("lastSelectedScaleIndex",selectedIndex=Integer.toString(comboItems.size()));
+                gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedIndex=Integer.toString(comboItems.size()));
             }
         }
 
@@ -367,6 +367,7 @@ public class GradeBoundariesController extends Controller {
         
         prefsJsonObj.put(REPORTS_CHOSEN_JSON_KEY, reportsConfig);
         prefsJsonObj.put(FORMATS_CHOSEN_JSON_KEY, formatsConfig);
+
         savePrefsJsonObj();
 
 
@@ -534,8 +535,9 @@ public class GradeBoundariesController extends Controller {
             return cell;
         });
 
-        //System.out.println(gradeScalesJsonObj.get("lastSelectedScaleIndex")+" ya joeeeee");
-        int index=Integer.parseInt((String)gradeScalesJsonObj.get("lastSelectedScaleIndex"));
+        //System.out.println(gradeScalesJsonObj.get(SELECTED_SCALE_JSON_KEY)+" ya joeeeee");
+        JSONObject obj=isOpenMode?currentOpenedProjectJson:gradeScalesJsonObj;
+        int index=Integer.parseInt((String) obj.get(SELECTED_SCALE_JSON_KEY));
         gradesConfigCombo.getSelectionModel().select(index);
 
     }
@@ -614,9 +616,20 @@ public class GradeBoundariesController extends Controller {
 
 
     private void initReportsDirTextField(){
-        boolean isJsonSuccess = loadPrefsJsonObj();
-        String lastDir = (String) prefsJsonObj.get("reportsOutputDir");
-        reportsDirTextField.setText(isJsonSuccess?lastDir:"");
+        boolean isJsonSuccess=loadPrefsJsonObj();
+
+        JSONObject obj=prefsJsonObj;
+
+        if(isOpenMode) {
+            obj = currentOpenedProjectJson;
+            isJsonSuccess=true;
+        }
+
+
+
+        String dir = (String) obj.get(REPORTS_OUT_PATH_JSON_KEY);
+
+        reportsDirTextField.setText(isJsonSuccess?dir:"");
     }
 
     private void initReportsConfigHBox() {
@@ -636,9 +649,16 @@ public class GradeBoundariesController extends Controller {
         reportsCheckBoxes.add(new JFXCheckBox("Report 5: Questions Statistics Report"));
 
         //load json array
-        boolean isJsonSuccess = loadPrefsJsonObj();
+        boolean isJsonSuccess=loadPrefsJsonObj();
 
-        JSONArray reportsChosen = (JSONArray) prefsJsonObj.get("reportsChosen");
+        JSONObject obj=prefsJsonObj;
+
+        if(isOpenMode) {
+            obj = currentOpenedProjectJson;
+            isJsonSuccess=true;
+        }
+
+        JSONArray reportsChosen = (JSONArray) obj.get(REPORTS_CHOSEN_JSON_KEY);
 
         //initialize checkboxes
         for (int i = 0; i < reportsCheckBoxes.size(); i++) {
@@ -664,8 +684,16 @@ public class GradeBoundariesController extends Controller {
         formatsCheckBoxes.add(new JFXCheckBox("TXT"));
 
         //load json array
-        boolean isJsonSuccess = loadPrefsJsonObj();
-        JSONArray formatsChosen = (JSONArray) prefsJsonObj.get("formatsChosen");
+        boolean isJsonSuccess=loadPrefsJsonObj();
+
+        JSONObject obj=prefsJsonObj;
+
+        if(isOpenMode) {
+            obj = currentOpenedProjectJson;
+            isJsonSuccess=true;
+        }
+
+        JSONArray formatsChosen = (JSONArray) obj.get(FORMATS_CHOSEN_JSON_KEY);
 
         //initialize checkboxes
         for (int i = 0; i < formatsCheckBoxes.size(); i++) {
@@ -715,7 +743,7 @@ public class GradeBoundariesController extends Controller {
             scales.remove(gradesConfigComboSelectedIndex);
             gradeScalesJsonObj.put("scales", scales);
             comboItems.remove(gradesConfigComboSelectedIndex);
-            gradeScalesJsonObj.put("lastSelectedScaleIndex",Integer.toString(gradesConfigComboSelectedIndex));
+            gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,Integer.toString(gradesConfigComboSelectedIndex));
             saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
 
 
@@ -748,13 +776,7 @@ public class GradeBoundariesController extends Controller {
 
 
     private void loadGradeConfigs() {
-
-
-        if ((gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null) {
-            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
-                    "Error in loading Grade Scale Configurations");
-            return;
-        }
+        
 
         JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
 

@@ -76,6 +76,7 @@ public abstract class Controller {
 
 
 
+    static JSONObject gradeScalesJsonObj;
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
@@ -92,8 +93,9 @@ public abstract class Controller {
     static String selectedIdentifierName;
     static String selectedFormColName;
     static final String MANUAL_MODE_INDICATOR=" (Manual Mode)";
+    static final String GRADE_SCALE_FILE_NAME = "GradeScales.json";
     static final String Q_NAMES_JSON_KEY="qNames",OBJ_GROUPS_JSON_KEY="objGroups",Q_CHOICES_JSON_KEY="questionsChoices",
-            OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="SelectedScaleIndex",
+            OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="lastSelectedScaleIndex",
             REPORTS_CHOSEN_JSON_KEY="reportsChosen",FORMATS_CHOSEN_JSON_KEY="formatsChosen",REPORTS_OUT_PATH_JSON_KEY="reportsOutputDir",
             Q_COL_START_INDEX_JSON_KEY="qColStartIndex",Q_COL_END_INDEX_JSON_KEY="qColEndIndex",SUBJ_COL_START_INDEX_JSON_KEY="subjColStartIndex",
             SUBJ_COL_END_INDEX_JSON_KEY="subjColEndIndex", SUBJ_Q_COUNT_JSON_KEY="subjQuestionsCount",FORM_COL_INDEX_JSON_KEY="formColIndex",

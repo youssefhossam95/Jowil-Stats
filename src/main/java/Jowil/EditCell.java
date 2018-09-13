@@ -21,6 +21,13 @@ public class EditCell<S, T> extends TableCell<S, T> {
     // Converter for converting the text in the text field to the user type, and vice-versa:
     private final StringConverter<T> converter ;
 
+    WeightsController parentController;
+
+
+    public EditCell(StringConverter<T> converter,WeightsController parentController){
+        this(converter);
+        this.parentController=parentController;
+    }
 
 
     public EditCell(StringConverter<T> converter) {
@@ -39,10 +46,17 @@ public class EditCell<S, T> extends TableCell<S, T> {
 
         textField.setOnAction(evt -> {
             commitEdit(this.converter.fromString(textField.getText()));
+            if(parentController!=null)
+                parentController.refreshGradesFreq();
+
+            System.out.println("ana called action");
         });
         textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (! isNowFocused) {
                 commitEdit(this.converter.fromString(textField.getText()));
+                if(parentController!=null)
+                    parentController.refreshGradesFreq();
+                System.out.println("ana called focused");
             }
         });
         textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -92,6 +106,14 @@ public class EditCell<S, T> extends TableCell<S, T> {
         return new EditCell<S, String>(IDENTITY_CONVERTER);
     }
 
+    public static <S> EditCell<S, String> createStringEditCell(WeightsController parentController) {
+
+        return new EditCell<S, String>(IDENTITY_CONVERTER,parentController);
+    }
+
+
+
+
 
     // set the text of the text field and display the graphic
     @Override
@@ -128,8 +150,8 @@ public class EditCell<S, T> extends TableCell<S, T> {
         }
 
         super.commitEdit(item);
-
         setContentDisplay(ContentDisplay.TEXT_ONLY);
+
     }
 
 }

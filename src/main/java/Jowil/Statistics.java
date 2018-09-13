@@ -243,7 +243,7 @@ public class Statistics {
 
     ///////////////initializers
 
-    private static void initScores(){
+    static void initScores(){
 
         studentScores = new ArrayList<Double>() ;
         for(int i = 0 ; i <studentAnswers.size() ; i ++) {

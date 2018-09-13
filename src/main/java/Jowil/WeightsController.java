@@ -1,5 +1,12 @@
 package Jowil;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
+import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -8,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,11 +24,77 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+import javafx.util.Pair;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static Jowil.ManualModeController.isIgnoreSavedObjectiveWeights;
 
-public class WeightsController extends Controller{
+public class WeightsController extends Controller {
+
+    public static class Grade extends RecursiveTreeObject<Grade> {
+
+
+        private SimpleStringProperty gradeName;
+        private SimpleStringProperty minPercentScore;
+        private SimpleStringProperty frequency;
+
+        Grade(String name, String score) {
+
+            this.gradeName = new SimpleStringProperty(name);
+            this.minPercentScore = new SimpleStringProperty(score);
+        }
+
+        Grade(String name, String score,String frequency) {
+
+            this.gradeName = new SimpleStringProperty(name);
+            this.minPercentScore = new SimpleStringProperty(score);
+            this.frequency=new SimpleStringProperty(frequency);
+        }
+
+
+
+        public String getGradeName() {
+            return gradeName.get();
+        }
+
+        public SimpleStringProperty gradeNameProperty() {
+            return gradeName;
+        }
+
+        public void setGradeName(String gradeName) {
+            this.gradeName.set(gradeName);
+        }
+
+        public String getMinPercentScore() {
+            return minPercentScore.get();
+        }
+
+        public SimpleStringProperty minPercentScoreProperty() {
+            return minPercentScore;
+        }
+
+        public void setMinPercentScore(String minPercentScore) {
+            this.minPercentScore.set(minPercentScore);
+        }
+        public String getFrequency() {
+            return frequency.get();
+        }
+
+        public SimpleStringProperty frequencyProperty() {
+            return frequency;
+        }
+
+        public void setFrequency(String frequency) {
+            this.frequency.set(frequency);
+        }
+
+
+    }
 
 
     public static class Question {
@@ -28,10 +102,12 @@ public class WeightsController extends Controller{
 
         private SimpleStringProperty header;
         private SimpleStringProperty weight;
-        private Question(String header, String weight){
-            this.header=new SimpleStringProperty(header);
-            this.weight=new SimpleStringProperty(weight);
+
+        private Question(String header, String weight) {
+            this.header = new SimpleStringProperty(header);
+            this.weight = new SimpleStringProperty(weight);
         }
+
 
         public String getHeader() {
             return header.get();
@@ -59,14 +135,14 @@ public class WeightsController extends Controller{
     }
 
 
-    public class SubjQuestion{
+    public class SubjQuestion {
 
         private SimpleStringProperty name;
-        private SimpleStringProperty maxScore=new SimpleStringProperty("10");
+        private SimpleStringProperty maxScore = new SimpleStringProperty("10");
 
-        SubjQuestion(String name, String maxScore){
-            this.name=new SimpleStringProperty("Subjective Question "+name);
-            this.maxScore=new SimpleStringProperty(maxScore);
+        SubjQuestion(String name, String maxScore) {
+            this.name = new SimpleStringProperty("Subjective Question " + name);
+            this.maxScore = new SimpleStringProperty(maxScore);
         }
 
         public String getMaxScore() {
@@ -98,22 +174,25 @@ public class WeightsController extends Controller{
 
     //components
 
-    final static String BUTTONS_TEXT="Update Selection";
+    final static String BUTTONS_TEXT = "Update Selection";
     private TableView<ObservableList<StringProperty>> objTable = new TableView();
     final VBox objTableVbox = new VBox();
-    final HBox objHBox= new HBox();
-    private VBox subjTableVbox=new VBox();
-    private TableView subjTable= new TableView();
+    final HBox objHBox = new HBox();
+    private VBox subjTableVbox = new VBox();
+    private TableView subjTable = new TableView();
     TableColumn subjNamesCol = new TableColumn("Question");
     TableColumn subjWeightsCol = new TableColumn("Weight");
-    final HBox subjHBox= new HBox();
+    final HBox subjHBox = new HBox();
     final TextField objWeightText = new TextField();
     final Button objWeightsButton = new Button(BUTTONS_TEXT);
     final TextField subjWeightText = new TextField();
     final Button subjWeightsButton = new Button(BUTTONS_TEXT);
     final Label subjLabel = new Label("Subjective Questions");
     final Label objLabel = new Label("Objective Questions");
+    Separator midSeparator = new Separator();
+    JFXTreeTableView gradesFreqTable = new JFXTreeTableView();
 
+    ObservableList<Grade> gradesFreqData = FXCollections.observableArrayList();
 
 
     ///data fields
@@ -121,23 +200,17 @@ public class WeightsController extends Controller{
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
 
 
-
-
-
-
-
-
     //Main methods
 
-    WeightsController(Controller back){
-        super("Weights.fxml","Weights",1.25,1.25,true,back,"4.png",2,"Questions Weights");
+    WeightsController(Controller back) {
+        super("Weights.fxml", "Weights", 1.25, 1.25, true, back, "4.png", 2, "Questions Weights");
     }
 
 
     protected void updateSizes() {
         super.updateSizes();
 
-        double tablesShift=0.13;
+        double tablesShift = 0.13;
 
         objTableVbox.setSpacing(rootHeightToPixels(0.019));
         objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, 0));
@@ -146,7 +219,7 @@ public class WeightsController extends Controller{
         subjHBox.setSpacing(resXToPixels(0.005));
         subjTable.setPrefHeight(objTable.getPrefHeight());
         subjTableVbox.setSpacing(resYToPixels(0.015));
-        subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04),0, 0, 0));
+        subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, 0));
         objTableVbox.setPrefWidth(rootWidthToPixels(0.27));
         subjTableVbox.setPrefWidth(rootWidthToPixels(0.27));
         objTable.setPrefWidth(objTableVbox.getPrefWidth());
@@ -155,16 +228,25 @@ public class WeightsController extends Controller{
         subjHBox.setPrefWidth(subjTable.getPrefWidth());
         objLabel.setPrefWidth(objTable.getPrefWidth());
         subjLabel.setPrefWidth(subjTable.getPrefWidth());
-        HBox.setHgrow(objWeightsButton,Priority.ALWAYS);
-        HBox.setHgrow(subjWeightsButton,Priority.ALWAYS);
-        HBox.setHgrow(objWeightText,Priority.ALWAYS);
-        HBox.setHgrow(subjWeightText,Priority.ALWAYS);
+        HBox.setHgrow(objWeightsButton, Priority.ALWAYS);
+        HBox.setHgrow(subjWeightsButton, Priority.ALWAYS);
+        HBox.setHgrow(objWeightText, Priority.ALWAYS);
+        HBox.setHgrow(subjWeightText, Priority.ALWAYS);
 
 
+        midSeparator.setLayoutX(rootWidthToPixels(0.665));
+        midSeparator.setLayoutY(rootHeight * 0.03);
+        midSeparator.setPrefHeight(rootHeightToPixels(0.8));
 
-        objTableVbox.setLayoutX(rootWidthToPixels(tablesShift));
-        subjTableVbox.setLayoutX(rootWidthToPixels(1-tablesShift)-subjTableVbox.getPrefWidth());
-        if(objTable.getPrefWidth()>getObjTableColumnsWidth())
+        objTableVbox.setLayoutX(buttonsHbox.getLayoutX());
+        subjTableVbox.setLayoutX(objTableVbox.getLayoutX() + objTable.getPrefWidth() + rootWidth * 0.06);
+
+        gradesFreqTable.setPrefWidth(objTable.getPrefWidth());
+        gradesFreqTable.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-gradesFreqTable.getPrefWidth());
+        gradesFreqTable.setLayoutY(midSeparator.getLayoutY()+rootHeight*0.05);
+        gradesFreqTable.setPrefHeight(objTable.getPrefHeight()*0.6);
+
+        if (objTable.getPrefWidth() > getObjTableColumnsWidth())
             objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         else
             objTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
@@ -175,10 +257,14 @@ public class WeightsController extends Controller{
 
     protected void initComponents() {
         initWeightsHBoxes();
-        subjLabel.setAlignment(Pos.CENTER);
-        objLabel.setAlignment(Pos.CENTER);
+//        subjLabel.setAlignment(Pos.CENTER);
+//        objLabel.setAlignment(Pos.CENTER);
         initObjTableVBox();
         initSubjTableVBox();
+        initGradesFreqTable();
+
+        midSeparator.setVisible(true);
+        midSeparator.setOrientation(Orientation.VERTICAL);
     }
 
 
@@ -189,14 +275,13 @@ public class WeightsController extends Controller{
     }
 
     @Override
-    protected void saveChanges(){
+    protected void saveChanges() {
 
         //save objective weights
-        ArrayList<ArrayList<Double>> objWeights= new ArrayList<>();
+        ArrayList<ArrayList<Double>> objWeights = new ArrayList<>();
 
 
-        for (int i = 1; i < objQuestions.get(0).size(); i++)
-        {
+        for (int i = 1; i < objQuestions.get(0).size(); i++) {
             objWeights.add(new ArrayList<Double>());
             for (int j = 0; j < objQuestions.size(); j++)
                 objWeights.get(objWeights.size() - 1).add(Double.parseDouble(objQuestions.get(j).get(i).get()));
@@ -219,42 +304,39 @@ public class WeightsController extends Controller{
     }
 
     @Override
-    protected void buildComponentsGraph(){
+    protected void buildComponentsGraph() {
 
         super.buildComponentsGraph();
 
-        objHBox.getChildren().addAll(objWeightText,objWeightsButton);
-        subjHBox.getChildren().addAll(subjWeightText,subjWeightsButton);
+        objHBox.getChildren().addAll(objWeightText, objWeightsButton);
+        subjHBox.getChildren().addAll(subjWeightText, subjWeightsButton);
 
 //        objTable.getColumns().addAll(objHeadersCol,objWeightsCol); objTable construction in "populateObjTable" method
-        subjTable.getColumns().addAll(subjNamesCol,subjWeightsCol);
+        subjTable.getColumns().addAll(subjNamesCol, subjWeightsCol);
 
 
-        objTableVbox.getChildren().addAll(objLabel, objTable,objHBox);
-        subjTableVbox.getChildren().addAll(subjLabel, subjTable,subjHBox);
+        objTableVbox.getChildren().addAll(objLabel, objTable, objHBox);
+        subjTableVbox.getChildren().addAll(subjLabel, subjTable, subjHBox);
 
 
-
-
-        rootPane.getChildren().addAll(objTableVbox,subjTableVbox);
+        rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable);
 
     }
 
     @Override
-    protected void stabalizeTables(){
+    protected void stabalizeTables() {
         disableTableDrag(subjTable);
         disableTableDrag(objTable);
     }
 
     //helper methods
 
-    private void initObjTableVBox(){
+    private void initObjTableVBox() {
 
         objLabel.setFont(new Font("Arial", headersFontSize));
 
 //        for(int i=0;i<headers.size();i++)
 //            objQuestions.add(new Question(headers.get(i),"1.0"));
-
 
 
         populateObjTable();
@@ -265,10 +347,9 @@ public class WeightsController extends Controller{
         Platform.runLater(() -> objTable.refresh());
 
 
-
     }
 
-    private void initWeightsHBoxes(){
+    private void initWeightsHBoxes() {
 
         //objective hbox
 
@@ -279,23 +360,23 @@ public class WeightsController extends Controller{
             public void handle(ActionEvent e) {
 
                 String w;
-                if((w=tryDouble(objWeightText.getText()))==null){
-                    showAlert(Alert.AlertType.ERROR,stage.getOwner(),"Invalid weight value","Cannot update objective weights: weight value \"" + objWeightText.getText()+"\" is invalid.");
+                if ((w = tryDouble(objWeightText.getText())) == null) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid weight value", "Cannot update objective weights: weight value \"" + objWeightText.getText() + "\" is invalid.");
                     return;
                 }
 
-                ObservableList<TablePosition> selected=objTable.getSelectionModel().getSelectedCells();
-                for(int i=0;i<selected.size();i++) {
-                    int row=selected.get(i).getRow();
-                    int col=selected.get(i).getColumn();
-                    if(col==0)
+                ObservableList<TablePosition> selected = objTable.getSelectionModel().getSelectedCells();
+                for (int i = 0; i < selected.size(); i++) {
+                    int row = selected.get(i).getRow();
+                    int col = selected.get(i).getColumn();
+                    if (col == 0)
                         continue;
 
-                    objTable.getItems().get(row).set(col,new SimpleStringProperty(w));
+                    objTable.getItems().get(row).set(col, new SimpleStringProperty(w));
                 }
 
                 objTable.refresh();
-
+                refreshGradesFreq();
             }
         });
 
@@ -307,77 +388,120 @@ public class WeightsController extends Controller{
             @Override
             public void handle(ActionEvent e) {
                 String w;
-                if((w=tryDouble(subjWeightText.getText()))==null){
-                    showAlert(Alert.AlertType.ERROR,stage.getOwner(),"Invalid weight value","Cannot update subjective weights: weight value \"" + subjWeightText.getText()+"\" is invalid.");
+                if ((w = tryDouble(subjWeightText.getText())) == null) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid weight value", "Cannot update subjective weights: weight value \"" + subjWeightText.getText() + "\" is invalid.");
                     return;
                 }
 
-                ObservableList<TablePosition> selected=subjTable.getSelectionModel().getSelectedCells();
-                for(int i=0;i<selected.size();i++)
+                ObservableList<TablePosition> selected = subjTable.getSelectionModel().getSelectedCells();
+                for (int i = 0; i < selected.size(); i++)
                     ((SubjQuestion) subjTable.getItems().get(selected.get(i).getRow())).setMaxScore(w);
 
                 subjTable.refresh();
+                refreshGradesFreq();
 
             }
         });
-        if(CSVHandler.getSubjQuestionsCount()==0){
+        if (CSVHandler.getSubjQuestionsCount() == 0) {
             subjWeightsButton.setDisable(true);
             subjWeightText.setDisable(true);
         }
 
     }
 
-    private void initSubjTableVBox(){
+    private void initSubjTableVBox() {
 
         subjNamesCol.setCellValueFactory(
-                new PropertyValueFactory<SubjQuestion,String>("name")
+                new PropertyValueFactory<SubjQuestion, String>("name")
         );
 
 
-        subjNamesCol.setCellFactory((t) -> EditCell.createStringEditCell());
-
-
+        subjNamesCol.setCellFactory((t) -> EditCell.createStringEditCell(this));
 
 
         subjWeightsCol.setCellValueFactory(
-                new PropertyValueFactory<WeightsController.SubjQuestion,String>("maxScore")
+                new PropertyValueFactory<WeightsController.SubjQuestion, String>("maxScore")
         );
 
-        subjWeightsCol.setCellFactory((t) -> EditCell.createStringEditCell());
+        subjWeightsCol.setCellFactory((t) -> EditCell.createStringEditCell(this));
 
-        subjWeightsCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SubjQuestion,String>>) t-> {
+        subjWeightsCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SubjQuestion, String>>) t -> {
 
             String w;
-            if((w=tryDouble(t.getNewValue()))==null){
+            if ((w = tryDouble(t.getNewValue())) == null) {
                 t.getTableView().getItems().get(t.getTablePosition().getRow()).setMaxScore(t.getOldValue());
                 subjTable.refresh();
-            }
-            else
+            } else{
                 t.getTableView().getItems().get(t.getTablePosition().getRow()).setMaxScore(w);
+            }
+
 
         });
 
         subjLabel.setFont(new Font("Arial", headersFontSize));
 
-        for(int i=0;i<CSVHandler.getSubjQuestionsCount();i++)
-            subjQuestions.add(new SubjQuestion(Integer.toString(i+1),"10.0"));
-
+        for (int i = 0; i < CSVHandler.getSubjQuestionsCount(); i++)
+            subjQuestions.add(new SubjQuestion(Integer.toString(i + 1), "10.0"));
 
 
         subjTable.setEditable(true);
         subjTable.setItems(subjQuestions);
-        Label placeLabel=new Label("No Subjective Questions Detected");
+        Label placeLabel = new Label("No Subjective Questions Detected");
         placeLabel.setStyle("-fx-font-weight: bold;");
         subjTable.setPlaceholder(placeLabel);
         //subjTable.setStyle("-fx-border-color:#1E90FF");
         subjTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        Platform.runLater(()->subjTable.refresh());
+        Platform.runLater(() -> subjTable.refresh());
         subjNamesCol.setSortable(false);
         subjWeightsCol.setSortable(false);
         subjNamesCol.setEditable(false);
 
     }
+
+    private void initGradesFreqTable() {
+
+        refreshGradesFreq();
+        JFXTreeTableColumn<Grade,String> gradeNamesCol = new JFXTreeTableColumn<>("Grade");
+
+        JFXTreeTableColumn<Grade,String> gradeFreqCol = new JFXTreeTableColumn<>("Frequency");
+
+
+        gradeNamesCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Grade, String> param) -> {
+            return param.getValue().getValue().gradeName;
+        });
+
+
+        gradeNamesCol.setCellFactory((TreeTableColumn<Grade, String> param) -> new GenericEditableTreeTableCell<>(
+                new TextFieldEditorBuilder()));
+
+
+
+        gradeFreqCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Grade, String> param) -> {
+            return param.getValue().getValue().frequency;
+        });
+
+        gradeFreqCol.setCellFactory((TreeTableColumn<Grade, String> param) -> new GenericEditableTreeTableCell<>(
+                new TextFieldEditorBuilder()));
+
+
+        final TreeItem<Grade> root = new RecursiveTreeItem<>(gradesFreqData, RecursiveTreeObject::getChildren);
+
+        gradesFreqTable.setRoot(root);
+        gradesFreqTable.setShowRoot(false);
+        gradesFreqTable.setEditable(false);
+        gradesFreqTable.getColumns().addAll(gradeNamesCol,gradeFreqCol);
+        gradesFreqTable.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+
+        gradeNamesCol.setSortable(false);
+        gradeFreqCol.setSortable(false);
+
+
+
+
+
+    }
+
 
     private void populateObjTable() {
 
@@ -388,7 +512,7 @@ public class WeightsController extends Controller{
         objTable.getColumns().clear();
         objTable.setPlaceholder(new Label("Loading..."));
         objTable.setOnKeyPressed(event -> {
-            TablePosition<ObservableList<StringProperty>, ?> pos = objTable.getFocusModel().getFocusedCell() ;
+            TablePosition<ObservableList<StringProperty>, ?> pos = objTable.getFocusModel().getFocusedCell();
             if (pos != null && event.getCode().isDigitKey()) {
                 objTable.edit(pos.getRow(), pos.getTableColumn());
             }
@@ -403,24 +527,18 @@ public class WeightsController extends Controller{
         objTable.getColumns().get(0).setSortable(false);
 
 
-        int formsCount=CSVHandler.getFormsCount();
+        int formsCount = CSVHandler.getFormsCount();
         //add Weight columns
-        if(formsCount==1) {
+        if (formsCount == 1) {
             objTable.getColumns().add(createColumn(1, "Weight"));
-        }
-        else{
+        } else {
 //            TableColumn weightCol=new TableColumn<>("Weight");
 //            objTable.getColumns().add(weightCol);
-            for (int i=0; i< formsCount; i++) {
+            for (int i = 0; i < formsCount; i++) {
                 //weightCol.getColumns().add(createColumn(i+1, ""));
-                objTable.getColumns().add(createColumn(i+1, ""));
+                objTable.getColumns().add(createColumn(i + 1, ""));
             }
         }
-
-
-
-
-
 
 
     }
@@ -430,12 +548,12 @@ public class WeightsController extends Controller{
         TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
         String title;
         if (columnTitle == null || columnTitle.trim().length() == 0) {
-            title = "Form " + (columnIndex)+" Weight";
+            title = "Form " + (columnIndex) + " Weight";
         } else {
             title = columnTitle;
         }
 
-        column.setCellFactory((t) -> EditCell.createStringEditCell());
+        column.setCellFactory((t) -> EditCell.createStringEditCell(this));
         column.setSortable(true);
 
 
@@ -455,37 +573,34 @@ public class WeightsController extends Controller{
                 });
 
 
-
-        column.setOnEditCommit( t->{
-            String w;
-            int row=t.getTablePosition().getRow();
-            int col=t.getTablePosition().getColumn();
-            if((w=tryDouble(t.getNewValue()))!=null) {
-                 t.getTableView().getItems().get(row).set(col,new SimpleStringProperty(w));
-                 objTable.refresh();
-               System.out.println(objTable.getItems());
-            }
-            else { //return to old text before editing
-                t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
-                objTable.refresh();
-            }
-        }
+        column.setOnEditCommit(t -> {
+                    String w;
+                    int row = t.getTablePosition().getRow();
+                    int col = t.getTablePosition().getColumn();
+                    if ((w = tryDouble(t.getNewValue())) != null) {
+                        t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(w));
+                        objTable.refresh();
+                        System.out.println(objTable.getItems());
+                    } else { //return to old text before editing
+                        t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
+                        objTable.refresh();
+                    }
+                }
 
 
         );
 
 
-
         return column;
     }
 
-    private void initializeObjQuestions(){
+    private void initializeObjQuestions() {
 
-        for(int i=0;i<CSVHandler.getDetectedQHeaders().size();i++){
-            ObservableList<StringProperty> row= FXCollections.observableArrayList();
+        for (int i = 0; i < CSVHandler.getDetectedQHeaders().size(); i++) {
+            ObservableList<StringProperty> row = FXCollections.observableArrayList();
             row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
-            for(int j=0;j<CSVHandler.getFormsCount();j++) {
-                String weight=isOpenMode && !isIgnoreSavedObjectiveWeights?String.format("%.1f",Statistics.getQuestionWeights().get(j).get(i)):"1.0";
+            for (int j = 0; j < CSVHandler.getFormsCount(); j++) {
+                String weight = isOpenMode && !isIgnoreSavedObjectiveWeights ? String.format("%.1f", Statistics.getQuestionWeights().get(j).get(i)) : "1.0";
                 row.add(new SimpleStringProperty(weight));
             }
             objQuestions.add(row);
@@ -493,21 +608,91 @@ public class WeightsController extends Controller{
 
     }
 
-    private double getObjTableColumnsWidth(){
-        int totalWidth=0;
-        for(TableColumn column: objTable.getColumns())
-            totalWidth+=column.getWidth();
+    private double getObjTableColumnsWidth() {
+        int totalWidth = 0;
+        for (TableColumn column : objTable.getColumns())
+            totalWidth += column.getWidth();
         return totalWidth;
     }
 
-    
-    
+
+    private void loadGradeScale() {
+
+        if ((gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null) {
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
+                    "Error in loading Grade Scale Configurations");
+            return;
+        }
+
+    }
+
+    private void loadGradesFreqData(){
+
+        JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+        JSONObject obj=isOpenMode?currentOpenedProjectJson:gradeScalesJsonObj;
+        int index=Integer.parseInt((String) obj.get(SELECTED_SCALE_JSON_KEY));
 
 
+        JSONObject scale=(JSONObject)scales.get(index);
 
+        JSONArray grades=(JSONArray) scale.values().iterator().next();
+        ArrayList<Grade> tempScale=new ArrayList<>();
 
+        for(int i=0;i<grades.size();i++){
+            JSONObject grade = (JSONObject) grades.get(i);
+            tempScale.add(new Grade((String) grade.keySet().iterator().next(),(String) grade.values().iterator().next()));
+        }
 
+        Collections.sort(tempScale,new GradeSorter());
 
+        if(Double.parseDouble(tempScale.get(0).getMinPercentScore())!=0) //last grade must have min =0
+            tempScale.add(0,new Grade("F","0.0"));
 
+        ArrayList<String> gradeNames=new ArrayList<>();
+
+        ArrayList<Double> gradeMins=new ArrayList<>();
+
+        for(Grade grade : tempScale){
+            gradeNames.add(grade.getGradeName());
+            gradeMins.add(Double.parseDouble(grade.getMinPercentScore()) / 100);
+        }
+
+        gradeMins.add(1.0);
+        Statistics.setGrades(gradeNames);
+        Statistics.setGradesLowerRange(gradeMins);
+
+        Statistics.initScores();
+
+        ArrayList<ArrayList<String>> report1Table=Statistics.report1Stats();
+
+        report1Table = Utils.transposeStringList(report1Table);
+
+        gradesFreqData.clear();
+
+        for(int i=0;i<report1Table.get(0).size();i++)
+            gradesFreqData.add(new Grade(report1Table.get(0).get(i),"0.0",report1Table.get(3).get(i))); //0.0 is just a dummy
+
+    }
+
+    public void refreshGradesFreq(){
+        saveChanges();
+        if(gradeScalesJsonObj==null)
+            loadGradeScale();
+        loadGradesFreqData();
+
+    }
+
+    class GradeSorter implements Comparator<Grade> {
+
+        @Override
+        public int compare(Grade o1,Grade o2) {
+            return (int) (double) (Double.parseDouble(o1.getMinPercentScore()) - Double.parseDouble(o2.getMinPercentScore()));
+        }
+    }
 
 }
+
+
+
+
+
