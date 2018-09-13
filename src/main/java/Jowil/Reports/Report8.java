@@ -16,6 +16,8 @@ import javafx.scene.chart.*;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.nodes.Document;
 import com.lowagie.text.DocumentException;
@@ -24,6 +26,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -275,65 +279,27 @@ public class Report8 extends Report {
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
 
+
         XWPFDocument document = WordUtils.createDocument();
+
         int formIndex = 0 ;
         ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex) ;
         int graphIndex = 0;
         ArrayList<Double> graphData = formGraphsData.get(graphIndex) ;
         ArrayList<ArrayList<String>> table  = getTableWithHeaders(graphData) ;
 
-//
-//        XWPFTable table = document.createTable();
-//
-//        //create first row
-//        XWPFTableRow tableRowOne = table.getRow(0);
-//        tableRowOne.getCell(0).setText("col one, row one");
-//        tableRowOne.addNewTableCell().setText("col two, row one");
-//        tableRowOne.addNewTableCell().setText("col three, row one");
-//
-//        //create second row
-//        XWPFTableRow tableRowTwo = table.createRow();
-//        tableRowTwo.getCell(0).setText("col one, row two");
-//        tableRowTwo.getCell(1).setText("col two, row two");
-//        tableRowTwo.getCell(2).setText("col three, row two");
-//
-//        //create third row
-//        XWPFTableRow tableRowThree = table.createRow();
-//        tableRowThree.getCell(0).setText("col one, row three");
-//        tableRowThree.getCell(1).setText("col two, row three");
-//        tableRowThree.getCell(2).setText("col three, row three");
-//        XWPFParagraph par = document.createParagraph() ;
-//        XWPFRun run = par.createRun() ;
-//        run.add
 
-//        XWPFTable lineTable = document.createTable();
-//        XWPFTableRow tableRowOne = lineTable.getRow(0);
-//        XWPFTableCell cell1 =  tableRowOne.getCell(0);
-//        XWPFTableCell cell2 =  tableRowOne.addNewTableCell();
-//        cell2.setText("hell");
-
-        XWPFParagraph par = document.createParagraph();
-        par.setAlignment(ParagraphAlignment.CENTER);
-        par.setBorderTop(Borders.THICK);
-        XWPFRun run = par.createRun();
-        run.setBold(true);
-        run.setText("Q");
-        run.setFontSize(18);
-        run.addBreak();
-        run.addBreak();
-//        CTPPr parPro = par.getCTP().getPPr();
-//        parPro
-//        borders.getTop().setSz(BigInteger.valueOf(15));
-//        par.setSpacingAfter(10);
-        XWPFTable wordTable = WordUtils.addTable(document , table) ;
-        WordUtils.addImage(document,null , imagesFullPath + this.imgName + formIndex + graphIndex + ".png"
-                ,ParagraphAlignment.CENTER,400 , 250 , true) ;
-//        document.removeBodyElement(document.getBodyElements().size()-1) ;
-
-//        cell1.insertTable(0 , wordTable);
-
-//        WordUtils.changeTableWidth(wordTable , WordUtils.A4_PAGE_WIDTH / 2 - WordUtils.A4_PAGE_WIDTH/20);
-//        WordUtils.setTableAlign(wordTable  , ParagraphAlignment.LEFT);
+        XWPFTable wrapperTable = document.createTable(1,3);
+        wrapperTable.setCellMargins(400 , 0 , 400 , 0);
+        XWPFTableRow tablerow = wrapperTable.getRow(0);
+        WordUtils.createTableInCell(tablerow.getCell(0) , table,WordUtils.TABLE_ALIGN_LR ,"" , 10 , true) ;
+        String imgFullPath = imagesFullPath + this.imgName + formIndex + graphIndex + ".png"  ;
+        XWPFRun run = tablerow.getCell(1).getParagraphArray(0).createRun();
+        run.setColor("FFFFFF"); run.setText("man");
+        WordUtils.addImage(tablerow.getCell(2).getParagraphArray(0),imgFullPath,280 , 160) ;
+        WordUtils.removeBorders(wrapperTable , false);
+        WordUtils.setTableAlign(wrapperTable, ParagraphAlignment.CENTER);
+        WordUtils.changeTableWidth(wrapperTable);
 
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
 
