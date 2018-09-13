@@ -81,6 +81,8 @@ public class ManualModeController extends Controller{
     @FXML
     Label CSTypeLabel;
 
+    Label placeHolder=new Label("No Column Sets Added");
+
 
     ObservableList<ObservableList<StringProperty>> tableContent= FXCollections.observableArrayList();
     private static boolean isManualModeUsedBefore;
@@ -152,6 +154,9 @@ public class ManualModeController extends Controller{
         scrollPaneContentVBox.setPadding(new Insets(0, 0, 0, (int)(scrollPaneWidth * 0.02)));
         scrollPaneContentVBox.setSpacing((int)(resYToPixels(0.03)));
         columnSetsVBox.setSpacing((int)(resYToPixels(0.025)));
+
+        placeHolder.setPadding(new Insets(scrollPaneHeight*0.3,scrollPaneWidth*0.4,scrollPaneHeight*0.3,scrollPaneWidth*0.275));
+
 
         scrollPaneTitlesHBox.setPadding(new Insets((int)(scrollPaneHeight * 0.05), 0, 0, 0));
         scrollPaneTitlesHBox.setSpacing((int)(scrollPaneWidth * 0.03));
@@ -411,7 +416,9 @@ public class ManualModeController extends Controller{
     }
 
     private void initColumnSetsVBox() {
-
+        placeHolder.setStyle("-fx-font-weight:bold");
+        placeHolder.setFont(new Font(resX*12/1280));
+        columnSetsVBox.getChildren().setAll(placeHolder);
     }
 
     private void initAddButton(){
@@ -658,7 +665,12 @@ public class ManualModeController extends Controller{
 
     public void deleteColumnSet(ColumnSet deleted) {
         columnSets.remove(deleted);
-        columnSetsVBox.getChildren().setAll(columnSets);
+
+        if(columnSets.size()==0)
+            columnSetsVBox.getChildren().setAll(placeHolder);
+        else
+            columnSetsVBox.getChildren().setAll(columnSets);
+
         String deletedColor=deleted.getColor();
         colorGen.addToAvailable(deletedColor);
 
