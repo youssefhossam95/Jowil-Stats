@@ -10,6 +10,7 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
 
     <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
@@ -25,18 +26,18 @@
     </VBox>
     <VBox fx:id="rightSideVBox">
         <Label fx:id="rightTitleLabel" text="Column Sets" ></Label>
-    <ScrollPane fx:id="scrollPane" styleClass="columnSetsScrollPane ">
+
         <VBox fx:id="scrollPaneContentVBox">
             <HBox fx:id="scrollPaneTitlesHBox">
             <Label fx:id="CSNameLabel" text="Name" alignment="CENTER"></Label>
                 <Label fx:id="CSTypeLabel" text="Type" alignment="CENTER"></Label>
             <Label fx:id="CSRangeLabel" text="Range" alignment="CENTER"></Label>
                 <Label fx:id="CSColorLabel" text="Color" alignment="CENTER"></Label>
-
             </HBox>
-            <VBox fx:id="columnSetsVBox"></VBox>
+            <JFXListView fx:id="setsListView" >
+            </JFXListView>
         </VBox>
-    </ScrollPane>
+
     </VBox>
 
 </AnchorPane>

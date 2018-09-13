@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
 
@@ -45,7 +46,7 @@ public class ManualModeController extends Controller{
 
 
     @FXML
-    ScrollPane scrollPane;
+    JFXListView setsListView;
 
     @FXML
     HBox columnSetHBox;
@@ -62,8 +63,7 @@ public class ManualModeController extends Controller{
     @FXML
     HBox scrollPaneTitlesHBox;
 
-    @FXML
-    VBox columnSetsVBox;
+
 
     @FXML
     VBox scrollPaneContentVBox;
@@ -84,7 +84,7 @@ public class ManualModeController extends Controller{
 
     ObservableList<ObservableList<StringProperty>> tableContent= FXCollections.observableArrayList();
     private static boolean isManualModeUsedBefore;
-    ArrayList<ColumnSet> columnSets=new ArrayList<>();
+    ObservableList<ColumnSet> columnSets= FXCollections.observableArrayList();
     int colClicksCount=0;
     ArrayList<String> tableHeaders;
     static final int MAX_ROWS_COUNT=11;
@@ -146,12 +146,14 @@ public class ManualModeController extends Controller{
         rightSideVBox.setPadding(tableVBox.getPadding());
         double scrollPaneWidth=(int)(buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()-rightSideVBox.getLayoutX());
         double scrollPaneHeight=(int)(table.getPrefHeight());
-        scrollPane.setPrefWidth(scrollPaneWidth);
-        scrollPane.setPrefHeight(scrollPaneHeight);
+        scrollPaneContentVBox.setPrefWidth(scrollPaneWidth);
+        scrollPaneContentVBox.setPrefHeight(scrollPaneHeight);
 
         scrollPaneContentVBox.setPadding(new Insets(0, 0, 0, (int)(scrollPaneWidth * 0.02)));
         scrollPaneContentVBox.setSpacing((int)(resYToPixels(0.03)));
-        columnSetsVBox.setSpacing((int)(resYToPixels(0.025)));
+
+        setsListView.setPrefWidth(scrollPaneContentVBox.getPrefWidth());
+        setsListView.setPrefHeight(100000);
 
         scrollPaneTitlesHBox.setPadding(new Insets((int)(scrollPaneHeight * 0.05), 0, 0, 0));
         scrollPaneTitlesHBox.setSpacing((int)(scrollPaneWidth * 0.03));
@@ -174,16 +176,16 @@ public class ManualModeController extends Controller{
         rightTitleLabel.setFont(tableTitle.getFont());
         
 
+        scrollPaneContentVBox.setStyle("-fx-background-color:white;-fx-border-color:black;-fx-border-width:1");
         scrollPaneTitlesHBox.setStyle("-fx-font-size:"+resX/100+";-fx-font-weight: bold;");
-        scrollPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue)
-                rootPane.requestFocus();
-        });
 
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        setsListView.setItems(columnSets);
+        setsListView.setStyle("-fx-background-color:transparent;-fx-border-width:0");
+
+
+        setsListView.focusModelProperty().addListener(t->rootPane.requestFocus());
 
         initTable();
-        initColumnSetsVBox();
         initAddButton();
         initColumnSetCombo();
         initNextButton();
@@ -410,9 +412,6 @@ public class ManualModeController extends Controller{
 
     }
 
-    private void initColumnSetsVBox() {
-
-    }
 
     private void initAddButton(){
         addButton.getStyleClass().add("BlueJFXButton");
@@ -620,7 +619,6 @@ public class ManualModeController extends Controller{
         columnSets.add(new ColumnSet(columnSetTextField.getText(),nextColor,start,end-start+1,this,comboOptions[columnSetCombo.getSelectionModel().getSelectedIndex()]));
         columnSets.sort(new ColumnSetSorter());
 
-        columnSetsVBox.getChildren().setAll(columnSets);
         updateSizes();
 
     }
@@ -658,7 +656,6 @@ public class ManualModeController extends Controller{
 
     public void deleteColumnSet(ColumnSet deleted) {
         columnSets.remove(deleted);
-        columnSetsVBox.getChildren().setAll(columnSets);
         String deletedColor=deleted.getColor();
         colorGen.addToAvailable(deletedColor);
 
