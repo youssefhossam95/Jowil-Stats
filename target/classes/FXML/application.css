@@ -119,7 +119,7 @@ JFXCheckBox {
 
 .jfx-tree-table-view .column-header {
     -fx-border-width: 0 0 1 0;
-     -fx-border-color: #A9A9A9;;
+     -fx-border-color: #A9A9A9;
      /*-fx-border-color: #3184c9;*/
     -fx-background-color:white;
 

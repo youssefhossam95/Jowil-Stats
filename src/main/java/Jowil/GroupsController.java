@@ -5,6 +5,7 @@ import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -69,6 +70,18 @@ public class GroupsController  extends Controller{
     Label treeLabel;
 
 
+    @FXML
+    Label  infoLabel;
+
+    @FXML
+    VBox infoVBox;
+
+    @FXML
+    Pane gridPaneContainer;
+
+    @FXML
+    GridPane infoGridPane;
+
 
 
 
@@ -98,12 +111,13 @@ public class GroupsController  extends Controller{
     @Override
     protected void initComponents() {
 
-        groupsLabel.setAlignment(Pos.CENTER);
-        treeLabel.setAlignment(Pos.CENTER);
+//        groupsLabel.setAlignment(Pos.CENTER);
+//        treeLabel.setAlignment(Pos.CENTER);
         initGroupsTableVBox();
         initManualButton();
         initTreeView();
-        midSeparator.setVisible(false);
+        initInfoGridPane();
+        midSeparator.setVisible(true);
         //initInfoGridPane();
         choicesTreeVBox.getChildren().add(choicesTreeView);
 
@@ -141,7 +155,10 @@ public class GroupsController  extends Controller{
 
         });
 
-        treeLabel.setFont(new Font("Arial", headersFontSize));
+        Font titleFont=new Font("Arial", headersFontSize);
+        treeLabel.setFont(titleFont);
+        groupsLabel.setFont(titleFont);
+        infoLabel.setFont(titleFont);
 
     }
 
@@ -152,7 +169,7 @@ public class GroupsController  extends Controller{
         groupsTableVbox.setLayoutY(rootHeightToPixels(0.05));
         groupsTableVbox.setPadding(new Insets(0, 0, 0, 0));
         //groupsLabel.setPrefHeight(rootHeightToPixels(0.05));
-        choicesTreeVBox.setSpacing(resYToPixels(0.02));
+        choicesTreeVBox.setSpacing(groupsTableVbox.getSpacing());
         choicesTreeVBox.setLayoutY(groupsTableVbox.getLayoutY());
         choicesTreeVBox.setPadding(groupsTableVbox.getPadding());
         groupsTable.setPrefHeight(rootHeightToPixels(0.67));
@@ -162,24 +179,34 @@ public class GroupsController  extends Controller{
         choicesTreeView.setPrefHeight(groupsTable.getPrefHeight());
         choicesTreeView.setPrefWidth(groupsTable.getPrefWidth());
 
-        //infoVBox.setLayoutX(groupsTableVbox.getLayoutX()+groupsTable.getPrefWidth()+rootWidthToPixels(0.03));
 
-//        infoVBox.setLayoutY(groupsTableVbox.getLayoutY()+groupsLabel.getPrefHeight()+groupsTableVbox.getSpacing());
-//        infoGridPane.setPrefWidth(groupsTable.getPrefWidth());
-//        //infoGridPane.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
-//        gridPaneContainer.setMaxWidth(infoGridPane.getPrefWidth());
+
+
+        infoGridPane.setPrefWidth(groupsTable.getPrefWidth());
+        infoGridPane.setPrefHeight(groupsTable.getPrefHeight());
+        gridPaneContainer.setMaxWidth(infoGridPane.getPrefWidth());
 
         manualButton.setPrefHeight(navHeight);
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
         manualButton.setLayoutY(buttonsHbox.getLayoutY()+buttonsHbox.getPadding().getTop());
-        double tablesShift=0.13;
-        groupsTableVbox.setLayoutX(rootWidthToPixels(tablesShift));
-        choicesTreeVBox.setLayoutX(rootWidthToPixels(1-tablesShift)-choicesTreeView.getPrefWidth());
-        choicesTreeView.setLayoutY(groupsTable.getLayoutY());
+//        double tablesShift=0.13;
+//        groupsTableVbox.setLayoutX(rootWidthToPixels(tablesShift));
+//        choicesTreeVBox.setLayoutX(rootWidthToPixels(1-tablesShift)-choicesTreeView.getPrefWidth());
 
-        midSeparator.setLayoutX(rootWidthToPixels(0.5));
-        midSeparator.setLayoutY(groupsTableVbox.getLayoutY());
-        midSeparator.setPrefHeight(rootHeightToPixels(0.75));
+        groupsTableVbox.setLayoutX(buttonsHbox.getLayoutX());
+        choicesTreeVBox.setLayoutX(groupsTableVbox.getLayoutX()+groupsTable.getPrefWidth()+rootWidth*0.06);
+
+        midSeparator.setLayoutX(rootWidthToPixels(0.665));
+        midSeparator.setLayoutY(rootHeight*0.03);
+        midSeparator.setPrefHeight(rootHeightToPixels(0.8));
+
+        infoVBox.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-infoGridPane.getPrefWidth());
+        infoVBox.setLayoutY(groupsTableVbox.getLayoutY());
+        infoVBox.setSpacing(groupsTableVbox.getSpacing());
+
+
+
+        //infoGridPane.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
 
 
         manualButton.toFront();
@@ -343,7 +370,7 @@ public class GroupsController  extends Controller{
         for(int i=0;i<detectedGroups.size();i++)
             tableGroups.add(detectedGroups.get(i));
 
-        groupsLabel.setFont(new Font("Arial", headersFontSize));
+
 
 
         groupsTable.setEditable(false);
@@ -366,54 +393,67 @@ public class GroupsController  extends Controller{
     }
 
 
-//    private void initInfoGridPane() {
-//
-//        Insets leftLabelsPadding=new Insets(resY*0.01,resX*0.015,resY*0.01,resX*0.002);
-//        Insets rightLabelsPadding=new Insets(resY*0.01,resX*0.007,resY*0.01,resX*0.004);
-//
-//        Label [] labels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
-//                new Label("Number of Subjective Questions"),new Label("Number of Students"),
-//                new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};
-//
-//        String [] values={Integer.toString(Statistics.getQuestionNames().size()),
-//                Integer.toString(CSVHandler.getDetectedGroups().size()),Integer.toString(CSVHandler.getSubjQuestionsCount()),
-//                Integer.toString(Statistics.getStudentAnswers().size()),Integer.toString(CSVHandler.getFormsCount()),
-//        CSVHandler.getIdentifierColStartIndex()==NOT_AVAILABLE?"None":Statistics.getIdentifierName(),
-//                CSVHandler.getFormColName()};
-//
-//
-////        Label objCountLabel=new Label("Number of Objective Questions");
-////        Label objGroupsCount=new Label("Number of Objective Groups");
-////        Label subjCountLabel=new Label("Number of Subjective Questions");
-////        Label studentsCountLabel=new Label("Number of Students");
-////        Label formsCountLabel=new Label("Number of Forms");
-////        Label identifierColLabel=new Label("Identifier Column");
-////        Label formsColLabel=new Label("Form Column");
-//
-//        //infoGridPane.setAlignment(Pos.CENTER);
-//
-//
-//
-//        for (int i=0;i<labels.length;i++){
-//            infoGridPane.add(labels[i],0,i);
-//            labels[i].setPadding(leftLabelsPadding);
-//            labels[i].setStyle("-fx-font-weight: bold;");
-//            Label valueLabel=new Label(values[i]);
-//            valueLabel.setPadding(rightLabelsPadding);
-//            infoGridPane.add(valueLabel,1,i);
-//        }
-////        infoGridPane.setGridLinesVisible(true);
-//
-//
-//
-//        gridPaneContainer.getChildren().add(infoGridPane);
-//
-//
-//        gridPaneContainer.setStyle("-fx-border-width:1;-fx-border-color:#A9A9A9;");
-//
-//
-//
-//    }
+    private void initInfoGridPane() {
+
+        double vSpace=resY*0.017;
+        Insets leftLabelsPadding=new Insets(vSpace,resX*0.015,vSpace,resX*0.004);
+        Insets rightLabelsPadding=new Insets(vSpace,resX*0.007,vSpace,0);
+
+        Label [] labels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
+                new Label("Number of Subjective Questions"),new Label("Number of Students"),
+                new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};
+
+
+
+        String [] values={Integer.toString(CSVHandler.getDetectedQHeaders().size()),
+                Integer.toString(CSVHandler.getDetectedGroups().size()),Integer.toString(CSVHandler.getSubjQuestionsCount()),
+                Integer.toString(Statistics.getStudentAnswers().size()),Integer.toString(CSVHandler.getFormsCount()),
+        CSVHandler.getIdentifierColStartIndex()==NOT_AVAILABLE?"None":Statistics.getIdentifierName(),
+                selectedFormColName};
+
+
+
+
+//        Label objCountLabel=new Label("Number of Objective Questions");
+//        Label objGroupsCount=new Label("Number of Objective Groups");
+//        Label subjCountLabel=new Label("Number of Subjective Questions");
+//        Label studentsCountLabel=new Label("Number of Students");
+//        Label formsCountLabel=new Label("Number of Forms");
+//        Label identifierColLabel=new Label("Identifier Column");
+//        Label formsColLabel=new Label("Form Column");
+
+        //infoGridPane.setAlignment(Pos.CENTER);
+
+
+        Font labelsFont=new Font(resX*12/1280);
+
+        for (int i=0;i<labels.length;i++){
+            infoGridPane.add(labels[i],0,i);
+            labels[i].setPadding(leftLabelsPadding);
+
+            labels[i].setFont(labelsFont);
+
+            labels[i].setStyle("-fx-font-weight: bold;");
+            Label valueLabel=new Label(values[i]);
+            valueLabel.setPadding(rightLabelsPadding);
+            valueLabel.setAlignment(Pos.CENTER);
+            valueLabel.setPrefWidth(resX*0.05);
+            valueLabel.setFont(labelsFont);
+            infoGridPane.add(valueLabel,1,i);
+        }
+
+
+
+
+
+
+
+
+        gridPaneContainer.setStyle("-fx-border-width:1;-fx-border-color:#A9A9A9;-fx-background-color:white;-fx-border-color:derive(-fx-background,-20%);");
+
+
+
+    }
 
     private void initManualButton(){
         manualButton.getStyleClass().add("BlueJFXButton");

@@ -153,7 +153,7 @@ public class GradeBoundariesController extends Controller {
 
         super.updateSizes();
 
-        double scrollPaneWidth = rootWidthToPixels(0.43);
+        double scrollPaneWidth = rootWidthToPixels(0.44);
         double scrollPaneHeight = rootHeightToPixels(0.56);
 
         //left half
@@ -202,7 +202,7 @@ public class GradeBoundariesController extends Controller {
         reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
         reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
         reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight() * 0.8);
-        reportsConfigHBox.setSpacing(resXToPixels(0.04));
+        reportsConfigHBox.setSpacing(resXToPixels(0.06));
 
         reportsLabel.setFont(gradesLabelsFonts);
         reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.05, 0));
