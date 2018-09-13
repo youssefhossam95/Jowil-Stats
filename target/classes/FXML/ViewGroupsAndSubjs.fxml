@@ -17,5 +17,12 @@
     <VBox fx:id="choicesTreeVBox">
         <Label text="Groups Choices" fx:id="treeLabel"></Label>
     </VBox>
+
+    <VBox fx:id="infoVBox">
+        <Label fx:id="infoLabel" text="Test Info"></Label>
+        <Pane fx:id="gridPaneContainer">
+            <GridPane fx:id="infoGridPane"></GridPane>
+        </Pane>
+    </VBox>
     <JFXButton fx:id="manualButton" text="Switch to Manual Mode"></JFXButton>
 </AnchorPane>

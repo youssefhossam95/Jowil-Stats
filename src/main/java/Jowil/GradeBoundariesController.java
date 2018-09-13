@@ -36,7 +36,7 @@ public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back);
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports");
 
 
     }
@@ -153,12 +153,12 @@ public class GradeBoundariesController extends Controller {
 
         super.updateSizes();
 
-        double scrollPaneWidth = rootWidthToPixels(0.43);
+        double scrollPaneWidth = rootWidthToPixels(0.44);
         double scrollPaneHeight = rootHeightToPixels(0.56);
 
         //left half
         scrollPane.setLayoutY((int)(rootHeightToPixels(0.25)));
-        scrollPane.setLayoutX((int)(rootWidthToPixels(0.05)));
+        scrollPane.setLayoutX((int)(buttonsHbox.getLayoutX()));
         scrollPane.setPrefWidth((int)(scrollPaneWidth));
         scrollPane.setPrefHeight((int)(scrollPaneHeight));
         gradesConfigCombo.setPrefWidth(rootWidthToPixels(0.25));
@@ -194,7 +194,7 @@ public class GradeBoundariesController extends Controller {
         reportsDirHBox.setSpacing(resXToPixels(0.005));
         reportsDirHBox.setLayoutY(comboHBox.getLayoutY());
         reportsDirHBox.setLayoutX(reportsConfigTitle.getLayoutX());
-        reportsDirHBox.setPrefWidth(rootWidthToPixels(0.95) - reportsDirHBox.getLayoutX());
+        reportsDirHBox.setPrefWidth(buttonsHbox.getPrefWidth()+buttonsHbox.getLayoutX()- reportsDirHBox.getLayoutX());
         HBox.setHgrow(reportsDirTextField, Priority.ALWAYS);
 
 
@@ -202,7 +202,7 @@ public class GradeBoundariesController extends Controller {
         reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
         reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
         reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight() * 0.8);
-        reportsConfigHBox.setSpacing(resXToPixels(0.04));
+        reportsConfigHBox.setSpacing(resXToPixels(0.06));
 
         reportsLabel.setFont(gradesLabelsFonts);
         reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.05, 0));

@@ -8,9 +8,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
@@ -96,21 +98,19 @@ public class WeightsController extends Controller{
 
     //components
 
+    final static String BUTTONS_TEXT="Update Selection";
     private TableView<ObservableList<StringProperty>> objTable = new TableView();
-    TableColumn objHeadersCol = new TableColumn("Question");
-    TableColumn objWeightsCol=new TableColumn("Weight");
     final VBox objTableVbox = new VBox();
     final HBox objHBox= new HBox();
     private VBox subjTableVbox=new VBox();
     private TableView subjTable= new TableView();
     TableColumn subjNamesCol = new TableColumn("Question");
     TableColumn subjWeightsCol = new TableColumn("Weight");
-    private HBox tablesHbox= new HBox();
     final HBox subjHBox= new HBox();
     final TextField objWeightText = new TextField();
-    final Button objWeightsButton = new Button("Update Selected Weights");
+    final Button objWeightsButton = new Button(BUTTONS_TEXT);
     final TextField subjWeightText = new TextField();
-    final Button subjWeightsButton = new Button("Update Selected Weights");
+    final Button subjWeightsButton = new Button(BUTTONS_TEXT);
     final Label subjLabel = new Label("Subjective Questions");
     final Label objLabel = new Label("Objective Questions");
 
@@ -130,22 +130,40 @@ public class WeightsController extends Controller{
     //Main methods
 
     WeightsController(Controller back){
-        super("Weights.fxml","Weights",1.25,1.25,true,back);
+        super("Weights.fxml","Weights",1.25,1.25,true,back,"4.png",2,"Questions Weights");
     }
 
 
     protected void updateSizes() {
         super.updateSizes();
+
+        double tablesShift=0.13;
+
         objTableVbox.setSpacing(rootHeightToPixels(0.019));
-        objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, rootWidthToPixels(0.05)));
-        objTable.setPrefHeight(rootHeightToPixels(0.67));
+        objTableVbox.setPadding(new Insets(rootHeightToPixels(0.04), 0, 0, 0));
+        objTable.setPrefHeight(rootHeightToPixels(0.63));
         objHBox.setSpacing(rootWidthToPixels(0.00625));
         subjHBox.setSpacing(resXToPixels(0.005));
-        subjTable.setPrefHeight(rootHeightToPixels(0.67));
+        subjTable.setPrefHeight(objTable.getPrefHeight());
         subjTableVbox.setSpacing(resYToPixels(0.015));
-        tablesHbox.setSpacing(rootWidth-2*objHBox.getWidth()-2*rootWidth/20);
         subjTableVbox.setPadding(new Insets(rootHeightToPixels(0.04),0, 0, 0));
-        objTable.setPrefWidth(objHBox.getWidth());
+        objTableVbox.setPrefWidth(rootWidthToPixels(0.27));
+        subjTableVbox.setPrefWidth(rootWidthToPixels(0.27));
+        objTable.setPrefWidth(objTableVbox.getPrefWidth());
+        subjTable.setPrefWidth(subjTableVbox.getPrefWidth());
+        objHBox.setPrefWidth(objTable.getPrefWidth());
+        subjHBox.setPrefWidth(subjTable.getPrefWidth());
+        objLabel.setPrefWidth(objTable.getPrefWidth());
+        subjLabel.setPrefWidth(subjTable.getPrefWidth());
+        HBox.setHgrow(objWeightsButton,Priority.ALWAYS);
+        HBox.setHgrow(subjWeightsButton,Priority.ALWAYS);
+        HBox.setHgrow(objWeightText,Priority.ALWAYS);
+        HBox.setHgrow(subjWeightText,Priority.ALWAYS);
+
+
+
+        objTableVbox.setLayoutX(rootWidthToPixels(tablesShift));
+        subjTableVbox.setLayoutX(rootWidthToPixels(1-tablesShift)-subjTableVbox.getPrefWidth());
         if(objTable.getPrefWidth()>getObjTableColumnsWidth())
             objTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         else
@@ -157,6 +175,8 @@ public class WeightsController extends Controller{
 
     protected void initComponents() {
         initWeightsHBoxes();
+        subjLabel.setAlignment(Pos.CENTER);
+        objLabel.setAlignment(Pos.CENTER);
         initObjTableVBox();
         initSubjTableVBox();
     }
@@ -214,10 +234,9 @@ public class WeightsController extends Controller{
         subjTableVbox.getChildren().addAll(subjLabel, subjTable,subjHBox);
 
 
-        tablesHbox.getChildren().add(objTableVbox);
-        tablesHbox.getChildren().add(subjTableVbox);
 
-        rootPane.getChildren().add(tablesHbox);
+
+        rootPane.getChildren().addAll(objTableVbox,subjTableVbox);
 
     }
 
@@ -347,7 +366,9 @@ public class WeightsController extends Controller{
 
         subjTable.setEditable(true);
         subjTable.setItems(subjQuestions);
-        subjTable.setPlaceholder(new Label("No subjective Questions detected"));
+        Label placeLabel=new Label("No Subjective Questions Detected");
+        placeLabel.setStyle("-fx-font-weight: bold;");
+        subjTable.setPlaceholder(placeLabel);
         //subjTable.setStyle("-fx-border-color:#1E90FF");
         subjTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         subjTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
