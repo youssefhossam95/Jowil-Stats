@@ -209,7 +209,7 @@ public class Report4 extends Report{
         for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
             ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
             int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
-            tableRow.add("<<img>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
+            tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
         }
 
         XWPFTable docTable = WordUtils.addTable(document, tableWithHeaders);
