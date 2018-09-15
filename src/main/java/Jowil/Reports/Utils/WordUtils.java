@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class WordUtils {
 
-    final static int inch = 1440 ;
+    public final static int inch = 1440 ;
     final static int TITLE_FONT_SIZE = 24 ;
     public final static String REPORTS_COLOR = "157880" ;
     final static String GRAY_ROW_COLOR = "EFEFEF" ;
@@ -23,12 +23,21 @@ public class WordUtils {
     public final static int LANDSCAPE_PAGE_HEIGHT = 12240; // total height of the land scape page
     public final static int TABLE_ALIGN_CENTER = 0 ;
     public final static int TABLE_ALIGN_LR = 1 ;
-    static int pageWidth = A4_PAGE_WIDTH ;
+    public static int pageWidth = A4_PAGE_WIDTH ;
 
 
 
     public static XWPFDocument createDocument (){
-      return  createDocument((int)(8.5*inch ) ,  (int)(11 * inch)) ;
+      return  createDocument((int)(8.5*inch ) ,  (int)(11 * inch) , inch) ;
+    }
+
+
+    public static XWPFDocument createDocument ( int width , int height){
+        return  createDocument(width , height, inch) ;
+    }
+
+    public static XWPFDocument createDocument ( int LRPageMargins){
+        return  createDocument((int)(8.5*inch ) ,  (int)(11 * inch) , LRPageMargins) ;
     }
 
     public static void changeDocumentSize(XWPFDocument document , int width , int height) {
@@ -50,20 +59,22 @@ public class WordUtils {
         pageSize.setW(BigInteger.valueOf(width));
         pageSize.setH(BigInteger.valueOf(height));
     }
-    public static XWPFDocument createDocument (int width , int height){
+    public static XWPFDocument createDocument (int width , int height , int LRPageMargins ){
         XWPFDocument document = new XWPFDocument();
 
         changeDocumentSize(document , width , height) ;
 
+        int topBottomPageMargins = (int)(0.5*inch) ;
         //set document margins
         CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
         CTPageMar pageMar = sectPr.addNewPgMar();
-        pageMar.setLeft(BigInteger.valueOf(inch));
-        pageMar.setTop(BigInteger.valueOf((int)(0.5*inch)));
-        pageMar.setRight(BigInteger.valueOf(inch));
-        pageMar.setBottom(BigInteger.valueOf((int)(0.5*inch)));
+        pageMar.setLeft(BigInteger.valueOf(LRPageMargins));
+        pageMar.setTop(BigInteger.valueOf(topBottomPageMargins));
+        pageMar.setRight(BigInteger.valueOf(LRPageMargins));
+        pageMar.setBottom(BigInteger.valueOf(topBottomPageMargins));
 
 
+        pageWidth = width - 2 * LRPageMargins ;
         return document ;
     }
     public static void changeTableWidth(XWPFTable table){
@@ -177,17 +188,17 @@ public class WordUtils {
     }
 
 
-    public static XWPFTable createTableInCell (XWPFTableCell wrapperCell, ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean addHeaderRow ) throws IOException, InvalidFormatException {
+    public static XWPFTable createTableInCell (XWPFTableCell wrapperCell, ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean addHeaderRow , double tableWidth ) throws IOException, InvalidFormatException {
 
 
         wrapperCell.removeParagraph(0);
 
         if(title != "") {
             XWPFParagraph titleParagraph = wrapperCell.addParagraph() ;
-            if(alignment==TABLE_ALIGN_LR)
-                titleParagraph.setSpacingAfter(0);
+            titleParagraph.setSpacingAfter(0);
             XWPFRun titleRun = titleParagraph.createRun() ;
             titleRun.setText(title);
+            titleRun.setBold(true);
             titleRun.setFontSize(titleFontSize);
         }
 
@@ -200,7 +211,7 @@ public class WordUtils {
 
         docTable.setCellMargins(50 , 0 ,50 , 0);
         setTableAlign(docTable,ParagraphAlignment.CENTER);
-        changeTableWidth(docTable , (int)(pageWidth/2.8));
+        changeTableWidth(docTable , (int)tableWidth);
 
         removeBorders(docTable);
 
@@ -270,9 +281,13 @@ public class WordUtils {
     private static XWPFRun processCellData (XWPFTableCell cell , XWPFParagraph cellParagraph , String cellData ) throws IOException, InvalidFormatException {
 
         String cellText = cellData ; // the normal case no classes
-        if(cellData.length()>7 && cellData.substring(0 , 7).equals("<<img>>")){
-            String imgPath = cellData.substring(7 , cellData.length());
-            addImage(cellParagraph , imgPath , 100 , 10) ;
+        if(cellData.length()>7 && cellData.substring(0 , 5).equals("<<img")){
+            String [] parts = cellData.split(">>");
+            String imgPath = parts[1] ;
+            String[] parts2 = parts[0].split(",") ;
+            int imgWidth = Integer.valueOf(parts2[1]) ;
+            int imgHeight = Integer.valueOf(parts2[2])  ;
+            addImage(cellParagraph , imgPath , imgWidth , imgHeight) ;
             return cellParagraph.createRun();
         }else if(cellData.contains(";")) {
             String [] parts = cellData.split(";");
@@ -294,37 +309,40 @@ public class WordUtils {
     }
 
 
-    public static void addTitle (XWPFDocument document , String title ) {
+        public static void addTitle (XWPFDocument document , String title , int numberOfLineBreaks  ) {
 
-        // create title table
-        XWPFTable titleTable = document.createTable(1 , 3) ;
-        titleTable.setCellMargins(30 , 100 , 30 , 100);
-        changeTableWidth(titleTable);
-        setTableAlign(titleTable , ParagraphAlignment.CENTER);
-        removeBorders(titleTable);
+            // create title table
+            XWPFTable titleTable = document.createTable(1 , 3) ;
+            titleTable.setCellMargins(30 , 100 , 30 , 100);
+            changeTableWidth(titleTable);
+            setTableAlign(titleTable , ParagraphAlignment.CENTER);
+            removeBorders(titleTable);
 
 
-        // add title text to the table and format it
-        XWPFTableRow titleTableRow = titleTable.getRow(0);
-        XWPFParagraph paragraph = titleTableRow.getCell(1).addParagraph() ;
-        paragraph.setSpacingAfter(0);
-        titleTableRow.getCell(1).removeParagraph(0);
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
-        XWPFRun run = paragraph.createRun();
-        run.setBold(true);
-        run.setFontSize(TITLE_FONT_SIZE);
-        run.setText(title) ;
-        run.setColor("FFFFFF");
-        for (int i = 0 ; i < 3 ; i++)
-            titleTableRow.getCell(i).setColor(REPORTS_COLOR);
+            // add title text to the table and format it
+            XWPFTableRow titleTableRow = titleTable.getRow(0);
+            XWPFParagraph paragraph = titleTableRow.getCell(1).addParagraph() ;
+            paragraph.setSpacingAfter(0);
+            titleTableRow.getCell(1).removeParagraph(0);
+            paragraph.setAlignment(ParagraphAlignment.CENTER);
+            XWPFRun run = paragraph.createRun();
+            run.setBold(true);
+            run.setFontSize(TITLE_FONT_SIZE);
+            run.setText(title) ;
+            run.setColor("FFFFFF");
+            for (int i = 0 ; i < 3 ; i++)
+                titleTableRow.getCell(i).setColor(REPORTS_COLOR);
 
-        // add line breaks after the table
-        int numberOfBreaks = 4 ;
-        XWPFRun lineBreakRun = document.createParagraph().createRun();
-        for(int i = 0 ; i <4 ; i++) {
-            lineBreakRun.addBreak();
+            // add line breaks after the table
+            XWPFRun lineBreakRun = document.createParagraph().createRun();
+            for(int i = 0 ; i <numberOfLineBreaks ; i++) {
+                lineBreakRun.addBreak();
+            }
         }
-    }
+
+        public static void addTitle (XWPFDocument document , String title ) {
+        addTitle(document , title , 4);
+        }
 
     public static XWPFParagraph addLegendImage(XWPFDocument document , String imgPath) throws IOException, InvalidFormatException {
         return  addImage( document ,null ,imgPath , ParagraphAlignment.LEFT,  10 , 10 , false);
@@ -372,6 +390,58 @@ public class WordUtils {
     }
 
 
+    public static void addHeaderLine(XWPFDocument document , String header) {
+        XWPFTable lineTable = document.createTable(2 , 3) ;
+
+        for(int i = 0 ; i  < 2 ; i ++ ){
+            for(int j = 0 ; j <3 ; j ++ ){
+                lineTable.getRow(i).getCell(j).getParagraphArray(0).setSpacingAfter(0);
+            }
+        }
+//        lineTable.setCellMargins(0 , 100 , 0 , 100);
+
+        //merge the second col
+        XWPFTableCell cell = lineTable.getRow(0).getCell(1);
+        CTVMerge vmerge = CTVMerge.Factory.newInstance();
+        vmerge.setVal(STMerge.RESTART);
+
+        if (cell.getCTTc().getTcPr() == null) cell.getCTTc().addNewTcPr();
+        lineTable.getRow(0).getCell(1).getCTTc().getTcPr().setVMerge(vmerge);
+
+        // add header formating and data
+        XWPFParagraph linePar = cell.getParagraphArray(0);
+        XWPFRun lineRun = linePar.createRun();
+        lineRun.setText(header);
+        lineRun.setBold(true);
+        lineRun.setFontSize(16);
+        linePar.setAlignment(ParagraphAlignment.CENTER);
+        linePar.setSpacingAfter(0);
+        cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+
+
+        //change the middle cell width
+        if (cell.getCTTc().getTcPr() == null)
+            cell.getCTTc().addNewTcPr();
+        if (cell.getCTTc().getTcPr().getTcW()==null)
+            cell.getCTTc().getTcPr().addNewTcW();
+        cell.getCTTc().getTcPr().getTcW().setW(BigInteger.valueOf((long) header.length()*150+500));
+
+        // Secound Row cell will be merged
+        CTVMerge vmerge1 = CTVMerge.Factory.newInstance();
+        vmerge.setVal(STMerge.CONTINUE);
+        cell =  lineTable.getRow(1).getCell(1)  ;
+        if (cell.getCTTc().getTcPr() == null) cell.getCTTc().addNewTcPr();
+        cell.getCTTc().getTcPr().setVMerge(vmerge1);
+
+
+        WordUtils.removeBorders(lineTable,  false);
+        //draw the line
+        lineTable.setInsideHBorder(XWPFTable.XWPFBorderType.SINGLE,15 , 0 , WordUtils.REPORTS_COLOR);
+
+        document.createParagraph().createRun().addBreak();
+
+        WordUtils.changeTableWidth(lineTable);
+    }
     public static void writeWordDocument (XWPFDocument document , String filePath) throws IOException {
 
         FileOutputStream out = new FileOutputStream( new File(filePath));

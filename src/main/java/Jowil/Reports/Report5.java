@@ -4,9 +4,12 @@ import Jowil.CSVHandler;
 import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -153,7 +156,7 @@ public class Report5 extends Report {
         final int CHP = 2 ;
 
         ArrayList<String>headers= getHeaders() ;
-        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.TXT) ;
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getProcessedTables(ReportsHandler.TXT) ;
         String outputTxt = "" ;
 
         int pageWidth = TxtUtils.calcTableWidth(printableFormsStatsTables.get(0).get(0) , CHP);
@@ -230,7 +233,25 @@ public class Report5 extends Report {
 
     }
 
-    private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getPrintableTables (int type){
+    private void editRowForWord (ArrayList<String> tableRow) {
+        String infoImageHtml = tableRow.get(3);
+        if(!infoImageHtml.equals(" ")) {
+            int endIndex = infoImageHtml.indexOf(".png'") + 4;
+            String imgName = infoImageHtml.substring(10, endIndex) ;
+            String imgFullPath = workSpacePath + imgName ;
+            String imgEndcoding = "<<img,10,10>>"+ imgFullPath ;
+            tableRow.set(3, imgEndcoding);
+        }
+        String percent = tableRow.get(2) ;
+        String color = tableRow.get(4);
+        color = color.substring(0 , color.length()-3) ;
+        percent = percent.substring(0,percent.length()-2) ;
+        String barImgFullPath = resourcesPath+"RectImages\\Report5\\"+color+"\\"+percent+".png" ;
+        String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
+        tableRow.set(4,imgEncoding) ;
+//        System.out.println(imgEncoding);
+    }
+    private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getProcessedTables (int type){
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = new ArrayList<>();
         for(ArrayList<ArrayList<ArrayList<String>>> tables: formsStatsTables) {
             ArrayList<ArrayList<ArrayList<String>>> clonedTables  = Utils.clone3D(tables) ;
@@ -239,8 +260,10 @@ public class Report5 extends Report {
                 for(  ArrayList<String> tableRow :table){
                         if(type == ReportsHandler.PRINTABLE_PDF)
                             editRowForPrintablePdf(tableRow);
-                        else
+                        else if(type == ReportsHandler.TXT)
                             editRowForTxt(tableRow);
+                        else
+                            editRowForWord(tableRow);
                 }
             }
             printableFormsStatsTables.add(clonedTables);
@@ -251,7 +274,7 @@ public class Report5 extends Report {
     @Override
     public void generatePrintablePdfReport() throws IOException, DocumentException {
 
-        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.PRINTABLE_PDF);
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getProcessedTables(ReportsHandler.PRINTABLE_PDF);
         Document doc = generatePdfHtml(printableFormsStatsTables) ;
 //        doc.select("th.percent").after("<th>  </th>") ;
         //change border color of empty bar
@@ -274,7 +297,7 @@ public class Report5 extends Report {
     private String generateCharSeparatedValuesString(char separator) {
         ArrayList<String> headers = getHeaders() ;
 
-        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getPrintableTables(ReportsHandler.TXT) ;
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = getProcessedTables(ReportsHandler.TXT) ;
         String outputCsv = "" ;
 
         int pageWidth = CsvUtils.calcTableWidth(printableFormsStatsTables.get(0).get(0));
@@ -319,9 +342,132 @@ public class Report5 extends Report {
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
 
     }
+    ArrayList<ArrayList<String>> getTableWithHeaders(ArrayList<ArrayList<String>> table) {
+        ArrayList<String> headers = getHeaders() ;
+        headers.set(headers.size()-1 , "") ;
+        headers.add("") ;
 
+        ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
+        tableWithHeaders.add(0, headers) ;
+        return tableWithHeaders ;
+    }
+
+    private void addWordLegend(XWPFDocument document) throws IOException, InvalidFormatException {
+        ArrayList<ArrayList<String>> legends = new ArrayList<>();
+        ArrayList<String> legend = new ArrayList<>( );
+
+        legend.add(workSpacePath+"distractorColored.png") ; //legend img path
+        legend.add("Distractors*") ; //legend txt
+        legends.add(legend);
+
+        legend = new ArrayList<>();
+        legend.add(workSpacePath+"nonDistractorColored.png") ; //legend img path
+        legend.add("Non Distractors") ; //legend txt
+        legends.add(legend);
+
+        legend = new ArrayList<>();
+        legend.add(workSpacePath+"correctColored.png") ; //legend img path
+        legend.add("Correct Answer") ; //legend txt
+        legends.add(legend) ;
+
+
+        WordUtils.addLegend(document , legends);
+    }
     @Override
-    public void generateWordReport() {
+    public void generateWordReport() throws IOException, InvalidFormatException {
+
+        final int LINE_ROWS = 4 ;
+        final int TITLE_ROWS = 7 ;
+        final int WRAPPER_TABLE_ROWS = 5 ;
+        final int BLANK_PAGE_ROWS = 36 ;
+        final int TABLE_SPACING_ROWS = 3 ;
+//        final int FIRST_PAGE_ROWS = BLANK_PAGE_ROWS - TITLE_ROWS ;
+        double tableWidth = WordUtils.pageWidth * 0.49 ;
+        XWPFDocument document = WordUtils.createDocument((int)(WordUtils.inch * 0.9)) ;
+
+        ArrayList<Group>groups = CSVHandler.getDetectedGroups() ;
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsProcessedTables = getProcessedTables(ReportsHandler.WORD) ;
+        for( int formIndex = 0 ;formIndex < formsProcessedTables.size() ; formIndex++ ) {
+            ArrayList<ArrayList<ArrayList<String>>> formTables = formsProcessedTables.get(formIndex);
+            String title = " Condensed Test Report" ;
+            if( formsProcessedTables.size() >1) {
+                title = "Form " + (formIndex+1) + title;
+            }
+            if(formIndex>0)
+                WordUtils.addPageBreak(document);
+
+            int remainingRows = BLANK_PAGE_ROWS ;
+
+            WordUtils.addTitle(document, title ,1);
+
+            addWordLegend(document );
+
+            remainingRows-= TITLE_ROWS ;
+
+            int questionIndex= 0 ;
+            for( int groupIndex = 0 ; groupIndex < groups.size() ; groupIndex ++ ) {
+
+                Group group = groups.get(groupIndex);
+
+                if(remainingRows > LINE_ROWS + WRAPPER_TABLE_ROWS + formTables.get(questionIndex).size()-TABLE_SPACING_ROWS) {
+                    WordUtils.addHeaderLine(document, group.getCleanedName());
+                }else
+                {
+                    WordUtils.addPageBreak(document);
+                    remainingRows = BLANK_PAGE_ROWS ;
+                    WordUtils.addHeaderLine(document, group.getCleanedName());
+                }
+
+                remainingRows-= LINE_ROWS ;
+
+                int groupNumberOfQuestions = group.getqCount();
+
+                ArrayList<ArrayList<ArrayList<String>>> groupTables =
+                        new ArrayList<>(formTables.subList(questionIndex, questionIndex + groupNumberOfQuestions));
+
+                for (int tableIndex = 0; tableIndex < groupTables.size(); tableIndex += 2) {
+                    ArrayList<ArrayList<String>> table = groupTables.get(tableIndex);
+
+                    if(remainingRows < WRAPPER_TABLE_ROWS+table.size() -TABLE_SPACING_ROWS) {
+                        WordUtils.addPageBreak(document);
+                        remainingRows = BLANK_PAGE_ROWS ;
+                    }
+
+                    remainingRows-= WRAPPER_TABLE_ROWS+table.size() ;
+                    // add headers to table
+
+                    ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(table);
+
+
+                    XWPFTable wrapperTable = document.createTable(1, 2);
+                    wrapperTable.setCellMargins(0, 0, 400, 0);
+                    XWPFTableRow tablerow = wrapperTable.getRow(0);
+                    XWPFTable leftTable = WordUtils.createTableInCell(tablerow.getCell(0), tableWithHeaders, WordUtils.TABLE_ALIGN_CENTER,
+                            group.getName() + (tableIndex + 1), 13, false, tableWidth);
+
+                    WordUtils.setTableAlign(leftTable, ParagraphAlignment.LEFT);
+//        XWPFRun run = tablerow.getCell(1).getParagraphArray(0).createRun();
+//        run.setColor("FFFFFF");
+//        run.setText("man");
+                    if (tableIndex + 1 < groupTables.size()) {
+                        ArrayList<ArrayList<String>> table2 = groupTables.get(tableIndex + 1);
+
+                        ArrayList<ArrayList<String>> tableWithHeaders2 = getTableWithHeaders(table2);
+
+                        XWPFTable rightTable = WordUtils.createTableInCell(tablerow.getCell(1), tableWithHeaders2, WordUtils.TABLE_ALIGN_CENTER,
+                                Utils.generatePattern(" ", 4) + group.getName() + (tableIndex + 2), 13, false, tableWidth);
+                        WordUtils.setTableAlign(rightTable, ParagraphAlignment.RIGHT);
+                    }
+                    WordUtils.removeBorders(wrapperTable, false);
+                    WordUtils.setTableAlign(wrapperTable, ParagraphAlignment.CENTER);
+                    WordUtils.changeTableWidth(wrapperTable);
+
+                    document.createParagraph().createRun().addBreak();
+                }
+                questionIndex += group.getqCount() ;
+            }
+        }
+        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
 
     }
 

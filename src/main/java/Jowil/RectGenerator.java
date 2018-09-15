@@ -18,13 +18,13 @@ import java.io.IOException;
 
 public class RectGenerator  extends Application {
 
-    final static String COLOR_FOLDER_NAME="green/";
+    final static String COLOR_FOLDER_NAME="gray/";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-//        generateRects(primaryStage,"#08436b","green");
-        generateRoundRects(primaryStage,"#08436b","#157880");
+        generateRects(primaryStage,"#157880","#64686b");
+//        generateRoundRects(primaryStage,"#08436b","#157880");
         Platform.exit();
     }
 
@@ -49,7 +49,7 @@ public class RectGenerator  extends Application {
             empty.setWidth(100-i);
             WritableImage snapShot = wrapper.snapshot(new SnapshotParameters() , null);
             ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
-                    new File("./src/main/resources/RectImages/Report5"+COLOR_FOLDER_NAME+Integer.toString(i)+".png"));
+                    new File("./src/main/resources/RectImages/Report5/"+COLOR_FOLDER_NAME+Integer.toString(i)+".png"));
         }
 
     }

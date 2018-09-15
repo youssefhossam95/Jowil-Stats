@@ -280,28 +280,52 @@ public class Report8 extends Report {
     public void generateWordReport() throws IOException, InvalidFormatException {
 
 
-        XWPFDocument document = WordUtils.createDocument();
+        XWPFDocument document = WordUtils.createDocument((int)(WordUtils.inch * 0.9)); // create document with left and right margin = 0.9inch
 
-        int formIndex = 0 ;
-        ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex) ;
-        int graphIndex = 0;
-        ArrayList<Double> graphData = formGraphsData.get(graphIndex) ;
-        ArrayList<ArrayList<String>> table  = getTableWithHeaders(graphData) ;
+        ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
+        for ( int formIndex = 0 ; formIndex <formsData.size() ; formIndex++ ) {
+            ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
+            String title = " Hardness Graduality Report" ;
+            if( formsData.size() >1) {
+                title = "Form " + (formIndex+1) + title;
+            }
+            if(formIndex>0)
+                WordUtils.addPageBreak(document);
 
+            WordUtils.addTitle(document, title);
 
-        XWPFTable wrapperTable = document.createTable(1,3);
-        wrapperTable.setCellMargins(400 , 0 , 400 , 0);
-        XWPFTableRow tablerow = wrapperTable.getRow(0);
-        WordUtils.createTableInCell(tablerow.getCell(0) , table,WordUtils.TABLE_ALIGN_LR ,"" , 10 , true) ;
-        String imgFullPath = imagesFullPath + this.imgName + formIndex + graphIndex + ".png"  ;
-        XWPFRun run = tablerow.getCell(1).getParagraphArray(0).createRun();
-        run.setColor("FFFFFF"); run.setText("man");
-        WordUtils.addImage(tablerow.getCell(2).getParagraphArray(0),imgFullPath,280 , 160) ;
-        WordUtils.removeBorders(wrapperTable , false);
-        WordUtils.setTableAlign(wrapperTable, ParagraphAlignment.CENTER);
-        WordUtils.changeTableWidth(wrapperTable);
+            for (int graphIndex = 0; graphIndex < formGraphsData.size(); graphIndex++) {
+                // add page break after two graphs
+                if(graphIndex%2 == 0 && graphIndex>0)
+                    WordUtils.addPageBreak(document);
 
-        WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+                ArrayList<Double> graphData = formGraphsData.get(graphIndex);
+                ArrayList<ArrayList<String>> table = getTableWithHeaders(graphData);
+
+                String titleLine = "All Test" ;
+                if(graphIndex>0)
+                    titleLine = groups.get(graphIndex-1).getCleanedName();
+                WordUtils.addHeaderLine(document,titleLine);
+
+                XWPFTable wrapperTable = document.createTable(1, 3);
+                wrapperTable.setCellMargins(0, 0, 400, 0);
+                XWPFTableRow tablerow = wrapperTable.getRow(0);
+                WordUtils.createTableInCell(tablerow.getCell(0), table, WordUtils.TABLE_ALIGN_LR, "", 10, true , WordUtils.pageWidth*.45);
+                String imgFullPath = imagesFullPath + this.imgName + formIndex + graphIndex + ".png";
+                XWPFRun run = tablerow.getCell(1).getParagraphArray(0).createRun();
+                run.setColor("FFFFFF");
+                run.setText("man");
+                WordUtils.addImage(tablerow.getCell(2).getParagraphArray(0), imgFullPath, 250, 150);
+
+                WordUtils.removeBorders(wrapperTable, false);
+                WordUtils.setTableAlign(wrapperTable, ParagraphAlignment.CENTER);
+                WordUtils.changeTableWidth(wrapperTable);
+
+                document.createParagraph().createRun().addBreak();
+            }
+        }
+
+        WordUtils.writeWordDocument(document, outputFormatsFolderPaths[ReportsHandler.WORD] + outputFileName + ".docx");
 
     }
 
