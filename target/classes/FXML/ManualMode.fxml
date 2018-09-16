@@ -10,6 +10,8 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
 
     <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
@@ -19,7 +21,13 @@
         <HBox fx:id="columnSetHBox">
             <JFXTextField fx:id="columnSetTextField" promptText="Column Set Name" focusColor="#3184c9" labelFloat="true"></JFXTextField>
             <JFXComboBox fx:id="columnSetCombo" promptText="Column Set Type" focusColor="#3184c9" labelFloat="true"></JFXComboBox>
-            <Button fx:id="addButton" text="Add Selected Column Set" textFill="white" ></Button>
+            <Button fx:id="addButton" text="Add Selection" styleClass="BlueJFXButton">
+                <graphic>
+                    <ImageView fitWidth="13" fitHeight="13">
+                        <Image url="@../Images/whitePlus.png"></Image>
+                    </ImageView>
+                </graphic>
+            </Button>
         </HBox>
 
     </VBox>

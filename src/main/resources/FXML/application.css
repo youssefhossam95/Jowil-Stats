@@ -31,15 +31,38 @@ TableView:focused{
 
 
 .BlueJFXButton{
-    -fx-background-color:#4169E1;-fx-text-fill: white;
+    -fx-background-color:#3184c9;-fx-text-fill: white;
 }
 .BlueJFXButton:hover{
-    -fx-background-color:#6585e7;
+    -fx-background-color:#5b9fd7;
 }
 
 .BlueJFXButton:pressed{
-    -fx-background-color:#4169E1;
+    -fx-background-color:#3184c9;
 }
+
+.GreenJFXButton{
+    -fx-background-color:#3CB371;-fx-text-fill: white;
+}
+.GreenJFXButton:hover{
+    -fx-background-color:#6585e7;
+}
+
+.GreenJFXButton:pressed{
+    -fx-background-color:#3CB371;
+}
+
+.saveChangesButton{
+-fx-border-color:#3CB371;
+-fx-text-fill: #3CB371;
+-fx-background-color:transparent;
+}
+.saveChangesButton:hover {
+    /*-fx-text-fill: white;*/
+    -fx-background-color: 	#3CB371;
+}
+
+
 
 JFXComboBox{
     -fx-prompt-text-fill: #989898;

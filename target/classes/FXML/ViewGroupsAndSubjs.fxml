@@ -8,6 +8,8 @@
 
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
     <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
     <VBox fx:id="groupsTableVbox">
@@ -24,5 +26,14 @@
             <GridPane fx:id="infoGridPane"></GridPane>
         </Pane>
     </VBox>
-    <JFXButton fx:id="manualButton" text="Switch to Manual Mode"></JFXButton>
+    <Button fx:id="manualButton" text="Manual Configuration">
+        <graphic>
+            <ImageView fitWidth="13" fitHeight="13">
+                <Image url="@../Images/whiteConfig.png">
+                </Image>
+            </ImageView>
+        </graphic>
+
+
+    </Button>
 </AnchorPane>
