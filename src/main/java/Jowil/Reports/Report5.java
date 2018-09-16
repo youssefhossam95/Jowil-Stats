@@ -27,6 +27,7 @@ public class Report5 extends Report {
     String imagesFolderFullPath ;
 
     public Report5(){
+        reportTitle = "Questions Analysis Report" ;
         workSpacePath = reportsPath + "report5\\" ;
         templatePath = workSpacePath + "report5Template.html";
         outputFileName = "Report5" ;
@@ -61,10 +62,10 @@ public class Report5 extends Report {
                 doc.select("div.wrapper").last().after(pageBreakHtml);
                 doc.select("div.page-break").last().after(templateHtml) ;
                 doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                doc.select("div.divTitle").last().text( reportTitle +": Form "+(formIndex+1));
             }else
             if(Statistics.getNumberOfForms()>1)
-                doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                doc.select("div.divTitle").last().text(reportTitle + ": Form "+(formIndex+1));
 
             int remainingRows = NUMBER_OF_ROWS_IN_PAGE - ROWS_OF_MAIN_HEADER;
 
@@ -166,11 +167,11 @@ public class Report5 extends Report {
             if(formIndex>0)
                 outputTxt += Utils.generatePattern("#" , pageWidth)+TxtUtils.newLine;
 
-            String reportTitle = "Condenced Test Report"  ;
+            String txtReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
-                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+                txtReportTitle =  txtReportTitle +": Form "+(formIndex+1)  ;
 
-            String txtTitle = TxtUtils.generateTitleLine(reportTitle,
+            String txtTitle = TxtUtils.generateTitleLine(txtReportTitle,
                     pageWidth,2) ;
 
             outputTxt+= txtTitle ;
@@ -304,11 +305,11 @@ public class Report5 extends Report {
 
         for(int formIndex = 0  ;formIndex <Statistics.getNumberOfForms() ; formIndex++) {
 
-            String reportTitle = "Condenced Test Report"  ;
+            String csvReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
-                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+                csvReportTitle =  csvReportTitle +": Form "+(formIndex+1) ;
 
-            String txtTitle = CsvUtils.generateTitleLine(reportTitle,separator,
+            String txtTitle = CsvUtils.generateTitleLine(csvReportTitle,separator,
                     pageWidth,2) ;
 
             outputCsv+= txtTitle ;
@@ -389,9 +390,9 @@ public class Report5 extends Report {
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsProcessedTables = getProcessedTables(ReportsHandler.WORD) ;
         for( int formIndex = 0 ;formIndex < formsProcessedTables.size() ; formIndex++ ) {
             ArrayList<ArrayList<ArrayList<String>>> formTables = formsProcessedTables.get(formIndex);
-            String title = " Condensed Test Report" ;
+            String title = reportTitle ;
             if( formsProcessedTables.size() >1) {
-                title = "Form " + (formIndex+1) + title;
+                title = title + ": Form " + (formIndex+1) ;
             }
             if(formIndex>0)
                 WordUtils.addPageBreak(document);

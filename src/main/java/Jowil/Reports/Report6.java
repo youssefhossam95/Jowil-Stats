@@ -33,6 +33,7 @@ public class Report6 extends Report {
     String imgName = "DifficultyHistogram" ;
     ArrayList<ArrayList<ArrayList<String>>>  formsStatsTables ;
 
+    volatile boolean chartsDone = false ;
 
     public Report6(){
         workSpacePath = reportsPath + "report6\\" ;
@@ -40,7 +41,7 @@ public class Report6 extends Report {
         outputFileName = "Report6" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         imgsDirectoryFullPath = System.getProperty("user.dir") + workSpacePath ;
-
+        while (!chartsDone) ;
     }
 
 
@@ -52,80 +53,88 @@ public class Report6 extends Report {
     @Override
     public void init(){
         formsStatsTables = Statistics.report6Stats() ;
-        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
-            ArrayList<ArrayList<String>> statsTable = formsStatsTables.get(formIndex);
 
-            ArrayList<ArrayList<String>> statsTableTrans = Utils.transposeStringList(statsTable);
-
-            double[] freq = statsTableTrans.get(6).stream().mapToDouble(d -> Double.valueOf(d)).toArray();
-
-            final int formIndexForGraph = formIndex+1 ;
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        generateReport6Chart(statsTableTrans.get(0), freq , formIndexForGraph);
+                        generateReport6Chart();
+                        chartsDone = true ;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             });
-        }
     }
 
     /**
      * generate a bar chart for reprot 6 that represent the group hardness, and stores it in image.
-     * @param groupNames ArrayList that contians all group Names i.e. MCQ , TF ...
-     * @param hardness the hardness of each group
      * @throws IOException if it couldn't store the img in the spicified path
      */
-    private void generateReport6Chart( ArrayList<String> groupNames , double[] hardness , int formIndex) throws IOException {
-        Stage stage = new Stage() ;
-        stage.setTitle("Student Grades");
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        final BarChart<String,Number> bc =
-                new BarChart<String,Number>(xAxis,yAxis);
-        bc.setTitle("Group Hardness");
-        xAxis.setLabel("Group");
-        yAxis.setLabel("Hardness");
+    private void generateReport6Chart( ) throws IOException {
+        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
+            ArrayList<ArrayList<String>> statsTable = formsStatsTables.get(formIndex);
 
-        XYChart.Series series1 = new XYChart.Series();
-        bc.setLegendVisible(false);
-        double max = 0  ;
-        int maxIndex = 0 ;
-        for(int groupIndex = 0 ;  groupIndex <groupNames.size() ; groupIndex++) {
+            ArrayList<ArrayList<String>> statsTableTrans = Utils.transposeStringList(statsTable);
 
-            double groupHardness  =  hardness[groupIndex];
-            if(groupHardness>max) {
-                max = groupHardness;
-                maxIndex = groupIndex ;
+            double[] hardness = statsTableTrans.get(6).stream().mapToDouble(d -> Double.valueOf(d)).toArray();
+            ArrayList<String> groupNames = statsTableTrans.get(0) ;
+
+            Stage stage = new Stage();
+            stage.setTitle("Student Grades");
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis(0 , 10 , 1);
+            final BarChart<String, Number> bc =
+                    new BarChart<String, Number>(xAxis, yAxis);
+            bc.setTitle("Group Difficulty");
+            xAxis.setLabel("Group");
+            yAxis.setLabel("Difficulty");
+
+            XYChart.Series series1 = new XYChart.Series();
+            bc.setLegendVisible(false);
+            double max = 0;
+            double min = 1000;
+            int minIndex = 0;
+            int maxIndex = 0;
+            for (int groupIndex = 0; groupIndex < groupNames.size(); groupIndex++) {
+
+                double groupHardness = hardness[groupIndex];
+                if (groupHardness > max) {
+                    max = groupHardness;
+                    maxIndex = groupIndex;
+                }
+                if (groupHardness < min) {
+                    min = groupHardness;
+                    minIndex = groupIndex;
+                }
+
+                series1.getData().add(new XYChart.Data(groupNames.get(groupIndex), groupHardness));
             }
-            series1.getData().add(new XYChart.Data(groupNames.get(groupIndex), groupHardness));
+            bc.getData().add(series1);
 
+            for (int groupIndex = 0; groupIndex < groupNames.size(); groupIndex++) {
+                String addedClass = "normal";
+                if (groupIndex == maxIndex)
+                    addedClass = "hardest";
+                if (groupIndex == minIndex)
+                    addedClass = "easiest";
+                Node n = bc.lookup(".data" + groupIndex + ".chart-bar");
+                n.getStyleClass().add(addedClass);
+            }
+
+
+            bc.setAnimated(false);
+            Scene scene = new Scene(bc, 800, 400);
+
+            scene.getStylesheets().add("reports/report6/style.css");
+            bc.applyCss();
+            bc.layout();
+            stage.setScene(scene);
+
+            WritableImage snapShot = bc.snapshot(new SnapshotParameters(), null);
+            ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
+                    new File(workSpacePath + imgName + formIndex + ".png"));
         }
-        bc.getData().add(series1);
-
-        for(int groupIndex = 0 ;  groupIndex<groupNames.size() ; groupIndex++) {
-            String addedClass = "normal" ;
-            if(groupIndex == maxIndex)
-                addedClass = "hardest" ;
-            Node n = bc.lookup(".data"+groupIndex+".chart-bar");
-            n.getStyleClass().add(addedClass);
-        }
-
-
-        bc.setAnimated(false);
-        Scene scene  = new Scene(bc,800,600);
-
-        scene.getStylesheets().add("reports/report6/style.css");
-        bc.applyCss();
-        bc.layout();
-        stage.setScene(scene);
-
-        WritableImage snapShot = bc.snapshot(new SnapshotParameters() , null);
-        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
-                new File(workSpacePath+imgName+formIndex+".png"));
     }
 
     /**
