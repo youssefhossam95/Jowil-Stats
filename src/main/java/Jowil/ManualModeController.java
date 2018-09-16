@@ -745,6 +745,10 @@ public class ManualModeController extends Controller{
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file: " + e.getMessage()+". Make sure that you have selected a valid form column.");
                 return false;
+            } catch (CSVHandler.InvalidSubjColumnException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: " + e.getMessage());
+                return false;
             }
         }
         else {
@@ -759,7 +763,7 @@ public class ManualModeController extends Controller{
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in reading students responses file.");
                 return false;
-            } catch (CSVHandler.InvalidFormNumberException e) {
+            } catch (CSVHandler.InvalidFormNumberException | CSVHandler.InvalidSubjColumnException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file: " + e.getMessage());
                 return false;

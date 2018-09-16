@@ -52,14 +52,15 @@ public class CSVHandler {
 
     }
 
+    public static class InvalidSubjColumnException extends Exception{
 
-    public static class AnswersCaseInsensitive extends Exception{
-
-
-        AnswersCaseInsensitive(String group){
-            super("Group "+group+" contains answers with different case sensitivity.");
+        InvalidSubjColumnException(int rowNumber,String invalidScore){
+            super("Invalid subjective question score \""+invalidScore+"\" at row "+rowNumber+".");
         }
+
+
     }
+
 
 
     //fields
@@ -300,7 +301,7 @@ public class CSVHandler {
      *
      * @throws IOException
      */
-    public static  void loadCsv(boolean isHeadersExist ) throws IOException, InvalidFormNumberException, IllFormedCSVException {
+    public static  void loadCsv(boolean isHeadersExist ) throws IOException, InvalidFormNumberException, IllFormedCSVException, InvalidSubjColumnException {
 
         BufferedReader input = new BufferedReader(new FileReader(responsesFilePath));
         String line = null;
@@ -338,7 +339,7 @@ public class CSVHandler {
             Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
             updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
             updateStudentForms(row,rowNumber);
-            updateSubjScores(row);
+            updateSubjScores(row,rowNumber);
             rowNumber++;
         }
 
@@ -353,7 +354,7 @@ public class CSVHandler {
     }
 
 
-    public static void loadSavedCSV() throws InvalidFormNumberException {
+    public static void loadSavedCSV() throws InvalidFormNumberException, InvalidSubjColumnException {
 
         //initialization
         Statistics.setStudentIdentifier(new ArrayList<String>());
@@ -372,7 +373,7 @@ public class CSVHandler {
             Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
             updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
             updateStudentForms(row,rowNumber);
-            updateSubjScores(row);
+            updateSubjScores(row,rowNumber);
             rowNumber++;
         }
     }
@@ -568,7 +569,7 @@ public class CSVHandler {
     }
 
 
-    private static void updateSubjScores(String [] row){
+    private static void updateSubjScores(String [] row,int rowNumber) throws InvalidSubjColumnException {
 
         //no subj questions
         if(subjStartIndex==NOT_AVAILABLE)
@@ -580,7 +581,7 @@ public class CSVHandler {
             try{
                 studentSubScores.add(Double.parseDouble(row[i]));
             }catch(NumberFormatException e){
-                studentSubScores.add(0.0);
+                throw new InvalidSubjColumnException(rowNumber,row[i]);
             }
         }
 
