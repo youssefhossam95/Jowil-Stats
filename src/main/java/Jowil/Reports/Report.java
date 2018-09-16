@@ -36,6 +36,7 @@ abstract public class Report {
     protected String outputFileName ;
     protected String pdfHtmlPath ;
 
+
     protected String reportTitle ;
 
     public final static int REPORTS_COUNT=8;
@@ -45,6 +46,10 @@ abstract public class Report {
         int reportIndex=Integer.parseInt(this.getClass().getSimpleName().substring("Report".length()))-1;
         this.reportTitle=reportsTitles[reportIndex];
         this.outputFileName=this.getClass().getSimpleName()+" - "+this.reportTitle;
+    }
+
+    public String getOutputFileName() {
+        return outputFileName;
     }
 
     public static void initOutputFolderPaths(String outPath){

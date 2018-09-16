@@ -197,7 +197,7 @@ public class ReportProgressController {
             try {
                 reportsHandler.generateReports(reportsOut, formatsOut);
             } catch (IOException e) {
-                showReportsErrorMessage(" Make sure that the file "+"\"Report"+(progressCount.get()+1)+".pdf\" is not opened in another application");
+                showReportsErrorMessage(" Make sure that the file "+"\""+reportsOut.get(progressCount.get()).getOutputFileName()+".pdf\" is not opened in another application");
 
 
             } catch (DocumentException e) {
@@ -233,7 +233,7 @@ public class ReportProgressController {
         Platform.runLater(()->{
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
 
         alert.getButtonTypes().add(ButtonType.CLOSE);

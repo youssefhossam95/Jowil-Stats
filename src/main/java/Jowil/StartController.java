@@ -40,9 +40,6 @@ public class StartController extends Controller{
 
 
     @FXML
-    ImageView upperImageView;
-
-    @FXML
     AnchorPane lowerAncPane;
 
     @FXML
