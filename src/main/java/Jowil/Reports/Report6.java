@@ -133,7 +133,8 @@ public class Report6 extends Report {
 
             WritableImage snapShot = bc.snapshot(new SnapshotParameters(), null);
             ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
-                    new File(workSpacePath + imgName + formIndex + ".png"));
+                    new File(workSpacePath + imgName + (formIndex+1) + ".png"));
+            System.out.println("Hi man ");
         }
     }
 
