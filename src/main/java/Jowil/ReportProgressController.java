@@ -1,7 +1,6 @@
 package Jowil;
 
-import Jowil.Reports.Report;
-import Jowil.Reports.ReportsHandler;
+import Jowil.Reports.*;
 import com.lowagie.text.DocumentException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -29,6 +28,7 @@ import java.util.Optional;
 
 public class ReportProgressController {
 
+    private final ArrayList<Boolean> isGenerateReports;
     Scene scene;
     Stage stage;
 
@@ -43,7 +43,7 @@ public class ReportProgressController {
     private static volatile SimpleDoubleProperty reportProgress;
 
     Pane root;
-    ArrayList<Report> reportsOut;
+
     ArrayList<Integer> formatsOut;
 
 
@@ -65,14 +65,16 @@ public class ReportProgressController {
     Label titleLabel;
 
 
-    ReportProgressController(int reportsCount,ArrayList<Report> reportsOut,ArrayList<Integer>formatsOut){
+    ReportProgressController(int reportsCount,ArrayList<Boolean> isGenerateReports,ArrayList<Integer>formatsOut){
 
         reportProgress=new SimpleDoubleProperty();
         progressCount=new SimpleIntegerProperty();
 
         this.reportsCount=reportsCount;
         this.formatsOut=formatsOut;
-        this.reportsOut=reportsOut;
+        this.isGenerateReports=isGenerateReports;
+
+
 
         reportProgress.addListener(t -> {
 
@@ -182,24 +184,33 @@ public class ReportProgressController {
 
         Runnable task =()->{
 
-                ReportsHandler reportsHandler = new ReportsHandler();
+            ArrayList<Report> reportsOut=new ArrayList<>();
 
-                try {
-                    reportsHandler.generateReports(reportsOut, formatsOut);
-                } catch (IOException e) {
-                    showReportsErrorMessage(" Make sure that the file "+"\"Report"+(progressCount.get()+1)+".pdf\" is not opened in another application");
+            for(int i=0;i<isGenerateReports.size();i++){
+                if(isGenerateReports.get(i))
+                    reportsOut.add(getReport(i+1));
+            }
 
 
-                } catch (DocumentException e) {
+            ReportsHandler reportsHandler = new ReportsHandler();
+
+            try {
+                reportsHandler.generateReports(reportsOut, formatsOut);
+            } catch (IOException e) {
+                showReportsErrorMessage(" Make sure that the file "+"\"Report"+(progressCount.get()+1)+".pdf\" is not opened in another application");
+
+
+            } catch (DocumentException e) {
+                showReportsErrorMessage("");
+                e.printStackTrace();
+            }
+            catch(RuntimeException e) {
+                if(!Thread.currentThread().isInterrupted()) //not caused by interruption
                     showReportsErrorMessage("");
-                }
-                catch(RuntimeException e) {
-                    if(!Thread.currentThread().isInterrupted()) //not caused by interruption
-                        showReportsErrorMessage("");
-
-                } catch (InvalidFormatException e) {
-                    e.printStackTrace();
-                }
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
 
         };
 
@@ -241,7 +252,7 @@ public class ReportProgressController {
         stage.hide();
 
         if(option.get()==ButtonType.OK)
-            new ReportProgressController(reportsCount,reportsOut,formatsOut).startWindow();
+            new ReportProgressController(reportsCount,isGenerateReports,formatsOut).startWindow();
 
         stage.close();
         });
@@ -272,6 +283,30 @@ public class ReportProgressController {
 
         stage.close();
 
+    }
+
+
+    private Report getReport(int reportNumber){
+
+        switch (reportNumber){
+            case 1:
+                return new Report1();
+            case 2:
+                return new Report2();
+            case 3:
+                return new Report3();
+            case 4:
+                return new Report4();
+            case 5:
+                return new Report5();
+            case 6:
+                return new Report6();
+            case 7:
+                return new Report7();
+            case 8:
+                return new Report8();
+        }
+        return null;
     }
 
 

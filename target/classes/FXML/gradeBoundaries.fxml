@@ -29,7 +29,7 @@
     <HBox fx:id="reportsDirHBox">
     <JFXTextField fx:id="reportsDirTextField" promptText="Reports Directory Path" labelFloat="true" focusColor="#3184c9"></JFXTextField>
     <StackPane fx:id="reportsDirChooser">
-        <FontAwesomeIconView styleClass="FolderIcon" fill="#3184c9" glyphName="FOLDER" size="27.0"></FontAwesomeIconView>
+        <FontAwesomeIconView styleClass="FolderIcon" glyphName="FOLDER" size="27.0"></FontAwesomeIconView>
     </StackPane>
     </HBox>
 

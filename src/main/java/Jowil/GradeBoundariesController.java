@@ -109,11 +109,6 @@ public class GradeBoundariesController extends Controller {
     Font gradesLabelsFonts = new Font("Arial", resX / 100);
 
 
-
-
-    private static Report[] reports;
-
-
     JSONObject prefsJsonObj;
     
 
@@ -333,23 +328,25 @@ public class GradeBoundariesController extends Controller {
         
         //generate Reports
 
-        ArrayList<Report> reportsOut = new ArrayList<>();
+        ArrayList<Boolean> isGenerateReports = new ArrayList<>();
         ArrayList<Integer> formatsOut = new ArrayList<>();
         JSONArray reportsConfig = new JSONArray();
         JSONArray formatsConfig = new JSONArray();
 
         Statistics.init();
 
-        reports = new Report[]{new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
+
+
 
         //parse checkboxes and save their configs
         int i = 0;
         for (CheckBox checkBox : reportsCheckBoxes) {
             boolean isSelected = checkBox.isSelected();
-            if (isSelected) {
-                reportsOut.add(reports[i]);
+            if (isSelected)
                 reportsCount++;
-            }
+
+            isGenerateReports.add(isSelected);
+
             reportsConfig.add(isSelected);
             i++;
         }
@@ -429,7 +426,7 @@ public class GradeBoundariesController extends Controller {
         saveJsonObj(SAVED_PROJECTS_FILE_NAME,savedProjectsJson);
 
         Report.initOutputFolderPaths(outPath+projectDirName);
-        showProgressDialog(reportsOut,formatsOut);
+        showProgressDialog(isGenerateReports,formatsOut);
 
 
         stage.close();
@@ -900,8 +897,8 @@ public class GradeBoundariesController extends Controller {
     }
 
 
-    private void showProgressDialog(ArrayList<Report> reportsOut, ArrayList<Integer> formatsOut) {
-        new ReportProgressController(reportsCount,reportsOut,formatsOut).startWindow();
+    private void showProgressDialog(ArrayList<Boolean> isGenerateReport, ArrayList<Integer> formatsOut) {
+        new ReportProgressController(reportsCount,isGenerateReport,formatsOut).startWindow();
     }
 
 

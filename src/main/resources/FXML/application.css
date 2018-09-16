@@ -71,6 +71,10 @@ JFXComboBox{
 
 }
 
+.FolderIcon{
+-fx-fill:#3184c9;
+}
+
 .FolderIcon:hover{
 -fx-fill:#87CEEB;
 }
@@ -340,6 +344,15 @@ JFXListView:focused {
 
 .projectRemoveIcon:hover{
 -fx-fill:#ff9999;
+}
+
+
+.projectOpenIcon{
+-fx-fill:#3184c9;
+}
+
+.projectOpenIcon:hover{
+-fx-fill:#87CEEB;
 }
 
 .weightsBarChart{

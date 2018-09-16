@@ -437,4 +437,7 @@ public class StartController extends Controller{
 
 
     }
+
+    public void openProjectInExplorer(String myText) {
+    }
 }

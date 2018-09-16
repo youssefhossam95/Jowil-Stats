@@ -51,9 +51,9 @@ public class ReportChartsTest extends Application {
                 Jowil.Statistics.printCalculations();
 
                 ArrayList<Report> reports = new ArrayList<>();
-                Report.initOutputFolderPaths("E:\\work\\Jowil\\output folder test\\Jowil");
+                Report.initOutputFolderPaths(".");
 //
-//                reports.add(new Report1()) ;
+                reports.add(new Report1()) ;
 //                reports.add(new Report2()) ;
 //                reports.add(new Report3());
 //                reports.add(new Report4()) ;

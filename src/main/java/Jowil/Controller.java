@@ -92,7 +92,7 @@ public abstract class Controller {
     static JSONObject currentOpenedProjectJson;
     static String selectedIdentifierName;
     static String selectedFormColName;
-    static final String MANUAL_MODE_INDICATOR=" (Manual Mode)";
+    static final String MANUAL_MODE_INDICATOR=" (Manual Configuration)";
     static final String GRADE_SCALE_FILE_NAME = "GradeScales.json";
     static final String Q_NAMES_JSON_KEY="qNames",OBJ_GROUPS_JSON_KEY="objGroups",Q_CHOICES_JSON_KEY="questionsChoices",
             OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="lastSelectedScaleIndex",
