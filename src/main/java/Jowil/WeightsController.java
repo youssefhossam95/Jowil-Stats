@@ -56,6 +56,8 @@ public class WeightsController extends Controller {
         private SimpleStringProperty gradeName;
         private SimpleStringProperty minPercentScore;
         private SimpleStringProperty frequency;
+        private SimpleStringProperty percentage;
+
 
         Grade(String name, String score) {
 
@@ -68,6 +70,9 @@ public class WeightsController extends Controller {
             this.gradeName = new SimpleStringProperty(name);
             this.minPercentScore = new SimpleStringProperty(score);
             this.frequency=new SimpleStringProperty(frequency);
+
+            double percent=Double.parseDouble(frequency)/Statistics.getStudentAnswers().size()*100;
+            this.percentage=new SimpleStringProperty(String.format("%.1f",percent)+"%");
         }
 
 
@@ -105,6 +110,18 @@ public class WeightsController extends Controller {
 
         public void setFrequency(String frequency) {
             this.frequency.set(frequency);
+        }
+
+        public String getPercentage() {
+            return percentage.get();
+        }
+
+        public SimpleStringProperty percentageProperty() {
+            return percentage;
+        }
+
+        public void setPercentage(String percentage) {
+            this.percentage.set(percentage);
         }
 
 
@@ -515,7 +532,7 @@ public class WeightsController extends Controller {
 
         JFXTreeTableColumn<Grade,String> gradeNamesCol = new JFXTreeTableColumn<>("Grade");
 
-        JFXTreeTableColumn<Grade,String> gradeFreqCol = new JFXTreeTableColumn<>("Frequency");
+        JFXTreeTableColumn<Grade,String> gradeFreqCol = new JFXTreeTableColumn<>("Relative Freq.");
 
 
         gradeNamesCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Grade, String> param) -> {
@@ -529,7 +546,7 @@ public class WeightsController extends Controller {
 
 
         gradeFreqCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Grade, String> param) -> {
-            return param.getValue().getValue().frequency;
+            return param.getValue().getValue().percentage;
         });
 
         gradeFreqCol.setCellFactory((TreeTableColumn<Grade, String> param) -> new GenericEditableTreeTableCell<>(
