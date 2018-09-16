@@ -1,5 +1,6 @@
 package Jowil;
 
+import Jowil.Reports.Report;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -10,6 +11,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -23,7 +27,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.pdfsam.ui.RingProgressIndicator;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -330,7 +337,7 @@ public class StartController extends Controller{
         dialog.setHeaderText("Projects");
         dialog.setGraphic(null);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-
+        dialog.getDialogPane().setMinWidth(resX*300/1280);
 
         dialog.getDialogPane().getStyleClass().add("projectsDialog");
         //dialog.getDialogPane().setStyle("-fx-background-color:transparent");
@@ -432,12 +439,32 @@ public class StartController extends Controller{
             }
         }
         existingProjectsListItems.remove(projName);
+        projectsNames.remove(projName);
         saveJsonObj(SAVED_PROJECTS_FILE_NAME,savedProjectsJson);
 
 
 
     }
 
-    public void openProjectInExplorer(String myText) {
+    public void openProjectInExplorer(String projName) {
+
+        int projIndex=projectsNames.indexOf(projName);
+        JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
+        JSONObject proj=(JSONObject)projects.get(projIndex);
+
+        String dirPath=(String)proj.get(Controller.REPORTS_OUT_PATH_JSON_KEY)+"\\"+projName;
+
+
+        File file = new File (dirPath);
+        Desktop desktop = Desktop.getDesktop();
+
+
+        try {
+            desktop.open(file);
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

@@ -366,6 +366,8 @@ JFXListView:focused {
 -fx-padding:0;
 }
 
+
+
 .weightsBarChart .chart-content{
     -fx-padding: 0px;
 }
@@ -377,4 +379,16 @@ JFXListView:focused {
 .weightsBarChart .axis-label { -fx-font-size: 0.9em ; }
 .weightsBarChart .axis{
 -fx-tick-label-font-size: 0.6em;
+}
+
+
+.list-view {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ListViewSkin";
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: -1.4, 0, 1;
+    -fx-background-radius: 1.4, 0, 0;
+
+     /* There is some oddness if padding is in em values rather than pixels,
+        in particular, the left border of the control doesn't show. */
+    -fx-padding: 1; /* 0.083333em; */
 }

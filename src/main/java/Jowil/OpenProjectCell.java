@@ -25,8 +25,8 @@ class OpenProjectCell extends JFXListCell {
     private long lastClick;
     String myText;
     Dialog dialog;
-    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size(Double.toString(resX/80)).styleClass("projectRemoveIcon").build();
-    private final  Node openFolderIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TIMES_CIRCLE).size(Double.toString(resX/80)).styleClass("projectOpenIcon").build();
+    private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).size(Double.toString(resX/80)).styleClass("projectRemoveIcon").build();
+    private final  Node openFolderIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.EXTERNAL_LINK).size(Double.toString(resX/80)).styleClass("projectOpenIcon").build();
 
 
     StartController parentController;
@@ -56,7 +56,7 @@ class OpenProjectCell extends JFXListCell {
             AnchorPane cellPane=new AnchorPane();
             cellPane.setStyle("-fx-background-color:transparent");
             HBox leftHbox = new HBox(5);
-            HBox rightHBox=new HBox(3);
+            HBox rightHBox=new HBox(11);
 
             this.setOnMouseClicked(event -> {
 
@@ -85,9 +85,10 @@ class OpenProjectCell extends JFXListCell {
 
             StackPane openButton=new StackPane();
             openButton.getChildren().add(openFolderIcon);
-            Tooltip tooltipOpen = new Tooltip("Show in Explorer");
+            Tooltip tooltipOpen = new Tooltip("Show Project in Explorer");
             Tooltip.install(openButton, tooltipOpen);
             openButton.setOnMouseClicked(event ->{
+                lastClick=0;
                 parentController.openProjectInExplorer(myText);
             });
 
@@ -95,7 +96,7 @@ class OpenProjectCell extends JFXListCell {
             rightHBox.getChildren().addAll(openButton,deleteButton);
             cellPane.getChildren().addAll(leftHbox,rightHBox);
             AnchorPane.setLeftAnchor(leftHbox,0.0);
-            AnchorPane.setRightAnchor(deleteButton,5.0);
+            AnchorPane.setRightAnchor(rightHBox,2.0);
 
             this.setGraphic(cellPane);
         }
