@@ -495,8 +495,8 @@ public class Statistics {
 
         formTestInsights.put("Hardest Question" , hardestQuestion);
         formTestInsights.put("Easiest Question" , easiestQuestion) ;
-        formTestInsights.put("Hardest Section" , hardestGroup) ;
-        formTestInsights.put("Easiest Section" , easiestGroup) ;
+        formTestInsights.put("Hardest Group" , hardestGroup) ;
+        formTestInsights.put("Easiest Group" , easiestGroup) ;
 
         return formTestInsights ;
     }
@@ -559,8 +559,8 @@ public class Statistics {
 
         statsMap.put("Hardest Question" , hardestQuestion) ;
         statsMap.put("Easiest Question" , easiestQuestion) ;
-        statsMap.put("Hardest Section" , hardestGroup) ;
-        statsMap.put("Easiest Section" , easiestGroup) ;
+        statsMap.put("Hardest Group" , hardestGroup) ;
+        statsMap.put("Easiest Group" , easiestGroup) ;
         return  statsMap;
     }
 
@@ -596,11 +596,12 @@ public class Statistics {
 
         statsMap.put("Number Of Students" , Utils.formatNumber(studentScores.size() , 0));
 
-        statsMap.put("Number Of Graded Questions" , Utils.formatNumber(numberOfQuestions , 0) );
+        statsMap.put("Number of Objective Questions" , Utils.formatNumber(numberOfQuestions , 0) );
+        statsMap.put("Number of Subjective Questions" , Utils.formatNumber(subjMaxScores.size() , 0) );
         statsMap.put("Maximum Possible Score" , Utils.formatNumber(maxScore , 0)) ; // assuming all Forms should have the same weight sum
-        statsMap.put("Benchmark" ,  Utils.formatNumber(benchMark , 0 ) ) ;
+//        statsMap.put("Benchmark" ,  Utils.formatNumber(benchMark , 0 ) ) ;
 
-        statsMap.put("Mean" , Utils.formatNumber(mean , 1 ));
+        statsMap.put("Mean Score" , Utils.formatNumber(mean , 1 ));
         statsMap.put("Mean Percent Score" , Utils.formatNumber(mean/maxScore  ,1 ) ) ;
         statsMap.put("Highest Score" ,Utils.formatNumber(HightestScore , 0) ) ;
         statsMap.put("Lowest Score" , Utils.formatNumber( LowestScore , 0 )) ;

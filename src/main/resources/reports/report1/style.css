@@ -9,6 +9,14 @@
     -fx-tick-label-font-size: 1.3em;
   }
 
+  .chart { 
+    -fx-background-color: white ; 
+    -fx-vertical-grid-lines-visible:false;
+  }
+  .chart-plot-background {
+    -fx-background-color:white;
+}
+
   .normal { 
     -fx-bar-fill:#157880;
   }

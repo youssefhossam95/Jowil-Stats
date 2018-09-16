@@ -38,6 +38,7 @@ public class Report2 extends Report {
 
 
     public Report2(){
+        reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
         outputFileName = "Report2" ;
@@ -67,8 +68,11 @@ public class Report2 extends Report {
                     doc.select("table").last().after(pageBreakHtml);
                     doc.select("div.page-break").last().after(templateBodyHtml) ;
                     doc.select("div.divTitle").addClass("second-page-header") ;
-                    doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                    doc.select("div.divTitle").last().text(reportTitle + ": Form "+(formIndex+1) );
                 }
+                else if(Statistics.getNumberOfForms()>1)
+                    doc.select("div.divTitle").last().text(reportTitle + ": Form "+(formIndex+1) );
+
                 fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
                 ArrayList<ArrayList<ArrayList<String>>> statsTables ;
                 if(isPrintable)
@@ -177,8 +181,11 @@ public class Report2 extends Report {
             if(formIndex>0) {
                 doc.select("table").last().after(templateBodyHtml);
                 doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("div.DivTitle").last().text("Form "+(formIndex+1) + " Condensed Test Report");
+                doc.select("div.divTitle").last().text( reportTitle+": Form "+(formIndex+1));
             }
+            else if (Statistics.getNumberOfForms()> 1)
+                doc.select("div.divTitle").last().text( reportTitle+": Form "+(formIndex+1));
+
             fillGeneralStatsReport2(doc , formsStatsMaps.get(formIndex));
             ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
 
@@ -249,8 +256,8 @@ public class Report2 extends Report {
         for(String qChoice: questionChoices )
             tableHeaders.add(qChoice) ;
         tableHeaders.add("Non Distractors") ;
-        tableHeaders.add("Point Biserial") ; tableHeaders.add("total") ; tableHeaders.add("lower 27%");
-        tableHeaders.add("upper 27%") ;
+        tableHeaders.add("Point Biserial") ; tableHeaders.add("Overall %") ; tableHeaders.add("Bottom 25%");
+        tableHeaders.add("Top 25%") ;
 
         return tableHeaders ;
     }
@@ -292,11 +299,11 @@ public class Report2 extends Report {
             ArrayList<ArrayList<String>> mapAsTable = processMap(statsMap);
             String generalStatsTxt = TxtUtils.generateTxtTableAlignLR(mapAsTable, "", CHP_LR_TABLE);
 
-            String reportTitle = "Condenced Test Report"  ;
+            String txtReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
-                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+                txtReportTitle =  txtReportTitle + ": Form "+(formIndex+1)  ;
 
-            String txtTitle = TxtUtils.generateTitleLine(reportTitle,
+            String txtTitle = TxtUtils.generateTitleLine(txtReportTitle,
                     pageWidth,2) ;
 
             if(formIndex>0)
@@ -375,11 +382,11 @@ public class Report2 extends Report {
             ArrayList<ArrayList<String>> mapAsTable = processMap(statsMap);
             String generalStatsTxt = CsvUtils.generateTable(mapAsTable, separator);
 
-            String reportTitle = "Condenced Test Report"  ;
+            String csvReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
-                reportTitle = "Form"+(formIndex+1) + " " + reportTitle ;
+                csvReportTitle =  csvReportTitle +": Form "+(formIndex+1) ;
 
-            String txtTitle = CsvUtils.generateTitleLine(reportTitle, separator,
+            String txtTitle = CsvUtils.generateTitleLine(csvReportTitle, separator,
                     pageWidth,2) ;
 
 
@@ -451,10 +458,11 @@ public class Report2 extends Report {
 
         XWPFDocument document = WordUtils.createDocument(WordUtils.LANDSCAPE_PAGE_WIDHT , WordUtils.LANDSCAPE_PAGE_HEIGHT) ; // landscape size
 
+        WordUtils.createWordFooter(document); ;
         for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
-            String title = " Test Statistics Report";
+            String title = reportTitle;
             if( formsStatsTables.size() >1) {
-                title = "Form " + (formIndex+1) + title;
+                title = title +": Form " + (formIndex+1);
             }
             if(formIndex>0)
                 WordUtils.addPageBreak(document);

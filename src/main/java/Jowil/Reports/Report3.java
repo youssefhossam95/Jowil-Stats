@@ -28,6 +28,7 @@ public class Report3 extends Report {
     String[] tablesTitles = {"Test Insights", "Test Data", "Basic Statistics", "Dispersion", "Confidence Intervals", "Test Reliability"};
 
     public Report3(){
+        reportTitle=  "Test Statistics Report" ;
         workSpacePath = reportsPath + "report3\\" ;
         templatePath = workSpacePath + "report3Template.html";
         outputFileName = "Report3" ;
@@ -36,19 +37,21 @@ public class Report3 extends Report {
 
     private void fillHtmlWithMap (Document doc , Map<String , String> statsMap){
 
-        doc.select("td.NumberOfGradedQuestions").last().text(statsMap.get("Number Of Graded Questions")) ;
+        doc.select("td.NumberOfObjectiveQuestions").last().text(statsMap.get("Number of Objective Questions")) ;
+        doc.select("td.NumberOfSubjectiveQuestions").last().text(statsMap.get("Number of Subjective Questions")) ;
         doc.select("td.MaximumPossibleScore").last().text(statsMap.get("Maximum Possible Score")) ;
-        doc.select("td.Benchmark").last().text(statsMap.get("Benchmark")) ;
+//        doc.select("td.Benchmark").last().text(statsMap.get("Benchmark")) ;
 
+//        System.out.println("fuck you");
         //testInsights
         doc.select("td.EasiestQuestion").last().text(statsMap.get("Easiest Question")) ;
         doc.select("td.HardestQuestion").last().text(statsMap.get("Hardest Question")) ;
-        doc.select("td.EasiestSection").last().text(statsMap.get("Easiest Section")) ;
-        doc.select("td.HardestSection").last().text(statsMap.get("Hardest Section")) ;
+        doc.select("td.EasiestGroup").last().text(statsMap.get("Easiest Group")) ;
+        doc.select("td.HardestGroup").last().text(statsMap.get("Hardest Group")) ;
 
 
         //Basic Statistics
-        doc.select("td.Mean").last().text(statsMap.get("Mean")) ;
+        doc.select("td.Mean").last().text(statsMap.get("Mean Score")) ;
         doc.select("td.MeanPercentScore").last().text(statsMap.get("Mean Percent Score")) ;
         doc.select("td.HighestScore").last().text(statsMap.get("Highest Score")) ;
         doc.select("td.LowestScore").last().text(statsMap.get("Lowest Score")) ;
@@ -88,7 +91,7 @@ public class Report3 extends Report {
                 doc.select("table").last().after(pageBreakHtml);
                 doc.select("div.page-break").last().after(templateBodyHtml) ;
                 doc.select("div.divTitle").addClass("second-page-header") ;
-                doc.select("div.divTitle").last().text("Form "+ mapIndex + " Test Statistics Report");
+                doc.select("div.divTitle").last().text(reportTitle +": Form "+ mapIndex );
             }
 
             Map<String , String > statsMap = report3Maps.get(mapIndex);
@@ -164,11 +167,11 @@ public class Report3 extends Report {
 
             String form = "" ;
             if(mapIndex>0) {
-                form = "Form " + mapIndex;
+                form = ": Form " + mapIndex;
                 outputTxt += Utils.generatePattern("#" , pageWidth)+TxtUtils.newLine;
 
             }
-            String txtTitle = TxtUtils.generateTitleLine(form +" Test Statistics Report",
+            String txtTitle = TxtUtils.generateTitleLine(reportTitle +form ,
                     pageWidth, 2);
 
             outputTxt += txtTitle;
@@ -208,10 +211,9 @@ public class Report3 extends Report {
 
             String form = "";
             if (mapIndex > 0) {
-                form = "Form " + mapIndex;
-                ;
+                form = ": Form " + mapIndex;
             }
-            String txtTitle = CsvUtils.generateTitleLine(form + " Test Statistics Report", separator,
+            String txtTitle = CsvUtils.generateTitleLine(reportTitle + form , separator,
                     pageWidth, 2);
 
             outputCsv += txtTitle;
@@ -246,7 +248,7 @@ public class Report3 extends Report {
             String title = " Test Statistics Report";
             if(mapIndex>0) {
                 WordUtils.addPageBreak(document);
-                title = "Form " + mapIndex + title;
+                title =   title + ": Form " + mapIndex;
             }
             WordUtils.addTitle(document , title);
             ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex)) ;

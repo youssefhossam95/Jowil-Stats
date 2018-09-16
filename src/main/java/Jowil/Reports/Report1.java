@@ -18,9 +18,12 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 
 import javax.imageio.ImageIO;
@@ -35,13 +38,16 @@ public class Report1 extends Report{
     String report1ImgFullPath  ;
     ArrayList<ArrayList<String>> statsTable ;
 
+    volatile boolean chartsReady = false ;
 
     public Report1(){
+        reportTitle = "Grades Distribution Report" ;
         workSpacePath = reportsPath + "report1\\" ;
         templatePath = workSpacePath + "report1Template.html";
         outputFileName = "Report1" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         report1ImgFullPath = System.getProperty("user.dir") + workSpacePath.replace("." , "") + "GradesDistributionHistogram.png" ;
+        while (!chartsReady);
     }
 
 
@@ -62,6 +68,7 @@ public class Report1 extends Report{
             public void run() {
                 try {
                     generateReport1Chart(statsTableTrans.get(0) , freq );
+                    chartsReady = true ;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -153,6 +160,7 @@ public class Report1 extends Report{
         Document doc = generatePdfHtml() ;
         doc.select("div#footer").remove() ;
         doc.select("img").attr("src" ,"file://"+ report1ImgFullPath);
+        doc.select("img").attr("width" , "60%") ;
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
@@ -178,7 +186,7 @@ public class Report1 extends Report{
 
         int cellHorizontalPadding = 3 ;
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
-        String txtTitle = TxtUtils.generateTitleLine("Grades Distribution Report",
+        String txtTitle = TxtUtils.generateTitleLine(reportTitle,
                 TxtUtils.calcTableWidth(tableWithHeaders,cellHorizontalPadding),2) ;
         String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding , false) ;
 
@@ -200,7 +208,7 @@ public class Report1 extends Report{
     private String generateCharSeparatedValuesString(char separator){
         String outputCsv = "";
         int pageWidth = CsvUtils.calcTableWidth(statsTable);
-        String titleCsv = CsvUtils.generateTitleLine("Grades Distribution Report",separator ,pageWidth , 2) ;
+        String titleCsv = CsvUtils.generateTitleLine(reportTitle,separator ,pageWidth , 2) ;
         String tableCsv = CsvUtils.generateTable(getTableWithHeaders() , separator) ;
 
         outputCsv = titleCsv + tableCsv ;
@@ -222,12 +230,14 @@ public class Report1 extends Report{
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
     }
 
+
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
         XWPFDocument document = new XWPFDocument();
-        WordUtils.addTitle(document , "Grades Distribution Report" );
+        WordUtils.addTitle(document , reportTitle );
 
 
+        WordUtils.createWordFooter(document);
         WordUtils.addTable(document, getTableWithHeaders());
 
         WordUtils.addImage(document , report1ImgFullPath);

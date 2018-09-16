@@ -4,7 +4,9 @@ import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import java.io.*;
@@ -441,6 +443,85 @@ public class WordUtils {
         document.createParagraph().createRun().addBreak();
 
         WordUtils.changeTableWidth(lineTable);
+    }
+
+    public static void setTabStop(XWPFParagraph oParagraph, STTabJc.Enum oSTTabJc, BigInteger oPos) {
+        CTP oCTP = oParagraph.getCTP();
+        CTPPr oPPr = oCTP.getPPr();
+        if (oPPr == null) {
+            oPPr = oCTP.addNewPPr();
+        }
+
+        CTTabs oTabs = oPPr.getTabs();
+        if (oTabs == null) {
+            oTabs = oPPr.addNewTabs();
+        }
+
+        CTTabStop oTabStop = oTabs.addNewTab();
+        oTabStop.setVal(oSTTabJc);
+        oTabStop.setPos(oPos);
+    }
+
+    public static void createWordFooter(XWPFDocument document) {
+
+        CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+        XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(document, sectPr);
+        CTP ctpFooterPage = CTP.Factory.newInstance();
+
+
+        XWPFParagraph[] parsFooter;
+
+
+// add style (s.th.)
+        CTPPr ctppr = ctpFooterPage.addNewPPr();
+//        CTString pst = ctppr.addNewPStyle();
+//        pst.setVal("style21");
+        CTJc ctjc = ctppr.addNewJc();
+        ctjc.setVal(STJc.RIGHT);
+//        ctppr.addNewRPr();
+
+// Add in word "Page "
+        CTR ctr = ctpFooterPage.addNewR();
+        CTText t = ctr.addNewT();
+        t.setStringValue("Page ");
+        t.setSpace(SpaceAttribute.Space.PRESERVE);
+
+// add everything from the footerXXX.xml you need
+        ctr = ctpFooterPage.addNewR();
+        ctr.addNewRPr();
+        CTFldChar fch = ctr.addNewFldChar();
+        fch.setFldCharType(STFldCharType.BEGIN);
+
+        ctr = ctpFooterPage.addNewR();
+        ctr.addNewInstrText().setStringValue(" PAGE ");
+
+        ctpFooterPage.addNewR().addNewFldChar().setFldCharType(STFldCharType.SEPARATE);
+
+        ctpFooterPage.addNewR().addNewT().setStringValue("1");
+
+        ctpFooterPage.addNewR().addNewFldChar().setFldCharType(STFldCharType.END);
+
+        ctr.addNewTab();
+        CTText name = ctr.addNewT() ;
+        name.setStringValue("my name");
+
+
+        XWPFParagraph footerPageParagraph = new XWPFParagraph(ctpFooterPage, document);
+        footerPageParagraph.setBorderTop(Borders.THICK);
+
+        XWPFRun run = footerPageParagraph.createRun();
+        run.addTab();
+        run.setText("fuck you");
+        parsFooter = new XWPFParagraph[1];
+
+
+        BigInteger pos1 = BigInteger.valueOf(4500);
+        setTabStop(footerPageParagraph, STTabJc.Enum.forString("center"), pos1);
+
+        parsFooter[0] = footerPageParagraph;
+//        parsFooter[0] = footerDateParagraph ;
+        policy.createFooter(XWPFHeaderFooterPolicy.DEFAULT, parsFooter);
+
     }
     public static void writeWordDocument (XWPFDocument document , String filePath) throws IOException {
 

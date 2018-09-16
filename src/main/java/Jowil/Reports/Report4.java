@@ -25,6 +25,7 @@ public class Report4 extends Report{
     private ArrayList<ArrayList<String>> statsTable ;
 
     public Report4(){
+        reportTitle = "Students Grades Report" ;
         workSpacePath = reportsPath + "report4\\" ;
         templatePath = workSpacePath + "report4Template.html";
         outputFileName = "Report4" ;
@@ -129,7 +130,7 @@ public class Report4 extends Report{
         String outputTxt = "" ;
         int pageWidth = TxtUtils.calcTableWidth(tableWithHeaders , CHP) ;
 
-        String txtTitle = TxtUtils.generateTitleLine("Studets Grades Report",
+        String txtTitle = TxtUtils.generateTitleLine(reportTitle,
                 pageWidth,2) ;
 
         outputTxt+= txtTitle ;
@@ -168,7 +169,7 @@ public class Report4 extends Report{
         String outputCsv = "";
         int pageWidth = CsvUtils.calcTableWidth(tableWithHeaders);
 
-        String txtTitle = CsvUtils.generateTitleLine("Studets Grades Report", separator,
+        String txtTitle = CsvUtils.generateTitleLine(reportTitle, separator,
                 pageWidth, 2);
 
         outputCsv += txtTitle;
@@ -202,7 +203,7 @@ public class Report4 extends Report{
     public void generateWordReport() throws IOException, InvalidFormatException {
 
         XWPFDocument document = new XWPFDocument();
-        WordUtils.addTitle(document , "Grades Distribution Report" );
+        WordUtils.addTitle(document , reportTitle );
 
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
         tableWithHeaders.get(0).add("") ;

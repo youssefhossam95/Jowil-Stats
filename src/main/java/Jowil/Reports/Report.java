@@ -35,6 +35,7 @@ abstract public class Report {
     protected String outputFileName ;
     protected String pdfHtmlPath ;
 
+    protected String reportTitle ;
 
     Report() {
         init();
