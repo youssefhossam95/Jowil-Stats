@@ -41,7 +41,6 @@ public class Report2 extends Report {
         reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
-        outputFileName = "Report2" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 

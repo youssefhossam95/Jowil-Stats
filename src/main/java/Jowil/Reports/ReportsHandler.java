@@ -38,7 +38,8 @@ import java.util.regex.Pattern;
 
 public class ReportsHandler {
 
-    public final static int PDF=0,HTML=1,TXT=2,WORD=3,XLS=4 , PRINTABLE_PDF=5 , CSV = 6 , TSV = 7  ;
+    public final static int PDF=0,WORD=1,HTML=2,PRINTABLE_PDF=3 ,TXT=4,XLS=5, CSV = 6 , TSV = 7  ;
+    public final static String [] FORMATS_NAMES={"PDF","WORD","HTML","PRINTABLE PDF","TXT","XLS","CSV","TSV"};
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
     public static boolean isTestMode;
 

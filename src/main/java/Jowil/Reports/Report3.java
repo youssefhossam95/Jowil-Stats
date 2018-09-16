@@ -31,7 +31,6 @@ public class Report3 extends Report {
         reportTitle=  "Test Statistics Report" ;
         workSpacePath = reportsPath + "report3\\" ;
         templatePath = workSpacePath + "report3Template.html";
-        outputFileName = "Report3" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
 

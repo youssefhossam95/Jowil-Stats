@@ -28,7 +28,6 @@ public class Report4 extends Report{
         reportTitle = "Students Grades Report" ;
         workSpacePath = reportsPath + "report4\\" ;
         templatePath = workSpacePath + "report4Template.html";
-        outputFileName = "Report4" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
 
