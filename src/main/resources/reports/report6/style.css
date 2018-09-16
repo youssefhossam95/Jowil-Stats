@@ -12,11 +12,18 @@
   .normal { 
     -fx-bar-fill:#157880 
   }
+  .chart { 
+    -fx-background-color: white ; 
+    -fx-vertical-grid-lines-visible:false;
+  }
+  .chart-plot-background {
+    -fx-background-color:white;
+}
 
-  .largest { 
-      -fx-bar-fill:#2bdb34 ; 
+  .easiest { 
+      -fx-bar-fill:green ; 
   }
   .hardest { 
-    -fx-bar-fill:red ; 
+    -fx-bar-fill: rgb(185, 41, 41) ; 
   }
   

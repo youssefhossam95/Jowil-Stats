@@ -124,7 +124,7 @@ public class Report6 extends Report {
 
 
             bc.setAnimated(false);
-            Scene scene = new Scene(bc, 800, 400);
+            Scene scene = new Scene(bc, 800, 600);
 
             scene.getStylesheets().add("reports/report6/style.css");
             bc.applyCss();
@@ -134,7 +134,6 @@ public class Report6 extends Report {
             WritableImage snapShot = bc.snapshot(new SnapshotParameters(), null);
             ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png",
                     new File(workSpacePath + imgName + (formIndex+1) + ".png"));
-            System.out.println("Hi man ");
         }
     }
 
