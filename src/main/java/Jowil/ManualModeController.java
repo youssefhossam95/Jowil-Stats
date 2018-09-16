@@ -416,7 +416,7 @@ public class ManualModeController extends Controller{
     }
 
     private void initColumnSetsVBox() {
-        placeHolder.setStyle("-fx-font-weight:bold");
+        placeHolder.setStyle("-fx-font-weight:bold;-fx-text-fill:#727171");
         placeHolder.setFont(new Font(resX*12/1280));
         columnSetsVBox.getChildren().setAll(placeHolder);
     }
