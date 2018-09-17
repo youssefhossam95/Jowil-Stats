@@ -396,6 +396,18 @@ public class WeightsController extends Controller {
         disableTableDrag(objTable);
     }
 
+    @Override
+    public void startWindow(){
+        super.startWindow();
+
+//        for (Node n: gradesFreqTable.lookupAll(".column-header"))
+//            n.setStyle("-fx-font-size:"+resX*14/1280);
+//
+//        for (Node n: gradesFreqTable.lookupAll(".tree-table-cell"))
+//            n.setStyle("-fx-font-size:"+resX*7/1280);
+
+    }
+
     //helper methods
 
     private void initObjTableVBox() {

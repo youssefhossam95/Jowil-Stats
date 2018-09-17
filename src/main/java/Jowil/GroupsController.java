@@ -5,6 +5,7 @@ import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -21,6 +22,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -32,10 +34,7 @@ import javafx.scene.text.Font;
 import javax.swing.text.html.ImageView;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
@@ -245,6 +244,22 @@ public class GroupsController  extends Controller{
 
     }
 
+    @Override
+    public void startWindow(){
+        super.startWindow();
+
+//        for (Node n: groupsTable.lookupAll(".column-header"))
+//            n.setStyle("-fx-font-size:"+resX*14/1280);
+//
+//        for (Node n: groupsTable.lookupAll(".tree-table-cell"))
+//            n.setStyle("-fx-font-size:"+resX*14/1280);
+
+
+
+
+
+    }
+
 
     /////static utility methods
 
@@ -365,7 +380,21 @@ public class GroupsController  extends Controller{
 
         groupsTable.setRoot(root);
         groupsTable.setShowRoot(false);
+//        groupsTable.applyCss();
+//        groupsTable.lookup(".column-header").setStyle("-fx-font-size:15;");
 
+
+
+
+//        groupsTable.skinProperty().addListener((a, b, newSkin) -> {
+//            TableHeaderRow headerRow = ((TableViewSkinBase) newSkin).getTableHeaderRow();
+//            Set<Node> nodes=headerRow.lookupAll(".label");
+//            Iterator<Node> it= nodes.iterator();
+//            while(it.hasNext()){
+//                it.next().setStyle("-fx-font-size:20");
+//            }
+//
+//        });
 
         detectedGroups=CSVHandler.getDetectedGroups();
 

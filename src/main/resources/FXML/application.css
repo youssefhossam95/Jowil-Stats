@@ -151,10 +151,10 @@ JFXCheckBox {
 
 .jfx-tree-table-view .column-header .label {
     -fx-font-weight: bold;
-    -fx-font-size:15;
     -fx-text-fill:black;
     -fx-pref-height: 45px;
     -fx-padding: 0 0 0 0;
+    /*font size in java code*/
 }
 
 
@@ -163,7 +163,7 @@ JFXCheckBox {
     -fx-border-color:#A9A9A9;
     -fx-pref-height: 35px;
     -fx-alignment: center;
-    -fx-font-size:14;
+    /*font size in java code*/
 }
 
 
