@@ -199,6 +199,9 @@ public class ManualModeController extends Controller{
         });
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        resetButton.setOnMouseClicked(event -> {
+            removeAllColSets();
+        });
 
         initTable();
         initColumnSetsVBox();
@@ -894,6 +897,20 @@ public class ManualModeController extends Controller{
 
 
     }
+
+    private void removeAllColSets() {
+
+        boolean isAccept=showConfirmationDialog("Reset Column Sets","Resetting will delete all existing column sets." +
+                " Are you sure you want to reset column sets?",stage.getOwner());
+
+        if(isAccept) {
+            while (!columnSets.isEmpty())
+                deleteColumnSet(columnSets.get(0));
+        }
+
+
+    }
+
 
     class ColumnSetSorter implements Comparator<ColumnSet> {
 

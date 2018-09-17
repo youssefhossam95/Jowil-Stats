@@ -29,7 +29,7 @@
                     </ImageView>
                 </graphic>
             </Button>
-            <Button fx:id="resetButton" text="Reset Table" styleClass="redJFXButton">
+            <Button fx:id="resetButton" text="Reset Column Sets" styleClass="redJFXButton">
                 <graphic>
                     <ImageView fitWidth="13" fitHeight="13">
                         <Image url="@../Images/whiteReset.png"></Image>
