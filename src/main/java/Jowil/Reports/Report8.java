@@ -55,6 +55,9 @@ public class Report8 extends Report {
     public Document generatePdfHtml () throws IOException {
         File file = new File(templatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
+
+        updateTemplateFooter(doc); // updates the date of the footer to the current date
+
         String templateBodyHtml = doc.select("div#template").html() ;
         String wrapperHtml = doc.select("div.wrapper").outerHtml() ;
         final String pageBreakHtml= "<div class='page-break'></div>\n" ;
@@ -67,10 +70,10 @@ public class Report8 extends Report {
             if(formIndex>0) {
                 doc.select("div.wrapper").last().after(pageBreakHtml);
                 doc.select("div.page-break").last().after(templateBodyHtml) ;
-                doc.select("div.divTitle").last().text("Form " +(1+formIndex) + " Hardness Graduality Report") ;
+                doc.select("div.divTitle").last().text( reportTitle+ ": Form " +(1+formIndex) ) ;
             }
             else if( formsData.size()>1)
-                doc.select("div.divTitle").last().text("Form " +(1+formIndex) + " Hardness Graduality Report") ;
+                doc.select("div.divTitle").last().text(reportTitle+ ": Form " +(1+formIndex)) ;
 
             for ( int graphIndex = 0; graphIndex < formGraphsData.size() ; graphIndex++) {
                if(graphIndex > 0) {
@@ -119,11 +122,12 @@ public class Report8 extends Report {
             for (int graphIndex = 0; graphIndex < formGraphsData.size(); graphIndex++) {
                 ArrayList<Double> graphData = formGraphsData.get(graphIndex);
 
+                int numberOfQuestions = graphData.size()-3 ;
                 Stage stage = new Stage() ;
 
-                stage.setTitle("Hardness Graduality");
+//                stage.setTitle("Difficulty Graduality");
 
-                final NumberAxis xAxis = new NumberAxis();
+                final NumberAxis xAxis = new NumberAxis(1 , numberOfQuestions, Math.max(Math.round((double)numberOfQuestions/10) , 1));
                 final NumberAxis yAxis = new NumberAxis(0 , 10 , 1);
 //                yAxis.setLowerBound(0);
 //                yAxis.setUpperBound(10);
@@ -131,7 +135,7 @@ public class Report8 extends Report {
                         new LineChart<>(xAxis,yAxis);
 
                 xAxis.setLabel("Question Number");
-                yAxis.setLabel("Hardness");
+                yAxis.setLabel("Difficulty");
 
                 lc.setLegendVisible(false);
                 lc.setCreateSymbols(false);
@@ -144,8 +148,14 @@ public class Report8 extends Report {
                 for (int questionIndex = 0; questionIndex < graphData.size() - 3; questionIndex++) {
                     series1.getData().add(new XYChart.Data(questionIndex + 1, graphData.get(questionIndex)));
                 }
+
+
                 lc.getData().add(series1);
 
+                if(graphData.get(graphData.size()-3)<0) {
+                    Node n = lc.lookup(".chart-series-line");
+                    n.getStyleClass().add("bad");
+                }
                 Scene scene = new Scene(lc);
                 scene.getStylesheets().add("reports/report8/style.css");
                 lc.applyCss();
@@ -176,10 +186,10 @@ public class Report8 extends Report {
         ArrayList<ArrayList<String>> table = new ArrayList<>( );
         ArrayList<String> tableRow = new ArrayList<>( );
 
-        tableRow.add("slope") ; tableRow.add(Utils.formatNumber( data.get(0) , 1 )) ;
+        tableRow.add("Slope") ; tableRow.add(Utils.formatNumber( data.get(0) , 1 )) ;
         table.add(tableRow );
         tableRow = new ArrayList<>( );
-        tableRow.add("error") ; tableRow.add(Utils.formatNumber( data.get(1) , 1 )) ;
+        tableRow.add("Error") ; tableRow.add(Utils.formatNumber( data.get(1) , 1 )) ;
         table.add(tableRow );
         tableRow = new ArrayList<>( );
         tableRow.add("Jowil") ; tableRow.add(Utils.formatNumber( data.get(2) , 1 )) ;
@@ -209,10 +219,10 @@ public class Report8 extends Report {
         for ( int formIndex = 0 ; formIndex < formsData.size() ; formIndex++ ) {
             String form  = "" ;
             if(formsData.size()>1)
-                form = "Form " + (formIndex+1) ;
+                form = ": Form " + (formIndex+1) ;
             if(formIndex > 0)
                 outputTxt+= Utils.generatePattern("*" , pageWidth) + TxtUtils.newLine ;
-            String txtTitle = TxtUtils.generateTitleLine(form + " Hardness Graduality Reprot" , pageWidth , 3) ;
+            String txtTitle = TxtUtils.generateTitleLine( reportTitle+form, pageWidth , 3) ;
             outputTxt += txtTitle ;
 
             ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
@@ -251,8 +261,8 @@ public class Report8 extends Report {
         for ( int formIndex = 0 ; formIndex < formsData.size() ; formIndex++ ) {
             String form  = "" ;
             if(formsData.size()>1)
-                form = "Form " + (formIndex+1) ;
-            String txtTitle = CsvUtils.generateTitleLine(form + " Hardness Graduality Reprot" , separator,  pageWidth , 3) ;
+                form = ": Form " + (formIndex+1) ;
+            String txtTitle = CsvUtils.generateTitleLine(reportTitle+form , separator,  pageWidth , 3) ;
             outputCsv += txtTitle ;
 
             ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
@@ -284,9 +294,9 @@ public class Report8 extends Report {
         ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
         for ( int formIndex = 0 ; formIndex <formsData.size() ; formIndex++ ) {
             ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
-            String title = " Hardness Graduality Report" ;
+            String title = reportTitle ;
             if( formsData.size() >1) {
-                title = "Form " + (formIndex+1) + title;
+                title =title +": Form "  + (formIndex+1) ;
             }
             if(formIndex>0)
                 WordUtils.addPageBreak(document);

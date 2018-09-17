@@ -1,5 +1,6 @@
 package Jowil.Reports;
 
+import Jowil.Controller;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfReader;
@@ -65,7 +66,13 @@ abstract public class Report {
 
     }
 
-    public void updateTemplateDate(Document doc) {
+    public void updateTemplateFooter(Document doc) {
+
+        String reportTitle = doc.select("div#footerCenter").text() ;
+        String projectName= Controller.getProjectName();
+        String centerFooter = reportTitle + "..." + projectName ;
+        doc.select("div#footerCenter").last().text(centerFooter) ;
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDateTime now = LocalDateTime.now();
 //        System.out.println();

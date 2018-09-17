@@ -38,7 +38,7 @@ public class Report5 extends Report {
         File file = new File(templatePath);
         Document doc =  Jsoup.parse(file , "UTF-8") ;
 
-        updateTemplateDate(doc); // updates the date of the footer to the current date
+        updateTemplateFooter(doc); // updates the date of the footer to the current date
 
         String wrapperHtml = doc.select("div.wrapper").outerHtml() ;
         String pageBreakHtml = "<div class='page-break'> </div>" ;
@@ -48,7 +48,7 @@ public class Report5 extends Report {
 
         final int  NUMBER_OF_ROWS_IN_PAGE = 41 ;
         final int  ROWS_OF_MAIN_HEADER = 12 ;
-        final int  ROWS_OF_TABLE_HEADER = 6 ;
+        final double  ROWS_OF_TABLE_HEADER = 5 ;
         final int  ROWS_OF_GROUP_NAME  = 6;
 
         ArrayList<Group> groups = CSVHandler.getDetectedGroups();
@@ -66,7 +66,7 @@ public class Report5 extends Report {
             if(Statistics.getNumberOfForms()>1)
                 doc.select("div.divTitle").last().text(reportTitle + ": Form "+(formIndex+1));
 
-            int remainingRows = NUMBER_OF_ROWS_IN_PAGE - ROWS_OF_MAIN_HEADER;
+            double remainingRows = NUMBER_OF_ROWS_IN_PAGE - ROWS_OF_MAIN_HEADER;
 
             int htmlTableIndex = 0 ; //Index of table in html if no tables where deleted due to change in groups
             for (int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {

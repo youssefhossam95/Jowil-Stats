@@ -44,7 +44,7 @@ public class Report7 extends Report {
         File file = new File(templatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
-        updateTemplateDate(doc); // updates the date of the footer to the current date
+        updateTemplateFooter(doc); // updates the date of the footer to the current date
 
 
         final String pageBreakHtml= "<div class='page-break'></div>\n" ;

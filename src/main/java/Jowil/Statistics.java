@@ -639,16 +639,18 @@ public class Statistics {
         compinedMap.putAll(generalStatsMap);
 
         report3Maps.add(compinedMap);
-        for(int formIndex = 0 ; formIndex< getNumberOfForms() ; formIndex++) {
-            generalStatsMap = calcGeneralStats(formsScors.get(formIndex) ,questionsChoices.size()) ;
-            testInsightsMap =  calcFormTestInsights(correctAnswersPercents.get(formIndex));
-            generalStatsMap.remove("Number Of Students") ;  // not in report 3
-            compinedMap = new LinkedHashMap() ;
-            compinedMap.putAll(testInsightsMap);
-            compinedMap.putAll(generalStatsMap);
-            report3Maps.add(compinedMap) ;
-        }
+        if(getNumberOfForms()>1) {
+            for (int formIndex = 0; formIndex < getNumberOfForms(); formIndex++) {
+                generalStatsMap = calcGeneralStats(formsScors.get(formIndex), questionsChoices.size());
+                testInsightsMap = calcFormTestInsights(correctAnswersPercents.get(formIndex));
+                generalStatsMap.remove("Number Of Students");  // not in report 3
+                compinedMap = new LinkedHashMap();
+                compinedMap.putAll(testInsightsMap);
+                compinedMap.putAll(generalStatsMap);
+                report3Maps.add(compinedMap);
+            }
 
+        }
         return report3Maps ;
 
     }

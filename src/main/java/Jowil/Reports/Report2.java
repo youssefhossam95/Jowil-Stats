@@ -48,7 +48,7 @@ public class Report2 extends Report {
             File file = new File(templatePath);
             Document doc = Jsoup.parse(file, "UTF-8");
 
-            updateTemplateDate(doc); // updates the date of the footer to the current date
+            updateTemplateFooter(doc); // updates the date of the footer to the current date
 
             final int ROWS_IN_BLANK_PAGE = 35 ;
             final int ROWS_IN_FIRST_PAGE = 14 ;
@@ -224,7 +224,7 @@ public class Report2 extends Report {
         ArrayList<String> tableRow = new ArrayList<>() ;
 
         tableRow.add("Number Of Students") ; tableRow.add(statsMap.get("Number Of Students")) ;
-        tableRow.add("Mean") ; tableRow.add(statsMap.get("Mean")) ;
+        tableRow.add("Mean") ; tableRow.add(statsMap.get("Mean Score")) ;
         tableRow.add("Lowest Score") ; tableRow.add(statsMap.get("Lowest Score")) ;
 
         mapAsTable.add(tableRow) ;

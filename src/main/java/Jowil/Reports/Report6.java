@@ -148,7 +148,7 @@ public class Report6 extends Report {
         File file = new File(templatePath);
         Document doc = Jsoup.parse(file, "UTF-8");
 
-        updateTemplateDate(doc); // updates the date of the footer to the current date
+        updateTemplateFooter(doc); // updates the date of the footer to the current date
 
 
         String templateBodyHtml = doc.select("div#template").html() ;
