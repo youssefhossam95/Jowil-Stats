@@ -50,7 +50,7 @@ TableView:focused{
 }
 
 .redJFXButton:pressed{
-    -fx-background-color:#f74242;
+    -fx-background-color:#ff4d4d;
 }
 
 

@@ -84,9 +84,6 @@ public class ManualModeController extends Controller{
     Label CSTypeLabel;
 
     @FXML
-    StackPane resetColSetsButton;
-
-    @FXML
     Button resetButton;
 
     Label placeHolder=new Label("No Column Sets Added");
@@ -144,8 +141,6 @@ public class ManualModeController extends Controller{
         columnSetTextField.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         columnSetCombo.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         //columnSetHBox.setPadding(new Insets(rootHeightToPixels(0.05),0,0,0));
-        resetColSetsButton.setLayoutX(tableVBox.getLayoutX()+tableVBox.getPrefWidth()-resetColSetsButton.getWidth());
-        resetColSetsButton.setLayoutY(tableVBox.getLayoutY()+tableTitle.getHeight());
 
         midSeparator.setLayoutX(tableVBox.getLayoutY()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
         midSeparator.setLayoutY(rootHeightToPixels(0.03));

@@ -54,8 +54,5 @@
         </VBox>
     </ScrollPane>
     </VBox>
-    <StackPane fx:id="resetColSetsButton">
-        <FontAwesomeIconView styleClass="gradesMinusIcon" glyphName="TIMES_CIRCLE" size="16.0"></FontAwesomeIconView>
-    </StackPane>
 
 </AnchorPane>
