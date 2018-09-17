@@ -12,6 +12,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
 
     <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
@@ -25,6 +26,13 @@
                 <graphic>
                     <ImageView fitWidth="13" fitHeight="13">
                         <Image url="@../Images/whitePlus.png"></Image>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button fx:id="resetButton" text="Reset Table" styleClass="redJFXButton">
+                <graphic>
+                    <ImageView fitWidth="13" fitHeight="13">
+                        <Image url="@../Images/whiteReset.png"></Image>
                     </ImageView>
                 </graphic>
             </Button>
@@ -46,5 +54,8 @@
         </VBox>
     </ScrollPane>
     </VBox>
+    <StackPane fx:id="resetColSetsButton">
+        <FontAwesomeIconView styleClass="gradesMinusIcon" glyphName="TIMES_CIRCLE" size="16.0"></FontAwesomeIconView>
+    </StackPane>
 
 </AnchorPane>

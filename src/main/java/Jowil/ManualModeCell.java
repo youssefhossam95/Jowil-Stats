@@ -30,6 +30,9 @@ public class ManualModeCell<S, T> extends TableCell<S, T> {
 
         initListeners();
 
+        String color=controller.colColors.get(columnIndex).get();
+        if(!color.equals("transparent"))  //in order to load existing col sets properly
+            this.setStyle("-fx-background-color:"+color);
 
         controller.colColors.get(columnIndex).addListener((obs,oldValue,newValue)->{
             if(newValue.equals("transparent"))

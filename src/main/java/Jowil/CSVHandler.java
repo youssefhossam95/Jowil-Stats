@@ -475,6 +475,8 @@ public class CSVHandler {
 
         detectedQHeaders=new ArrayList<>();
         detectedInfoHeaders=new ArrayList<>();
+        subjStartIndex=NOT_AVAILABLE;
+        subjEndIndex=NOT_AVAILABLE;
 
 
         BufferedReader input = new BufferedReader(new FileReader(responsesFilePath));
@@ -555,6 +557,7 @@ public class CSVHandler {
     private static ArrayList<String> extractStudentsAnswers(String [] original,int skipCols,int end){
         ArrayList<String> cropped=new ArrayList<String>();
         int qIndex=0;
+
 
         for(int i=skipCols;i<end;i++) {
             if (!isQuestionsIgnored.get(qIndex))
@@ -750,8 +753,7 @@ public class CSVHandler {
 
 
         Pattern groupsPattern = Pattern.compile(".*\\d+");
-        subjStartIndex=NOT_AVAILABLE;
-        subjEndIndex=NOT_AVAILABLE;
+
         //info headers
         int i;
         for (i = 0; i < headers.length; i++) {

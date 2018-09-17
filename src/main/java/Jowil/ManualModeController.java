@@ -9,8 +9,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
@@ -81,6 +83,12 @@ public class ManualModeController extends Controller{
     @FXML
     Label CSTypeLabel;
 
+    @FXML
+    StackPane resetColSetsButton;
+
+    @FXML
+    Button resetButton;
+
     Label placeHolder=new Label("No Column Sets Added");
 
 
@@ -136,6 +144,8 @@ public class ManualModeController extends Controller{
         columnSetTextField.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         columnSetCombo.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         //columnSetHBox.setPadding(new Insets(rootHeightToPixels(0.05),0,0,0));
+        resetColSetsButton.setLayoutX(tableVBox.getLayoutX()+tableVBox.getPrefWidth()-resetColSetsButton.getWidth());
+        resetColSetsButton.setLayoutY(tableVBox.getLayoutY()+tableTitle.getHeight());
 
         midSeparator.setLayoutX(tableVBox.getLayoutY()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
         midSeparator.setLayoutY(rootHeightToPixels(0.03));
@@ -169,6 +179,8 @@ public class ManualModeController extends Controller{
         CSRangeLabel.setPrefWidth((int)(scrollPaneWidth*0.2));
 
 
+
+
         for(ColumnSet col:columnSets)
             col.updateSizes(scrollPaneWidth,scrollPaneHeight);
 
@@ -193,8 +205,12 @@ public class ManualModeController extends Controller{
         initAddButton();
         initColumnSetCombo();
         initNextButton();
+        loadExistingColSets();
+
+
 
     }
+
 
     @Override
     protected void saveChanges() {
@@ -282,6 +298,56 @@ public class ManualModeController extends Controller{
 
         });
 
+
+    }
+
+    private void loadExistingColSets() {
+        int idStart=CSVHandler.getIdentifierColStartIndex();
+        int idEnd=CSVHandler.getIdentifierColEndIndex();
+
+        if(idStart!=NOT_AVAILABLE && idEnd!=NOT_AVAILABLE && selectedIdentifierName!=null) {
+            String nextColor=colorGen.getNextColor();
+            String idName=selectedIdentifierName.replace(MANUAL_MODE_INDICATOR,"");
+            columnSets.add(new ColumnSet(idName, nextColor, idStart, idEnd - idStart, this, ID_TYPE));
+            for(int i=idStart;i<idEnd;i++)
+                colColors.get(i).set(nextColor);
+        }
+
+        if(CSVHandler.getFormColIndex()!=NOT_AVAILABLE && selectedFormColName!=null) {
+            String nextColor=colorGen.getNextColor();
+            String formColName=selectedFormColName.replace(MANUAL_MODE_INDICATOR,"");
+            columnSets.add(new ColumnSet(formColName, nextColor, CSVHandler.getFormColIndex(), 1, this, FORM_TYPE));
+            colColors.get(CSVHandler.getFormColIndex()).set(nextColor);
+        }
+
+
+        int subjStart=CSVHandler.getSubjStartIndex();
+        int subjEnd=CSVHandler.getSubjEndIndex();
+
+        if(subjStart!=NOT_AVAILABLE && subjEnd!=NOT_AVAILABLE) {
+            String nextColor=colorGen.getNextColor();
+            columnSets.add(new ColumnSet("Subjective", nextColor, subjStart, subjEnd - subjStart, this, SUBJECTIVE_TYPE));
+            for(int i=subjStart;i<subjEnd;i++)
+                colColors.get(i).set(nextColor);
+        }
+
+        int currentGroupStart=CSVHandler.getQuestionsColStartIndex();
+
+        if(CSVHandler.getDetectedGroups()!=null) {
+            for (Group group : CSVHandler.getDetectedGroups()) {
+                String nextColor = colorGen.getNextColor();
+                columnSets.add(new ColumnSet(group.getCleanedName(), nextColor, currentGroupStart, group.getqCount(), this, OBJECTIVE_TYPE));
+                for (int i = currentGroupStart; i < currentGroupStart + group.getqCount(); i++)
+                    colColors.get(i).set(nextColor);
+
+                currentGroupStart += group.getqCount();
+            }
+        }
+
+        columnSets.sort(new ColumnSetSorter());
+
+        columnSetsVBox.getChildren().setAll(columnSets);
+        updateSizes();
 
     }
 

@@ -41,6 +41,19 @@ TableView:focused{
     -fx-background-color:#3184c9;
 }
 
+
+.redJFXButton{
+    -fx-background-color:#ff4d4d;-fx-text-fill: white;
+}
+.redJFXButton:hover{
+    -fx-background-color:#ff9999;
+}
+
+.redJFXButton:pressed{
+    -fx-background-color:#f74242;
+}
+
+
 .GreenJFXButton{
     -fx-background-color:#3CB371;-fx-text-fill: white;
 }
