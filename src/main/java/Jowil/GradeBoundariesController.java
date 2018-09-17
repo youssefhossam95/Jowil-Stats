@@ -13,6 +13,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -96,7 +98,10 @@ public class GradeBoundariesController extends Controller {
     Label gradeRaw = new Label("Score");
     Label reportsLabel = new Label("Reports");
     Label formatsLabel = new Label("File Formats");
-
+    HBox reportsLabelHBox=new HBox(resX*5/1280);
+    HBox formatsLabelHBox=new HBox(resX*5/1280);
+    ToggleButton reportsToggle=new ToggleButton();
+    ToggleButton formatsToggle=new ToggleButton();
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
     private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json";
@@ -124,6 +129,27 @@ public class GradeBoundariesController extends Controller {
 
     @Override
     protected void initComponents() {
+
+        String toggImagePath="Images/Add Folder_96px.png";
+        ImageView reportsCheckImage=new ImageView(new Image(toggImagePath));
+        int imgSize=20;
+        reportsCheckImage.setFitWidth(imgSize);
+        reportsCheckImage.setFitHeight(imgSize);
+        ImageView formatsCheckImage=new ImageView(new Image(toggImagePath));
+        formatsCheckImage.setFitWidth(imgSize);
+        formatsCheckImage.setFitHeight(imgSize);
+        formatsToggle.setPadding(Insets.EMPTY);
+        reportsToggle.setPadding(Insets.EMPTY);
+
+
+        reportsToggle.setGraphic(reportsCheckImage);
+        reportsLabelHBox.getChildren().addAll(reportsLabel,reportsToggle);
+
+        formatsToggle.setGraphic(formatsCheckImage);
+        formatsLabelHBox.getChildren().addAll(formatsLabel,formatsToggle);
+
+
+
 
 
         initTrashIcon();
@@ -161,6 +187,7 @@ public class GradeBoundariesController extends Controller {
         comboHBox.setLayoutY(rootHeightToPixels(0.15));
         //comboHBox.setSpacing(resXToPixels(0.005));
         comboHBox.setSpacing(scrollPane.getPrefWidth()-gradesConfigCombo.getPrefWidth()-deleteConfigButton.getWidth());
+
 
         gradeBoundariesTitle.setLayoutX(comboHBox.getLayoutX());
         gradeBoundariesTitle.setLayoutY(rootHeightToPixels(0.05));
@@ -636,7 +663,7 @@ public class GradeBoundariesController extends Controller {
     private void initReportsVBox() {
 
         reportsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
-        reportsVBox.getChildren().add(reportsLabel);
+        reportsVBox.getChildren().add(reportsLabelHBox);
 
 
         //add checkboxes
@@ -671,7 +698,7 @@ public class GradeBoundariesController extends Controller {
     private void initFormatsVbox() {
 
         formatsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
-        formatsVBox.getChildren().add(formatsLabel);
+        formatsVBox.getChildren().add(formatsLabelHBox);
 
 
         for(int i=0;i<ReportsHandler.FORMATS_NAMES.length;i++)
