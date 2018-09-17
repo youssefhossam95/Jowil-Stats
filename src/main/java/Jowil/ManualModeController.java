@@ -342,9 +342,13 @@ public class ManualModeController extends Controller{
             }
         }
 
-        columnSets.sort(new ColumnSetSorter());
+        if(columnSets.size()==0)
+            columnSetsVBox.getChildren().setAll(placeHolder);
+        else {
+            columnSets.sort(new ColumnSetSorter());
+            columnSetsVBox.getChildren().setAll(columnSets);
+        }
 
-        columnSetsVBox.getChildren().setAll(columnSets);
         updateSizes();
 
     }
@@ -362,12 +366,6 @@ public class ManualModeController extends Controller{
             String type=columnSet.getType();
 
             if(type.equals(OBJECTIVE_TYPE)){
-                String errorMessage="";
-                if((errorMessage=CSVHandler.getObjColumnSetErrorMessage(columnSet))!=null){
-                    showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Questions Error",errorMessage);
-                    deleteColumnSet(columnSet);
-                    return false;
-                }
                 if(objStartIndex==NOT_AVAILABLE) { //first objective group
                     objStartIndex = columnSet.getStartIndex();
                     firstObjCS=index;
@@ -833,6 +831,16 @@ public class ManualModeController extends Controller{
                 return false;
             }
         }
+
+        for(ColumnSet columnSet:objColSets){  //validate all objective column sets
+            String errorMessage="";
+            if((errorMessage=CSVHandler.getObjColumnSetErrorMessage(columnSet))!=null){
+                showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Questions Error",errorMessage);
+                deleteColumnSet(columnSet);
+                return false;
+            }
+        }
+
         return true;
 
     }
