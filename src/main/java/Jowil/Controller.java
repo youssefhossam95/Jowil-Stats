@@ -136,6 +136,9 @@ public abstract class Controller {
 
     }
 
+    public static String getProjectName (){
+        return projectName ;
+    }
 
     protected abstract void initComponents();
     protected abstract void saveChanges();

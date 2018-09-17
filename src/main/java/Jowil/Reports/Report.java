@@ -1,7 +1,11 @@
 package Jowil.Reports;
 
+import Jowil.Controller;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfWriter;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -62,7 +66,13 @@ abstract public class Report {
 
     }
 
-    public void updateTemplateDate(Document doc) {
+    public void updateTemplateFooter(Document doc) {
+
+        String reportTitle = doc.select("div#footerCenter").text() ;
+        String projectName= Controller.getProjectName();
+        String centerFooter = reportTitle + "..." + projectName ;
+        doc.select("div#footerCenter").last().text(centerFooter) ;
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDateTime now = LocalDateTime.now();
 //        System.out.println();
@@ -89,6 +99,15 @@ abstract public class Report {
         renderer.createPDF(out);
 
         out.close();
+
+//        PdfReader pdfReader = new PdfReader(outputPdfPath);
+//        pdfReader.selectPages("1");
+//
+//        PdfStamper pdfStamper = new PdfStamper(pdfReader,
+//                new FileOutputStream(outputPdfPath));
+//
+//        pdfStamper.close();
+
 
     }
 
