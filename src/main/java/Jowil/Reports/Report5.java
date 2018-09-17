@@ -30,7 +30,6 @@ public class Report5 extends Report {
         reportTitle = "Questions Analysis Report" ;
         workSpacePath = reportsPath + "report5\\" ;
         templatePath = workSpacePath + "report5Template.html";
-        outputFileName = "Report5" ;
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
         imagesFolderFullPath = System.getProperty("user.dir") + workSpacePath  ;
     }

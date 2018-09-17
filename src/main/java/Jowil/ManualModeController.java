@@ -105,8 +105,9 @@ public class ManualModeController extends Controller{
     static boolean isIgnoreSavedObjectiveWeights;
 
 
+
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Mode",1.25,1.25,true,null,false,false);
+        super("ManualMode.fxml","Manual Configuration",1.25,1.25,true,null,false,false);
         this.caller=caller;
 
     }
@@ -422,7 +423,7 @@ public class ManualModeController extends Controller{
     }
 
     private void initAddButton(){
-        addButton.getStyleClass().add("BlueJFXButton");
+       // addButton.getStyleClass().add("BlueJFXButton");
         addButton.setOnMouseClicked(t->{
             if(columnSetTextField.getText().isEmpty()) {
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Column Set Error",
@@ -744,6 +745,10 @@ public class ManualModeController extends Controller{
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file: " + e.getMessage()+". Make sure that you have selected a valid form column.");
                 return false;
+            } catch (CSVHandler.InvalidSubjColumnException e) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                        "Error in students responses file: " + e.getMessage());
+                return false;
             }
         }
         else {
@@ -758,7 +763,7 @@ public class ManualModeController extends Controller{
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in reading students responses file.");
                 return false;
-            } catch (CSVHandler.InvalidFormNumberException e) {
+            } catch (CSVHandler.InvalidFormNumberException | CSVHandler.InvalidSubjColumnException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file: " + e.getMessage());
                 return false;

@@ -41,7 +41,6 @@ public class Report2 extends Report {
         reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
-        outputFileName = "Report2" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 
@@ -143,7 +142,7 @@ public class Report2 extends Report {
         doc.select("td.MaxPossibleScore").last().text(generalStatsMap.get("Maximum Possible Score")) ;
 
         //Basic Statistics
-        doc.select("td.Mean").last().text(generalStatsMap.get("Mean")) ;
+        doc.select("td.Mean").last().text(generalStatsMap.get("Mean Score")) ;
         doc.select("td.HighestScore").last().text(generalStatsMap.get("Highest Score")) ;
         doc.select("td.LowestScore").last().text(generalStatsMap.get("Lowest Score")) ;
         //Dispersion

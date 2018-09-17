@@ -18,7 +18,7 @@ public class StatisticsTest extends TestCase {
 
 
 
-    public void testMulti1() throws IOException, CSVHandler.InConsistentAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException, CSVHandler.IllFormedCSVException {
+    public void testMulti1() throws IOException, CSVHandler.InConsistentAnswerKeyException, CSVHandler.InvalidFormNumberException, CSVHandler.EmptyCSVException, DocumentException, CSVHandler.IllFormedCSVException, CSVHandler.InvalidSubjColumnException {
             ////////////////////// test using jo csv ///////////////////////////////////////
         String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
 

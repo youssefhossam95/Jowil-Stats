@@ -29,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
+import javax.swing.text.html.ImageView;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class GroupsController  extends Controller{
     static TreeView choicesTreeView=new TreeView();
     
     @FXML
-    JFXButton manualButton;
+    Button manualButton;
 
     @FXML
     Label groupsLabel;
@@ -81,6 +82,7 @@ public class GroupsController  extends Controller{
 
     @FXML
     GridPane infoGridPane;
+
 
 
 
@@ -530,7 +532,7 @@ public class GroupsController  extends Controller{
         alert.setTitle("Continue to File Configuration");
         alert.setHeaderText(null);
         alert.setContentText("Going back to file configuration will reset all the" +
-                " changes made in manual editing. Are you sure you want to continue to file configuration?");
+                " changes made in manual configuration. Are you sure you want to continue to file configuration?");
 
         alert.getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
         Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);

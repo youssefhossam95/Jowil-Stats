@@ -109,11 +109,6 @@ public class GradeBoundariesController extends Controller {
     Font gradesLabelsFonts = new Font("Arial", resX / 100);
 
 
-
-
-    private static Report[] reports;
-
-
     JSONObject prefsJsonObj;
     
 
@@ -201,13 +196,13 @@ public class GradeBoundariesController extends Controller {
         reportsConfigHBox.setLayoutX(reportsConfigTitle.getLayoutX());
         reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
         reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
-        reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight() * 0.8);
+        reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight()*0.97);
         reportsConfigHBox.setSpacing(resXToPixels(0.06));
 
         reportsLabel.setFont(gradesLabelsFonts);
-        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.05, 0));
+        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
         formatsLabel.setFont(gradesLabelsFonts);
-        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.05, 0));
+        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
         reportsVBox.setSpacing(resYToPixels(0.02));
         reportsVBox.setPadding(new Insets(0, 0, 0, reportsConfigHBox.getPrefWidth() * 0.02));
         formatsVBox.setSpacing(resYToPixels(0.02));
@@ -333,23 +328,25 @@ public class GradeBoundariesController extends Controller {
         
         //generate Reports
 
-        ArrayList<Report> reportsOut = new ArrayList<>();
+        ArrayList<Boolean> isGenerateReports = new ArrayList<>();
         ArrayList<Integer> formatsOut = new ArrayList<>();
         JSONArray reportsConfig = new JSONArray();
         JSONArray formatsConfig = new JSONArray();
 
         Statistics.init();
 
-        reports = new Report[]{new Report1(), new Report2(), new Report3(), new Report4(), new Report5()};
+
+
 
         //parse checkboxes and save their configs
         int i = 0;
         for (CheckBox checkBox : reportsCheckBoxes) {
             boolean isSelected = checkBox.isSelected();
-            if (isSelected) {
-                reportsOut.add(reports[i]);
+            if (isSelected)
                 reportsCount++;
-            }
+
+            isGenerateReports.add(isSelected);
+
             reportsConfig.add(isSelected);
             i++;
         }
@@ -429,7 +426,7 @@ public class GradeBoundariesController extends Controller {
         saveJsonObj(SAVED_PROJECTS_FILE_NAME,savedProjectsJson);
 
         Report.initOutputFolderPaths(outPath+projectDirName);
-        showProgressDialog(reportsOut,formatsOut);
+        showProgressDialog(isGenerateReports,formatsOut);
 
 
         stage.close();
@@ -641,12 +638,10 @@ public class GradeBoundariesController extends Controller {
         reportsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         reportsVBox.getChildren().add(reportsLabel);
 
+
         //add checkboxes
-        reportsCheckBoxes.add(new JFXCheckBox("Report 1: Grades Distribution Report"));
-        reportsCheckBoxes.add(new JFXCheckBox("Report 2: Condensed Test Report"));
-        reportsCheckBoxes.add(new JFXCheckBox("Report 3: Test Statistics Report"));
-        reportsCheckBoxes.add(new JFXCheckBox("Report 4: Students Grades Report"));
-        reportsCheckBoxes.add(new JFXCheckBox("Report 5: Questions Statistics Report"));
+        for(int i=0;i<Report.REPORTS_COUNT;i++)
+            reportsCheckBoxes.add(new JFXCheckBox("Report "+(i+1)+": "+Report.reportsTitles[i]));
 
         //load json array
         boolean isJsonSuccess=loadPrefsJsonObj();
@@ -679,9 +674,9 @@ public class GradeBoundariesController extends Controller {
         formatsVBox.getChildren().add(formatsLabel);
 
 
-        formatsCheckBoxes.add(new JFXCheckBox("PDF"));
-        formatsCheckBoxes.add(new JFXCheckBox("HTML"));
-        formatsCheckBoxes.add(new JFXCheckBox("TXT"));
+        for(int i=0;i<ReportsHandler.FORMATS_NAMES.length;i++)
+            formatsCheckBoxes.add(new JFXCheckBox(ReportsHandler.FORMATS_NAMES[i]));
+
 
         //load json array
         boolean isJsonSuccess=loadPrefsJsonObj();
@@ -900,8 +895,8 @@ public class GradeBoundariesController extends Controller {
     }
 
 
-    private void showProgressDialog(ArrayList<Report> reportsOut, ArrayList<Integer> formatsOut) {
-        new ReportProgressController(reportsCount,reportsOut,formatsOut).startWindow();
+    private void showProgressDialog(ArrayList<Boolean> isGenerateReport, ArrayList<Integer> formatsOut) {
+        new ReportProgressController(reportsCount,isGenerateReport,formatsOut).startWindow();
     }
 
 
@@ -925,7 +920,7 @@ public class GradeBoundariesController extends Controller {
         for(int i=0;i<formatsCheckBoxes.size();i++){
 
             if(formatsCheckBoxes.get(i).isSelected()) {
-                boolean success = makeDir(outPath + projectName + "\\" + Report.formatDirNames[i]);
+                boolean success = makeDir(outPath + projectName + "\\"+ReportsHandler.FORMATS_NAMES[i]+" Reports\\");
                 if (!success)
                     return false;
             }

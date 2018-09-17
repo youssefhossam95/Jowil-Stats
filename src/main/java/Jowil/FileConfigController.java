@@ -333,6 +333,10 @@ public class FileConfigController extends Controller {
                         showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                                 "Error in students responses file: " + e.getMessage()+". Make sure that you have selected the form column correctly.");
                         return;
+                    } catch (CSVHandler.InvalidSubjColumnException e) { //won't happen because subjective columns were already validated when was first project created.
+                        showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
+                                "Error in students responses file: " + e.getMessage());
+                        return;
                     }
 
                     new GroupsController(this).startWindow();
@@ -436,7 +440,7 @@ public class FileConfigController extends Controller {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in reading students responses file.");
                 return;
-            } catch (CSVHandler.InvalidFormNumberException e) {
+            } catch (CSVHandler.InvalidFormNumberException | CSVHandler.InvalidSubjColumnException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                         "Error in students responses file: " + e.getMessage());
                 return;

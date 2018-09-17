@@ -29,7 +29,6 @@ public class Report7 extends Report {
         reportTitle = "Questions Insights Report" ;
         workSpacePath = reportsPath + "report7\\" ;
         templatePath = workSpacePath + "report7Template.html";
-        outputFileName = "Report7" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 

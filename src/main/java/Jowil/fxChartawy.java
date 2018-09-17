@@ -91,7 +91,11 @@ public class fxChartawy extends Application {
         CSVHandler.setIdentifierColEndIndex(1);
         boolean isHeaders=CSVHandler.processHeaders(false);
         CSVHandler.loadAnswerKeys(".\\src\\test\\TestCSVs\\welloAnswerKeys.csv",true);
-        Jowil.CSVHandler.loadCsv(isHeaders);
+        try {
+            CSVHandler.loadCsv(isHeaders);
+        } catch (CSVHandler.InvalidSubjColumnException e) {
+            e.printStackTrace();
+        }
         Jowil.Statistics.setQuestionsChoices(generateTestAllQuestionsChoices());
         ArrayList<ArrayList<Double>> questionWeights=new ArrayList<ArrayList<Double>>();
         questionWeights.add(generateQuestionsWeights(6));

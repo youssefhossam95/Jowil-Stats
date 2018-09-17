@@ -39,7 +39,6 @@ public class Report6 extends Report {
         reportTitle = "Groups Insights Report" ;
         workSpacePath = reportsPath + "report6\\" ;
         templatePath = workSpacePath + "report6Template.html";
-        outputFileName = "Report6" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         imgsDirectoryFullPath = System.getProperty("user.dir") + workSpacePath ;
         while (!chartsDone) ;

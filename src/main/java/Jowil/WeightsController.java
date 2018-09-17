@@ -27,6 +27,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -54,6 +56,8 @@ public class WeightsController extends Controller {
         private SimpleStringProperty gradeName;
         private SimpleStringProperty minPercentScore;
         private SimpleStringProperty frequency;
+        private SimpleStringProperty percentage;
+
 
         Grade(String name, String score) {
 
@@ -66,6 +70,9 @@ public class WeightsController extends Controller {
             this.gradeName = new SimpleStringProperty(name);
             this.minPercentScore = new SimpleStringProperty(score);
             this.frequency=new SimpleStringProperty(frequency);
+
+            double percent=Double.parseDouble(frequency)/Statistics.getStudentAnswers().size()*100;
+            this.percentage=new SimpleStringProperty(String.format("%.1f",percent)+"%");
         }
 
 
@@ -103,6 +110,18 @@ public class WeightsController extends Controller {
 
         public void setFrequency(String frequency) {
             this.frequency.set(frequency);
+        }
+
+        public String getPercentage() {
+            return percentage.get();
+        }
+
+        public SimpleStringProperty percentageProperty() {
+            return percentage;
+        }
+
+        public void setPercentage(String percentage) {
+            this.percentage.set(percentage);
         }
 
 
@@ -211,6 +230,10 @@ public class WeightsController extends Controller {
 
     ObservableList<Grade> gradesFreqData = FXCollections.observableArrayList();
 
+    ImageView objButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
+
+    ImageView subjButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
+
 
 
 
@@ -267,6 +290,14 @@ public class WeightsController extends Controller {
         gradesFreqTable.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-gradesFreqTable.getPrefWidth());
         gradesFreqTable.setLayoutY(objTableVbox.getLayoutY());
         gradesFreqTable.setPrefHeight(objTable.getPrefHeight()*0.6);
+
+        int graphicSize=12;
+        objButtonGraphic.setFitWidth(graphicSize);
+        objButtonGraphic.setFitHeight(graphicSize);
+
+        subjButtonGraphic.setFitWidth(graphicSize);
+        subjButtonGraphic.setFitHeight(graphicSize);
+
 
 
 
@@ -390,6 +421,7 @@ public class WeightsController extends Controller {
         //objective hbox
 
         objWeightText.setPromptText("New weight");
+        objWeightsButton.setGraphic(objButtonGraphic);
         objWeightsButton.getStyleClass().add("BlueJFXButton");
         objWeightsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -419,6 +451,7 @@ public class WeightsController extends Controller {
         ////subjective hbox
 
         subjWeightText.setPromptText("New weight");
+        subjWeightsButton.setGraphic(subjButtonGraphic);
         subjWeightsButton.getStyleClass().add("BlueJFXButton");
         subjWeightsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -499,7 +532,7 @@ public class WeightsController extends Controller {
 
         JFXTreeTableColumn<Grade,String> gradeNamesCol = new JFXTreeTableColumn<>("Grade");
 
-        JFXTreeTableColumn<Grade,String> gradeFreqCol = new JFXTreeTableColumn<>("Frequency");
+        JFXTreeTableColumn<Grade,String> gradeFreqCol = new JFXTreeTableColumn<>("Relative Freq.");
 
 
         gradeNamesCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Grade, String> param) -> {
@@ -513,7 +546,7 @@ public class WeightsController extends Controller {
 
 
         gradeFreqCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Grade, String> param) -> {
-            return param.getValue().getValue().frequency;
+            return param.getValue().getValue().percentage;
         });
 
         gradeFreqCol.setCellFactory((TreeTableColumn<Grade, String> param) -> new GenericEditableTreeTableCell<>(

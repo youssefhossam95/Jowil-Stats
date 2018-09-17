@@ -44,7 +44,6 @@ public class Report1 extends Report{
         reportTitle = "Grades Distribution Report" ;
         workSpacePath = reportsPath + "report1\\" ;
         templatePath = workSpacePath + "report1Template.html";
-        outputFileName = "Report1" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         report1ImgFullPath = System.getProperty("user.dir") + workSpacePath.replace("." , "") + "GradesDistributionHistogram.png" ;
         while (!chartsReady);

@@ -24,8 +24,9 @@ import java.util.regex.Pattern;
 abstract public class Report {
 
 
-    public final static String [] formatDirNames={"\\PDF Reports\\","\\HTML Reports\\","\\TXT Reports\\",
-            "\\Word Reports\\","\\XLS Reports\\" , "\\Printable PDF Reports\\" , "\\CSV Reports\\" , "\\TSV Reports\\"};
+    public final static String [] reportsTitles={"Grades Distribution Report","Test Summary Report",
+            "Test Statistics Report","Students Grades Report","Questions Analysis Report","Groups Insights Report",
+    "Questions Insights Report","Test Difficulty Report"};
 
     protected String templatePath ;
     protected final String resourcesPath=  ".\\src\\main\\resources\\";
@@ -38,19 +39,29 @@ abstract public class Report {
     protected String outputFileName ;
     protected String pdfHtmlPath ;
 
+
     protected String reportTitle ;
+
+    public final static int REPORTS_COUNT=8;
 
     Report() {
         init();
+        int reportIndex=Integer.parseInt(this.getClass().getSimpleName().substring("Report".length()))-1;
+        this.reportTitle=reportsTitles[reportIndex];
+        this.outputFileName=this.getClass().getSimpleName()+" - "+this.reportTitle;
+    }
+
+    public String getOutputFileName() {
+        return outputFileName;
     }
 
     public static void initOutputFolderPaths(String outPath){
 
-        outputFormatsFolderPaths=new String[formatDirNames.length];
+        outputFormatsFolderPaths=new String[ReportsHandler.FORMATS_NAMES.length];
         Report.outPath=outPath;
 
         for(int i=0;i<outputFormatsFolderPaths.length;i++)
-            outputFormatsFolderPaths[i]=outPath+formatDirNames[i];
+            outputFormatsFolderPaths[i]=outPath+"\\"+ReportsHandler.FORMATS_NAMES[i]+" Reports\\";
 
     }
 
@@ -66,6 +77,7 @@ abstract public class Report {
 
         String url = new File(inputHtmlPath).toURI().toURL().toString();
         System.out.println("URL: " + url);
+
 
 
         OutputStream out = new FileOutputStream(outputPdfPath);

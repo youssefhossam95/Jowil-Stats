@@ -46,7 +46,6 @@ public class Report8 extends Report {
     public Report8(){
         workSpacePath = reportsPath + "report8\\" ;
         templatePath = workSpacePath + "report8Template.html";
-        outputFileName = "Report8" ;
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         imagesFullPath = System.getProperty("user.dir") + workSpacePath  ;
         while (!chartsReady) ;

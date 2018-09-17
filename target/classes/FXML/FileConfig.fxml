@@ -33,7 +33,7 @@
             <JFXComboBox fx:id="formCombo" labelFloat="true" promptText="Form Column" focusColor="#3184c9"/>
         </AnchorPane>
 
-        <JFXToggleButton fx:id="manualModeToggle" text="Manual Mode"  />
+        <JFXToggleButton fx:id="manualModeToggle" text="Manual Configuration"  />
         </VBox>
 
         <JFXButton fx:id="nextButton" text="Next">
