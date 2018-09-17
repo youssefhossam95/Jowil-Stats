@@ -56,6 +56,7 @@ public class TxtUtils {
 
     public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ) {
 
+        System.out.println("fuck you ");
         String txtTable = "" ;
         ArrayList<Integer> cellsWidths = calcCellsWidths(table , cellHorizontalPadding) ;
         int tableWidth = calcTableWidth( table ,  cellHorizontalPadding) ;

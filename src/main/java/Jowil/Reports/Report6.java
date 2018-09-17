@@ -36,6 +36,7 @@ public class Report6 extends Report {
     volatile boolean chartsDone = false ;
 
     public Report6(){
+        reportTitle = "Groups Insights Report" ;
         workSpacePath = reportsPath + "report6\\" ;
         templatePath = workSpacePath + "report6Template.html";
         outputFileName = "Report6" ;
@@ -162,9 +163,9 @@ public class Report6 extends Report {
                 doc.select("img").last().after(pageBreakHtml);
                 doc.select("div.page-break").last().after(templateBodyHtml);
                 doc.select("div.divTitle").addClass("second-page-header");
-                doc.select("div.divTitle").last().text("Form " + (formIndex+1) + " Group Detils Report");
+                doc.select("div.divTitle").last().text( reportTitle +": Form " + (formIndex+1) );
             } else if(Statistics.getNumberOfForms()>1)
-                doc.select("div.divTitle").last().text("Form "+(formIndex+1) + " Group Detils Report");
+                doc.select("div.divTitle").last().text(reportTitle +": Form " + (formIndex+1));
 
             ArrayList<ArrayList<String>> statsTable = formsStatsTables.get(formIndex);
             String tableRowsHtml = createRowsHtml(statsTable, ";grayRow", "tg-l711");
@@ -246,14 +247,14 @@ public class Report6 extends Report {
           ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(formsStatsTables.get(formIndex)) ;
 
 
-            String reportTitle = "Section Details Report"  ;
+            String txtReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
-                reportTitle = "Form "+(formIndex+1) + " " + reportTitle ;
+                txtReportTitle = txtReportTitle +": Form " + (formIndex+1) ;
 
             if(formIndex > 0 )
                 outputTxt+= TxtUtils.newLine+Utils.generatePattern("*" , pageWidth)+TxtUtils.newLine;
 
-            String txtTitle = TxtUtils.generateTitleLine(reportTitle,
+            String txtTitle = TxtUtils.generateTitleLine(txtReportTitle,
                     TxtUtils.calcTableWidth(tableWithHeaders, CHP), 2);
 
             String txtTable = TxtUtils.generateTxtTableAlignCenter2(tableWithHeaders, "", CHP, false);
@@ -283,14 +284,14 @@ public class Report6 extends Report {
             ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(formsStatsTables.get(formIndex)) ;
 
 
-            String reportTitle = "Section Details Report"  ;
+            String csvReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
-                reportTitle = "Form "+(formIndex+1) + " " + reportTitle ;
+                csvReportTitle = csvReportTitle +": Form " + (formIndex+1) ;
 
 //            if(formIndex > 0 )
 //                outputCsv+= CsvUtils.newLine+Utils.generatePattern("*" , pageWidth)+CsvUtils.newLine;
 
-            String txtTitle = CsvUtils.generateTitleLine(reportTitle, separator ,
+            String txtTitle = CsvUtils.generateTitleLine(csvReportTitle, separator ,
                     pageWidth , 2);
 
             String txtTable = CsvUtils.generateTable(tableWithHeaders, separator);
@@ -322,9 +323,9 @@ public class Report6 extends Report {
         for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
 
 
-            String title = " Section Details Report" ;
+            String title = reportTitle ;
             if( formsStatsTables.size() >1) {
-                title = "Form " + (formIndex+1) + title;
+                title =   title+": Form " + (formIndex+1);
             }
             if(formIndex>0)
                 WordUtils.addPageBreak(document);

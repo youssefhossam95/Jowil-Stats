@@ -1070,7 +1070,7 @@ public class Statistics {
 
         }
         for (String dist: smartDistSet)
-            smartDist+= dist +"," ;
+            smartDist+= dist +" " ;
 
         smartDist = Utils.removeLastChar(smartDist) ;
         return  smartDist ;
@@ -1117,9 +1117,9 @@ public class Statistics {
                 for (int responseIndex = 0; responseIndex < questionStats.size(); responseIndex++) {
                     double responsePercent = questionStats.get(responseIndex);
                     if (responsePercent > correctAnswerPrecentage)
-                        distractors += questionsChoices.get(questionIndex).get(responseIndex) + ",";
+                        distractors += questionsChoices.get(questionIndex).get(responseIndex) + " ";
                     if (responsePercent == 0)
-                        nonDistractors += questionsChoices.get(questionIndex).get(responseIndex) + ",";
+                        nonDistractors += questionsChoices.get(questionIndex).get(responseIndex) + " ";
                 }
 
 
@@ -1132,7 +1132,13 @@ public class Statistics {
 
             SortByDiffAsc sorterAsc = new SortByDiffAsc();
             Collections.sort(questionsTable, sorterAsc);
-            ArrayList<ArrayList<String>> easiestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 2).subList(0, 10));
+            ArrayList<ArrayList<String>> easiestQuestionsTable ;
+            if(questionsTable.size()>10)
+              easiestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 2).subList(0, 10));
+            else
+              easiestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(questionsTable) ,2) ;
+
+
 
             Collections.sort(badQuestionsTable , sorterAsc);
             if(badQuestionsTable.size()>10) // if more than ten question return the worst 10 questions
@@ -1140,7 +1146,12 @@ public class Statistics {
 
             SortByDiffDesc sorterDesc = new SortByDiffDesc();
             Collections.sort(questionsTable, sorterDesc);
-            ArrayList<ArrayList<String>> hardestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 3).subList(0, 10));
+
+            ArrayList<ArrayList<String>> hardestQuestionsTable ;
+            if(questionsTable.size()>10)
+                hardestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 3).subList(0, 10));
+            else
+                hardestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(questionsTable) , 3) ;
 
             oneFormTables.add(hardestQuestionsTable);
             oneFormTables.add(easiestQuestionsTable);

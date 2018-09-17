@@ -2,6 +2,9 @@ package Jowil.Reports;
 
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfWriter;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -77,6 +80,15 @@ abstract public class Report {
         renderer.createPDF(out);
 
         out.close();
+
+//        PdfReader pdfReader = new PdfReader(outputPdfPath);
+//        pdfReader.selectPages("1");
+//
+//        PdfStamper pdfStamper = new PdfStamper(pdfReader,
+//                new FileOutputStream(outputPdfPath));
+//
+//        pdfStamper.close();
+
 
     }
 
