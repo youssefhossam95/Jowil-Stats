@@ -154,7 +154,7 @@ JFXCheckBox {
     -fx-text-fill:black;
     -fx-pref-height: 45px;
     -fx-padding: 0 0 0 0;
-    /*font size in java code*/
+    -fx-font-size:14;
 }
 
 
@@ -163,7 +163,8 @@ JFXCheckBox {
     -fx-border-color:#A9A9A9;
     -fx-pref-height: 35px;
     -fx-alignment: center;
-    /*font size in java code*/
+    -fx-font-size:14;
+
 }
 
 

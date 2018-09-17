@@ -91,6 +91,7 @@ public class FileConfigController extends Controller {
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
     private static final String EM1 = "1em";
     private static final String ERROR = "error";
+    private static final String CSV_DIR_FILE_NAME="CSVDir.json",LAST_CSV_DIR_JSON_KEY="lastCSVDir";
     private ArrayList<String> filteredInfoHeaders;
     private ObservableList<String> combosItems = FXCollections.observableArrayList();
     private int identifierComboSelectedIndex; //including none at index zero
@@ -102,6 +103,7 @@ public class FileConfigController extends Controller {
     private int complexIdStartIndex;
     private final static int SKIPROW = 0, CONTINUE = 1, CANCEL = 2, DECLARESUBJ = 3;
     final static String NONE_OPTION="None";
+    JSONObject lastDirJson;
 
     int manualColsCounter = 0;
     int manualIDIndex;
@@ -175,6 +177,9 @@ public class FileConfigController extends Controller {
         initFormCombo();
         initManualModeToggle();
         isMainTextFieldValidated=false;
+        lastDirJson=loadJsonObj(CSV_DIR_FILE_NAME);
+        lastDir=(String)lastDirJson.get(LAST_CSV_DIR_JSON_KEY);
+
         if (isOpenMode) {
             mainFileTextField.setText((String) currentOpenedProjectJson.get(RESPONSES_FILE_PATH_JSON_KEY));
             answersFileTextField.setText((String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY));
@@ -192,8 +197,8 @@ public class FileConfigController extends Controller {
         }
 
 
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+//        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+//        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
     }
 
@@ -281,6 +286,8 @@ public class FileConfigController extends Controller {
                 return;
             }
 
+
+
             int formsCount = isOpenMode?((JSONArray)currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size():CSVHandler.getFormsCount();
 
 
@@ -296,6 +303,7 @@ public class FileConfigController extends Controller {
                 return;
             }
 
+
             int responsesColCount = CSVHandler.getResponsesColsCount();
             int answersColCount = CSVHandler.getAnswersColsCount();
 
@@ -304,6 +312,11 @@ public class FileConfigController extends Controller {
                         responsesColCount + " columns, while the answer key file contains " + answersColCount + " columns.");
                 return;
             }
+
+            lastDirJson.put(LAST_CSV_DIR_JSON_KEY,lastDir);
+            saveJsonObj(CSV_DIR_FILE_NAME,lastDirJson);
+
+
 
             ManualModeController.setIsManualModeUsedBefore(false);
 
