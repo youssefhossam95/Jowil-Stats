@@ -204,33 +204,28 @@ public class Report6 extends Report {
 
         ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table);
         ArrayList<String>tableHeaders = new ArrayList<>();
-        tableHeaders.add("Section Name") ; tableHeaders.add("Hardest Question") ;
-        tableHeaders.add("Easiest Question") ; tableHeaders.add("Average Correct ") ;
-        tableHeaders.add("Percentage Of Questions"); tableHeaders.add("Average Point");
-        tableHeaders.add("Difficulity");
-
-        ArrayList<String> secondHeaders = new ArrayList<>();
-        secondHeaders.add("");  secondHeaders.add("") ; secondHeaders.add("");
-        secondHeaders.add("Percentage") ; secondHeaders.add("with Distractors");
-        secondHeaders.add("Biserial") ; secondHeaders.add("(0-10)") ;
-
-        tableWithHeaders.add(0,tableHeaders);
-        tableWithHeaders.add(1,secondHeaders) ;
-        return  tableWithHeaders ;
-    }
-
-    private ArrayList<ArrayList<String>> getTableWithHeadersWord ( ArrayList<ArrayList<String>> table) {
-
-        ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table);
-        ArrayList<String>tableHeaders = new ArrayList<>();
-        tableHeaders.add("Section Name") ; tableHeaders.add("Hardest Question") ;
-        tableHeaders.add("Easiest Question") ; tableHeaders.add("Average Correct Percentage") ;
-        tableHeaders.add("Percentage Of Questions with Distractors"); tableHeaders.add("Average Point Biserial");
+        tableHeaders.add("Name") ; tableHeaders.add("Hardest Question") ;
+        tableHeaders.add("Easiest Question") ; tableHeaders.add("Correct Response %") ;
+        tableHeaders.add("Questions With Distractors %"); tableHeaders.add("Point Biserial");
         tableHeaders.add("Difficulity (0-10)");
 
         tableWithHeaders.add(0,tableHeaders);
+//        tableWithHeaders.add(1,secondHeaders) ;
         return  tableWithHeaders ;
     }
+//
+//    private ArrayList<ArrayList<String>> getTableWithHeadersWord ( ArrayList<ArrayList<String>> table) {
+//
+//        ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table);
+//        ArrayList<String>tableHeaders = new ArrayList<>();
+//        tableHeaders.add("Section Name") ; tableHeaders.add("Hardest Question") ;
+//        tableHeaders.add("Easiest Question") ; tableHeaders.add("Average Correct Percentage") ;
+//        tableHeaders.add("Percentage Of Questions with Distractors"); tableHeaders.add("Average Point Biserial");
+//        tableHeaders.add("Difficulity (0-10)");
+//
+//        tableWithHeaders.add(0,tableHeaders);
+//        return  tableWithHeaders ;
+//    }
     @Override
     public void generateTxtReport() {
 
@@ -256,7 +251,7 @@ public class Report6 extends Report {
             String txtTitle = TxtUtils.generateTitleLine(txtReportTitle,
                     TxtUtils.calcTableWidth(tableWithHeaders, CHP), 2);
 
-            String txtTable = TxtUtils.generateTxtTableAlignCenter2(tableWithHeaders, "", CHP, false);
+            String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders, "", CHP, false);
 
              outputTxt+= txtTitle + txtTable;
         }
@@ -316,7 +311,7 @@ public class Report6 extends Report {
 
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
-        XWPFDocument document = new XWPFDocument();
+        XWPFDocument document = WordUtils.createDocument(WordUtils.LANDSCAPE_PAGE_WIDHT , WordUtils.LANDSCAPE_PAGE_HEIGHT);
 
 
         for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
@@ -332,7 +327,7 @@ public class Report6 extends Report {
 
             WordUtils.addTitle(document , title );
 
-            WordUtils.addTable(document, getTableWithHeadersWord(formsStatsTables.get(formIndex)));
+            WordUtils.addTable(document, getTableWithHeaders(formsStatsTables.get(formIndex)));
 
             WordUtils.addImage(document , imgsDirectoryFullPath+imgName+(formIndex+1)+".png");
 

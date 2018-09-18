@@ -1,6 +1,8 @@
 package Jowil.Reports;
 
 import Jowil.Controller;
+import Jowil.RectGenerator;
+import Jowil.Test;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfReader;
@@ -30,8 +32,8 @@ abstract public class Report {
     "Questions Insights Report","Test Difficulty Report"};
 
     protected String templatePath ;
-    protected final String resourcesPath=  ".\\src\\main\\resources\\";
-    protected final String reportsPath=  resourcesPath+ "reports\\";
+    protected  String resourcesPath;
+    protected  String reportsPath;
 //    protected final String ReportsPath = "\\reports" ;
 //    URLDecoder.decode(getClass().getResource("/GradeConfigs").getFile(),"utf-8")
     protected static String [] outputFormatsFolderPaths;  //same order as ReportsHandler formats Constants
@@ -46,6 +48,15 @@ abstract public class Report {
     public final static int REPORTS_COUNT=8;
 
     Report() {
+        try {
+            resourcesPath= ".\\src\\main\\resources\\" ;
+//                    URLDecoder.decode(Report.class.getResource("../../").getPath(),"utf-8");
+//            resourcesPath= resourcesPath.substring(0 , resourcesPath.length()-8) ;
+            System.out.println("fuck this fucken shit"+resourcesPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        reportsPath=  resourcesPath+ "reports\\";
         init();
         int reportIndex=Integer.parseInt(this.getClass().getSimpleName().substring("Report".length()))-1;
         this.reportTitle=reportsTitles[reportIndex];

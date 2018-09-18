@@ -129,6 +129,8 @@ public class Report5 extends Report {
                 doc.select("span.second").last().remove() ;
         }
 
+        doc.select("div.wrapper").last().attr("style" , "margin-bottom:0px") ;
+
         return doc ;
 //        writeHtmlFile(pdfHtmlPath , doc);
     }
@@ -174,6 +176,13 @@ public class Report5 extends Report {
                     pageWidth,2) ;
 
             outputTxt+= txtTitle ;
+
+            String legend = "! : Distractor"+TxtUtils.newLine +
+                            "- : Non Distractor" + TxtUtils.newLine +
+                            "<-- : Correct Answer" + TxtUtils.newLine;
+
+            outputTxt+= legend + TxtUtils.newLine ;
+
             ArrayList<String> formTxtTables = new ArrayList<>() ;
             ArrayList<ArrayList<ArrayList<String>>> formTables = printableFormsStatsTables.get(formIndex);
             for(int tableIndex = 0; tableIndex < formTables.size() ; tableIndex++) {
