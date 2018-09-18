@@ -249,6 +249,7 @@ public abstract class Controller {
             });
 
 
+
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
 

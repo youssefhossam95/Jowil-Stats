@@ -245,7 +245,7 @@ public class WeightsController extends Controller {
     //Main methods
 
     WeightsController(Controller back) {
-        super("Weights.fxml", "Weights", 1.23, 1.23, true, back, "4.png", 2, "Questions Weights");
+        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "4.png", 2, "Questions Weights");
     }
 
 
@@ -282,7 +282,10 @@ public class WeightsController extends Controller {
 
         objWeightsButton.setPadding(new Insets(verPadding,sidePadding,verPadding,sidePadding));
         objWeightsButton.setGraphicTextGap(resX*4/1280);
-        System.out.println("objawy"+objWeightsButton.getGraphicTextGap());
+        System.out.println("objawy"+objWeightsButton.getWidth());
+        objWeightsButton.setMinWidth(resX*123/1280);
+        subjWeightsButton.setMinWidth(resX*123/1280);
+
 
 
         midSeparator.setLayoutX(rootWidthToPixels(0.665));

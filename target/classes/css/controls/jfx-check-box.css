@@ -33,7 +33,10 @@
     -fx-pref-width: 18;
     -fx-pref-height: 18;
 
-
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
 
     -fx-background-color: TRANSPARENT;
     -fx-background-radius: 2;
