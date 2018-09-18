@@ -248,11 +248,7 @@ public class Report8 extends Report {
         generatePDF(pdfHtmlPath , outputFormatsFolderPaths[ReportsHandler.PRINTABLE_PDF]+outputFileName+".pdf");
     }
 
-    @Override
-    public void generateCsvReport() throws IOException {
-
-        char separator = ',' ;
-
+    private String generateCharSeparatedValuesString(char separator) {
         ArrayList<String> tablesTitles = getTableTitles();
         String outputCsv=  "" ;
         ArrayList<Double> tempTable = formsData.get(0).get(0) ;
@@ -271,18 +267,25 @@ public class Report8 extends Report {
                 ArrayList<Double> graphData = formGraphsData.get(graphIndex);
                 ArrayList<ArrayList<String>> table = getTableWithHeaders(new ArrayList<>
                         (graphData.subList(graphData.size() - 3, graphData.size())));
-                txtTables.add( CsvUtils.generateTable(table, ',' ,tablesTitles.get(graphIndex)));
+                txtTables.add( CsvUtils.generateTable(table, separator,tablesTitles.get(graphIndex)));
             }
             outputCsv += CsvUtils.stackTablesV(txtTables , 2) ;
         }
 
+        return outputCsv ;
+    }
+        @Override
+    public void generateCsvReport() throws IOException {
+
+        String outputCsv = generateCharSeparatedValuesString(',') ;
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.CSV]+outputFileName+".csv");
 
     }
 
     @Override
     public void generateTsvReprot() {
-
+        String outputTsv = generateCharSeparatedValuesString('\t') ;
+        CsvUtils.writeCsvToFile(outputTsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
     }
 
     @Override

@@ -185,7 +185,10 @@ public class Statistics {
     }
 
     public static Double getPassingPercent() {
-        return  gradesLowerRange.get(1) ;
+        int gradeIndex =1 ;
+        while (gradesLowerRange.get(gradeIndex)*100 < 50)
+            gradeIndex++;
+        return  gradesLowerRange.get(gradeIndex) ;
     }
 
     public static Double getMaxScore(){ return maxScore ; }
