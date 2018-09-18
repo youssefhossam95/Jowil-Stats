@@ -84,9 +84,6 @@ public class ManualModeController extends Controller{
     Label CSTypeLabel;
 
     @FXML
-    StackPane resetColSetsButton;
-
-    @FXML
     Button resetButton;
 
     Label placeHolder=new Label("No Column Sets Added");
@@ -144,8 +141,6 @@ public class ManualModeController extends Controller{
         columnSetTextField.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         columnSetCombo.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         //columnSetHBox.setPadding(new Insets(rootHeightToPixels(0.05),0,0,0));
-        resetColSetsButton.setLayoutX(tableVBox.getLayoutX()+tableVBox.getPrefWidth()-resetColSetsButton.getWidth());
-        resetColSetsButton.setLayoutY(tableVBox.getLayoutY()+tableTitle.getHeight());
 
         midSeparator.setLayoutX(tableVBox.getLayoutY()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
         midSeparator.setLayoutY(rootHeightToPixels(0.03));
@@ -347,9 +342,13 @@ public class ManualModeController extends Controller{
             }
         }
 
-        columnSets.sort(new ColumnSetSorter());
+        if(columnSets.size()==0)
+            columnSetsVBox.getChildren().setAll(placeHolder);
+        else {
+            columnSets.sort(new ColumnSetSorter());
+            columnSetsVBox.getChildren().setAll(columnSets);
+        }
 
-        columnSetsVBox.getChildren().setAll(columnSets);
         updateSizes();
 
     }
@@ -367,12 +366,6 @@ public class ManualModeController extends Controller{
             String type=columnSet.getType();
 
             if(type.equals(OBJECTIVE_TYPE)){
-                String errorMessage="";
-                if((errorMessage=CSVHandler.getObjColumnSetErrorMessage(columnSet))!=null){
-                    showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Questions Error",errorMessage);
-                    deleteColumnSet(columnSet);
-                    return false;
-                }
                 if(objStartIndex==NOT_AVAILABLE) { //first objective group
                     objStartIndex = columnSet.getStartIndex();
                     firstObjCS=index;
@@ -838,6 +831,16 @@ public class ManualModeController extends Controller{
                 return false;
             }
         }
+
+        for(ColumnSet columnSet:objColSets){  //validate all objective column sets
+            String errorMessage="";
+            if((errorMessage=CSVHandler.getObjColumnSetErrorMessage(columnSet))!=null){
+                showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Questions Error",errorMessage);
+                deleteColumnSet(columnSet);
+                return false;
+            }
+        }
+
         return true;
 
     }

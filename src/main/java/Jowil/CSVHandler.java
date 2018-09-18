@@ -917,7 +917,7 @@ public class CSVHandler {
             return "Invalid objective column set \""+columnSet.getName()+"\". Choices in an objective column set must be of the same type.";
 
         if(isContainsInvalidChoices(columnSet))
-            return "Invalid choices at column set \""+columnSet.getName()+"\". A valid choice must be either a number in range (0-99) or an english letter.";
+            return "Invalid responses at objective column set \""+columnSet.getName()+"\". A valid response must be either a number in the range (0-99) or an English letter.";
 
         return null;
     }
