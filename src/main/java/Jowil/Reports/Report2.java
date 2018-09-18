@@ -135,6 +135,7 @@ public class Report2 extends Report {
                     groupIndex++ ;
                 }
             }
+            doc.select("table").last().attr("style" , "margin-bottom:0px") ;
             return doc ;
         }
         private void fillGeneralStatsReport2 (Document doc , Map<String , String> generalStatsMap) {

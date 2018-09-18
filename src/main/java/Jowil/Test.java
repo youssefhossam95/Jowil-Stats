@@ -15,9 +15,11 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.math3.stat.StatUtils.* ;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static com.sun.javafx.scene.control.skin.Utils.getResource;
 import static org.apache.commons.math3.stat.StatUtils.max;
 
 
@@ -58,8 +60,8 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
-        String x = "7.5";
-        System.out.println(Math.round(Double.valueOf(x)));
+//        String x = "7.5";
+//        System.out.println(Math.round(Double.valueOf(x)));
 
 //        ArrayList<Double> hardness = new ArrayList<>( );
 //        for(int i = 0 ; i < 40 ; i ++)
@@ -75,7 +77,7 @@ public class Test {
 
 
 
-//        System.out.println(URLDecoder.decode(getResource("/reports/report1/report1template.html").getFile(),"utf-8"));
+        System.out.println(URLDecoder.decode(Test.class.getResource("/reports").getPath(),"utf-8"));
 
 
 
