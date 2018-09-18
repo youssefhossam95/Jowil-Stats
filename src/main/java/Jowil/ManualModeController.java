@@ -11,11 +11,13 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+
 
 
 import java.io.IOException;
@@ -86,6 +88,12 @@ public class ManualModeController extends Controller{
     @FXML
     Button resetButton;
 
+    @FXML
+    ImageView addButtonGraphic;
+
+    @FXML
+    ImageView resetButtonGraphic;
+
     Label placeHolder=new Label("No Column Sets Added");
 
 
@@ -112,7 +120,7 @@ public class ManualModeController extends Controller{
 
 
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Configuration",1.25,1.25,true,null,false,false);
+        super("ManualMode.fxml","Manual Configuration",1.23,1.23,true,null,false,false);
         this.caller=caller;
 
     }
@@ -142,9 +150,16 @@ public class ManualModeController extends Controller{
         columnSetCombo.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         //columnSetHBox.setPadding(new Insets(rootHeightToPixels(0.05),0,0,0));
 
+        double buttImageSize=resX*13/1280;
+        addButtonGraphic.setFitWidth(buttImageSize);
+        addButtonGraphic.setFitHeight(buttImageSize);
+        resetButtonGraphic.setFitWidth(buttImageSize);
+        resetButtonGraphic.setFitHeight(buttImageSize);
+
         midSeparator.setLayoutX(tableVBox.getLayoutY()+tableVBox.getPrefWidth()+rootWidthToPixels(0.05));
         midSeparator.setLayoutY(rootHeightToPixels(0.03));
         midSeparator.setPrefHeight(rootHeightToPixels(0.8));
+
 
 
         //right

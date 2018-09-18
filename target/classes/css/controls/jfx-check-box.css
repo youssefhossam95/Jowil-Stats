@@ -33,10 +33,7 @@
     -fx-pref-width: 18;
     -fx-pref-height: 18;
 
-    -fx-min-width: -fx-pref-width;
-    -fx-max-width: -fx-pref-width;
-    -fx-min-height: -fx-pref-height;
-    -fx-max-height: -fx-pref-height;
+
 
     -fx-background-color: TRANSPARENT;
     -fx-background-radius: 2;
@@ -46,6 +43,25 @@
     -fx-border-radius: 2;
     -fx-border-width: 2;
 }
+
+/*same as box class above but any properties related to size is removed in order to be able to set it dynamically in java code.*/
+.jfx-check-box .specialBox{
+
+    -fx-background-color: TRANSPARENT;
+    -fx-background-radius: 2;
+
+    -fx-border-color: -jfx-unchecked-color;
+    -fx-border-style: solid;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+
+}
+
+.jfx-check-box:selected .specialBox{
+    -fx-border-color: -jfx-checked-color;
+}
+
+
 
 .jfx-check-box:selected .box {
     -fx-border-color: -jfx-checked-color;

@@ -129,27 +129,12 @@ TreeView:focused{
 }
 
 
-JFXCheckBox {
+.jfx-check-box {
     -jfx-unchecked-color: #5A5A5A;
     -jfx-checked-color: #3184c9;
 }
 
 
-.smallCheckBox .box,
-.smallCheckBox:indeterminate .box,
-.smallCheckBox:indeterminate:selected .box{
-    -fx-pref-width: 14;
-    -fx-pref-height: 14;
-
-}
-
-
-.smallCheckBox .mark {
-    -fx-max-width: 13;
-    -fx-max-height: 11;
-
-
-}
 
 
 
@@ -167,7 +152,7 @@ JFXCheckBox {
     -fx-text-fill:black;
     -fx-pref-height: 45px;
     -fx-padding: 0 0 0 0;
-    -fx-font-size:14;
+
 }
 
 
@@ -176,7 +161,7 @@ JFXCheckBox {
     -fx-border-color:#A9A9A9;
     -fx-pref-height: 35px;
     -fx-alignment: center;
-    -fx-font-size:14;
+
 
 }
 

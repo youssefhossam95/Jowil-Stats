@@ -17,6 +17,7 @@ import static Jowil.Controller.resX;
 
 public class TreeViewCustomCell extends TreeCell<String> {
 
+    private final double CHECK_BOXES_SIZE=resX*14/1280;
 
     @Override
     protected void updateItem(String item, boolean empty) {
@@ -34,14 +35,14 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
             if (this.getTreeItem().isLeaf()) {
 
-                this.setStyle("-fx-font-size:12");
+
 
                 //HBox cellBox = new HBox(0);
-                JFXCheckBox checkBox = new JFXCheckBox(item);
+                JFXCheckBox checkBox = new JFXCheckBox(item,CHECK_BOXES_SIZE);
+                this.setStyle("-fx-font-size:"+resX*12/1280);
 //                Label label = new Label(item);
 //                label.setPadding(new Insets(0,0,0,0));
                 checkBox.setPadding(new Insets(0,0,0,0));
-                checkBox.getStyleClass().add("smallCheckBox");
                 checkBox.setSelected(GroupsController.isChoicePossible(this.getTreeItem().getParent().getParent().getValue(), this.getTreeItem().getValue()));
 
                 checkBox.selectedProperty().addListener((observable,oldValue,newValue)->{
@@ -73,8 +74,8 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 HBox cellBox = new HBox(4);
                 cellBox.setAlignment(Pos.CENTER_LEFT);
                 Label label = new Label(item);
-                this.setStyle("-fx-font-size:15;-fx-font-weight: bold;-fx-text-fill:#5e5c5c");
-                Node plusIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size("1.1em").styleClass("groupPlusIcon").build();
+                this.setStyle("-fx-font-size:"+resX*15/1280+";-fx-font-weight: bold;-fx-text-fill:#5e5c5c");
+                Node plusIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS_CIRCLE).size(Double.toString(resX/95)).styleClass("groupPlusIcon").build();
                 StackPane iconPane=new StackPane();
                 iconPane.getChildren().add(plusIcon);
 
@@ -103,7 +104,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 Label maxLabel=new Label(max);
                 minLabel.setPadding(new Insets(0,0,0,0));
                 maxLabel.setPadding(new Insets(0,0,0,0));
-                Node rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.ARROW_RIGHT).size("0.9em").styleClass("error").build();
+                Node rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.ARROW_RIGHT).size(Double.toString(resX/111)).styleClass("error").build();
                 this.selectedProperty().addListener((observable,oldValue,newValue)->{
                     if(newValue)
                         rightArrowIcon.setStyle("-fx-fill:white");
@@ -112,7 +113,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 });
                 rightArrowIcon.setStyle("-fx-fill:#3184c9");
 
-                this.setStyle("-fx-font-size:14");
+                this.setStyle("-fx-font-size:"+resX*14/1280);
                 cellBox.getChildren().addAll(minLabel,rightArrowIcon,maxLabel);
                 setGraphic(cellBox);
                 setText(null);

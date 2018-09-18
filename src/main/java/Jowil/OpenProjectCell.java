@@ -54,7 +54,7 @@ class OpenProjectCell extends JFXListCell {
         super.updateItem("",empty);
         if(item!=null){
             AnchorPane cellPane=new AnchorPane();
-            cellPane.setStyle("-fx-background-color:transparent");
+            cellPane.setStyle("-fx-background-color:transparent;");
             HBox leftHbox = new HBox(5);
             HBox rightHBox=new HBox(11);
 
@@ -67,12 +67,12 @@ class OpenProjectCell extends JFXListCell {
 
             ImageView imageView = new ImageView();
             imageView.setImage(new Image("Images/Folder_96px.png"));
-            imageView.setFitWidth(20);
-            imageView.setFitHeight(20);
+            imageView.setFitWidth(resX*20/1280);
+            imageView.setFitHeight(resX*20/1280);
 
             Label label = new Label(myText=(String)item);
             label.setId("label");
-            label.setFont(new Font(15));
+            label.setFont(new Font(resX*15/1280));
             label.setAlignment(Pos.CENTER);
 
             StackPane deleteButton=new StackPane();

@@ -245,7 +245,7 @@ public class WeightsController extends Controller {
     //Main methods
 
     WeightsController(Controller back) {
-        super("Weights.fxml", "Weights", 1.25, 1.25, true, back, "4.png", 2, "Questions Weights");
+        super("Weights.fxml", "Weights", 1.23, 1.23, true, back, "4.png", 2, "Questions Weights");
     }
 
 
@@ -277,6 +277,12 @@ public class WeightsController extends Controller {
         HBox.setHgrow(subjWeightsButton, Priority.ALWAYS);
         HBox.setHgrow(objWeightText, Priority.ALWAYS);
         HBox.setHgrow(subjWeightText, Priority.ALWAYS);
+        double sidePadding=resX*8/1280;
+        double verPadding=resX*4/1280;
+
+        objWeightsButton.setPadding(new Insets(verPadding,sidePadding,verPadding,sidePadding));
+        objWeightsButton.setGraphicTextGap(resX*4/1280);
+        System.out.println("objawy"+objWeightsButton.getGraphicTextGap());
 
 
         midSeparator.setLayoutX(rootWidthToPixels(0.665));
@@ -291,7 +297,7 @@ public class WeightsController extends Controller {
         gradesFreqTable.setLayoutY(objTableVbox.getLayoutY());
         gradesFreqTable.setPrefHeight(objTable.getPrefHeight()*0.6);
 
-        int graphicSize=12;
+        double graphicSize=resX*12/1280;
         objButtonGraphic.setFitWidth(graphicSize);
         objButtonGraphic.setFitHeight(graphicSize);
 
@@ -600,6 +606,15 @@ public class WeightsController extends Controller {
         barChart.getStyleClass().add("weightsBarChart");
         barChart.getData().add(barChartSeries);
         barChart.layout();
+        barChart.applyCss();
+
+        for(Node n:barChart.lookupAll(".axis-label"))
+            n.setStyle("-fx-font-size:"+resX*10.8/1280);
+
+        for(Node n:barChart.lookupAll(".axis"))
+            n.setStyle("-fx-tick-label-font-size:"+resX*7.2/1280);
+
+
 
     }
 

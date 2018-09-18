@@ -102,6 +102,7 @@ public class GradeHBox extends HBox {
         percentScoreTextField.setPrefWidth((int)(scrollPaneWidth*0.13));
         percentScoreTextField.setPrefHeight((int)(scrollPaneHeight/20));
         scoreSlider.setPrefWidth((int)(scrollPaneWidth*0.3));
+        scoreSlider.setPrefHeight((int)resX*14/680);
         scoreSlider.setPadding(new Insets((int)((rawScoreTextField.getPrefHeight()/2)),0,0,0));
         this.setSpacing((int)(scrollPaneWidth*0.03));
 
