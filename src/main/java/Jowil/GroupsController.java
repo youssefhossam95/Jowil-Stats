@@ -560,7 +560,7 @@ public class GroupsController  extends Controller{
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Continue to File Configuration");
         alert.setHeaderText(null);
-        alert.setContentText("Going back to file configuration will reset all the" +
+        alert.setContentText("Going back to file configuration may reset some of the" +
                 " changes made in manual configuration. Are you sure you want to continue to file configuration?");
 
         alert.getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);

@@ -47,10 +47,23 @@ public class JFXCheckBox extends CheckBox {
     /**
      * {@inheritDoc}
      */
+
+    public boolean isDynamicBoxSize;
+    public double boxSize;
     public JFXCheckBox(String text) {
         super(text);
         initialize();
+        isDynamicBoxSize=false;
     }
+
+    public JFXCheckBox(String text,double boxSize) {
+        this(text);
+        this.isDynamicBoxSize=true;
+        this.boxSize=boxSize;
+    }
+
+
+
 
     /**
      * {@inheritDoc}

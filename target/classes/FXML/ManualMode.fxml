@@ -13,6 +13,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.stage.Screen?>
+
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml" >
 
     <Separator fx:id="midSeparator" orientation="VERTICAL"></Separator>
@@ -24,14 +26,14 @@
             <JFXComboBox fx:id="columnSetCombo" promptText="Column Set Type" focusColor="#3184c9" labelFloat="true"></JFXComboBox>
             <Button fx:id="addButton" text="Add Selection" styleClass="BlueJFXButton">
                 <graphic>
-                    <ImageView fitWidth="13" fitHeight="13">
+                    <ImageView fx:id="addButtonGraphic" >
                         <Image url="@../Images/whitePlus.png"></Image>
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="resetButton" text="Reset Column Sets" styleClass="redJFXButton">
                 <graphic>
-                    <ImageView fitWidth="13" fitHeight="13">
+                    <ImageView fx:id="resetButtonGraphic" >
                         <Image url="@../Images/whiteReset.png"></Image>
                     </ImageView>
                 </graphic>

@@ -259,10 +259,10 @@ public class StartController extends Controller{
         System.out.println(file);
         pic.setImage(new Image("Images/Add Folder_96px.png"));
         dialog.setGraphic(pic);
-        pic.setFitWidth(30);
-        pic.setFitHeight(30);
+        pic.setFitWidth(resX*30/1280);
+        pic.setFitHeight(resX*30/1280);
 
-
+        dialog.getDialogPane().setStyle("-fx-font-size:"+resX*12/1280);
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
@@ -343,11 +343,11 @@ public class StartController extends Controller{
         dialog.setWidth(resX*0.6);
         dialog.setHeight(resY*0.8);
 
-
         dialog.getDialogPane().getButtonTypes().setAll(ButtonType.CLOSE);
 
         Button butt=(Button)dialog.getDialogPane().lookupButton(ButtonType.CLOSE); //butt is needed to be able to close dialog using x
         butt.setVisible(false);
+        dialog.getDialogPane().lookup(".header-panel .label").setStyle("-fx-font-size:"+resX*15/1280);
 
         JFXListView projectsList=new JFXListView();
 
@@ -358,7 +358,6 @@ public class StartController extends Controller{
 
 
         projectsList.setCellFactory(event->OpenProjectCell.createOpenProjectCell(dialog,this));
-
 
 
         for(String name:projectsNames){

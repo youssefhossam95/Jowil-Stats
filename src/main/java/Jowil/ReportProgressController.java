@@ -37,8 +37,8 @@ public class ReportProgressController {
     double resX=Controller.resX;
     double resY=Controller.resY;
     Thread th;
-    double rootWidth=resX/2;
-    double rootHeight=resY/2;
+    double rootWidth=1280/2;
+    double rootHeight=680/2;
 
     private static volatile SimpleDoubleProperty reportProgress;
 
@@ -114,7 +114,7 @@ public class ReportProgressController {
 
         mainHBox.setLayoutX((int)(rootWidth*0.18));
         mainHBox.setLayoutY((int)(rootHeight*0.25));
-        mainHBox.setSpacing((int)(resX/20));
+        mainHBox.setSpacing((int)(1280/20));
 
         counterIndicator=new RingProgressIndicator(reportsCount);
 
@@ -122,8 +122,8 @@ public class ReportProgressController {
 
         counterIndicator.setStyle("-fx-background-color:transparent");
 
-        titleLabel.setLayoutY((int)(resY/18));
-        titleLabel.setLayoutX((int)(resX/70));
+        titleLabel.setLayoutY((int)(680/18));
+        titleLabel.setLayoutX((int)(1280/70));
 
         stage.setOnCloseRequest(event->{
             boolean isQuit=Controller.showConfirmationDialog("Quit Reports Generation","Are you sure you want to quit reports generation?",stage.getOwner());

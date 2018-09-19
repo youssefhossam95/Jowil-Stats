@@ -19,6 +19,7 @@
 
 package com.jfoenix.skins;
 
+import Jowil.Controller;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
@@ -46,7 +47,7 @@ import javafx.util.Duration;
  */
 public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior<JFXCheckBox>> {
 
-    private final StackPane box = new StackPane();
+    public final StackPane box = new StackPane();
     private final StackPane mark = new StackPane();
     private final StackPane indeterminateMark = new StackPane();
     private final JFXRippler rippler;
@@ -56,7 +57,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
 
     private boolean invalid = true;
     private JFXFillTransition select;
-    private final StackPane boxContainer;
+    public final StackPane boxContainer;
 
     public JFXCheckBoxSkin(JFXCheckBox control) {
         super(control, new ButtonBehavior<>(control));
@@ -71,7 +72,17 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         mark.setScaleX(0);
         mark.setScaleY(0);
 
-        box.getStyleClass().setAll("box");
+
+        if(control.isDynamicBoxSize) {
+            double size=control.boxSize;
+            box.setPrefSize(size,size);
+            box.setMinSize(size, size);
+            box.setMaxSize(size, size);
+            box.getStyleClass().setAll("specialBox");
+        }
+        else
+            box.getStyleClass().setAll("box");
+
         box.setBorder(new Border(new BorderStroke(control.getUnCheckedColor(),
             BorderStrokeStyle.SOLID,
             new CornerRadii(2),

@@ -4,6 +4,7 @@ import Jowil.Reports.*;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -86,7 +87,12 @@ public class GradeBoundariesController extends Controller {
     VBox formatsVBox;
 
     @FXML
-    Node trashIcon;
+    FontAwesomeIconView trashIcon;
+
+    @FXML
+    FontAwesomeIconView folderIcon;
+
+
 
 
     HBox gradesLabelsHBox = new HBox();
@@ -104,6 +110,7 @@ public class GradeBoundariesController extends Controller {
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
     private int reportsCount;
+    private final double CHECK_BOXES_SIZE=resX*14/1280;
 
 
     Font gradesLabelsFonts = new Font("Arial", resX / 100);
@@ -176,6 +183,9 @@ public class GradeBoundariesController extends Controller {
         gradeName.setFont(gradesLabelsFonts);
         gradePercent.setFont(gradesLabelsFonts);
         gradeRaw.setFont(gradesLabelsFonts);
+
+        trashIcon.setSize(Double.toString(DEFAULT_FONT_AWESOME_ICON_SIZE));
+        folderIcon.setSize(Double.toString(DEFAULT_FONT_AWESOME_ICON_SIZE));
 
 
         //right half
@@ -641,7 +651,7 @@ public class GradeBoundariesController extends Controller {
 
         //add checkboxes
         for(int i=0;i<Report.REPORTS_COUNT;i++)
-            reportsCheckBoxes.add(new JFXCheckBox("Report "+(i+1)+": "+Report.reportsTitles[i]));
+            reportsCheckBoxes.add(new JFXCheckBox("Report "+(i+1)+": "+Report.reportsTitles[i],CHECK_BOXES_SIZE));
 
         //load json array
         boolean isJsonSuccess=loadPrefsJsonObj();
@@ -661,7 +671,7 @@ public class GradeBoundariesController extends Controller {
             if (isJsonSuccess)
                 value = (Boolean) reportsChosen.get(i);
             reportsCheckBoxes.get(i).setSelected(value);
-            reportsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
+            //reportsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
         }
 
         reportsVBox.getChildren().addAll(reportsCheckBoxes);
@@ -675,7 +685,7 @@ public class GradeBoundariesController extends Controller {
 
 
         for(int i=0;i<ReportsHandler.FORMATS_NAMES.length;i++)
-            formatsCheckBoxes.add(new JFXCheckBox(ReportsHandler.FORMATS_NAMES[i]));
+            formatsCheckBoxes.add(new JFXCheckBox(ReportsHandler.FORMATS_NAMES[i],CHECK_BOXES_SIZE));
 
 
         //load json array
@@ -696,7 +706,7 @@ public class GradeBoundariesController extends Controller {
             if (isJsonSuccess)
                 value = (Boolean) formatsChosen.get(i);
             formatsCheckBoxes.get(i).setSelected(value);
-            formatsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
+            //formatsCheckBoxes.get(i).getStyleClass().add("smallCheckBox");
         }
 
         formatsVBox.getChildren().addAll(formatsCheckBoxes);

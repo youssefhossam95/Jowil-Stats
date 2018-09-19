@@ -12,6 +12,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
+import static Jowil.Controller.resY;
+
 
 public class EditCell<S, T> extends TableCell<S, T> {
 
@@ -27,18 +29,19 @@ public class EditCell<S, T> extends TableCell<S, T> {
     public EditCell(StringConverter<T> converter,WeightsController parentController){
         this(converter);
         this.parentController=parentController;
+
     }
 
 
     public EditCell(StringConverter<T> converter) {
         this.converter = converter ;
 
-
         itemProperty().addListener((obx, oldItem, newItem) -> {
             if (newItem == null) {
                 setText(null);
             } else {
                 setText(converter.toString(newItem));
+
             }
         });
         setGraphic(textField);
@@ -49,14 +52,12 @@ public class EditCell<S, T> extends TableCell<S, T> {
             if(parentController!=null)
                 parentController.refreshGradesDistribution();
 
-            System.out.println("ana called action");
         });
         textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (! isNowFocused) {
                 commitEdit(this.converter.fromString(textField.getText()));
                 if(parentController!=null)
                     parentController.refreshGradesDistribution();
-                System.out.println("ana called focused");
             }
         });
         textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {

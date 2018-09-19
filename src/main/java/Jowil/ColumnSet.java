@@ -61,7 +61,7 @@ public class ColumnSet extends HBox {
         nameTextField.setFont(innerLabelsFont);
         nameTextField.setText(this.name);
         nameTextField.setStyle("-jfx-focus-color:#3184c9;-jfx-unfocus-color: #989898");
-        nameTextField.setEditable(false);
+        nameTextField.setEditable(true);
         nameTextField.setAlignment(Pos.CENTER);
 
 
@@ -135,7 +135,7 @@ public class ColumnSet extends HBox {
     }
 
     public String getName() {
-        return name;
+        return nameTextField.getText();
     }
 
 

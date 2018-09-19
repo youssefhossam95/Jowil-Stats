@@ -1,6 +1,6 @@
 package Jowil;
 
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.*;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -29,7 +31,9 @@ import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 public abstract class Controller {
@@ -59,6 +63,7 @@ public abstract class Controller {
     double navWidth;
     double navHeight;
     boolean isHeightCalling;
+    final double DEFAULT_FONT_AWESOME_ICON_SIZE=resX*27/1280;
 
 
 
@@ -77,10 +82,11 @@ public abstract class Controller {
 
 
     static JSONObject gradeScalesJsonObj;
+    HashMap<String,Double> classesFontSizes;
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
-    protected final double headersFontSize=resX/64;
+    protected double headersFontSize=resX/64;
     private boolean isMaximizedChanged=false;
     boolean isWait=false;
     static boolean isOpenMode;
@@ -133,7 +139,8 @@ public abstract class Controller {
         this.back=back;
         this.isBeginMaximised=isMaximised;
         this.isStepWindow=isStepWindow;
-
+        headersFontSize=resX*20/1280;
+        initClassesFontSizes();
     }
 
     public static String getProjectName (){
@@ -149,7 +156,7 @@ public abstract class Controller {
         stepCounterIndicator.setScaleY(0.2);
         this.stepLabel=new Label("Step "+Integer.toString(stepIndex+1)+" of 4: "+stepName);
         //this.stepLabel=new Label(stepName);
-        stepLabel.setStyle("-fx-font-weight: bold;");
+        stepLabel.setStyle("-fx-font-weight: bold;-fx-font-size:"+resX*12/1280);
 
 
         if(isStepWindow)
@@ -195,12 +202,14 @@ public abstract class Controller {
             loader.setController(this);
             Pane root = loader.load();
 
+            double sceneWidth=(resX==800 && this instanceof WeightsController)?673:resX/XSCALE; //to solve bar chart min width issue
+
             if(isStepWindow){
                 outerBorderPane.setCenter(rootPane);
-                scene = new Scene(outerBorderPane, resX / XSCALE, resY / YSCALE);
+                scene = new Scene(outerBorderPane, sceneWidth, resY / YSCALE);
             }
             else
-                scene=new Scene(root,resX / XSCALE, resY / YSCALE);
+                scene=new Scene(root,sceneWidth, resY / YSCALE);
 
 
             if(isStepWindow)
@@ -242,6 +251,7 @@ public abstract class Controller {
             });
 
 
+
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
 
@@ -258,6 +268,7 @@ public abstract class Controller {
             });
             stage.show();
             stage.setMaximized(isBeginMaximised);
+            updateFonts();
 
         }
         catch (IOException e) {
@@ -284,12 +295,6 @@ public abstract class Controller {
         }
 
 
-
-
-
-
-
-
         progressImage.setFitWidth(resX*0.25);
         progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
 
@@ -301,9 +306,9 @@ public abstract class Controller {
         logoImage.setFitWidth(logoImage.getFitHeight());
 
         double topSpace=topWrapperPane.getPrefHeight()*0.2;
-        double sideSpace=resX*0.015;
+        double sideSpace=resX*3/1280;
         AnchorPane.setLeftAnchor(progressImage,(rootWidth-progressImage.getFitWidth())/2);
-        AnchorPane.setRightAnchor(logoImage,sideSpace);
+        AnchorPane.setRightAnchor(logoImage,logoImage.getFitWidth()+sideSpace);
         AnchorPane.setTopAnchor(logoImage,topSpace);
 
         AnchorPane.setLeftAnchor(stepLabel,6.0);
@@ -353,7 +358,6 @@ public abstract class Controller {
         System.out.println(rootHeight);
 
     }
-
 
 
 
@@ -407,6 +411,20 @@ public abstract class Controller {
 
     }
 
+    private void initClassesFontSizes() {
+        classesFontSizes=new HashMap<>();
+        classesFontSizes.put(JFXTextField.class.getSimpleName(),resX*14/1280);
+        classesFontSizes.put(TextField.class.getSimpleName(),resX*12/1280);
+        classesFontSizes.put(JFXComboBox.class.getSimpleName(),resX*14/1280);
+        classesFontSizes.put(JFXToggleButton.class.getSimpleName(),resX*12/1280);
+        classesFontSizes.put(JFXButton.class.getSimpleName(),resX*12/1280);
+        classesFontSizes.put(Button.class.getSimpleName(),resX*12/1280);
+        classesFontSizes.put(JFXTreeTableView.class.getSimpleName(),resX*14/1280);
+        classesFontSizes.put(TableView.class.getSimpleName(),resX*12/1280);
+        classesFontSizes.put(JFXCheckBox.class.getSimpleName(),resX*12/1280);
+    }
+
+
     private void initBackButton(){
 
         rootPane.getChildren().add(backButton);
@@ -423,6 +441,30 @@ public abstract class Controller {
         buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
         //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#3184c9");
     }
+
+    private void updateFonts() {
+
+        LinkedBlockingQueue<Parent> queue=new LinkedBlockingQueue<>();
+        queue.add(rootPane);
+        while(!queue.isEmpty()){
+            Parent parent=queue.poll();
+            String pClassName=parent.getClass().getSimpleName();
+            if(classesFontSizes.containsKey(pClassName))
+                parent.setStyle("-fx-font-size:"+classesFontSizes.get(pClassName));
+
+            for(Node node:parent.getChildrenUnmodifiable()){
+                if(node instanceof Parent)
+                    queue.add((Parent)node);
+                else{
+                    String nClassName=node.getClass().getSimpleName();
+                    if(classesFontSizes.containsKey(nClassName))
+                        node.setStyle("-fx-font-size:"+classesFontSizes.get(nClassName));
+                }
+            }
+        }
+
+    }
+
 
 
     protected void initNextButton(){

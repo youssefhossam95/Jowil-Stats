@@ -2,6 +2,8 @@ package Jowil;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.base.ValidatorBase;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -60,12 +62,11 @@ public class FileConfigController extends Controller {
     private StackPane answersFileChooser;
 
     @FXML
-    private ImageView answersChooserButtonImage;
-
-    @FXML
     private HBox mainHBox;
 
     @FXML
+	private ImageView answersChooserButtonImage;
+	@FXML
     private HBox answersHBox;
 
     @FXML
@@ -79,7 +80,16 @@ public class FileConfigController extends Controller {
     private VBox contentVbox;
 
 
-    JFXToggleButton toggleButton = new JFXToggleButton();
+    @FXML
+    FontAwesomeIconView mainChooserIcon;
+
+
+    @FXML
+    FontAwesomeIconView answersChooserIcon;
+
+
+
+
     VBox subjVBox = new VBox();
     JFXSlider slider = new JFXSlider();
     final Popup popup = new Popup();
@@ -144,17 +154,24 @@ public class FileConfigController extends Controller {
         answersFileTextField.setPrefHeight(resYToPixels(0.04));
         answersFileTextField.setPadding(Insets.EMPTY);
 
+        answersChooserIcon.setSize(Double.toString(DEFAULT_FONT_AWESOME_ICON_SIZE));
+        mainChooserIcon.setSize(Double.toString(DEFAULT_FONT_AWESOME_ICON_SIZE));
+
 
         formCombo.setPadding(Insets.EMPTY);
         formCombo.setPrefWidth(rootWidthToPixels(0.227));
         identifierCombo.setPrefWidth(rootWidthToPixels(0.227));
         manualModeToggle.setPadding(new Insets(rootHeightToPixels(0.03), 0, 0, 0));
+        manualModeToggle.setSize(resX*10/1280);
 
 
         nextButton.setPrefWidth(resXToPixels(0.07));
         nextButton.setPrefHeight(resXToPixels(0.004));
         nextButton.setLayoutX(rootWidthToPixels(0.78));
         nextButton.setLayoutY(rootHeightToPixels(0.77));
+
+
+
 
 
         combosAnchor.setPrefWidth(rootWidthToPixels(0.4));
@@ -565,13 +582,6 @@ public class FileConfigController extends Controller {
 
     }
 
-    private void initToggleButton() {
-
-        toggleButton.setText("Subjective Questions");
-        toggleButton.setStyle("-fx-font-weight: bold;-jfx-toggle-color: #00BFFF");
-        slider.setMax(20);
-        slider.setMin(0);
-    }
 
     private void initMainFileTextField() {
 
@@ -676,6 +686,7 @@ public class FileConfigController extends Controller {
                     public ListCell<String> call(ListView<String> param) {
                         final ListCell<String> cell = new ListCell<String>() {
                             {
+                                this.setPrefHeight(rootHeight*0.06);
                                 //super.setPrefHeight(identifierCombo.getPrefHeight());
                             }
 
