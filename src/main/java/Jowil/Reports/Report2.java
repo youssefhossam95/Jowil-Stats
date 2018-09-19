@@ -11,11 +11,12 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Table;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
 import javax.print.Doc;
 import java.io.File;
@@ -453,11 +454,66 @@ public class Report2 extends Report {
 
         WordUtils.addLegend(document , legends);
     }
+
+    public void createWordHeader(XWPFDocument document , int questionIndex ) {
+        ArrayList<String> headers = getHeaders(questionIndex);
+        XWPFTable headerTable = document.createTable(2 , headers.size()) ;
+
+        WordUtils.changeTableWidth(headerTable);
+        int numberOfChoices = headers.size() - 8 ;
+        CTVMerge vmerge = CTVMerge.Factory.newInstance();
+        vmerge.setVal(STMerge.RESTART);
+
+        CTHMerge hmerge = CTHMerge.Factory.newInstance();
+        hmerge.setVal(STMerge.RESTART);
+
+        CTVMerge vmerge2 = CTVMerge.Factory.newInstance();
+        vmerge2.setVal(STMerge.CONTINUE);
+
+        CTHMerge hmerge2 = CTHMerge.Factory.newInstance();
+        hmerge2.setVal(STMerge.CONTINUE);
+
+        String[] firstRowHeaders = {"Response Percentages" , "Correct Group Responses"} ;
+        int firstRowIndex = 0  ;
+
+        for(int rowIndex = 0 ; rowIndex< 2 ; rowIndex++) {
+            for(int colIndex =0 ; colIndex<headers.size() ; colIndex++) {
+                XWPFTableCell cell = headerTable.getRow(rowIndex).getCell(colIndex) ;
+                XWPFParagraph headerCellPar = cell.getParagraphArray(0) ;
+                headerCellPar.setSpacingAfter(0);
+                headerCellPar.setAlignment(ParagraphAlignment.CENTER);
+                XWPFRun headerRun = headerCellPar.createRun();
+                headerRun.setBold(true);
+                if (cell.getCTTc().getTcPr() == null)
+                    cell.getCTTc().addNewTcPr();
+                if(colIndex<3 || (colIndex > 2 +numberOfChoices &&  colIndex < headers.size()-3) ){
+                    if(rowIndex ==0) {
+                        cell.getCTTc().getTcPr().setVMerge(vmerge);
+                        cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                        headerRun.setText(headers.get(colIndex));
+                    }
+                    else
+                        cell.getCTTc().getTcPr().setVMerge(vmerge2);
+                }
+                else if(rowIndex==0 && (colIndex==3 || colIndex == headers.size()-3)) {
+                    cell.getCTTc().getTcPr().setHMerge(hmerge);
+                    headerRun.setText(firstRowHeaders[firstRowIndex++]);
+                }
+                else if(rowIndex==0)
+                    cell.getCTTc().getTcPr().setHMerge(hmerge2);
+                else headerRun.setText(headers.get(colIndex));
+
+            }
+        }
+
+
+
+    }
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
 
         XWPFDocument document = WordUtils.createDocument(WordUtils.LANDSCAPE_PAGE_WIDHT , WordUtils.LANDSCAPE_PAGE_HEIGHT) ; // landscape size
-
+//
         WordUtils.createWordFooter(document); ;
         for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
             String title = reportTitle;
@@ -469,19 +525,23 @@ public class Report2 extends Report {
 
             WordUtils.addTitle(document , title);
 
-            addWordLegend(document);
+
+
 
             ArrayList<ArrayList<String>> mapTable = processMap(formsStatsMaps.get(formIndex)) ;
             ArrayList<ArrayList<ArrayList<String>>> statsTables = formsStatsTables.get(formIndex);
 
             WordUtils.addTable(document , mapTable , WordUtils.TABLE_ALIGN_LR , "" , 14);
 
+            addWordLegend(document);
+
             int questionIndex = 0 ;
             for(int tableIndex = 0 ; tableIndex<statsTables.size() ; tableIndex++) {
                 ArrayList<ArrayList<String>> table = statsTables.get(tableIndex);
-                ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
-                tableWithHeaders.add(0, getHeaders(questionIndex)) ;
-                WordUtils.addTable(document , tableWithHeaders , true);
+//                ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
+//                tableWithHeaders.add(0, getHeaders(questionIndex)) ;
+                createWordHeader(document , questionIndex );
+                WordUtils.addTable(document , table , true , false);
                 questionIndex+= table.size() ;
             }
         }

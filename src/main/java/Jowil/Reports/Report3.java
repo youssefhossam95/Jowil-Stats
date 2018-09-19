@@ -243,6 +243,8 @@ public class Report3 extends Report {
 
         XWPFDocument document = WordUtils.createDocument() ;
 
+        WordUtils.createWordFooter(document);
+
         for(int mapIndex = 0 ; mapIndex < report3Maps.size() ; mapIndex++) {
             String title = " Test Statistics Report";
             if(mapIndex>0) {

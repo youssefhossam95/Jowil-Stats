@@ -294,6 +294,9 @@ public class Report8 extends Report {
 
         XWPFDocument document = WordUtils.createDocument((int)(WordUtils.inch * 0.9)); // create document with left and right margin = 0.9inch
 
+
+        WordUtils.createWordFooter(document); ;
+
         ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
         for ( int formIndex = 0 ; formIndex <formsData.size() ; formIndex++ ) {
             ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
@@ -304,7 +307,7 @@ public class Report8 extends Report {
             if(formIndex>0)
                 WordUtils.addPageBreak(document);
 
-            WordUtils.addTitle(document, title);
+            WordUtils.addTitle(document, title , 3);
 
             for (int graphIndex = 0; graphIndex < formGraphsData.size(); graphIndex++) {
                 // add page break after two graphs

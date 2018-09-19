@@ -38,6 +38,7 @@ public class Report5 extends Report {
         File file = new File(templatePath);
         Document doc =  Jsoup.parse(file , "UTF-8") ;
 
+
         updateTemplateFooter(doc); // updates the date of the footer to the current date
 
         String wrapperHtml = doc.select("div.wrapper").outerHtml() ;
@@ -388,11 +389,16 @@ public class Report5 extends Report {
         final int LINE_ROWS = 4 ;
         final int TITLE_ROWS = 7 ;
         final int WRAPPER_TABLE_ROWS = 5 ;
-        final int BLANK_PAGE_ROWS = 36 ;
+        final int BLANK_PAGE_ROWS = 35 ;
         final int TABLE_SPACING_ROWS = 3 ;
 //        final int FIRST_PAGE_ROWS = BLANK_PAGE_ROWS - TITLE_ROWS ;
         double tableWidth = WordUtils.pageWidth * 0.49 ;
+
+
         XWPFDocument document = WordUtils.createDocument((int)(WordUtils.inch * 0.9)) ;
+
+
+        WordUtils.createWordFooter(document); ;
 
         ArrayList<Group>groups = CSVHandler.getDetectedGroups() ;
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsProcessedTables = getProcessedTables(ReportsHandler.WORD) ;
