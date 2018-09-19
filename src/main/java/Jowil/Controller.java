@@ -140,7 +140,7 @@ public abstract class Controller {
         this.isBeginMaximised=isMaximised;
         this.isStepWindow=isStepWindow;
         headersFontSize=resX*20/1280;
-        initClassesFontSizes();
+
     }
 
     public static String getProjectName (){
@@ -178,8 +178,7 @@ public abstract class Controller {
         updateSizes();
         buildComponentsGraph();
         stabalizeTables();
-
-
+        initClassesFontSizes();
 
 
 
@@ -413,15 +412,15 @@ public abstract class Controller {
 
     private void initClassesFontSizes() {
         classesFontSizes=new HashMap<>();
-        classesFontSizes.put(JFXTextField.class.getSimpleName(),resX*14/1280);
-        classesFontSizes.put(TextField.class.getSimpleName(),resX*12/1280);
-        classesFontSizes.put(JFXComboBox.class.getSimpleName(),resX*14/1280);
-        classesFontSizes.put(JFXToggleButton.class.getSimpleName(),resX*12/1280);
-        classesFontSizes.put(JFXButton.class.getSimpleName(),resX*12/1280);
-        classesFontSizes.put(Button.class.getSimpleName(),resX*12/1280);
-        classesFontSizes.put(JFXTreeTableView.class.getSimpleName(),resX*14/1280);
-        classesFontSizes.put(TableView.class.getSimpleName(),resX*12/1280);
-        classesFontSizes.put(JFXCheckBox.class.getSimpleName(),resX*12/1280);
+        classesFontSizes.put(JFXTextField.class.getSimpleName(),rootWidth*14/1280);
+        classesFontSizes.put(TextField.class.getSimpleName(),rootWidth*12/1280);
+        classesFontSizes.put(JFXComboBox.class.getSimpleName(),rootWidth*14/1280);
+        classesFontSizes.put(JFXToggleButton.class.getSimpleName(),rootWidth*12/1280);
+        classesFontSizes.put(JFXButton.class.getSimpleName(),rootWidth*12/1280);
+        classesFontSizes.put(Button.class.getSimpleName(),rootWidth*12/1280);
+        classesFontSizes.put(JFXTreeTableView.class.getSimpleName(),rootWidth*14/1280);
+        classesFontSizes.put(TableView.class.getSimpleName(),rootWidth*12/1280);
+        classesFontSizes.put(JFXCheckBox.class.getSimpleName(),rootWidth*12/1280);
     }
 
 
