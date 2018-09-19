@@ -67,6 +67,8 @@ public class GradeHBox extends HBox {
 
         });
 
+        scoreSlider.setBlockIncrement(1.0);
+
 
 
 
