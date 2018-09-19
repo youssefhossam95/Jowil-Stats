@@ -202,12 +202,14 @@ public abstract class Controller {
             loader.setController(this);
             Pane root = loader.load();
 
+            double sceneWidth=(resX==800 && this instanceof WeightsController)?673:resX/XSCALE; //to solve bar chart min width issue
+
             if(isStepWindow){
                 outerBorderPane.setCenter(rootPane);
-                scene = new Scene(outerBorderPane, resX / XSCALE, resY / YSCALE);
+                scene = new Scene(outerBorderPane, sceneWidth, resY / YSCALE);
             }
             else
-                scene=new Scene(root,resX / XSCALE, resY / YSCALE);
+                scene=new Scene(root,sceneWidth, resY / YSCALE);
 
 
             if(isStepWindow)
