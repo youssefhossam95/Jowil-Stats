@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -28,7 +29,7 @@ public class GradeHBox extends HBox {
 
     JFXTextField nameTextField=new JFXTextField();
     JFXTextField percentScoreTextField=new JFXTextField();
-    JFXTextField rawScoreTextField=new JFXTextField();
+    Label rawScoreTextField=new Label();
     JFXSlider scoreSlider=new JFXSlider();
     private final  Node addIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.PLUS).size(Double.toString(resX/85)).styleClass("gradesPlusIcon").build();
     private final  Node removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).size(Double.toString(resX/80)).styleClass("projectRemoveIcon").build();
@@ -52,7 +53,6 @@ public class GradeHBox extends HBox {
         nameTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         nameTextField.setAlignment(Pos.CENTER);
         this.nameTextField.textProperty().addListener(t->parentController.setContentEdited(true));
-
 
         initPercentScoreTextField(percentScore);
         initRawScoreTextField(percentScore);
@@ -106,6 +106,8 @@ public class GradeHBox extends HBox {
         scoreSlider.setPrefWidth((int)(scrollPaneWidth*0.3));
         scoreSlider.setPrefHeight((int)resX*14/680);
         scoreSlider.setPadding(new Insets((int)((rawScoreTextField.getPrefHeight()/2)),0,0,0));
+        rawScoreTextField.setPadding(new Insets((int)((rawScoreTextField.getPrefHeight()/3)),0,0,0)); //label option
+        rawScoreTextField.setStyle("-fx-font-size:"+resX*14/1280);//label option
         this.setSpacing((int)(scrollPaneWidth*0.03));
 
     }
@@ -186,7 +188,7 @@ public class GradeHBox extends HBox {
         this.rawScoreTextField.setText(String.format("%.1f",Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
         this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
         rawScoreTextField.setAlignment(Pos.CENTER);
-        rawScoreTextField.setEditable(false);
+        //rawScoreTextField.setEditable(false); label option
 
         rawScoreTextField.focusedProperty().addListener((observable,oldValue,newValue)->{
             if(newValue)

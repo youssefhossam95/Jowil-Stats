@@ -13,7 +13,7 @@
     <children>
         <VBox fx:id="contentVbox">
         <HBox fx:id="mainHBox">
-            <JFXTextField fx:id="mainFileTextField" labelFloat="true"  promptText="Students Responses File Path"  focusColor="#3184c9"/>
+            <JFXTextField fx:id="mainFileTextField" labelFloat="true"  promptText="Students Responses File Path" />
             <StackPane fx:id="mainFileChooser">
                 <FontAwesomeIconView fx:id="mainChooserIcon" styleClass="FolderIcon" fill="#3184c9" glyphName="FOLDER" ></FontAwesomeIconView>
             </StackPane>

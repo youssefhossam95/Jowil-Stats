@@ -23,6 +23,8 @@ JFXButton:hover {
 JFXTextField{
     -fx-prompt-text-fill: #989898;
     -fx-font-size:14;
+     -jfx-focus-color: #3184c9;
+
 }
 
 TableView:focused{
