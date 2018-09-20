@@ -101,8 +101,8 @@ public class GradeBoundariesController extends Controller {
     Label gradeName = new Label("Name");
     Label gradePercent = new Label("Score %");
     Label gradeRaw = new Label("Score");
-    JFXCheckBox reportsMasterCheckBox = new JFXCheckBox("Reports",CHECK_BOXES_SIZE*1.05);
-    JFXCheckBox formatsMasterCheckBox = new JFXCheckBox("File Formats",CHECK_BOXES_SIZE*1.05);
+    JFXCheckBox reportsMasterCheckBox = new JFXCheckBox("Reports",CHECK_BOXES_SIZE*1.08);
+    JFXCheckBox formatsMasterCheckBox = new JFXCheckBox("File Formats",CHECK_BOXES_SIZE*1.08);
 
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
@@ -115,7 +115,7 @@ public class GradeBoundariesController extends Controller {
 
 
     Font gradesLabelsFonts = new Font("Arial", resX/100);
-    double reportsConfigLabelsFontSize=resX*14/1280;
+    double reportsConfigLabelsFontSize=resX*13.2/1280;
 
 
     JSONObject prefsJsonObj;
