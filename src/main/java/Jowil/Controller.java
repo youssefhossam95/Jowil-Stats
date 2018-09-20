@@ -269,12 +269,16 @@ public abstract class Controller {
             stage.show();
             stage.setMaximized(isBeginMaximised);
             updateFonts();
+            setCustomStyles();
 
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+
     protected void updateSizes(){
 
         Insets navPadding=new Insets(0,0,0,0);
@@ -411,6 +415,14 @@ public abstract class Controller {
 
     }
 
+
+
+    //can be used to change default style settings set by update fonts
+    protected void setCustomStyles() {
+
+    }
+
+    //initializes each Component class with its default font
     private void initClassesFontSizes() {
         classesFontSizes=new HashMap<>();
         classesFontSizes.put(JFXTextField.class.getSimpleName(),resX*14/1280);

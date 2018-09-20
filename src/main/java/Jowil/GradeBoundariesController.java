@@ -94,14 +94,15 @@ public class GradeBoundariesController extends Controller {
 
 
 
+    private final double CHECK_BOXES_SIZE=resX*14/1280;
 
     HBox gradesLabelsHBox = new HBox();
 
     Label gradeName = new Label("Name");
     Label gradePercent = new Label("Score %");
     Label gradeRaw = new Label("Score");
-    Label reportsLabel = new Label("Reports");
-    Label formatsLabel = new Label("File Formats");
+    JFXCheckBox reportsMasterCheckBox = new JFXCheckBox("Reports",CHECK_BOXES_SIZE*1.05);
+    JFXCheckBox formatsMasterCheckBox = new JFXCheckBox("File Formats",CHECK_BOXES_SIZE*1.05);
 
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
@@ -110,10 +111,11 @@ public class GradeBoundariesController extends Controller {
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
     private int reportsCount;
-    private final double CHECK_BOXES_SIZE=resX*14/1280;
 
 
-    Font gradesLabelsFonts = new Font("Arial", resX / 100);
+
+    Font gradesLabelsFonts = new Font("Arial", resX/100);
+    double reportsConfigLabelsFontSize=resX*14/1280;
 
 
     JSONObject prefsJsonObj;
@@ -146,6 +148,17 @@ public class GradeBoundariesController extends Controller {
         initReportsVBox();
         initFormatsVbox();
         initFinishButton();
+
+        reportsMasterCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            for(CheckBox checkBox:reportsCheckBoxes)
+                checkBox.setSelected(newValue);
+        });
+
+        formatsMasterCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            for(CheckBox checkBox:formatsCheckBoxes)
+                checkBox.setSelected(newValue);
+        });
+
 
     }
 
@@ -209,12 +222,12 @@ public class GradeBoundariesController extends Controller {
         reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight()*0.97);
         reportsConfigHBox.setSpacing(resXToPixels(0.06));
 
-        reportsLabel.setFont(gradesLabelsFonts);
-        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
-        formatsLabel.setFont(gradesLabelsFonts);
-        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
+
+        reportsMasterCheckBox.setPadding(new Insets(0,0,reportsConfigHBox.getPrefHeight() * 0.02,0));
+        formatsMasterCheckBox.setPadding(new Insets(0, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
         reportsVBox.setSpacing(resYToPixels(0.02));
-        reportsVBox.setPadding(new Insets(0, 0, 0, reportsConfigHBox.getPrefWidth() * 0.02));
+        reportsVBox.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, 0, reportsConfigHBox.getPrefWidth() * 0.02));
+        formatsVBox.setPadding(new Insets(reportsConfigHBox.getPrefHeight()*0.05));
         formatsVBox.setSpacing(resYToPixels(0.02));
 
 
@@ -457,6 +470,14 @@ public class GradeBoundariesController extends Controller {
     }
 
 
+    @Override
+    protected void setCustomStyles(){
+        reportsMasterCheckBox.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;-fx-font-size:"+reportsConfigLabelsFontSize+";");
+        formatsMasterCheckBox.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;-fx-font-size:"+reportsConfigLabelsFontSize+";");
+
+    }
+
+
     public void addNextGrade(int callingIndex) {
         int newIndex = callingIndex + 1;
 
@@ -574,7 +595,7 @@ public class GradeBoundariesController extends Controller {
 
 
         gradesLabelsHBox.getChildren().addAll(gradeName, gradePercent, gradeRaw);
-        gradeName.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
+        gradeName.setStyle("-fx-font-weight: bold;");
         gradeName.setAlignment(Pos.CENTER);
         gradeRaw.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
         gradeRaw.setAlignment(Pos.CENTER);
@@ -645,8 +666,7 @@ public class GradeBoundariesController extends Controller {
 
     private void initReportsVBox() {
 
-        reportsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
-        reportsVBox.getChildren().add(reportsLabel);
+        reportsVBox.getChildren().add(reportsMasterCheckBox);
 
 
         //add checkboxes
@@ -680,8 +700,7 @@ public class GradeBoundariesController extends Controller {
 
     private void initFormatsVbox() {
 
-        formatsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
-        formatsVBox.getChildren().add(formatsLabel);
+        formatsVBox.getChildren().add(formatsMasterCheckBox);
 
 
         for(int i=0;i<ReportsHandler.FORMATS_NAMES.length;i++)
