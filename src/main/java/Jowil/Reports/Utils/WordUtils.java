@@ -1,5 +1,7 @@
 package Jowil.Reports.Utils;
 
+import Jowil.Controller;
+import Jowil.Utils;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -12,6 +14,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class WordUtils {
@@ -121,19 +125,19 @@ public class WordUtils {
             borders.addNewTop().setVal(STBorder.NONE);
     }
     public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable ) throws IOException, InvalidFormatException {
-        return addTable(document,dataTable, TABLE_ALIGN_CENTER , "" , 12 , false );
+        return addTable(document,dataTable, TABLE_ALIGN_CENTER , "" , 12 , false , true );
     }
 
-    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , boolean hasBorders ) throws IOException, InvalidFormatException {
-        return addTable(document, dataTable, TABLE_ALIGN_CENTER , "" , 12 , hasBorders );
+    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , boolean hasBorders ,boolean firstRowTitle ) throws IOException, InvalidFormatException {
+        return addTable(document, dataTable, TABLE_ALIGN_CENTER , "" , 12 , hasBorders ,firstRowTitle );
 
     }
     public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize) throws IOException, InvalidFormatException {
-       return addTable(document ,  dataTable, alignment , title , titleFontSize , false );
+       return addTable(document ,  dataTable, alignment , title , titleFontSize , false , true );
     }
 
 
-    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean hasBorders) throws IOException, InvalidFormatException {
+    public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean hasBorders , boolean firstRowHeader) throws IOException, InvalidFormatException {
 
         if(title != "") {
             XWPFParagraph titleParagraph = document.createParagraph() ;
@@ -169,7 +173,7 @@ public class WordUtils {
                 XWPFParagraph par = cell.getParagraphArray(0) ;
                 par.setSpacingAfter(0);
                 if(rowIndex%2==0 && alignment!= TABLE_ALIGN_LR) {
-                    if(!(rowIndex == 0 && hasBorders))
+                    if(!(rowIndex == 0 && hasBorders) || !firstRowHeader)
                         cell.setColor(GRAY_ROW_COLOR);
                 }
                 if(alignment == TABLE_ALIGN_LR) {
@@ -180,7 +184,7 @@ public class WordUtils {
                 }else
                     par.setAlignment(ParagraphAlignment.CENTER);
               XWPFRun run = processCellData(cell , par , data );
-              if(alignment == TABLE_ALIGN_CENTER && rowIndex==0)
+              if(alignment == TABLE_ALIGN_CENTER && rowIndex==0 && firstRowHeader)
                   run.setBold(true);
 
             }
@@ -472,18 +476,19 @@ public class WordUtils {
         XWPFParagraph[] parsFooter;
 
 
-// add style (s.th.)
         CTPPr ctppr = ctpFooterPage.addNewPPr();
-//        CTString pst = ctppr.addNewPStyle();
-//        pst.setVal("style21");
         CTJc ctjc = ctppr.addNewJc();
         ctjc.setVal(STJc.RIGHT);
-//        ctppr.addNewRPr();
 
-// Add in word "Page "
+        XWPFParagraph footerPageParagraph = new XWPFParagraph(ctpFooterPage, document);
+        footerPageParagraph.setBorderTop(Borders.THICK);
+
+
+        ctpFooterPage = footerPageParagraph.getCTP() ;
+
         CTR ctr = ctpFooterPage.addNewR();
         CTText t = ctr.addNewT();
-        t.setStringValue("Page ");
+        t.setStringValue( "Page ");
         t.setSpace(SpaceAttribute.Space.PRESERVE);
 
 // add everything from the footerXXX.xml you need
@@ -501,25 +506,11 @@ public class WordUtils {
 
         ctpFooterPage.addNewR().addNewFldChar().setFldCharType(STFldCharType.END);
 
-        ctr.addNewTab();
-        CTText name = ctr.addNewT() ;
-        name.setStringValue("my name");
 
-
-        XWPFParagraph footerPageParagraph = new XWPFParagraph(ctpFooterPage, document);
-        footerPageParagraph.setBorderTop(Borders.THICK);
-
-        XWPFRun run = footerPageParagraph.createRun();
-        run.addTab();
-        run.setText("fuck you");
         parsFooter = new XWPFParagraph[1];
 
-
-        BigInteger pos1 = BigInteger.valueOf(4500);
-        setTabStop(footerPageParagraph, STTabJc.Enum.forString("center"), pos1);
-
         parsFooter[0] = footerPageParagraph;
-//        parsFooter[0] = footerDateParagraph ;
+
         policy.createFooter(XWPFHeaderFooterPolicy.DEFAULT, parsFooter);
 
     }

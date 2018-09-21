@@ -50,13 +50,16 @@ public class Statistics {
     private static ArrayList<Double> gradesLowerRange; // list of the lower range of the grades assuming that the upper range is the lower range of the next grade
     private static ArrayList<String> studentIdentifier;
     private static String identifierName ="ID";
-    private static double maxScore ;
+    private static double maxScore = -1 ;
+    private static double bonus = 0 ;
+    private static double userMaxScore = -1 ;
+    private static boolean allowExceedMaxScore = true ;
     private static double epslon = 0.0000001 ;
 
     private static ArrayList<Double> subjMaxScores;
     private static ArrayList<ArrayList<Double>> formsScors ;
-    private static ArrayList<ArrayList<ArrayList<Integer>>> pointBiserialTables;
-    private static ArrayList<ArrayList<Integer>> pointBiserialTotalTable ;
+    private static ArrayList<ArrayList<ArrayList<Integer>>> birnaryStudentResponses; // for each form for each question for each student 1 if he got the correct answer else 0
+    private static ArrayList<ArrayList<Integer>> studentsCorrectAnswersCount ; // for each form for each student number of questions he got right
 
     ////////////////////setters
 //    public static void setIdentifierMode(int identifierMode) {
@@ -127,6 +130,21 @@ public class Statistics {
     public static void setFormsScors(ArrayList<ArrayList<Double>> formsScors) {
         Statistics.formsScors = formsScors;
     }
+
+
+    public static void setBonus(double bonus) {
+        Statistics.bonus = bonus;
+    }
+
+    public static void setUserMaxScore(double userMaxScore) {
+        Statistics.userMaxScore = userMaxScore;
+    }
+
+    public static void setAllowExceedMaxScore(boolean allowExceedMaxScore) {
+        Statistics.allowExceedMaxScore = allowExceedMaxScore;
+    }
+
+
     //getters
 //    public static int getIdentifierMode() {
 //        return identifierMode;
@@ -248,6 +266,7 @@ public class Statistics {
 
     static void initScores(){
 
+        initMaxScore();
         studentScores = new ArrayList<Double>() ;
         for(int i = 0 ; i <studentAnswers.size() ; i ++) {
             double studentScore = 0 ;
@@ -255,7 +274,9 @@ public class Statistics {
             for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
                 String questionAnswer = studentAnswer.get(j) ;
                 if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)).get(j))) {
-                    studentScore+= questionWeights.get(studentForms.get(i)).get(j) ;
+                    studentScore+= questionWeights.get(studentForms.get(i)).get(j)+ bonus ;
+                    if(!allowExceedMaxScore)
+                        studentScore = studentScore>maxScore?maxScore:studentScore ;
                 }
             }
             if(subjScores.size()!=0) {
@@ -266,10 +287,11 @@ public class Statistics {
             studentScores.add(studentScore) ;
         }
         printStudentScores();
-        initMaxScore();
     }
 
     public static void initFormsScores(){
+        if(maxScore ==-1)
+            initMaxScore();
 
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
         int numberOfForms = (int)max(forms)+1 ;
@@ -287,7 +309,9 @@ public class Statistics {
             for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
                 String questionAnswer = studentAnswer.get(j) ;
                 if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)).get(j))) {
-                    studentScore+= questionWeights.get(studentForms.get(i)).get(j) ;
+                    studentScore+= (questionWeights.get(studentForms.get(i)).get(j) + bonus) ;
+                    if(!allowExceedMaxScore)
+                        studentScore = studentScore>maxScore?maxScore:studentScore ;
                 }
             }
             formsScors.get(studentForms.get(i)).add(studentScore) ;
@@ -329,6 +353,10 @@ public class Statistics {
     }
 
     public static void initMaxScore() {
+        if(userMaxScore != -1) {
+            maxScore = userMaxScore;
+            return;
+        }
         double[] wieghts = questionWeights.get(0).stream().mapToDouble(d -> d).toArray();
         maxScore = sum(wieghts) ;
         if(subjMaxScores.size()!=0) {
@@ -357,8 +385,8 @@ public class Statistics {
 
     public static void init(){
         questionNames=CSVHandler.getDetectedQHeaders();
-        initFormsScores();
         initScores();
+        initFormsScores();
         initPointBiserialTables();
         initSortedStudentAnswers();
         initAnswersStats();
@@ -420,11 +448,14 @@ public class Statistics {
         return 0  ;
     }
 
-    private static double calcKr20 (double var){
+    private static double calcKr20 (){
 
-        var += epslon ;
+        double var = 1 ;
+//        var += epslon ;
         double pqsum = 0 ;
         for ( int formIndex = 0 ; formIndex < answersStats.size() ; formIndex ++ ) {
+//            double var = studentsCorrectAnswersCount
+
             ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex);
             for(int qIndex = 0 ; qIndex < formStats.size() ; qIndex++) {
                 ArrayList<Double> questionStats = formStats.get(qIndex);
@@ -437,7 +468,6 @@ public class Statistics {
                 double q = (1 - p);
 
                 pqsum += p * q ;
-
 
             }
 
@@ -593,7 +623,7 @@ public class Statistics {
         double CI99Lower = Utils.getNumberWithinLimits(mean - calcCI(numberOfStudents,0.99 , std) , 0 , maxScore)  ;
         double CI99Higher = Utils.getNumberWithinLimits(mean + calcCI(numberOfStudents,0.99 , std)  , 0 , maxScore) ;
 
-        double kr20  = calcKr20(variance);
+        double kr20  = calcKr20();
         double kr21 = calcKr21(mean , variance , numberOfStudents) ;
 
 
@@ -662,15 +692,15 @@ public class Statistics {
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
         int numberOfForms = (int)max(forms)+1 ;
 
-        pointBiserialTables = new ArrayList<ArrayList<ArrayList<Integer>>>();
-        pointBiserialTotalTable = new ArrayList<ArrayList<Integer>>();
+        birnaryStudentResponses = new ArrayList<ArrayList<ArrayList<Integer>>>();
+        studentsCorrectAnswersCount= new ArrayList<ArrayList<Integer>>();
 
         for(int i = 0 ; i <numberOfForms ; i ++) {
             ArrayList<ArrayList<Integer>> table = new ArrayList<ArrayList<Integer>>() ;
-            pointBiserialTables.add(table);
+            birnaryStudentResponses.add(table);
 
             ArrayList<Integer> formTotal = new ArrayList<Integer>() ;
-            pointBiserialTotalTable.add(formTotal);
+            studentsCorrectAnswersCount.add(formTotal);
         }
 
         for (int studentIndex = 0 ; studentIndex < studentScores.size() ; studentIndex++) {
@@ -685,20 +715,19 @@ public class Statistics {
                isStudentAnswersCorrect.add(isStudentAnswerCorrect);
            }
 
-            pointBiserialTables.get(studentForm).add(isStudentAnswersCorrect) ;
-            pointBiserialTotalTable.get(studentForm).add(studentTotal) ;
+            birnaryStudentResponses.get(studentForm).add(isStudentAnswersCorrect) ;
+            studentsCorrectAnswersCount.get(studentForm).add(studentTotal) ;
         }
 
         for(int i = 0 ; i < numberOfForms ; i++) {
-            pointBiserialTables.set(i ,  Utils.transpose(pointBiserialTables.get(i)));
+            birnaryStudentResponses.set(i ,  Utils.transpose(birnaryStudentResponses.get(i)));
         }
-        System.out.println(pointBiserialTables);
     }
 
 
     private static double calcPointBiserial(int formIndex , int questionIndex ) {
-        double[] questionVector = pointBiserialTables.get(formIndex).get(questionIndex).stream().mapToDouble(d -> d).toArray();
-        double[] totalVector = pointBiserialTotalTable.get(formIndex).stream().mapToDouble(d -> d).toArray();
+        double[] questionVector = birnaryStudentResponses.get(formIndex).get(questionIndex).stream().mapToDouble(d -> d).toArray();
+        double[] totalVector = studentsCorrectAnswersCount.get(formIndex).stream().mapToDouble(d -> d).toArray();
         PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation() ;
         double pointBiserial =  pearsonsCorrelation.correlation(totalVector , questionVector) ;
         return Double.isNaN(pointBiserial)?0:pointBiserial;
@@ -1189,7 +1218,11 @@ public class Statistics {
         return  2 * (x * y) / ( x + y) ;
     }
     private static double calcJowilParam (double slope , double error) {
-        double slopeSign = slope/Math.abs(slope) ;
+        double slopeSign ;
+        if(slope == 0)
+            slopeSign = 1 ;
+        else
+         slopeSign = slope/Math.abs(slope) ;
         double harMean = calcHarMean(Math.abs(slope) , 1-Math.abs(error)) ;
         return (slopeSign* harMean + 2)*5;
     }

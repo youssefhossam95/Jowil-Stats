@@ -247,6 +247,8 @@ public class Report7 extends Report {
 
         XWPFDocument document = WordUtils.createDocument() ; // landscape size
 
+        WordUtils.createWordFooter(document); ;
+
         int tableTitleFontSize = 18 ;
 
         for(int formIndex = 0 ; formIndex < formsTableStats.size() ; formIndex++) {
@@ -268,7 +270,7 @@ public class Report7 extends Report {
                 ArrayList<ArrayList<String>> table = statsTables.get(tableIndex);
                 if(table.size()>0) {
                     ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(table, tableIndex);
-                    WordUtils.addTable(document, tableWithHeaders, WordUtils.TABLE_ALIGN_CENTER, tableTitles[tableIndex], tableTitleFontSize, true);
+                    WordUtils.addTable(document, tableWithHeaders, WordUtils.TABLE_ALIGN_CENTER, tableTitles[tableIndex], tableTitleFontSize, true,true);
                 }
                 else {
                     XWPFParagraph tableTitlePar = document.createParagraph();

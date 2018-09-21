@@ -313,6 +313,8 @@ public class Report6 extends Report {
     public void generateWordReport() throws IOException, InvalidFormatException {
         XWPFDocument document = WordUtils.createDocument(WordUtils.LANDSCAPE_PAGE_WIDHT , WordUtils.LANDSCAPE_PAGE_HEIGHT);
 
+        WordUtils.createWordFooter(document); ;
+
 
         for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
 

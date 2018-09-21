@@ -202,7 +202,11 @@ public class Report4 extends Report{
     public void generateWordReport() throws IOException, InvalidFormatException {
 
         XWPFDocument document = new XWPFDocument();
+
+        WordUtils.createWordFooter(document); ;
+
         WordUtils.addTitle(document , reportTitle );
+
 
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
         tableWithHeaders.get(0).add("") ;
