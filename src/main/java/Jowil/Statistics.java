@@ -448,40 +448,41 @@ public class Statistics {
         return 0  ;
     }
 
-    private static double calcKr20 (){
+    private static double calcKr20 ( int formIndex){
 
-        double var = 1 ;
-//        var += epslon ;
+        ArrayList<Integer> formCAC = studentsCorrectAnswersCount.get(formIndex) ;
+
+        double[] formCACArray = formCAC.stream().mapToDouble(d -> d).toArray();
+
+        double var = variance(formCACArray) ;
+        var += epslon ;
+
         double pqsum = 0 ;
-        for ( int formIndex = 0 ; formIndex < answersStats.size() ; formIndex ++ ) {
 //            double var = studentsCorrectAnswersCount
 
-            ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex);
-            for(int qIndex = 0 ; qIndex < formStats.size() ; qIndex++) {
-                ArrayList<Double> questionStats = formStats.get(qIndex);
-                String correctAnswer = correctAnswers.get(formIndex).get(qIndex);
-                //get index of the correct answer in the question choices List
-                int correctAnswerIndex = questionsChoices.get(qIndex).indexOf(correctAnswer);
-                // p is the proportion of correct responses
-                double p = questionStats.get(correctAnswerIndex);
-                // q is the proportion of incorrect responses
-                double q = (1 - p);
+        ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex);
+        for(int qIndex = 0 ; qIndex < formStats.size() ; qIndex++) {
+            ArrayList<Double> questionStats = formStats.get(qIndex);
+            String correctAnswer = correctAnswers.get(formIndex).get(qIndex);
+            //get index of the correct answer in the question choices List
+            int correctAnswerIndex = questionsChoices.get(qIndex).indexOf(correctAnswer);
+            // p is the proportion of correct responses
+            double p = questionStats.get(correctAnswerIndex);
+            // q is the proportion of incorrect responses
+            double q = (1 - p);
 
-                pqsum += p * q ;
+            pqsum += p * q ;
 
-            }
-
-            int k  = studentScores.size();
-            if(k == 1)
-                return 1 ;
-            return k/(k-1) * (1-pqsum/var) ;
         }
-        return 0 ;
+
+        int k  = studentScores.size();
+        if(k == 1)
+            return 1 ;
+        return k/(k-1) * (1-pqsum/var) ;
     }
 
 
     public static double calcKr21 (double mean , double var , int n) {
-
         return n / (n - 1) * (1 - (mean * (n - mean) / (n * var)));
     }
 
@@ -597,7 +598,7 @@ public class Statistics {
         return  statsMap;
     }
 
-    public static Map<String,String> calcGeneralStats (ArrayList<Double> studentScores ,  int numberOfQuestions) {
+    public static Map<String,String> calcGeneralStats (ArrayList<Double> studentScores ,  int numberOfQuestions , int formIndex) {
         Map<String , String>  statsMap = new LinkedHashMap<>() ;
 
         double[] scores = studentScores.stream().mapToDouble(d -> d).toArray();
@@ -623,7 +624,7 @@ public class Statistics {
         double CI99Lower = Utils.getNumberWithinLimits(mean - calcCI(numberOfStudents,0.99 , std) , 0 , maxScore)  ;
         double CI99Higher = Utils.getNumberWithinLimits(mean + calcCI(numberOfStudents,0.99 , std)  , 0 , maxScore) ;
 
-        double kr20  = calcKr20();
+        double kr20  = calcKr20(formIndex);
         double kr21 = calcKr21(mean , variance , numberOfStudents) ;
 
 
@@ -663,27 +664,40 @@ public class Statistics {
 
         ArrayList<Map<String , String>> report3Maps = new ArrayList<>();
 
-        Map <String , String > testInsightsMap = calcTestInsights();
-        Map <String , String > generalStatsMap = calcGeneralStats(studentScores , questionsChoices.size() );
-        generalStatsMap.remove("Number Of Students") ;  // not in report 3
-
+        Map <String , String > testInsightsMap ;
+        Map <String , String > generalStatsMap ;
         Map compinedMap = new LinkedHashMap() ;
-        compinedMap.putAll(testInsightsMap);
-        compinedMap.putAll(generalStatsMap);
 
-        report3Maps.add(compinedMap);
+        double meanKr20  =0 ;
         if(getNumberOfForms()>1) {
             for (int formIndex = 0; formIndex < getNumberOfForms(); formIndex++) {
-                generalStatsMap = calcGeneralStats(formsScors.get(formIndex), questionsChoices.size());
+                generalStatsMap = calcGeneralStats(formsScors.get(formIndex), questionsChoices.size() , formIndex);
                 testInsightsMap = calcFormTestInsights(correctAnswersPercents.get(formIndex));
                 generalStatsMap.remove("Number Of Students");  // not in report 3
                 compinedMap = new LinkedHashMap();
                 compinedMap.putAll(testInsightsMap);
                 compinedMap.putAll(generalStatsMap);
                 report3Maps.add(compinedMap);
+
+                meanKr20 += Double.valueOf(generalStatsMap.get("Kuder-Richardson Formula 20"));
             }
 
+            meanKr20 /= getNumberOfForms() ;
+
         }
+
+        testInsightsMap= calcTestInsights();
+        generalStatsMap= calcGeneralStats(studentScores , questionsChoices.size() , 0 );
+        generalStatsMap.remove("Number Of Students") ;  // not in report 3
+
+        if(getNumberOfForms()>1) {
+            generalStatsMap.put("Kuder-Richardson Formula 20", Utils.formatNumber(meanKr20, 2));
+        }
+        compinedMap = new LinkedHashMap( );
+        compinedMap.putAll(testInsightsMap);
+        compinedMap.putAll(generalStatsMap);
+        report3Maps.add(compinedMap);
+
         return report3Maps ;
 
     }
@@ -757,7 +771,7 @@ public class Statistics {
     }
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
-        return calcGeneralStats (formsScors.get(formIndex) , questionsChoices.size());
+        return calcGeneralStats (formsScors.get(formIndex) , questionsChoices.size() , formIndex);
     }
 
     // this fucntion needs refactoring
