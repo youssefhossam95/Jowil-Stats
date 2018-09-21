@@ -269,7 +269,7 @@ public class WeightsController extends Controller {
     ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
     boolean isMouseClicked=false;
-
+    private double buttAbsX,buttAbsY,contextXPos,contextYPos;
 
     //Main methods
 
@@ -323,12 +323,14 @@ public class WeightsController extends Controller {
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
         contextMenuExpandButton.setOnMouseClicked(event -> {
             
-            double buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
-            double buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
+            buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
+            buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
             double buttSize=contextMenuIcon.getFitWidth();
             contextMenu.show(rootPane,0,0);
             contextMenu.hide();
-            contextMenu.show( contextMenuExpandButton,buttAbsX+buttSize/4-contextMenuCheckBox.getWidth(), buttAbsY+buttSize);
+            contextXPos=buttAbsX+buttSize/4-contextMenuCheckBox.getWidth();
+            contextYPos=buttAbsY+buttSize;
+            contextMenu.show( contextMenuExpandButton,contextXPos,contextYPos);
 
         });
 
@@ -718,7 +720,14 @@ public class WeightsController extends Controller {
     private void initContextMenu() {
 
 
-        contextMenu.setOnHidden(event->saveContextMenuChanges());
+        contextMenu.setOnHidden(event-> {
+            if(!saveContextMenuChanges(false))
+                Platform.runLater(()->contextMenu.show(contextMenuExpandButton,contextXPos,contextYPos));
+
+
+
+        }
+        );
 
 
         fullMarksMenuItem.setHideOnClick(false);
@@ -758,7 +767,7 @@ public class WeightsController extends Controller {
         fullMarksTextField.setOnKeyPressed(event -> {
 
             if(event.getCode()==KeyCode.ENTER)
-                saveContextMenuChanges();
+                saveContextMenuChanges(true);
 
         });
 
@@ -767,7 +776,7 @@ public class WeightsController extends Controller {
         bonusMarksTextField.setOnKeyPressed(event -> {
 
             if(event.getCode()==KeyCode.ENTER)
-                saveContextMenuChanges();
+                saveContextMenuChanges(true);
         });
 
 
@@ -784,10 +793,16 @@ public class WeightsController extends Controller {
 
     }
 
-    private boolean saveFullMarkChange() {
+    private boolean saveFullMarkChange(boolean isCalledFromEnter) {
         String s=tryDouble(fullMarksTextField.getText());
         if(s==null) {
-            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", "Full mark value\"" + fullMarksTextField.getText() + "\" is invalid.");
+
+
+            if(isCalledFromEnter)
+                contextMenu.hide();
+            else
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", "Full mark value\"" + fullMarksTextField.getText() + "\" is invalid.");
+
             fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
 
             return false;
@@ -797,11 +812,17 @@ public class WeightsController extends Controller {
         return true;
     }
 
-    private boolean saveBonusMarkChange() {
+    private boolean saveBonusMarkChange(boolean isCalledFromEnter) {
         String s=tryDouble(bonusMarksTextField.getText());
         if(s==null) {
-            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Bonus Marks Value", "Bonus marks value\"" + bonusMarksTextField.getText() + "\" is invalid.");
+
+            if(isCalledFromEnter)
+                contextMenu.hide();
+            else
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Bonus Marks Value", "Bonus marks value\"" + bonusMarksTextField.getText() + "\" is invalid.");
+
             bonusMarksTextField.setText(Double.toString(Statistics.getBonus()));
+
             return false;
         }
         Statistics.setBonus(Double.parseDouble(s));
@@ -809,11 +830,14 @@ public class WeightsController extends Controller {
         return true;
     }
 
-    private void saveContextMenuChanges(){
+    private boolean saveContextMenuChanges(boolean isCalledFromEnter){
 
-        boolean success=saveFullMarkChange();
+        boolean success=saveFullMarkChange(isCalledFromEnter);
         if(success)
-            saveBonusMarkChange();
+            return saveBonusMarkChange(isCalledFromEnter);
+        else
+            return false;
+
     }
 
 
