@@ -417,6 +417,7 @@ public class GradeBoundariesController extends Controller {
         projObject.put(IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY,CSVHandler.isIsAnswerKeyContainsHeaders());
         projObject.put(RESPONSES_FILE_PATH_JSON_KEY,CSVHandler.getResponsesFilePath());
         projObject.put(ANSWERS_FILE_PATH_JSON_KEY,CSVHandler.getAnswerKeyFilePath());
+        projObject.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY,Statistics.isAllowExceedMaxScore());
 
 
         saveObjectiveGroups(projObject);

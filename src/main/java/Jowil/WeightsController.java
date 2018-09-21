@@ -34,6 +34,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -43,7 +46,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -263,6 +265,7 @@ public class WeightsController extends Controller {
     ///data fields
     ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
+    boolean isMouseClicked=false;
 
 
     //Main methods
@@ -312,6 +315,15 @@ public class WeightsController extends Controller {
         contextMenuIcon.setSize(Double.toString(resX*18/1280));
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
+        contextMenuExpandButton.setOnMouseClicked(event -> {
+            double buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
+            double buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
+            double buttSize=Double.parseDouble(contextMenuIcon.getSize());
+            contextMenu.show(rootPane,0,0);
+            contextMenu.hide();
+            contextMenu.show( contextMenuExpandButton,buttAbsX+buttSize/4-contextMenuCheckBox.getWidth(), buttAbsY+buttSize);
+
+        });
 
         double verPad=resY*4/680,sidePad=resX*5/1280;
         fullMarksAnc.setPrefWidth(resX*125/1280);
@@ -379,15 +391,16 @@ public class WeightsController extends Controller {
         initWeightsHBoxes();
 //        subjLabel.setAlignment(Pos.CENTER);
 //        objLabel.setAlignment(Pos.CENTER);
+
+        Statistics.setUserMaxScore(-1);
+        Statistics.setBonus(0);
         initObjTableVBox();
         initSubjTableVBox();
         refreshGradesDistribution();
         initGradesFreqTable();
         initBarChart();
         initContextMenu();
-        contextMenuExpandButton.setOnMouseClicked(event -> {
-            contextMenu.show(contextMenuExpandButton, event.getScreenX(), event.getScreenY());
-        });
+
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
     }
@@ -410,6 +423,9 @@ public class WeightsController extends Controller {
     }
 
     private void saveWeights() {
+
+
+
 
         //save objective weights
         ArrayList<ArrayList<Double>> objWeights = new ArrayList<>();
@@ -456,7 +472,7 @@ public class WeightsController extends Controller {
         fullMarksAnc.getChildren().addAll(fullMarksLabel,fullMarksTextField);
         bonusMarksAnc.getChildren().addAll(bonusMarksLabel,bonusMarksTextField);
         checkBoxAnc.getChildren().add(contextMenuCheckBox);
-        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,checkBoxMenuItem);
+        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,new SeparatorMenuItem(),checkBoxMenuItem);
 
 
         rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable,contextMenuExpandButton);
@@ -543,7 +559,7 @@ public class WeightsController extends Controller {
             public void handle(ActionEvent e) {
                 String w;
                 if ((w = tryDouble(subjWeightText.getText())) == null) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid weight value", "Cannot update subjective weights: weight value \"" + subjWeightText.getText() + "\" is invalid.");
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Weight Value", "Cannot update subjective weights: weight value \"" + subjWeightText.getText() + "\" is invalid.");
                     return;
                 }
 
@@ -686,6 +702,11 @@ public class WeightsController extends Controller {
     }
 
     private void initContextMenu() {
+
+
+        contextMenu.setOnHidden(event->saveContextMenuChanges());
+
+
         fullMarksMenuItem.setHideOnClick(false);
         bonusMarksMenuItem.setHideOnClick(false);
         checkBoxMenuItem.setHideOnClick(false);
@@ -694,22 +715,91 @@ public class WeightsController extends Controller {
         fullMarksMenuItem.getStyleClass().add("nonSelectableMenuItem");
         bonusMarksMenuItem.getStyleClass().add("nonSelectableMenuItem");
         checkBoxMenuItem.getStyleClass().add("nonSelectableMenuItem");
-
         contextMenuCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
+
+
+        fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
+        bonusMarksTextField.setText("0.0");
+
+        fullMarksTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue)
+                isMouseClicked=false;
+
+            if(!isMouseClicked)
+                fullMarksTextField.requestFocus();
+        });
+
+        bonusMarksTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue)
+                isMouseClicked=false;
+
+            if(!isMouseClicked)
+                bonusMarksTextField.requestFocus();
+        });
+
+        contextMenu.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> isMouseClicked=true);
+
+
+
+        fullMarksTextField.setOnKeyPressed(event -> {
+
+            if(event.getCode()==KeyCode.ENTER)
+                saveContextMenuChanges();
+
+        });
+
+
+
+        bonusMarksTextField.setOnKeyPressed(event -> {
+
+            if(event.getCode()==KeyCode.ENTER)
+                saveContextMenuChanges();
+        });
+
+
+
 
         if(generalPrefsJson==null && !isOpenMode)
             contextMenuCheckBox.setSelected(true);
         else {
             JSONObject obj=isOpenMode?currentOpenedProjectJson:generalPrefsJson;
             contextMenuCheckBox.setSelected((Boolean) obj.get(ALLOW_EXCEED_FULL_MARK_JSON_KEY));
-
         }
+        contextMenuCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> Statistics.setAllowExceedMaxScore(newValue));
 
 
+    }
 
+    private boolean saveFullMarkChange() {
+        String s=tryDouble(fullMarksTextField.getText());
+        if(s==null) {
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", "Full mark value\"" + fullMarksTextField.getText() + "\" is invalid.");
+            fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
 
+            return false;
+        }
+        Statistics.setUserMaxScore(Double.parseDouble(s));
+        refreshGradesDistribution();
+        return true;
+    }
 
+    private boolean saveBonusMarkChange() {
+        String s=tryDouble(bonusMarksTextField.getText());
+        if(s==null) {
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Bonus Marks Value", "Bonus marks value\"" + bonusMarksTextField.getText() + "\" is invalid.");
+            bonusMarksTextField.setText(Double.toString(Statistics.getBonus()));
+            return false;
+        }
+        Statistics.setBonus(Double.parseDouble(s));
+        refreshGradesDistribution();
+        return true;
+    }
 
+    private void saveContextMenuChanges(){
+
+        boolean success=saveFullMarkChange();
+        if(success)
+            saveBonusMarkChange();
     }
 
 
