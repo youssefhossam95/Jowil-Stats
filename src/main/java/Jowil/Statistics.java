@@ -144,6 +144,10 @@ public class Statistics {
         Statistics.allowExceedMaxScore = allowExceedMaxScore;
     }
 
+    public static boolean isAllowExceedMaxScore() {
+        return allowExceedMaxScore;
+    }
+
 
     //getters
 //    public static int getIdentifierMode() {
@@ -210,6 +214,10 @@ public class Statistics {
     }
 
     public static Double getMaxScore(){ return maxScore ; }
+    public static double getBonus() {
+        return bonus;
+    }
+
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");
@@ -269,12 +277,12 @@ public class Statistics {
         initMaxScore();
         studentScores = new ArrayList<Double>() ;
         for(int i = 0 ; i <studentAnswers.size() ; i ++) {
-            double studentScore = 0 ;
+            double studentScore = bonus ;
             ArrayList<String> studentAnswer = studentAnswers.get(i) ;
             for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
                 String questionAnswer = studentAnswer.get(j) ;
                 if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)).get(j))) {
-                    studentScore+= questionWeights.get(studentForms.get(i)).get(j)+ bonus ;
+                    studentScore+= questionWeights.get(studentForms.get(i)).get(j);
                     if(!allowExceedMaxScore)
                         studentScore = studentScore>maxScore?maxScore:studentScore ;
                 }
@@ -304,12 +312,12 @@ public class Statistics {
             formsScors.add(formScores);
         }
         for(int i = 0 ; i <studentAnswers.size() ; i ++) {
-            double studentScore = 0 ;
+            double studentScore = bonus ;
             ArrayList<String> studentAnswer = studentAnswers.get(i) ;
             for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
                 String questionAnswer = studentAnswer.get(j) ;
                 if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)).get(j))) {
-                    studentScore+= (questionWeights.get(studentForms.get(i)).get(j) + bonus) ;
+                    studentScore+= (questionWeights.get(studentForms.get(i)).get(j)) ;
                     if(!allowExceedMaxScore)
                         studentScore = studentScore>maxScore?maxScore:studentScore ;
                 }
