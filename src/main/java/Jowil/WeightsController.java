@@ -243,7 +243,7 @@ public class WeightsController extends Controller {
     ImageView subjButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
 
     StackPane contextMenuExpandButton=new StackPane();
-    FontAwesomeIconView contextMenuIcon=(FontAwesomeIconView)GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.ELLIPSIS_H).styleClass("optionsIcon").build();
+    ImageView contextMenuIcon=new ImageView(new Image("Images/blueMenu.png"));
     ContextMenu contextMenu=new ContextMenu();
 
 
@@ -315,13 +315,17 @@ public class WeightsController extends Controller {
         objWeightsButton.setMinWidth(resX*123/1280);
         subjWeightsButton.setMinWidth(resX*123/1280);
 
-        contextMenuIcon.setSize(Double.toString(resX*18/1280));
-        contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2); //mid point between separator and subjVbox
+
+        //contextMenuIcon.setSize(Double.toString(resX*18/1280));
+        contextMenuIcon.setFitWidth(resX*18/1280);
+        contextMenuIcon.setFitHeight(resX*18/1280);
+        contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2-contextMenuIcon.getFitWidth()/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
         contextMenuExpandButton.setOnMouseClicked(event -> {
+            
             double buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
             double buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
-            double buttSize=Double.parseDouble(contextMenuIcon.getSize());
+            double buttSize=contextMenuIcon.getFitWidth();
             contextMenu.show(rootPane,0,0);
             contextMenu.hide();
             contextMenu.show( contextMenuExpandButton,buttAbsX+buttSize/4-contextMenuCheckBox.getWidth(), buttAbsY+buttSize);
@@ -406,7 +410,9 @@ public class WeightsController extends Controller {
 
         Tooltip tooltipAdd = new Tooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltipAdd);
-
+        contextMenuExpandButton.setOnMouseEntered(event->contextMenuIcon.setImage(new Image("Images/lightBlueMenu.png")));
+        contextMenuExpandButton.setOnMouseExited(event -> contextMenuIcon.setImage(new Image("Images/blueMenu.png")));
+        //contextMenuIcon.setRotate(90);
 
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
