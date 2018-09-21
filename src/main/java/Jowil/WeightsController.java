@@ -18,9 +18,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -36,6 +38,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -240,7 +243,7 @@ public class WeightsController extends Controller {
     ImageView subjButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
 
     StackPane contextMenuExpandButton=new StackPane();
-    FontAwesomeIconView contextMenuIcon=(FontAwesomeIconView)GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CARET_DOWN).styleClass("optionsIcon").build();
+    FontAwesomeIconView contextMenuIcon=(FontAwesomeIconView)GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.ELLIPSIS_H).styleClass("optionsIcon").build();
     ContextMenu contextMenu=new ContextMenu();
 
 
@@ -384,7 +387,6 @@ public class WeightsController extends Controller {
             objTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
 
-        //deleteButton.setLayoutX(rootWidth/10+addHBox.getWidth()/3);
     }
 
     protected void initComponents() {
@@ -400,6 +402,11 @@ public class WeightsController extends Controller {
         initGradesFreqTable();
         initBarChart();
         initContextMenu();
+
+
+        Tooltip tooltipAdd = new Tooltip("Tweak Grades");
+        Tooltip.install(contextMenuExpandButton, tooltipAdd);
+
 
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
@@ -477,6 +484,7 @@ public class WeightsController extends Controller {
 
         rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable,contextMenuExpandButton);
 
+
     }
 
     @Override
@@ -489,11 +497,11 @@ public class WeightsController extends Controller {
     public void startWindow(){
         super.startWindow();
 
-//        for (Node n: gradesFreqTable.lookupAll(".column-header"))
-//            n.setStyle("-fx-font-size:"+resX*14/1280);
-//
-//        for (Node n: gradesFreqTable.lookupAll(".tree-table-cell"))
-//            n.setStyle("-fx-font-size:"+resX*7/1280);
+
+        Platform.runLater(()->gradesFreqTable.refresh());
+
+
+
 
     }
 
