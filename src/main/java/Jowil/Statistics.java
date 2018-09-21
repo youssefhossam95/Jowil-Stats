@@ -130,6 +130,21 @@ public class Statistics {
     public static void setFormsScors(ArrayList<ArrayList<Double>> formsScors) {
         Statistics.formsScors = formsScors;
     }
+
+
+    public static void setBonus(double bonus) {
+        Statistics.bonus = bonus;
+    }
+
+    public static void setUserMaxScore(double userMaxScore) {
+        Statistics.userMaxScore = userMaxScore;
+    }
+
+    public static void setAllowExceedMaxScore(boolean allowExceedMaxScore) {
+        Statistics.allowExceedMaxScore = allowExceedMaxScore;
+    }
+
+
     //getters
 //    public static int getIdentifierMode() {
 //        return identifierMode;
@@ -1260,13 +1275,6 @@ public class Statistics {
         return formsData ;
     }
 
-    public static void setBonus(double bonus) {
-        Statistics.bonus = bonus;
-    }
-
-    public static void setUserMaxScore(double userMaxScore) {
-        Statistics.userMaxScore = userMaxScore;
-    }
 }
 
 class SortByScore implements Comparator<ArrayList<String>>
