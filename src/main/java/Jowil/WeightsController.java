@@ -1,10 +1,14 @@
 package Jowil;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,9 +34,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -41,6 +43,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -234,6 +237,26 @@ public class WeightsController extends Controller {
 
     ImageView subjButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
 
+    StackPane contextMenuExpandButton=new StackPane();
+    FontAwesomeIconView contextMenuIcon=(FontAwesomeIconView)GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.CARET_DOWN).styleClass("optionsIcon").build();
+    ContextMenu contextMenu=new ContextMenu();
+
+
+    AnchorPane fullMarksAnc=new AnchorPane();
+    Label fullMarksLabel=new Label("Full Mark:");
+    TextField fullMarksTextField=new TextField();
+    CustomMenuItem fullMarksMenuItem= new CustomMenuItem(fullMarksAnc);
+
+    AnchorPane bonusMarksAnc=new AnchorPane();
+    Label bonusMarksLabel=new Label("Bonus Marks:");
+    TextField bonusMarksTextField=new TextField();
+    CustomMenuItem bonusMarksMenuItem= new CustomMenuItem(bonusMarksAnc);
+
+    AnchorPane checkBoxAnc=new AnchorPane();
+    CheckBox contextMenuCheckBox=new JFXCheckBox("Allow exceeding full mark",CHECK_BOXES_SIZE);
+    CustomMenuItem checkBoxMenuItem=new CustomMenuItem(checkBoxAnc);
+
+
 
 
 
@@ -286,6 +309,31 @@ public class WeightsController extends Controller {
         objWeightsButton.setMinWidth(resX*123/1280);
         subjWeightsButton.setMinWidth(resX*123/1280);
 
+        contextMenuIcon.setSize(Double.toString(resX*18/1280));
+        contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2); //mid point between separator and subjVbox
+        contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
+
+        double verPad=resY*4/680,sidePad=resX*5/1280;
+        fullMarksAnc.setPrefWidth(resX*125/1280);
+        fullMarksTextField.setPrefWidth(resX*50/1280);
+        fullMarksLabel.setFont(new Font(resX*12/1280));
+        fullMarksLabel.setPadding(new Insets(resX*4/1280,0,0,0));
+
+
+
+        bonusMarksAnc.setPrefWidth(fullMarksAnc.getPrefWidth());
+        bonusMarksTextField.setPrefWidth(fullMarksTextField.getPrefWidth());
+        bonusMarksLabel.setFont(fullMarksLabel.getFont());
+        bonusMarksLabel.setPadding(fullMarksLabel.getPadding());
+
+
+
+        AnchorPane.setLeftAnchor(fullMarksLabel,0.0);
+        AnchorPane.setLeftAnchor(bonusMarksLabel,0.0);
+        AnchorPane.setRightAnchor(fullMarksTextField,0.0);
+        AnchorPane.setRightAnchor(bonusMarksTextField,0.0);
+
+
 
 
         midSeparator.setLayoutX(rootWidthToPixels(0.665));
@@ -336,11 +384,14 @@ public class WeightsController extends Controller {
         refreshGradesDistribution();
         initGradesFreqTable();
         initBarChart();
-
-
+        initContextMenu();
+        contextMenuExpandButton.setOnMouseClicked(event -> {
+            contextMenu.show(contextMenuExpandButton, event.getScreenX(), event.getScreenY());
+        });
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
     }
+
 
 
 
@@ -352,6 +403,13 @@ public class WeightsController extends Controller {
 
     @Override
     protected void saveChanges() {
+
+        saveWeights();
+        generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY,contextMenuCheckBox.isSelected());
+        saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+    }
+
+    private void saveWeights() {
 
         //save objective weights
         ArrayList<ArrayList<Double>> objWeights = new ArrayList<>();
@@ -390,12 +448,18 @@ public class WeightsController extends Controller {
 //        objTable.getColumns().addAll(objHeadersCol,objWeightsCol); objTable construction in "populateObjTable" method
         subjTable.getColumns().addAll(subjNamesCol, subjWeightsCol);
 
-
         objTableVbox.getChildren().addAll(objLabel, objTable, objHBox);
         subjTableVbox.getChildren().addAll(subjLabel, subjTable, subjHBox);
 
+        contextMenuExpandButton.getChildren().add(contextMenuIcon);
 
-        rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable);
+        fullMarksAnc.getChildren().addAll(fullMarksLabel,fullMarksTextField);
+        bonusMarksAnc.getChildren().addAll(bonusMarksLabel,bonusMarksTextField);
+        checkBoxAnc.getChildren().add(contextMenuCheckBox);
+        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,checkBoxMenuItem);
+
+
+        rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable,contextMenuExpandButton);
 
     }
 
@@ -621,6 +685,32 @@ public class WeightsController extends Controller {
 
     }
 
+    private void initContextMenu() {
+        fullMarksMenuItem.setHideOnClick(false);
+        bonusMarksMenuItem.setHideOnClick(false);
+        checkBoxMenuItem.setHideOnClick(false);
+
+
+        fullMarksMenuItem.getStyleClass().add("nonSelectableMenuItem");
+        bonusMarksMenuItem.getStyleClass().add("nonSelectableMenuItem");
+        checkBoxMenuItem.getStyleClass().add("nonSelectableMenuItem");
+
+        contextMenuCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
+
+        if(generalPrefsJson==null && !isOpenMode)
+            contextMenuCheckBox.setSelected(true);
+        else {
+            JSONObject obj=isOpenMode?currentOpenedProjectJson:generalPrefsJson;
+            contextMenuCheckBox.setSelected((Boolean) obj.get(ALLOW_EXCEED_FULL_MARK_JSON_KEY));
+
+        }
+
+
+
+
+
+
+    }
 
 
     private void populateObjTable() {
@@ -801,7 +891,7 @@ public class WeightsController extends Controller {
     }
 
     private void refreshGradeFreqTable(){
-        saveChanges();
+        saveWeights();
         if(gradeScalesJsonObj==null)
             loadGradeScale();
         loadGradesFreqData();

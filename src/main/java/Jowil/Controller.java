@@ -94,12 +94,13 @@ public abstract class Controller {
     boolean isStepWindow;
     static String projectName;
     static String SAVED_PROJECTS_FILE_NAME="Projects.json";
-    static JSONObject savedProjectsJson;
-    static JSONObject currentOpenedProjectJson;
+    static JSONObject savedProjectsJson,currentOpenedProjectJson,generalPrefsJson;
     static String selectedIdentifierName;
     static String selectedFormColName;
+    final double CHECK_BOXES_SIZE=resX*14/1280;
     static final String MANUAL_MODE_INDICATOR=" (Manual Configuration)";
     static final String GRADE_SCALE_FILE_NAME = "GradeScales.json";
+    static final String GENERAL_PREFS_FILE_NAME="GeneralPrefs.json",LAST_CSV_DIR_JSON_KEY="lastCSVDir";
     static final String Q_NAMES_JSON_KEY="qNames",OBJ_GROUPS_JSON_KEY="objGroups",Q_CHOICES_JSON_KEY="questionsChoices",
             OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="lastSelectedScaleIndex",
             REPORTS_CHOSEN_JSON_KEY="reportsChosen",FORMATS_CHOSEN_JSON_KEY="formatsChosen",REPORTS_OUT_PATH_JSON_KEY="reportsOutputDir",
@@ -109,7 +110,7 @@ public abstract class Controller {
             IS_RESPONSES_CONTAINS_HEADERS_JSON_KEY="isResponsesContainsHeaders",IS_ANSWER_KEY_CONTAINS_HEADERS_JSON_KEY="isAnswerKeyContainsHeaders",
             RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
             ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
-            SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name";
+            SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name",ALLOW_EXCEED_FULL_MARK_JSON_KEY="allowExceedFullMark";
 
 
 

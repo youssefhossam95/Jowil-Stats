@@ -356,6 +356,14 @@ JFXListView:focused {
 -fx-fill:#87CEEB;
 }
 
+.optionsIcon{
+-fx-fill:#474545;
+}
+
+.optionsIcon:hover{
+-fx-fill:  #9a9898;
+}
+
 .weightsBarChart{
 -fx-background-color:transparent;
 -fx-alternative-column-fill-visible:true;
@@ -377,7 +385,7 @@ JFXListView:focused {
 -fx-bar-fill: #157880;
 }
 
-.weightsBarChart .axis-label { -fx-font-size: 0.9em ;}
+.weightsBarChart .axis-label { -fx-font-size: 0.9em ; }
 .weightsBarChart .axis{
 -fx-tick-label-font-size: 0.6em;
 }
@@ -392,4 +400,20 @@ JFXListView:focused {
      /* There is some oddness if padding is in em values rather than pixels,
         in particular, the left border of the control doesn't show. */
     -fx-padding: 1; /* 0.083333em; */
+}
+
+.nonSelectableMenuItem{
+/*    -fx-skin: "com.sun.javafx.scene.control.skin.MenuItemSkin";*/
+    -fx-background-color: white;
+    -fx-padding: 0.333333em 0.41777em 0.333333em 0.41777em;  /* 4 5 4 5 */
+}
+
+.nonSelectableMenuItem:focused {
+     -fx-background:  #3184c9;
+     -fx-background-color: transparent;
+     -fx-text-fill: -fx-text-base-color;
+}
+
+.nonSelectableMenuItem:focused .label {
+    -fx-text-fill: -fx-text-base-color;
 }

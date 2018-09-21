@@ -110,7 +110,7 @@ public class GradeBoundariesController extends Controller {
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
     private int reportsCount;
-    private final double CHECK_BOXES_SIZE=resX*14/1280;
+
 
 
     Font gradesLabelsFonts = new Font("Arial", resX / 100);
