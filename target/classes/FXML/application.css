@@ -409,7 +409,7 @@ JFXListView:focused {
 }
 
 .nonSelectableMenuItem:focused {
-     -fx-background:  #3184c9;
+     -fx-background: #f8f8f8;
      -fx-background-color: transparent;
      -fx-text-fill: -fx-text-base-color;
 }
