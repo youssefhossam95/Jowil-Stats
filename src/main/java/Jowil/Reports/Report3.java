@@ -92,6 +92,9 @@ public class Report3 extends Report {
                 doc.select("div.divTitle").addClass("second-page-header") ;
                 doc.select("div.divTitle").last().text(reportTitle +": Form "+ mapIndex );
             }
+            else if(report3Maps.size()>1)
+                doc.select("td.kr20-title").last().text("Kuder-Richardson Formula 20 (mean)") ;
+
 
             Map<String , String > statsMap = report3Maps.get(mapIndex);
             fillHtmlWithMap(doc , statsMap);
@@ -268,6 +271,9 @@ public class Report3 extends Report {
 
     @Override
     public void init() {
+
         report3Maps = Statistics.report3Stats() ;
+        report3Maps.add(0, report3Maps.get(report3Maps.size()-1));
+        report3Maps.remove(report3Maps.size()-1) ;
     }
 }
