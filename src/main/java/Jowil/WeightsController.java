@@ -322,6 +322,7 @@ public class WeightsController extends Controller {
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
         contextMenuExpandButton.setOnMouseClicked(event -> {
+            
             double buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
             double buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
             double buttSize=contextMenuIcon.getFitWidth();
@@ -409,6 +410,8 @@ public class WeightsController extends Controller {
 
         Tooltip tooltipAdd = new Tooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltipAdd);
+        contextMenuExpandButton.setOnMouseEntered(event->contextMenuIcon.setImage(new Image("Images/blueMenu.png")));
+        contextMenuExpandButton.setOnMouseExited(event -> contextMenuIcon.setImage(new Image("Images/Menu Vertical_50px.png")));
 
 
         midSeparator.setVisible(true);
