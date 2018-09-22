@@ -13,6 +13,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation ;
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.math3.stat.StatUtils.* ;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -30,6 +31,41 @@ public class Test {
      * @param hardness the ordered hardness of questions at index 0 question 1 ... etc
      * @return Pair with key = slope and value = error
      */
+
+    public static Pair <Double,Double> getTrendDataSimple (ArrayList<Double> hardness)  {
+        SimpleRegression regression = new SimpleRegression() ;
+
+        double[] hardnessArray = hardness.stream().mapToDouble(d -> d).toArray();
+        double maxHardness = max(hardnessArray);
+
+        for(int i = 0 ; i < hardness.size() ; i ++) {
+            regression.addData((double)i/(hardness.size()-1) , hardness.get(i)/maxHardness);
+        }
+        System.out.println("slope: " + regression.getSlope());
+        System.out.println("intercept: "+ regression.getIntercept());
+//        System.out.println("Mean Square Error: "+regression.getMeanSquareError());
+//        System.out.println("R Square: "+regression.getRSquare());
+//        System.out.println("R: "+regression.getR());
+//        System.out.println("Slope Std Error: "+regression.getSlopeStdErr());
+//        System.out.println("Sum Sqared Error: "+regression.getSumSquaredErrors());
+
+        return new Pair<Double, Double>(regression.getSlope() , Math.sqrt(regression.getMeanSquareError())) ;
+    }
+
+    private static  double calcHarMean (double x , double y ) {
+        return  2 * (x * y) / ( x + y) ;
+    }
+
+    private static double calcJowilParam (double slope , double error) {
+        double slopeSign ;
+        if(slope == 0)
+            slopeSign = 1 ;
+        else
+            slopeSign = slope/Math.abs(slope) ;
+        double harMean = calcHarMean(Math.abs(slope) , 1-Math.abs(error)) ;
+        return (slopeSign* harMean + 1)*5;
+    }
+
     public static Pair<Double , Double> getTrendData (ArrayList<Double> hardness) {
         double[] hardnessArray = hardness.stream().mapToDouble(d -> d).toArray();
         double [][] X = new double[hardnessArray.length][1] ;
@@ -60,24 +96,27 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
-//        String x = "7.5";
-//        System.out.println(Math.round(Double.valueOf(x)));
 
-//        ArrayList<Double> hardness = new ArrayList<>( );
-//        for(int i = 0 ; i < 40 ; i ++)
-//            hardness.add(0.0);hardness.add(10.0);
-////       hardness.add(0.0);hardness.add(10.0);
-////        hardness.add(0.0); hardness.add(10.0) ;  hardness.add(0.0) ;  hardness.add(10.0) ;
-////        hardness.add(0.0) ; hardness.add(10.0) ; hardness.add(0.0); hardness.add(10.0);
-//        Pair<Double , Double> pair = getTrendData(hardness ) ;
-//        double slope = pair.getKey();
-//        double Rss = pair.getValue() ;
-//        System.out.println("slope: " + slope);
-//        System.out.println("standard Error: " + Rss)
+        ArrayList<Double> hardness = new ArrayList<>( );
+//        for(double i = 0 ; i < 40 ; i ++) {
+////            hardness.add(0.0) ;
+//            hardness.add(i/4);
+//            hardness.add(i-10);
+//        }
+       hardness.add(0.0);hardness.add(3.0);
+        hardness.add(0.0); hardness.add(5.0) ;  hardness.add(1.0) ;  hardness.add(10.0) ;
+        hardness.add(6.0) ; hardness.add(9.0) ; hardness.add(7.0); hardness.add(5.0);
+        Pair<Double , Double> pair = getTrendDataSimple(hardness ) ;
+        double slope = pair.getKey();
+        double Rss = pair.getValue() ;
+        System.out.println("slope: " + slope);
+        System.out.println("standard Error: " + Rss);
+
+        System.out.println("Jowil Param: "+calcJowilParam(slope, Rss)) ;
 
 
 
-        System.out.println(URLDecoder.decode(Test.class.getResource("/reports").getPath(),"utf-8"));
+//        System.out.println(URLDecoder.decode(Test.class.getResource("/reports").getPath(),"utf-8"));
 
 
 
