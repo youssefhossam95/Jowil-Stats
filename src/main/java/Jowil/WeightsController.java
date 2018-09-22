@@ -268,7 +268,7 @@ public class WeightsController extends Controller {
     ///data fields
     ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
-    boolean isMouseClicked=false;
+    boolean isMouseClickedWhileFocused=false;
     private double buttAbsX,buttAbsY,contextXPos,contextYPos;
 
     //Main methods
@@ -400,8 +400,14 @@ public class WeightsController extends Controller {
 //        subjLabel.setAlignment(Pos.CENTER);
 //        objLabel.setAlignment(Pos.CENTER);
 
-        Statistics.setUserMaxScore(-1);
-        Statistics.setBonus(0);
+        if(isOpenMode){
+            Statistics.setUserMaxScore((Double)currentOpenedProjectJson.get(MAX_SCORE_JSON_KEY));
+            Statistics.setBonus((Double)currentOpenedProjectJson.get(BONUS_MARKS_JSON_KEY));
+        }
+        else {
+            Statistics.setUserMaxScore(-1);
+            Statistics.setBonus(0);
+        }
         initObjTableVBox();
         initSubjTableVBox();
         refreshGradesDistribution();
@@ -433,8 +439,10 @@ public class WeightsController extends Controller {
     protected void saveChanges() {
 
         saveWeights();
-        generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY,contextMenuCheckBox.isSelected());
-        saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+        if(generalPrefsJson!=null) {
+            generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY, contextMenuCheckBox.isSelected());
+            saveJsonObj(GENERAL_PREFS_FILE_NAME, generalPrefsJson);
+        }
     }
 
     private void saveWeights() {
@@ -722,7 +730,7 @@ public class WeightsController extends Controller {
 
         contextMenu.setOnHidden(event-> {
             if(!saveContextMenuChanges(false))
-                Platform.runLater(()->contextMenu.show(contextMenuExpandButton,contextXPos,contextYPos));
+                Platform.runLater(()->contextMenu.show(contextMenuExpandButton,contextXPos,contextYPos)); //if invalid show context menu again
 
 
 
@@ -741,26 +749,39 @@ public class WeightsController extends Controller {
         contextMenuCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
 
 
+        //next 2 lines depend on the initialization of bonus and max score in initComponents
         fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
-        bonusMarksTextField.setText("0.0");
+        bonusMarksTextField.setText(isOpenMode?Double.toString(Statistics.getBonus()):"0.0");
 
         fullMarksTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue)
-                isMouseClicked=false;
+                isMouseClickedWhileFocused=false;
 
-            if(!isMouseClicked)
+            if(!isMouseClickedWhileFocused)
                 fullMarksTextField.requestFocus();
         });
 
         bonusMarksTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue)
-                isMouseClicked=false;
+                isMouseClickedWhileFocused=false;
 
-            if(!isMouseClicked)
+            if(!isMouseClickedWhileFocused)
                 bonusMarksTextField.requestFocus();
         });
 
-        contextMenu.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> isMouseClicked=true);
+        contextMenu.addEventFilter(MouseEvent.MOUSE_PRESSED, event ->{
+
+            //ignore any mouse click on an already focused text field
+            if(fullMarksTextField.isFocused() &&
+                    fullMarksTextField.contains(fullMarksTextField.sceneToLocal(new Point2D(event.getSceneX(),event.getSceneY()))))
+                return;
+
+            if(bonusMarksTextField.isFocused() &&
+                    bonusMarksTextField.contains(bonusMarksTextField.sceneToLocal(new Point2D(event.getSceneX(),event.getSceneY()))))
+                return;
+
+                isMouseClickedWhileFocused=true;
+        });
 
 
 
@@ -797,10 +818,9 @@ public class WeightsController extends Controller {
         String s=tryDouble(fullMarksTextField.getText());
         if(s==null) {
 
-
-            if(isCalledFromEnter)
+            if(isCalledFromEnter) //triggered by Enter button -> hide context menu so that full validation will take place, to avoid double alerts
                 contextMenu.hide();
-            else
+            else //triggered by context menu hide-> show alert
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", "Full mark value\"" + fullMarksTextField.getText() + "\" is invalid.");
 
             fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
