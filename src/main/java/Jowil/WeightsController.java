@@ -400,8 +400,14 @@ public class WeightsController extends Controller {
 //        subjLabel.setAlignment(Pos.CENTER);
 //        objLabel.setAlignment(Pos.CENTER);
 
-        Statistics.setUserMaxScore(-1);
-        Statistics.setBonus(0);
+        if(isOpenMode){
+            Statistics.setUserMaxScore((Double)currentOpenedProjectJson.get(MAX_SCORE_JSON_KEY));
+            Statistics.setBonus((Double)currentOpenedProjectJson.get(BONUS_MARKS_JSON_KEY));
+        }
+        else {
+            Statistics.setUserMaxScore(-1);
+            Statistics.setBonus(0);
+        }
         initObjTableVBox();
         initSubjTableVBox();
         refreshGradesDistribution();
@@ -743,8 +749,9 @@ public class WeightsController extends Controller {
         contextMenuCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
 
 
+        //next 2 lines depend on the initialization of bonus and max score in initComponents
         fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
-        bonusMarksTextField.setText("0.0");
+        bonusMarksTextField.setText(isOpenMode?Double.toString(Statistics.getBonus()):"0.0");
 
         fullMarksTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue)
