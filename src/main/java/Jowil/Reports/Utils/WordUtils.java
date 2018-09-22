@@ -30,6 +30,7 @@ public class WordUtils {
     public final static int TABLE_ALIGN_CENTER = 0 ;
     public final static int TABLE_ALIGN_LR = 1 ;
     public static int pageWidth = A4_PAGE_WIDTH ;
+    public static final int TOP_BORDER_SZ = 15 ;
 
 
 
@@ -117,7 +118,7 @@ public class WordUtils {
         borders.addNewRight().setVal(STBorder.NONE);
         if(addTopBorder) {
             borders.addNewTop().setVal(STBorder.THICK);
-            borders.getTop().setSz(BigInteger.valueOf(15));
+            borders.getTop().setSz(BigInteger.valueOf(TOP_BORDER_SZ));
             borders.getTop().setSpace(BigInteger.valueOf(0));
             borders.getTop().setColor(REPORTS_COLOR);
         }
@@ -193,6 +194,16 @@ public class WordUtils {
         return docTable ;
     }
 
+    public static void addBorderToCell(XWPFTableCell cell) {
+        CTTc ctTc = cell.getCTTc();
+        CTTcPr tcPr = ctTc.addNewTcPr();
+        CTTcBorders border = tcPr.addNewTcBorders();
+        border.addNewTop().setVal(STBorder.SINGLE);
+        border.getTop().setColor(REPORTS_COLOR);
+        border.getTop().setSz(BigInteger.valueOf(TOP_BORDER_SZ));
+
+    }
+
 
     public static XWPFTable createTableInCell (XWPFTableCell wrapperCell, ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean addHeaderRow , double tableWidth ) throws IOException, InvalidFormatException {
 
@@ -266,7 +277,7 @@ public class WordUtils {
         return docTable ;
     }
 
-    private static void parseCellClass( XWPFTableCell cell ,  String cellClassesString) {
+    public static void parseCellClass( XWPFTableCell cell ,  String cellClassesString) {
         String [] cellClasses = cellClassesString.split(" ") ;
         ArrayList<String> cellClassesList = new ArrayList<>();
         for(int i =0 ; i < cellClasses.length ; i++)
@@ -284,7 +295,7 @@ public class WordUtils {
      * @param cell cell object to be filled
      * @param cellData string containing class and text of the cell
      */
-    private static XWPFRun processCellData (XWPFTableCell cell , XWPFParagraph cellParagraph , String cellData ) throws IOException, InvalidFormatException {
+    public static XWPFRun processCellData (XWPFTableCell cell , XWPFParagraph cellParagraph , String cellData ) throws IOException, InvalidFormatException {
 
         String cellText = cellData ; // the normal case no classes
         if(cellData.length()>7 && cellData.substring(0 , 5).equals("<<img")){

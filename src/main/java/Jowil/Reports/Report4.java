@@ -7,9 +7,7 @@ import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -18,6 +16,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Report4 extends Report{
 
@@ -220,7 +219,29 @@ public class Report4 extends Report{
             tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
         }
 
-        XWPFTable docTable = WordUtils.addTable(document, tableWithHeaders);
+        XWPFTable docTable = WordUtils.addTable(document,new ArrayList<>( tableWithHeaders.subList(0 , tableWithHeaders.size()-1)));
+        XWPFTableRow row = docTable.createRow();
+        ArrayList<String> lastRow = tableWithHeaders.get(tableWithHeaders.size()-1) ;
+        for(int i = 0 ; i < lastRow.size() ; i++) {
+            String cellData = lastRow.get(i)  ;
+            XWPFTableCell cell = row.getCell(i) ;
+            XWPFParagraph par = cell.getParagraphArray(0);
+            par.setAlignment(ParagraphAlignment.CENTER);
+
+            WordUtils.processCellData(cell , par, cellData)  ;
+//            XWPFRun run = par.createRun();
+//            run.setText(cellData);
+//            run.setBold(true);
+            WordUtils.addBorderToCell(cell);
+
+        }
+
+//        List <XWPFParagraph> paragraphs = document.getParagraphs();
+//        document.removeBodyElement(document.getPosOfParagraph(paragraphs.get(paragraphs.size()-1))) ;
+//
+//        WordUtils.addTable(document, tableWithHeaders);
+
+
 //        docTable.setCellMargins(50 ,200 , 50 , 200);
 //        WordUtils.removeBorders(docTable);
 //        docTable.addNewCol();
