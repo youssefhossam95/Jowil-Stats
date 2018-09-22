@@ -218,6 +218,11 @@ public class Statistics {
         return bonus;
     }
 
+    public static ArrayList<ArrayList<Double>> getCorrectAnswersPercents() {
+        return correctAnswersPercents;
+    }
+
+
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");
@@ -349,7 +354,7 @@ public class Statistics {
             Collections.sort(sortedStudentAnswers.get(i),sorter);
     }
 
-    private static void initAnswersStats(){
+    public static void initAnswersStats(){
 
         answersStats=new ArrayList<ArrayList<ArrayList<Double>>>(correctAnswers.size());
         for(int i=0;i<correctAnswers.size();i++){

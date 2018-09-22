@@ -408,6 +408,8 @@ public class WeightsController extends Controller {
             Statistics.setUserMaxScore(-1);
             Statistics.setBonus(0);
         }
+        Statistics.initAnswersStats();
+        Statistics.initCorrectAnswersPercent();
         initObjTableVBox();
         initSubjTableVBox();
         refreshGradesDistribution();
@@ -888,13 +890,17 @@ public class WeightsController extends Controller {
         int formsCount = CSVHandler.getFormsCount();
         //add Weight columns
         if (formsCount == 1) {
-            objTable.getColumns().add(createColumn(1, "Weight"));
+            objTable.getColumns().add(createColumn(1,"Correct%"));
+            objTable.getColumns().add(createColumn(2, "Weight"));
         } else {
-//            TableColumn weightCol=new TableColumn<>("Weight");
-//            objTable.getColumns().add(weightCol);
+
             for (int i = 0; i < formsCount; i++) {
-                //weightCol.getColumns().add(createColumn(i+1, ""));
-                objTable.getColumns().add(createColumn(i + 1, ""));
+
+                TableColumn parentCol=new TableColumn("Form "+(i+1));
+                objTable.getColumns().add(parentCol);
+                parentCol.getColumns().add(createColumn(i*2+1,"Correct%"));
+                parentCol.getColumns().add(createColumn(i*2+2, "Weight"));
+
             }
         }
 
@@ -904,20 +910,16 @@ public class WeightsController extends Controller {
     private TableColumn<ObservableList<StringProperty>, String> createColumn(
             final int columnIndex, String columnTitle) {
         TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-        String title;
-        if (columnTitle == null || columnTitle.trim().length() == 0) {
-            title = "Form " + (columnIndex) + " Weight";
-        } else {
-            title = columnTitle;
-        }
+
+        boolean isWeightsCol=columnTitle.toLowerCase().contains("weights");
+
+        if(!isWeightsCol)
+            column.setEditable(false);
 
         column.setCellFactory((t) -> EditCell.createStringEditCell(this));
-        column.setSortable(true);
+        column.setText(columnTitle);
 
-
-        column.setText(title);
-        column
-                .setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
+        column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
                     @Override
                     public ObservableValue<String> call(
                             TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
@@ -931,22 +933,22 @@ public class WeightsController extends Controller {
                 });
 
 
-        column.setOnEditCommit(t -> {
-                    String w;
-                    int row = t.getTablePosition().getRow();
-                    int col = t.getTablePosition().getColumn();
-                    if ((w = tryDouble(t.getNewValue())) != null) {
-                        t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(w));
-                        objTable.refresh();
-                        System.out.println(objTable.getItems());
-                    } else { //return to old text before editing
-                        t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
-                        objTable.refresh();
+        if(isWeightsCol) { //only weights columns are editable
+            column.setOnEditCommit(t -> {
+                        String w;
+                        int row = t.getTablePosition().getRow();
+                        int col = t.getTablePosition().getColumn();
+                        if ((w = tryDouble(t.getNewValue())) != null) {
+                            t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(w));
+                            objTable.refresh();
+                            System.out.println(objTable.getItems());
+                        } else { //return to old text before editing
+                            t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
+                            objTable.refresh();
+                        }
                     }
-                }
-
-
-        );
+            );
+        }
 
 
         return column;
@@ -958,6 +960,8 @@ public class WeightsController extends Controller {
             ObservableList<StringProperty> row = FXCollections.observableArrayList();
             row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
             for (int j = 0; j < CSVHandler.getFormsCount(); j++) {
+                String correctPercent=String.format("%.1f",Statistics.getCorrectAnswersPercents().get(j).get(i)*100);
+                row.add(new SimpleStringProperty(correctPercent));
                 String weight = isOpenMode && !isIgnoreSavedObjectiveWeights ? String.format("%.1f", Statistics.getQuestionWeights().get(j).get(i)) : "1.0";
                 row.add(new SimpleStringProperty(weight));
             }

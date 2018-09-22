@@ -177,7 +177,6 @@ public abstract class Controller {
         initNextButton();
         initButtonsHBox();
         initComponents();
-        updateSizes();
         buildComponentsGraph();
         stabalizeTables();
 
