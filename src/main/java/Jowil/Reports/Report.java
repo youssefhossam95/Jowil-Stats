@@ -81,7 +81,7 @@ abstract public class Report {
 
         String reportTitle = doc.select("div#footerCenter").text() ;
         String projectName= Controller.getProjectName();
-        String centerFooter = reportTitle + "..." + projectName ;
+        String centerFooter = reportTitle + "... " + projectName ;
         doc.select("div#footerCenter").last().text(centerFooter) ;
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
