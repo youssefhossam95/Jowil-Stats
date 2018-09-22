@@ -13,6 +13,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Percentile ;
 
 import org.apache.commons.math3.distribution.TDistribution ;
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import sun.rmi.server.InactiveGroupException;
 
 
 import java.text.DecimalFormat;
@@ -483,17 +484,39 @@ public class Statistics {
 
         }
 
-        int k  = studentScores.size();
+        int k  = questionsChoices.size();
         if(k == 1)
             return 1 ;
         return k/(k-1) * (1-pqsum/var) ;
     }
 
 
-    public static double calcKr21 (double mean , double var , int n) {
+
+    public static double calcKr21 (int formIndex) {
+
+        double n = birnaryStudentResponses.get(0).size() ;
+        double[] formCAC = studentsCorrectAnswersCount.get(formIndex).stream().mapToDouble(d -> d).toArray();
+
+        double mean = mean(formCAC) ;
+        double var = variance(formCAC) ;
+
         return n / (n - 1) * (1 - (mean * (n - mean) / (n * var)));
     }
 
+    public static double calcCronbachAlpha (int formIndex) {
+
+        double k = birnaryStudentResponses.get(0).size() ;
+        double[] formCAC = studentsCorrectAnswersCount.get(formIndex).stream().mapToDouble(d -> d).toArray();
+        double totalVar = variance(formCAC) ;
+        double varSum = 0 ;
+        for(ArrayList<Integer> questionResponses : birnaryStudentResponses.get(formIndex)) {
+           double[] questionRes =  questionResponses.stream().mapToDouble(d -> d).toArray();
+            varSum += variance(questionRes) ;
+        }
+
+        return  (k/(k-1)) * (1-varSum/totalVar) ;
+
+    }
 
     public static Map<String , String> calcFormTestInsights(ArrayList<Double> formCorrectPercents) {
 
@@ -633,7 +656,8 @@ public class Statistics {
         double CI99Higher = Utils.getNumberWithinLimits(mean + calcCI(numberOfStudents,0.99 , std)  , 0 , maxScore) ;
 
         double kr20  = calcKr20(formIndex);
-        double kr21 = calcKr21(mean , variance , numberOfStudents) ;
+        double kr21 = calcKr21(formIndex) ;
+        double cronbachAlpha = calcCronbachAlpha(formIndex) ;
 
 
         statsMap.put("Number Of Students" , Utils.formatNumber(studentScores.size() , 0));
@@ -644,7 +668,7 @@ public class Statistics {
 //        statsMap.put("Benchmark" ,  Utils.formatNumber(benchMark , 0 ) ) ;
 
         statsMap.put("Mean Score" , Utils.formatNumber(mean , 1 ));
-        statsMap.put("Mean Percent Score" , Utils.formatNumber(mean/maxScore  ,1 ) ) ;
+        statsMap.put("Mean Percent Score" , Utils.formatNumber(mean/maxScore  * 100 ,1 )+"%" ) ;
         statsMap.put("Highest Score" ,Utils.formatNumber(HightestScore , 0) ) ;
         statsMap.put("Lowest Score" , Utils.formatNumber( LowestScore , 0 )) ;
 
@@ -660,8 +684,9 @@ public class Statistics {
         statsMap.put("95" , Utils.formatNumber( CI95Lower , 1 ) + " - " + Utils.formatNumber(CI95Higher , 1 )) ;
         statsMap.put("99" , Utils.formatNumber( CI99Lower , 1 ) + " - " + Utils.formatNumber( CI99Higher , 1 )) ;
 
-        statsMap.put("Kuder-Richardson Formula 20" ,  Utils.formatNumber( kr20 , 1 ))  ;
-        statsMap.put("Kuder-Richardson Formula 21" ,  Utils.formatNumber( kr21 , 1)) ;
+        statsMap.put("Kuder-Richardson Formula 20" ,  Utils.formatNumber( kr20 , 2 ))  ;
+        statsMap.put("Kuder-Richardson Formula 21" ,  Utils.formatNumber( kr21 , 2)) ;
+        statsMap.put("Cronbach's Alpha" , Utils.formatNumber(cronbachAlpha , 2));
 
 
         return statsMap ;
@@ -670,6 +695,7 @@ public class Statistics {
 
     public static  ArrayList<Map<String ,String>> report3Stats() {
 
+        int numberOfForms= getNumberOfForms() ;
         ArrayList<Map<String , String>> report3Maps = new ArrayList<>();
 
         Map <String , String > testInsightsMap ;
@@ -677,8 +703,10 @@ public class Statistics {
         Map compinedMap = new LinkedHashMap() ;
 
         double meanKr20  =0 ;
-        if(getNumberOfForms()>1) {
-            for (int formIndex = 0; formIndex < getNumberOfForms(); formIndex++) {
+        double meanKr21 = 0 ;
+        double meanCronbachAlpha = 0  ;
+        if(numberOfForms>1) {
+            for (int formIndex = 0; formIndex < numberOfForms; formIndex++) {
                 generalStatsMap = calcGeneralStats(formsScors.get(formIndex), questionsChoices.size() , formIndex);
                 testInsightsMap = calcFormTestInsights(correctAnswersPercents.get(formIndex));
                 generalStatsMap.remove("Number Of Students");  // not in report 3
@@ -688,10 +716,13 @@ public class Statistics {
                 report3Maps.add(compinedMap);
 
                 meanKr20 += Double.valueOf(generalStatsMap.get("Kuder-Richardson Formula 20"));
+                meanKr21 += Double.valueOf(generalStatsMap.get("Kuder-Richardson Formula 21"));
+                meanCronbachAlpha += Double.valueOf(generalStatsMap.get("Cronbach's Alpha"));
             }
 
-            meanKr20 /= getNumberOfForms() ;
-
+            meanKr20 /= numberOfForms ;
+            meanKr21 /= numberOfForms;
+            meanCronbachAlpha /= numberOfForms ;
         }
 
         testInsightsMap= calcTestInsights();
@@ -700,6 +731,8 @@ public class Statistics {
 
         if(getNumberOfForms()>1) {
             generalStatsMap.put("Kuder-Richardson Formula 20", Utils.formatNumber(meanKr20, 2));
+            generalStatsMap.put("Kuder-Richardson Formula 21", Utils.formatNumber(meanKr21, 2));
+            generalStatsMap.put("Cronbach's Alpha", Utils.formatNumber(meanCronbachAlpha, 2));
         }
         compinedMap = new LinkedHashMap( );
         compinedMap.putAll(testInsightsMap);

@@ -71,6 +71,7 @@ public class Report3 extends Report {
         //Test Reliability
         doc.select("td.Kuder-RichardsonFormula20").last().text(statsMap.get("Kuder-Richardson Formula 20")) ;
         doc.select("td.Kuder-RichardsonFormula21").last().text(statsMap.get("Kuder-Richardson Formula 21")) ;
+        doc.select("td.CronbachsAlpha" ).last().text(statsMap.get("Cronbach's Alpha"));
     }
 
     public Document generatePdfHtml() throws IOException {
@@ -92,9 +93,11 @@ public class Report3 extends Report {
                 doc.select("div.divTitle").addClass("second-page-header") ;
                 doc.select("div.divTitle").last().text(reportTitle +": Form "+ mapIndex );
             }
-            else if(report3Maps.size()>1)
-                doc.select("td.kr20-title").last().text("Kuder-Richardson Formula 20 (mean)") ;
-
+            else if(report3Maps.size()>1) {
+                doc.select("td.kr20-title").last().text("Kuder-Richardson Formula 20 (mean)");
+                doc.select("td.kr21-title").last().text("Kuder-Richardson Formula 21 (mean)");
+                doc.select("td.alpha-title").last().text("Cronbach's Alpha (mean)");
+            }
 
             Map<String , String > statsMap = report3Maps.get(mapIndex);
             fillHtmlWithMap(doc , statsMap);
@@ -119,9 +122,9 @@ public class Report3 extends Report {
 
     }
 
-    public ArrayList<ArrayList<ArrayList<String>>> processMap (Map<String , String> map ){
+    public ArrayList<ArrayList<ArrayList<String>>> processMap (Map<String , String> map , boolean addMeanToTilte ){
 
-        int [] tablesRowCount = {4 ,3 , 4 , 7 ,3 ,2} ;
+        int [] tablesRowCount = {4 ,3 , 4 , 7 ,3 ,3} ;
         ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<>() ;
         ArrayList<ArrayList<String>> table  = new ArrayList<>();
         ArrayList<String>tableRow = new ArrayList<>() ;
@@ -135,11 +138,13 @@ public class Report3 extends Report {
                 tables.add(table);
                 table = new ArrayList<>() ;
             }
-            tableRow.add(entry.getKey()) ; tableRow.add(entry.getValue());
+            String addedText = "";
+            if(tableIndex == 5 && addMeanToTilte)
+                addedText = " (mean)" ;
+            tableRow.add(entry.getKey() + addedText) ; tableRow.add(entry.getValue());
             table.add(tableRow);
             tableRow = new ArrayList<>() ;
             currentTableRows++ ;
-
         }
 
         System.out.println(tables);
@@ -160,7 +165,9 @@ public class Report3 extends Report {
 //        ArrayList<Map<String, String> > reprot3Maps = Statistics.report3Stats() ;
         for (int mapIndex=  0 ; mapIndex <report3Maps.size() ; mapIndex++ ) {
 
-            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex));
+
+            boolean addMeanToTitle =report3Maps.size()>1 && mapIndex == 0 ? true:false ;
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex) , addMeanToTitle);
             ArrayList<Integer> CHPS = new ArrayList<>();
             for (ArrayList<ArrayList<String>> table : tables)
                 CHPS.add(CHP);
@@ -207,7 +214,9 @@ public class Report3 extends Report {
 
         for (int mapIndex = 0; mapIndex < report3Maps.size(); mapIndex++) {
 
-            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex));
+            boolean addMeanToTitle =report3Maps.size()>1 && mapIndex == 0 ? true:false ;
+
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex) , addMeanToTitle);
 
             int pageWidth = CsvUtils.calcPageWidth(tables);
 
@@ -255,7 +264,8 @@ public class Report3 extends Report {
                 title =   title + ": Form " + mapIndex;
             }
             WordUtils.addTitle(document , title);
-            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex)) ;
+            boolean addMeanToTitle =report3Maps.size()>1 && mapIndex == 0 ? true:false ;
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex), addMeanToTitle) ;
             for(int tableIndex = 0 ; tableIndex<tables.size() ; tableIndex++) {
                 ArrayList<ArrayList<String>> table = tables.get(tableIndex);
                 if(tableIndex==3)
