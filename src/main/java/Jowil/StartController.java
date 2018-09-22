@@ -85,7 +85,7 @@ public class StartController extends Controller{
     StackPane minusButton;
 
     @FXML
-    ImageView backImageView;
+    Rectangle backImageView;
 
     long lastClick;
 
@@ -102,6 +102,8 @@ public class StartController extends Controller{
     protected void initComponents() {
         Font jowilLabelFont=new Font("System Bold",resX*0.059);
         jowilLabel.setFont(jowilLabelFont);
+        for(String s :javafx.scene.text.Font.getFamilies())
+            System.out.println(s);
         Font buttonsFont=new Font("System Bold",resX*0.011);
         openLabel.setFont(buttonsFont);
         newLabel.setFont(buttonsFont);
@@ -196,8 +198,8 @@ public class StartController extends Controller{
 //        upperImageView.setFitHeight(upperHeight);
 
         lowerAncPane.setPrefWidth(rootWidth);
-        backImageView.setFitWidth(rootWidth);
-        backImageView.setFitHeight(rootHeight);
+        backImageView.setWidth(rootWidth);
+        backImageView.setHeight(rootHeight);
         //lowerAncPane.setPrefHeight(lowerHeight);
 
         jowilLabel.setLayoutX(0.353*rootWidth);

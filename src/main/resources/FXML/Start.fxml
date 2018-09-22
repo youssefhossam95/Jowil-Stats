@@ -14,11 +14,7 @@
     <center>
         <StackPane>
                 <children>
-                    <ImageView fx:id="backImageView" opacity="0.9">
-                        <image>
-                            <Image url="@../Images/chalk-board-with-math-blur-50.png" />
-                        </image>
-                    </ImageView>
+                   <Rectangle fx:id="backImageView" fill="darkgrey"></Rectangle>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
             <children>
 
@@ -44,7 +40,7 @@
                 </HBox>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../Images/tlogo.png" />
+                        <Image url="@../Images/logoJS.png" />
                     </image>
                 </ImageView>
                 <Label fx:id="jowilLabel" text="Jowil Stats" >

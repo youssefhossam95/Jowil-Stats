@@ -274,7 +274,7 @@ public class WeightsController extends Controller {
     //Main methods
 
     WeightsController(Controller back) {
-        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "4.png", 2, "Questions Weights");
+        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "3.png", 2, "Questions Weights");
     }
 
 
