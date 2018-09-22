@@ -595,6 +595,8 @@ public abstract class Controller {
     }
 
     protected void saveJsonObj(String path, JSONObject jsonObj) {
+        if(jsonObj==null)
+            return;
 
         PrintWriter pw = null;
         String file = "";
