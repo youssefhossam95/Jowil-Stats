@@ -58,6 +58,8 @@ public class Report4 extends Report{
         for(ArrayList<String> tableRow:tempStatsTable) {
             tableRow.set(0,tableRow.get(0) + "#colspan='2'" ) ;
             String barWidth = tableRow.get(tableRow.size() - 1);
+            if(Double.valueOf(barWidth.replace("%" ,"")) > 100)
+                barWidth = "100%" ;
             String passingPercent = ((DecimalFormat) format).format(Statistics.getPassingPercent()*100) +"%";
             String divHtml = "<div class='emptyBar'> \n"+
                                 "<div class='greenBar' style='width:" + barWidth + "'> </div>\n" +
@@ -213,6 +215,8 @@ public class Report4 extends Report{
         for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
             ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
             int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
+            if(rectWidth>100)
+                rectWidth = 100 ;
             tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
         }
 
