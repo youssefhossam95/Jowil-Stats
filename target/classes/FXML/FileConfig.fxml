@@ -15,25 +15,25 @@
         <HBox fx:id="mainHBox">
             <JFXTextField fx:id="mainFileTextField" labelFloat="true"  promptText="Students Responses File Path" />
             <StackPane fx:id="mainFileChooser">
-                <FontAwesomeIconView fx:id="mainChooserIcon" styleClass="FolderIcon" fill="#157880" glyphName="FOLDER" ></FontAwesomeIconView>
+                <FontAwesomeIconView fx:id="mainChooserIcon" styleClass="FolderIcon" fill="#0e6ba4" glyphName="FOLDER" ></FontAwesomeIconView>
             </StackPane>
 
 
         </HBox>
         <HBox fx:id="answersHBox">
-            <JFXTextField fx:id="answersFileTextField" labelFloat="true" promptText="Answer Key File Path" focusColor="#157880"/>
+            <JFXTextField fx:id="answersFileTextField" labelFloat="true" promptText="Answer Key File Path" focusColor="#0e6ba4"/>
             <StackPane fx:id="answersFileChooser">
-                <FontAwesomeIconView fx:id="answersChooserIcon" styleClass="FolderIcon" fill="#157880" glyphName="FOLDER" ></FontAwesomeIconView>
+                <FontAwesomeIconView fx:id="answersChooserIcon" styleClass="FolderIcon" fill="#0e6ba4" glyphName="FOLDER" ></FontAwesomeIconView>
             </StackPane>
 
         </HBox>
 
         <AnchorPane fx:id="combosAnchor">
-            <JFXComboBox fx:id="identifierCombo" labelFloat="true" promptText="Identifier Column" focusColor="#157880"/>
-            <JFXComboBox fx:id="formCombo" labelFloat="true" promptText="Form Column" focusColor="#157880"/>
+            <JFXComboBox fx:id="identifierCombo" labelFloat="true" promptText="Identifier Column" focusColor="#0e6ba4"/>
+            <JFXComboBox fx:id="formCombo" labelFloat="true" promptText="Form Column" focusColor="#0e6ba4"/>
         </AnchorPane>
 
-        <JFXToggleButton fx:id="manualModeToggle" text="Manual Configuration" toggleColor="#157880" unToggleColor="#157880"  />
+        <JFXToggleButton fx:id="manualModeToggle" text="Manual Configuration" toggleColor="#0e6ba4" unToggleColor="#0e6ba4"  />
         </VBox>
 
         <JFXButton fx:id="nextButton" text="Next">
