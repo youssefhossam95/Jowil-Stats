@@ -258,7 +258,7 @@ public class WeightsController extends Controller {
     CustomMenuItem bonusMarksMenuItem= new CustomMenuItem(bonusMarksAnc);
 
     AnchorPane checkBoxAnc=new AnchorPane();
-    CheckBox contextMenuCheckBox=new JFXCheckBox("Allow exceeding full mark",CHECK_BOXES_SIZE);
+    CheckBox contextMenuCheckBox=new JFXCheckBox("Allow exceeding full mark",14);
     CustomMenuItem checkBoxMenuItem=new CustomMenuItem(checkBoxAnc);
 
 
@@ -340,18 +340,20 @@ public class WeightsController extends Controller {
         });
 
         double verPad=resY*4/680,sidePad=resX*5/1280;
-        fullMarksAnc.setPrefWidth(resX*125/1280);
-        fullMarksTextField.setPrefWidth(resX*50/1280);
-        fullMarksLabel.setFont(new Font(resX*12/1280));
-        fullMarksLabel.setPadding(new Insets(resX*4/1280,0,0,0));
+        fullMarksAnc.setPrefWidth(125);
+        fullMarksTextField.setPrefWidth(50);
+        //fullMarksLabel.setFont(new Font(resX*12/1280));
+        fullMarksLabel.setPadding(new Insets(4,0,0,0));
 
 
 
         bonusMarksAnc.setPrefWidth(fullMarksAnc.getPrefWidth());
         bonusMarksTextField.setPrefWidth(fullMarksTextField.getPrefWidth());
-        bonusMarksLabel.setFont(fullMarksLabel.getFont());
+        //bonusMarksLabel.setFont(fullMarksLabel.getFont());
         bonusMarksLabel.setPadding(fullMarksLabel.getPadding());
 
+
+        contextMenuCheckBox.setStyle("");
 
 
         AnchorPane.setLeftAnchor(fullMarksLabel,0.0);
@@ -820,6 +822,8 @@ public class WeightsController extends Controller {
         );
 
 
+
+
         fullMarksMenuItem.setHideOnClick(false);
         bonusMarksMenuItem.setHideOnClick(false);
         checkBoxMenuItem.setHideOnClick(false);
@@ -973,7 +977,7 @@ public class WeightsController extends Controller {
         int formsCount = CSVHandler.getFormsCount();
         //add Weight columns
         if (formsCount == 1) {
-            objTable.getColumns().add(createColumn(1,"Correct %"));
+            objTable.getColumns().add(createColumn(1,"Correct%"));
             objTable.getColumns().add(createColumn(2, "Weight"));
         } else {
 
@@ -998,6 +1002,7 @@ public class WeightsController extends Controller {
 
 
         column.setEditable(isWeightsCol);
+
 
         column.setCellFactory((t) -> EditCell.createStringEditCell(this));
         column.setText(columnTitle);
