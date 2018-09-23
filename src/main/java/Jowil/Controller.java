@@ -440,7 +440,7 @@ public abstract class Controller {
 
     private void initButtonsHBox(){
         buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
-        //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#157880");
+        //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#0a6aa8");
     }
 
     private void updateFonts() {
