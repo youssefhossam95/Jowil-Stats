@@ -111,7 +111,7 @@ public abstract class Controller {
             RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
             ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
             SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name", ALLOW_EXCEED_FULL_MARK_JSON_KEY="allowExceedFullMark",
-            MAX_SCORE_JSON_KEY="maxScore",BONUS_MARKS_JSON_KEY="bonusMarks";
+            BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore";
 
 
 
@@ -177,7 +177,6 @@ public abstract class Controller {
         initNextButton();
         initButtonsHBox();
         initComponents();
-        updateSizes();
         buildComponentsGraph();
         stabalizeTables();
 

@@ -423,22 +423,22 @@ public class CSVHandler {
 
 
         //check for inconsistent blanks
-        if(isAnswerKeyContainsBlanks) {
 
-            ArrayList<String> form1Answers = correctAnswers.get(0);
 
-            for (int i = 0; i < form1Answers.size(); i++) { //for every question
+        ArrayList<String> form1Answers = correctAnswers.get(0);
 
-                boolean isQuestionBlank = form1Answers.get(i).isEmpty();
-                for (int j = 0; j < correctAnswers.size(); j++) { //for every form
+        for (int i = 0; i < form1Answers.size(); i++) { //for every question
 
-                    if (correctAnswers.get(j).get(i).isEmpty() != isQuestionBlank)
-                        throw new InConsistentAnswerKeyException(j + 1);
+            boolean isQuestionBlank = form1Answers.get(i).isEmpty();
+            for (int j = 0; j < correctAnswers.size(); j++) { //for every form
 
-                }
+                if (correctAnswers.get(j).get(i).isEmpty() != isQuestionBlank)
+                    throw new InConsistentAnswerKeyException(j + 1);
+
             }
-
         }
+
+
 
 
         if(isLoadingMode)

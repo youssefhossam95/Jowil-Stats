@@ -313,7 +313,10 @@ public class WeightsController extends Controller {
         objWeightsButton.setGraphicTextGap(resX*4/1280);
         System.out.println("objawy"+objWeightsButton.getWidth());
         objWeightsButton.setMinWidth(resX*123/1280);
+
         subjWeightsButton.setMinWidth(resX*123/1280);
+        subjWeightsButton.setGraphicTextGap(resX*4/1280);
+        subjWeightsButton.setPadding(new Insets(verPadding,sidePadding,verPadding,sidePadding));
 
 
         //contextMenuIcon.setSize(Double.toString(resX*18/1280));
@@ -400,14 +403,15 @@ public class WeightsController extends Controller {
 //        subjLabel.setAlignment(Pos.CENTER);
 //        objLabel.setAlignment(Pos.CENTER);
 
-        if(isOpenMode){
-            Statistics.setUserMaxScore((Double)currentOpenedProjectJson.get(MAX_SCORE_JSON_KEY));
-            Statistics.setBonus((Double)currentOpenedProjectJson.get(BONUS_MARKS_JSON_KEY));
-        }
-        else {
-            Statistics.setUserMaxScore(-1);
-            Statistics.setBonus(0);
-        }
+        double initialUserMaxScore=isOpenMode?(Double)currentOpenedProjectJson.get(USER_MAX_SCORE_JSON_KEY):-1;
+        double initialBonus=isOpenMode?(Double)currentOpenedProjectJson.get(BONUS_MARKS_JSON_KEY):0.0;
+
+
+        Statistics.setUserMaxScore(initialUserMaxScore);
+        Statistics.setBonus(initialBonus);
+
+        Statistics.initAnswersStats();
+        Statistics.initCorrectAnswersPercent();
         initObjTableVBox();
         initSubjTableVBox();
         refreshGradesDistribution();
@@ -455,6 +459,8 @@ public class WeightsController extends Controller {
 
 
         for (int i = 1; i < objQuestions.get(0).size(); i++) {
+            if(i%2!=0) //ignore odd columns -> correct percentage columns
+                continue;
             objWeights.add(new ArrayList<Double>());
             for (int j = 0; j < objQuestions.size(); j++)
                 objWeights.get(objWeights.size() - 1).add(Double.parseDouble(objQuestions.get(j).get(i).get()));
@@ -554,7 +560,7 @@ public class WeightsController extends Controller {
 
                 String w;
                 if ((w = tryDouble(objWeightText.getText())) == null) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid weight value", "Cannot update objective weights: weight value \"" + objWeightText.getText() + "\" is invalid.");
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Weight Value", "Cannot update objective weights: weight value \"" + objWeightText.getText() + "\" is invalid.");
                     return;
                 }
 
@@ -562,7 +568,8 @@ public class WeightsController extends Controller {
                 for (int i = 0; i < selected.size(); i++) {
                     int row = selected.get(i).getRow();
                     int col = selected.get(i).getColumn();
-                    if (col == 0)
+                    String title=selected.get(i).getTableColumn().getText();
+                    if (!title.toLowerCase().contains("weight"))
                         continue;
 
                     objTable.getItems().get(row).set(col, new SimpleStringProperty(w));
@@ -749,9 +756,8 @@ public class WeightsController extends Controller {
         contextMenuCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
 
 
-        //next 2 lines depend on the initialization of bonus and max score in initComponents
-        fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
-        bonusMarksTextField.setText(isOpenMode?Double.toString(Statistics.getBonus()):"0.0");
+        bonusMarksTextField.setText(Double.toString(Statistics.getBonus()));
+
 
         fullMarksTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue)
@@ -888,13 +894,17 @@ public class WeightsController extends Controller {
         int formsCount = CSVHandler.getFormsCount();
         //add Weight columns
         if (formsCount == 1) {
-            objTable.getColumns().add(createColumn(1, "Weight"));
+            objTable.getColumns().add(createColumn(1,"Correct%"));
+            objTable.getColumns().add(createColumn(2, "Weight"));
         } else {
-//            TableColumn weightCol=new TableColumn<>("Weight");
-//            objTable.getColumns().add(weightCol);
+
             for (int i = 0; i < formsCount; i++) {
-                //weightCol.getColumns().add(createColumn(i+1, ""));
-                objTable.getColumns().add(createColumn(i + 1, ""));
+
+                TableColumn parentCol=new TableColumn("Form "+(i+1));
+                objTable.getColumns().add(parentCol);
+                parentCol.getColumns().add(createColumn(i*2+1,"Correct%"));
+                parentCol.getColumns().add(createColumn(i*2+2, "Weight"));
+
             }
         }
 
@@ -904,20 +914,16 @@ public class WeightsController extends Controller {
     private TableColumn<ObservableList<StringProperty>, String> createColumn(
             final int columnIndex, String columnTitle) {
         TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-        String title;
-        if (columnTitle == null || columnTitle.trim().length() == 0) {
-            title = "Form " + (columnIndex) + " Weight";
-        } else {
-            title = columnTitle;
-        }
+
+        boolean isWeightsCol=columnTitle.toLowerCase().contains("weight");
+
+
+        column.setEditable(isWeightsCol);
 
         column.setCellFactory((t) -> EditCell.createStringEditCell(this));
-        column.setSortable(true);
+        column.setText(columnTitle);
 
-
-        column.setText(title);
-        column
-                .setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
+        column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
                     @Override
                     public ObservableValue<String> call(
                             TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
@@ -931,22 +937,22 @@ public class WeightsController extends Controller {
                 });
 
 
-        column.setOnEditCommit(t -> {
-                    String w;
-                    int row = t.getTablePosition().getRow();
-                    int col = t.getTablePosition().getColumn();
-                    if ((w = tryDouble(t.getNewValue())) != null) {
-                        t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(w));
-                        objTable.refresh();
-                        System.out.println(objTable.getItems());
-                    } else { //return to old text before editing
-                        t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
-                        objTable.refresh();
+        if(isWeightsCol) { //only weights columns are editable
+            column.setOnEditCommit(t -> {
+                        String w;
+                        int row = t.getTablePosition().getRow();
+                        int col = t.getTablePosition().getColumn();
+                        if ((w = tryDouble(t.getNewValue())) != null) {
+                            t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(w));
+                            objTable.refresh();
+                            System.out.println(objTable.getItems());
+                        } else { //return to old text before editing
+                            t.getTableView().getItems().get(row).set(col, new SimpleStringProperty(t.getOldValue()));
+                            objTable.refresh();
+                        }
                     }
-                }
-
-
-        );
+            );
+        }
 
 
         return column;
@@ -958,6 +964,8 @@ public class WeightsController extends Controller {
             ObservableList<StringProperty> row = FXCollections.observableArrayList();
             row.add(new SimpleStringProperty(CSVHandler.getDetectedQHeaders().get(i)));
             for (int j = 0; j < CSVHandler.getFormsCount(); j++) {
+                String correctPercent=String.format("%.1f",Statistics.getCorrectAnswersPercents().get(j).get(i)*100);
+                row.add(new SimpleStringProperty(correctPercent));
                 String weight = isOpenMode && !isIgnoreSavedObjectiveWeights ? String.format("%.1f", Statistics.getQuestionWeights().get(j).get(i)) : "1.0";
                 row.add(new SimpleStringProperty(weight));
             }
@@ -1033,6 +1041,10 @@ public class WeightsController extends Controller {
     }
 
     public void refreshGradesDistribution(){
+
+        double maxScore=Statistics.getUserMaxScore()==-1?Statistics.getMaxScore():Statistics.getUserMaxScore();
+        fullMarksTextField.setText(Double.toString(maxScore));
+
         refreshGradeFreqTable();
         refreshBarChart();
 
@@ -1055,14 +1067,6 @@ public class WeightsController extends Controller {
             max=Math.max(max,freq);
             barChartSeries.getData().add(new XYChart.Data(grade.getGradeName(), freq));
         }
-
-//        for(int gradeIndex = 0 ;  gradeIndex<gradesFreqData.size() ; gradeIndex++) {
-//            String addedClass = "normal" ;
-//            Node n = barChart.lookup(".data"+gradeIndex+".chart-bar");
-//            n.getStyleClass().add(addedClass);
-//        }
-
-
 
     }
 
