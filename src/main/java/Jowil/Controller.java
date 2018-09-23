@@ -546,6 +546,7 @@ public abstract class Controller {
 
     public void setContentEdited(boolean contentEdited) {
         isContentEdited = contentEdited;
+
     }
 
     public static boolean showConfirmationDialog(String title,String content,Window owner) {

@@ -265,6 +265,7 @@ public class WeightsController extends Controller {
 
 
 
+
     ///data fields
     ObservableList<ObservableList<StringProperty>> objQuestions = FXCollections.observableArrayList();
     ObservableList<SubjQuestion> subjQuestions = FXCollections.observableArrayList();
@@ -275,6 +276,7 @@ public class WeightsController extends Controller {
 
     WeightsController(Controller back) {
         super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "4.png", 2, "Questions Weights");
+        gradeScalesJsonObj=null; //reload grade scales json object for every project
     }
 
 
@@ -407,6 +409,7 @@ public class WeightsController extends Controller {
         double initialBonus=isOpenMode?(Double)currentOpenedProjectJson.get(BONUS_MARKS_JSON_KEY):0.0;
 
 
+
         Statistics.setUserMaxScore(initialUserMaxScore);
         Statistics.setBonus(initialBonus);
 
@@ -464,6 +467,15 @@ public class WeightsController extends Controller {
         isContentEdited=false;
         stage.close();
     }
+
+    @Override
+    public void showWindow(){
+        super.showWindow();
+        gradeScalesJsonObj=null; //force reload to avoid json simple bug
+        refreshGradesDistribution();
+
+    }
+
 
     private boolean checkBalancedFormsSums() {
 
@@ -1050,6 +1062,7 @@ public class WeightsController extends Controller {
 
 
     private void loadGradeScale() {
+
 
         if ((gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null) {
             showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",

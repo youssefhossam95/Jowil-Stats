@@ -110,6 +110,7 @@ public class GradeBoundariesController extends Controller {
     private ArrayList<GradeHBox> gradesHBoxes;
     private final static String labelsColor = "black";
     private int reportsCount;
+    boolean isNewScaleSavedBefore=false;
 
 
 
@@ -146,6 +147,17 @@ public class GradeBoundariesController extends Controller {
         initReportsVBox();
         initFormatsVbox();
         initFinishButton();
+
+        backButton.setOnMouseClicked(t->{
+            rootPane.requestFocus();
+
+            if(saveGradeScaleChanges()==null)
+                return;
+
+            back.showWindow();
+            stage.close();
+        });
+
 
     }
 
@@ -282,58 +294,14 @@ public class GradeBoundariesController extends Controller {
 
 
 
-        ArrayList<Pair<String, Double>> scale = new ArrayList<>();
-        ArrayList<String> gradeNames = new ArrayList<>();
-        ArrayList<Double> gradeMins = new ArrayList<>();
-
-        int counter = 1;
-        for (GradeHBox hbox : gradesHBoxes) {
-            Pair<String, Double> grade = hbox.getGrade();
-            if (grade.getKey().trim().isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Grade Scale Error",
-                        "Error in Grade number " + counter + ": Grade name cannot be empty.");
-                return;
-            }
-            scale.add(grade);
-            counter++;
-        }
-
-        ArrayList<Pair<String,Double>> origScale=new ArrayList<>();
-        for(Pair<String,Double> pair:scale)
-            origScale.add(pair);
-
-        Collections.sort(scale,new PairSorter());
-
-        if(scale.get(0).getValue()!=0) //last grade must have min =0
-            scale.add(0,new Pair<String,Double>("F",0.0));
 
 
-        for(Pair<String,Double> grade:scale){
-            gradeNames.add(grade.getKey());
-            gradeMins.add(grade.getValue() / 100);
-        }
+        String selectedIndex=saveGradeScaleChanges();
+
+        if(selectedIndex==null)
+            return;
 
 
-        gradeMins.add(1.0);
-
-        Statistics.setGrades(gradeNames);
-        Statistics.setGradesLowerRange(gradeMins);
-
-        String selectedIndex;
-
-        gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedIndex=Integer.toString(gradesConfigComboSelectedIndex));
-        //save new changes if user wants to
-
-        if (isContentEdited) {
-            String result = showSaveChangesDialog();
-            if (result != null) {
-                saveNewConfig(result,origScale);
-                gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedIndex=Integer.toString(comboItems.size()));
-            }
-        }
-
-
-        saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
 
         
         //generate Reports
@@ -449,8 +417,6 @@ public class GradeBoundariesController extends Controller {
         stage.close();
     }
 
-
-
     @Override
     protected Controller getNextController() {
         return null;
@@ -461,6 +427,7 @@ public class GradeBoundariesController extends Controller {
 
         for(GradeHBox hbox:gradesHBoxes) //
             hbox.refreshRawScore();
+
     }
 
 
@@ -1079,6 +1046,77 @@ public class GradeBoundariesController extends Controller {
             jsonOuterArr.add(jsonRow);
         }
         projObject.put(SAVED_RESPONSES_CSV_JSON_KEY,jsonOuterArr);
+    }
+
+
+    private String saveGradeScaleChanges() {
+
+
+        ArrayList<Pair<String, Double>> scale = new ArrayList<>();
+        ArrayList<String> gradeNames = new ArrayList<>();
+        ArrayList<Double> gradeMins = new ArrayList<>();
+
+        int counter = 1;
+        for (GradeHBox hbox : gradesHBoxes) {
+            Pair<String, Double> grade = hbox.getGrade();
+            if (grade.getKey().trim().isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Grade Scale Error",
+                        "Error in Grade number " + counter + ": Grade name cannot be empty.");
+                return null;
+            }
+            scale.add(grade);
+            counter++;
+        }
+
+        ArrayList<Pair<String,Double>> origScale=new ArrayList<>();
+        for(Pair<String,Double> pair:scale)
+            origScale.add(pair);
+
+        Collections.sort(scale,new PairSorter());
+
+        if(scale.get(0).getValue()!=0) //last grade must have min =0
+            scale.add(0,new Pair<String,Double>("F",0.0));
+
+
+        for(Pair<String,Double> grade:scale){
+            gradeNames.add(grade.getKey());
+            gradeMins.add(grade.getValue() / 100);
+        }
+
+
+        gradeMins.add(1.0);
+
+        Statistics.setGrades(gradeNames);
+        Statistics.setGradesLowerRange(gradeMins);
+
+
+        String selectedIndex;
+
+        gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedIndex=Integer.toString(gradesConfigComboSelectedIndex));
+        //save new changes if user wants to
+
+        if (isContentEdited) {
+
+            if(isNewScaleSavedBefore)
+                gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, selectedIndex = Integer.toString(comboItems.size()));
+            else{
+                String result = showSaveChangesDialog();
+                isNewScaleSavedBefore = true;
+                if (result != null) {
+                    saveNewConfig(result, origScale);
+                    gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, selectedIndex = Integer.toString(comboItems.size()));
+                }
+            }
+        }
+
+
+        if(isOpenMode)
+            currentOpenedProjectJson.put(SELECTED_SCALE_JSON_KEY,selectedIndex);
+
+
+        saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
+
+        return selectedIndex;
     }
 
 
