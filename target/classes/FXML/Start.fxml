@@ -16,7 +16,7 @@
                 <children>
                     <ImageView fx:id="backImageView" opacity="0.9">
                         <image>
-                            <Image url="@../Images/kohly.png" />
+                            <Image url="@../Images/chalk-board-with-math-blur-50.png" />
                         </image>
                     </ImageView>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
@@ -47,7 +47,7 @@
                         <Image url="@../Images/tlogo.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="jowilLabel" text="Jowil Stats" textFill="#262626" >
+                <Label fx:id="jowilLabel" text="Jowil Stats" >
                 </Label>
                 <StackPane fx:id="openStack" >
                     <children>
