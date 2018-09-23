@@ -4,8 +4,8 @@ AnchorPane{
 
 }
 JFXButton{
--fx-border-color: #086fb2;
--fx-text-fill: #086fb2;
+-fx-border-color: #157880;
+-fx-text-fill: #157880;
 -fx-background-color:transparent;
 }
 JFXButton:hover {
@@ -38,7 +38,7 @@ TableView:focused{
 JFXComboBox{
     -fx-prompt-text-fill: #989898;
     -fx-font-size:14;
-    -fx-selection-bar:#086fb2;
+    -fx-selection-bar:#157880;
 
 }
 
@@ -54,8 +54,8 @@ DialogPane Button{
 
 DialogPane Button:hover{
 -fx-background-color: 	#87CEEB;
--fx-text-fill:#086fb2;
--fx-border-color: #086fb2;
+-fx-text-fill:#157880;
+-fx-border-color: #157880;
 
 }
 
@@ -65,13 +65,13 @@ DialogPane{
 
 /*.smallCheckBox{
     -jfx-unchecked-color: #5A5A5A;
-    -jfx-checked-color: #086fb2;
+    -jfx-checked-color: #157880;
 }
 */
 
 
 TreeView:focused{
--fx-background-color:#086fb2,white;
+-fx-background-color:#157880,white;
 }
 
 .groupPlusIcon{
@@ -85,7 +85,7 @@ TreeView:focused{
 
 JFXCheckBox {
     -jfx-unchecked-color: #5A5A5A;
-    -jfx-checked-color: #086fb2;
+    -jfx-checked-color: #157880;
 }
 
 
@@ -111,7 +111,7 @@ JFXCheckBox {
 .jfx-tree-table-view .column-header {
     -fx-border-width: 0 0 1 0;
      -fx-border-color: #A9A9A9;;
-     /*-fx-border-color: #086fb2;*/
+     /*-fx-border-color: #157880;*/
     -fx-background-color:white;
 
 }
@@ -136,7 +136,7 @@ JFXCheckBox {
 
 
 .jfx-tree-table-view:focused {
-    -fx-background-color: #086fb2, transparent,white;
+    -fx-background-color: #157880, transparent,white;
     -fx-background-insets: -1.4, 0, 1;
     -fx-background-radius: 1.4, 0, 0;
     -fx-padding: 1; /* 0.083333em; */
@@ -151,7 +151,7 @@ JFXCheckBox {
 
 
 .jfx-tree-table-view .tree-table-cell:focused  {
-    -fx-background-color: #086fb2;
+    -fx-background-color: #157880;
     -fx-background-insets: 0, 0, 0;
     -fx-background-radius: 0, 0, 0;
 
@@ -193,17 +193,17 @@ JFXCheckBox {
 
 /* Styling the slider thumb */
 .jfx-slider > .thumb {
-     -fx-background-color: #086fb2;
+     -fx-background-color: #157880;
 }
 
 /* Styling the filled track */
 .jfx-slider > .colored-track {
-     -fx-background-color: #086fb2;
+     -fx-background-color: #157880;
 }
 
 /* Styling the animated thumb */
 .jfx-slider > .animated-thumb {
-     -fx-background-color: #086fb2;
+     -fx-background-color: #157880;
 }
 
 /* Styling the slider value text inside animated thumb */

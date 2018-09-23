@@ -838,7 +838,7 @@ public class FileConfigController extends Controller {
     }
 
     private void initManualModeToggle() {
-        manualModeToggle.setStyle("-jfx-untoggle-color:#086fb2;-jfx-toggle-color:#086fb2");
+        manualModeToggle.setStyle("-jfx-untoggle-color:#157880;-jfx-toggle-color:#157880");
         manualModeToggle.selectedProperty().addListener((observable, oldValue, newValue) ->
         {
             if (newValue) {
