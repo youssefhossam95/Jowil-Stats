@@ -420,9 +420,9 @@ public class GradeBoundariesController extends Controller {
 
 
 
-        projObject.put(MAX_SCORE_JSON_KEY,Statistics.getMaxScore());
         projObject.put(BONUS_MARKS_JSON_KEY,Statistics.getBonus());
         projObject.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY,Statistics.isAllowExceedMaxScore());
+        projObject.put(USER_MAX_SCORE_JSON_KEY,Statistics.getUserMaxScore());
 
 
 

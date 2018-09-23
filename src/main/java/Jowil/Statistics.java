@@ -221,6 +221,9 @@ public class Statistics {
     public static ArrayList<ArrayList<Double>> getCorrectAnswersPercents() {
         return correctAnswersPercents;
     }
+    public static double getUserMaxScore() {
+        return userMaxScore;
+    }
 
 
     // print fuctions
