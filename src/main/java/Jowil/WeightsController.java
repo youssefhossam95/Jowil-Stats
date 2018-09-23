@@ -440,18 +440,81 @@ public class WeightsController extends Controller {
     }
 
     @Override
-    protected void saveChanges() {
+    protected void goToNextWindow(){
 
-        saveWeights();
+        saveChanges();
+        if(!checkBalancedFormsSums())
+            return;
+
+
+
         if(generalPrefsJson!=null) {
             generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY, contextMenuCheckBox.isSelected());
             saveJsonObj(GENERAL_PREFS_FILE_NAME, generalPrefsJson);
         }
+
+
+        if(next==null || isContentEdited) { //if first time or edit manually has been pressed
+            next = getNextController();
+            next.startWindow();
+        }
+        else
+            next.showWindow();
+
+        isContentEdited=false;
+        stage.close();
+    }
+
+    private boolean checkBalancedFormsSums() {
+
+        ArrayList<Double> subjWeights=Statistics.getSubjMaxScores();
+        double subjSum=0;
+
+        for(Double d:subjWeights)
+            subjSum+=d;
+
+
+        ArrayList<ArrayList<Double>> objWeights=Statistics.getQuestionWeights();
+
+        ArrayList<Double> firstFormWeights=objWeights.get(0);
+        double firstSum=0;
+
+        for(Double weight:firstFormWeights)
+            firstSum+=weight;
+
+        ArrayList<Double> formsSums=new ArrayList<>();
+        formsSums.add(firstSum+subjSum);
+        boolean success=true;
+
+        for(int i=1;i<objWeights.size();i++){
+            double currentSum=0;
+            for(Double weight:objWeights.get(i))
+                currentSum+=weight;
+            if(currentSum!=firstSum)
+                success=false;
+            formsSums.add(currentSum+subjSum);
+        }
+
+        if(!success) {
+            String errorMessage="All forms must have the same max score. The forms have max scores (";
+            for(Double d:formsSums)
+                errorMessage+=String.format("%.1f",d)+"-";
+
+            errorMessage=errorMessage.substring(0,errorMessage.length()-1);
+            errorMessage+=") respectively.";
+
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Form Weights",errorMessage);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void saveChanges() {
+        saveWeights();
     }
 
     private void saveWeights() {
-
-
 
 
         //save objective weights
@@ -833,7 +896,11 @@ public class WeightsController extends Controller {
 
             return false;
         }
-        Statistics.setUserMaxScore(Double.parseDouble(s));
+
+        double userMaxScore=Double.parseDouble(s);
+        if(userMaxScore!=Statistics.getMaxScore())  //only set user max score if it was edited
+            Statistics.setUserMaxScore(userMaxScore);
+
         refreshGradesDistribution();
         return true;
     }
@@ -894,7 +961,7 @@ public class WeightsController extends Controller {
         int formsCount = CSVHandler.getFormsCount();
         //add Weight columns
         if (formsCount == 1) {
-            objTable.getColumns().add(createColumn(1,"Correct%"));
+            objTable.getColumns().add(createColumn(1,"Correct %"));
             objTable.getColumns().add(createColumn(2, "Weight"));
         } else {
 
@@ -1042,11 +1109,10 @@ public class WeightsController extends Controller {
 
     public void refreshGradesDistribution(){
 
-        double maxScore=Statistics.getUserMaxScore()==-1?Statistics.getMaxScore():Statistics.getUserMaxScore();
-        fullMarksTextField.setText(Double.toString(maxScore));
-
         refreshGradeFreqTable();
         refreshBarChart();
+        double maxScore=Statistics.getUserMaxScore()==-1?Statistics.getMaxScore():Statistics.getUserMaxScore();
+        fullMarksTextField.setText(Double.toString(maxScore));
 
     }
 
