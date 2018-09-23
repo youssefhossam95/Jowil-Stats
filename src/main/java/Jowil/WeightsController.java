@@ -614,6 +614,7 @@ public class WeightsController extends Controller {
 //            objQuestions.add(new Question(headers.get(i),"1.0"));
 
 
+        objTable.setStyle("-fx-alignment:center");
         populateObjTable();
         objTable.setEditable(true);
         objTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

@@ -29,6 +29,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
     public EditCell(StringConverter<T> converter,WeightsController parentController){
         this(converter);
         this.parentController=parentController;
+        this.setStyle("-fx-alignment:center");
 
     }
 

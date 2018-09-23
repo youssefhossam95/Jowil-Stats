@@ -14,7 +14,7 @@
     <center>
         <StackPane>
                 <children>
-                    <ImageView fx:id="backImageView" opacity="0.9">
+                    <ImageView fx:id="backImageView" opacity="0.85">
                         <image>
                             <Image url="@../Images/chalk-board-with-math-blur-50.png" />
                         </image>
