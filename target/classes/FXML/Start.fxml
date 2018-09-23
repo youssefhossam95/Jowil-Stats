@@ -44,7 +44,7 @@
                 </HBox>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../Images/tlogo.png" />
+                        <Image url="@../Images/logojs.png" />
                     </image>
                 </ImageView>
                 <Label fx:id="jowilLabel" text="Jowil Stats" >
