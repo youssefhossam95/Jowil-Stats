@@ -23,8 +23,8 @@ public class RectGenerator  extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        generateRects(primaryStage,"#0a6aa8","#64686b");
-//        generateRoundRects(primaryStage,"#08436b","#0a6aa8");
+        generateRects(primaryStage,"#157880","#64686b");
+//        generateRoundRects(primaryStage,"#08436b","#157880");
         Platform.exit();
     }
 
