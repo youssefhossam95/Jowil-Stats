@@ -402,16 +402,18 @@ public class Report5 extends Report {
 
         ArrayList<Group>groups = CSVHandler.getDetectedGroups() ;
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsProcessedTables = getProcessedTables(ReportsHandler.WORD) ;
+        int remainingRows = 0 ;
         for( int formIndex = 0 ;formIndex < formsProcessedTables.size() ; formIndex++ ) {
             ArrayList<ArrayList<ArrayList<String>>> formTables = formsProcessedTables.get(formIndex);
             String title = reportTitle ;
             if( formsProcessedTables.size() >1) {
                 title = title + ": Form " + (formIndex+1) ;
             }
-            if(formIndex>0)
-                WordUtils.addPageBreak(document);
-
-            int remainingRows = BLANK_PAGE_ROWS ;
+            if(formIndex>0) {
+                if(remainingRows>1)
+                    WordUtils.addPageBreak(document);
+            }
+            remainingRows = BLANK_PAGE_ROWS ;
 
             WordUtils.addTitle(document, title ,1);
 
@@ -428,7 +430,8 @@ public class Report5 extends Report {
                     WordUtils.addHeaderLine(document, group.getCleanedName());
                 }else
                 {
-                    WordUtils.addPageBreak(document);
+                    if(remainingRows!=0)
+                        WordUtils.addPageBreak(document);
                     remainingRows = BLANK_PAGE_ROWS ;
                     WordUtils.addHeaderLine(document, group.getCleanedName());
                 }
@@ -444,7 +447,8 @@ public class Report5 extends Report {
                     ArrayList<ArrayList<String>> table = groupTables.get(tableIndex);
 
                     if(remainingRows < WRAPPER_TABLE_ROWS+table.size() -TABLE_SPACING_ROWS) {
-                        WordUtils.addPageBreak(document);
+                        if(remainingRows>1)
+                            WordUtils.addPageBreak(document);
                         remainingRows = BLANK_PAGE_ROWS ;
                     }
 
