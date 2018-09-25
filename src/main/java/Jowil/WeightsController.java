@@ -430,10 +430,10 @@ public class WeightsController extends Controller {
 
         Tooltip tooltipAdd = new Tooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltipAdd);
-//        contextMenuExpandButton.setOnMouseEntered(event->contextMenuIcon.setImage(new Image("Images/lightBlueMenu.png")));
-//        contextMenuExpandButton.setOnMouseExited(event -> contextMenuIcon.setImage(new Image("Images/blueMenu.png")));
+        contextMenuExpandButton.setOnMouseEntered(event->contextMenuCircle.setStyle("-fx-fill:#87CEEB"));
+        contextMenuExpandButton.setOnMouseExited(event ->  contextMenuCircle.setStyle("-fx-fill:#095c90"));
 
-        contextMenuCircle.getStyleClass().add("FolderIcon");
+        contextMenuCircle.setStyle("-fx-fill:#095c90");
         contextMenuIcon.setRotate(90);
 
         midSeparator.setVisible(true);
