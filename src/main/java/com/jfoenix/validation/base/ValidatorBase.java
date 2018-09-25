@@ -129,7 +129,7 @@ public abstract class ValidatorBase extends Parent {
             else{
                 control.pseudoClassStateChanged(PSEUDO_CLASS_SUCCESS, false);
                 control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
-                //control.setStyle("-jfx-focus-color: #084d78");
+                //control.setStyle("-jfx-focus-color: #095c90");
             }
 
             //joe edit end
