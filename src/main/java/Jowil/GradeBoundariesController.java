@@ -695,7 +695,7 @@ public class GradeBoundariesController extends Controller {
             trashIcon.setStyle("-fx-fill:#87CEEB");
         });
 
-        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#0e6ba4"));
+        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#07446b"));
     }
 
     private void initFinishButton() {
