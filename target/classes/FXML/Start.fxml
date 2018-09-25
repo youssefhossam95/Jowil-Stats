@@ -14,9 +14,9 @@
     <center>
         <StackPane>
                 <children>
-                    <ImageView fx:id="backImageView" opacity="1">
+                    <ImageView fx:id="backImageView" opacity="0.83">
                         <image>
-                            <Image url="@../Images/blueeEditNew.jpg" />
+                            <Image url="@../Images/bluee.jpg" />
                         </image>
                     </ImageView>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
