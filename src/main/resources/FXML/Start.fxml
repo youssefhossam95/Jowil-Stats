@@ -16,7 +16,7 @@
                 <children>
                     <ImageView fx:id="backImageView" opacity="1">
                         <image>
-                            <Image url="@../Images/blueeEdit.jpg" />
+                            <Image url="@../Images/blueeEditNew.jpg" />
                         </image>
                     </ImageView>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
