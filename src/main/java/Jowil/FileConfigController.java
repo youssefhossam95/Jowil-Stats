@@ -126,7 +126,7 @@ public class FileConfigController extends Controller {
     //Main methods
     FileConfigController() {
 
-        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"colored1.png",0,"Files Configuration");
+        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"1.png",0,"Files Configuration");
 
 
     }
