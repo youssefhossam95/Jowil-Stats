@@ -47,7 +47,7 @@
                         <Image url="@../Images/coloredLogoBlue.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="jowilLabel" text="Jowil Stats" textFill="#0e6ba4" >
+                <Label fx:id="jowilLabel" text="Jowil Stats" textFill="black" >
                 </Label>
                 <StackPane fx:id="openStack" >
                     <children>
@@ -64,7 +64,7 @@
                 <StackPane fx:id="newStack">
                     <children>
                         <Rectangle fx:id="newRect"  stroke="#a6a6a6" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="6.0" opacity="0.6" style="-fx-fill: #a6a6a6;" />
-                        <Label fx:id="newLabel" alignment="CENTER" contentDisplay="CENTER" text="New Project" textAlignment="CENTER" >
+                        <Label fx:id="newLabel" alignment="CENTER" contentDisplay="CENTER" text="New Project" textAlignment="CENTER"  >
                         </Label>
                         <ImageView fx:id="newImageView" pickOnBounds="true" preserveRatio="true">
                             <image>
