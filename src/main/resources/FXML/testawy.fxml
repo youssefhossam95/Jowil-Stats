@@ -13,8 +13,8 @@
       <JFXComboBox layoutX="28.0" layoutY="97.0" prefHeight="39.0" prefWidth="153.0" />
       <HBox alignment="CENTER_RIGHT" layoutX="11.0" layoutY="838.0" prefHeight="56.0" prefWidth="1067.0" spacing="15.0" style="-fx-border-width: 1 0 0 0; -fx-border-color: #A9A9A9;">
          <children>
-            <JFXButton prefHeight="41.0" prefWidth="120.0" style="-fx-border-color: #095c90; -fx-text-fill: #095c90;" text="Back" />
-            <JFXButton prefHeight="41.0" prefWidth="119.0" style="-fx-border-color: #095c90; -fx-text-fill: #095c90;" text="Next" />
+            <JFXButton prefHeight="41.0" prefWidth="120.0" style="-fx-border-color: #084d78; -fx-text-fill: #084d78;" text="Back" />
+            <JFXButton prefHeight="41.0" prefWidth="119.0" style="-fx-border-color: #084d78; -fx-text-fill: #084d78;" text="Next" />
          </children>
       </HBox>
       <VBox layoutX="28.0" layoutY="193.0" prefHeight="610.0" prefWidth="424.0">
