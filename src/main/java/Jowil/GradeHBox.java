@@ -50,7 +50,7 @@ public class GradeHBox extends HBox {
 
 
         this.nameTextField.setText(name);
-        nameTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
+        nameTextField.setStyle("-jfx-focus-color:#0e6ba4;-fx-font-size:"+Double.toString(resX/100));
         nameTextField.setAlignment(Pos.CENTER);
         this.nameTextField.textProperty().addListener(t-> {
             parentController.setContentEdited(true);
@@ -128,7 +128,7 @@ public class GradeHBox extends HBox {
     private void initPercentScoreTextField(String percentScore){
 
         this.percentScoreTextField.setText(percentScore);
-        percentScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
+        percentScoreTextField.setStyle("-jfx-focus-color:#0e6ba4;-fx-font-size:"+Double.toString(resX/100));
         percentScoreTextField.setAlignment(Pos.CENTER);
 
 
@@ -192,7 +192,7 @@ public class GradeHBox extends HBox {
     private void initRawScoreTextField(String percentScore){
 
         this.rawScoreTextField.setText(String.format("%.1f",Double.parseDouble(percentScore)/100*Statistics.getMaxScore()));
-        this.rawScoreTextField.setStyle("-jfx-focus-color:#3184c9;-fx-font-size:"+Double.toString(resX/100));
+        this.rawScoreTextField.setStyle("-jfx-focus-color:#0e6ba4;-fx-font-size:"+Double.toString(resX/100));
         rawScoreTextField.setAlignment(Pos.CENTER);
         //rawScoreTextField.setEditable(false); label option
 
