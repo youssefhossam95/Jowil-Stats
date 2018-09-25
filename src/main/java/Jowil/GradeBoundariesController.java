@@ -695,7 +695,7 @@ public class GradeBoundariesController extends Controller {
             trashIcon.setStyle("-fx-fill:#87CEEB");
         });
 
-        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#3184c9"));
+        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#084d78"));
     }
 
     private void initFinishButton() {
@@ -1101,9 +1101,9 @@ public class GradeBoundariesController extends Controller {
                 gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, selectedIndex = Integer.toString(comboItems.size()));
             else{
                 String result = showSaveChangesDialog();
-                isNewScaleSavedBefore = true;
                 if (result != null) {
                     saveNewConfig(result, origScale);
+                    isNewScaleSavedBefore = true;
                     gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, selectedIndex = Integer.toString(comboItems.size()));
                 }
             }

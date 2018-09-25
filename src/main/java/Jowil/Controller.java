@@ -70,7 +70,7 @@ public abstract class Controller {
     BorderPane outerBorderPane=new BorderPane();
     AnchorPane topWrapperPane=new AnchorPane();
     ImageView progressImage=new ImageView();
-    ImageView logoImage=new ImageView(new Image("Images/logojsSmall.png"));
+    ImageView logoImage=new ImageView(new Image("Images/coloredLogo.png"));
     RingProgressIndicator stepCounterIndicator=new RingProgressIndicator(4);
     Label stepLabel;
 
@@ -440,7 +440,7 @@ public abstract class Controller {
 
     private void initButtonsHBox(){
         buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#A9A9A9");
-        //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#3184c9");
+        //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#084d78");
     }
 
     private void updateFonts() {

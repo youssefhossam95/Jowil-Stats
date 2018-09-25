@@ -14,9 +14,9 @@
     <center>
         <StackPane>
                 <children>
-                    <ImageView fx:id="backImageView" opacity="0.9">
+                    <ImageView fx:id="backImageView" opacity="0.83">
                         <image>
-                            <Image url="@../Images/chalk-board-with-math-blur-50.png" />
+                            <Image url="@../Images/bluee.jpg" />
                         </image>
                     </ImageView>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
@@ -47,11 +47,11 @@
                         <Image url="@../Images/logojs.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="jowilLabel" text="Jowil Stats" >
+                <Label fx:id="jowilLabel" text="Jowil Stats" textFill="black" >
                 </Label>
                 <StackPane fx:id="openStack" >
                     <children>
-                        <Rectangle fx:id="openRect" stroke="#989898" strokeLineCap="ROUND" strokeLineJoin="ROUND" opacity="0.6" strokeType="OUTSIDE" strokeWidth="6.0" style="-fx-fill: #989898;"  />
+                        <Rectangle fx:id="openRect" stroke="#a6a6a6" strokeLineCap="ROUND" strokeLineJoin="ROUND" opacity="0.6" strokeType="OUTSIDE" strokeWidth="6.0" style="-fx-fill: #a6a6a6;"  />
                         <Label fx:id="openLabel" alignment="CENTER" contentDisplay="CENTER" text="Open Existing Project" textAlignment="CENTER">
                         </Label>
                         <ImageView fx:id="openImageView" pickOnBounds="true" preserveRatio="true">
@@ -63,8 +63,8 @@
                 </StackPane>
                 <StackPane fx:id="newStack">
                     <children>
-                        <Rectangle fx:id="newRect"  stroke="#989898" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="6.0" opacity="0.6" style="-fx-fill: #989898;" />
-                        <Label fx:id="newLabel" alignment="CENTER" contentDisplay="CENTER" text="New Project" textAlignment="CENTER" >
+                        <Rectangle fx:id="newRect"  stroke="#a6a6a6" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="6.0" opacity="0.6" style="-fx-fill: #a6a6a6;" />
+                        <Label fx:id="newLabel" alignment="CENTER" contentDisplay="CENTER" text="New Project" textAlignment="CENTER"  >
                         </Label>
                         <ImageView fx:id="newImageView" pickOnBounds="true" preserveRatio="true">
                             <image>

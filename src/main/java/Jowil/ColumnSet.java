@@ -60,7 +60,7 @@ public class ColumnSet extends HBox {
         nameTextField=new JFXTextField();
         nameTextField.setFont(innerLabelsFont);
         nameTextField.setText(this.name);
-        nameTextField.setStyle("-jfx-focus-color:#3184c9;-jfx-unfocus-color: #989898");
+        nameTextField.setStyle("-jfx-focus-color:#084d78;-jfx-unfocus-color: #989898");
         nameTextField.setEditable(true);
         nameTextField.setAlignment(Pos.CENTER);
 
@@ -68,7 +68,7 @@ public class ColumnSet extends HBox {
         typeTextField=new Label();
         typeTextField.setFont(innerLabelsFont);
         typeTextField.setText(getCroppedType());
-        typeTextField.setStyle("-jfx-focus-color:#3184c9;-jfx-unfocus-color: #989898");
+        typeTextField.setStyle("-jfx-focus-color:#084d78;-jfx-unfocus-color: #989898");
         //typeTextField.setEditable(false);
         typeTextField.setAlignment(Pos.CENTER);
 
@@ -79,7 +79,7 @@ public class ColumnSet extends HBox {
         Label endLabel=new Label(Integer.toString(startIndex+mySize));
         startLabel.setFont(rangeLabelsFont);
         endLabel.setFont(rangeLabelsFont);
-        rightArrowIcon.setStyle("-fx-fill:#3184c9");
+        rightArrowIcon.setStyle("-fx-fill:#084d78");
         rangeHBox.getChildren().addAll(startLabel,rightArrowIcon,endLabel);
         rangeHBox.setAlignment(Pos.CENTER);
 

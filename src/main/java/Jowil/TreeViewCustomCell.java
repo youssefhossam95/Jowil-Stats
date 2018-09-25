@@ -109,9 +109,9 @@ public class TreeViewCustomCell extends TreeCell<String> {
                     if(newValue)
                         rightArrowIcon.setStyle("-fx-fill:white");
                     else
-                        rightArrowIcon.setStyle("-fx-fill:#3184c9");
+                        rightArrowIcon.setStyle("-fx-fill:#084d78");
                 });
-                rightArrowIcon.setStyle("-fx-fill:#3184c9");
+                rightArrowIcon.setStyle("-fx-fill:#084d78");
 
                 this.setStyle("-fx-font-size:"+resX*14/1280);
                 cellBox.getChildren().addAll(minLabel,rightArrowIcon,maxLabel);
