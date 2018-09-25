@@ -41,6 +41,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -243,7 +244,8 @@ public class WeightsController extends Controller {
     ImageView subjButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
 
     StackPane contextMenuExpandButton=new StackPane();
-    ImageView contextMenuIcon=new ImageView(new Image("Images/blueMenu.png"));
+    Circle contextMenuCircle=new Circle();
+    ImageView contextMenuIcon=new ImageView(new Image("Images/whiteMenu.png"));
     ContextMenu contextMenu=new ContextMenu();
 
 
@@ -322,8 +324,9 @@ public class WeightsController extends Controller {
 
 
         //contextMenuIcon.setSize(Double.toString(resX*18/1280));
-        contextMenuIcon.setFitWidth(resX*18/1280);
-        contextMenuIcon.setFitHeight(resX*18/1280);
+        contextMenuIcon.setFitWidth(resX*14/1280);
+        contextMenuIcon.setFitHeight(resX*14/1280);
+        contextMenuCircle.setRadius(contextMenuIcon.getFitWidth()*0.7);
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2-contextMenuIcon.getFitWidth()/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
         contextMenuExpandButton.setOnMouseClicked(event -> {
@@ -427,9 +430,11 @@ public class WeightsController extends Controller {
 
         Tooltip tooltipAdd = new Tooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltipAdd);
-        contextMenuExpandButton.setOnMouseEntered(event->contextMenuIcon.setImage(new Image("Images/lightBlueMenu.png")));
-        contextMenuExpandButton.setOnMouseExited(event -> contextMenuIcon.setImage(new Image("Images/blueMenu.png")));
-        //contextMenuIcon.setRotate(90);
+//        contextMenuExpandButton.setOnMouseEntered(event->contextMenuIcon.setImage(new Image("Images/lightBlueMenu.png")));
+//        contextMenuExpandButton.setOnMouseExited(event -> contextMenuIcon.setImage(new Image("Images/blueMenu.png")));
+
+        contextMenuCircle.getStyleClass().add("FolderIcon");
+        contextMenuIcon.setRotate(90);
 
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
@@ -573,7 +578,7 @@ public class WeightsController extends Controller {
         objTableVbox.getChildren().addAll(objLabel, objTable, objHBox);
         subjTableVbox.getChildren().addAll(subjLabel, subjTable, subjHBox);
 
-        contextMenuExpandButton.getChildren().add(contextMenuIcon);
+        contextMenuExpandButton.getChildren().addAll(contextMenuCircle,contextMenuIcon);
 
         fullMarksAnc.getChildren().addAll(fullMarksLabel,fullMarksTextField);
         bonusMarksAnc.getChildren().addAll(bonusMarksLabel,bonusMarksTextField);
