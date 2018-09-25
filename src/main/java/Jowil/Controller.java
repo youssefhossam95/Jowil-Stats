@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 public abstract class Controller {
 
+
     ///components
 
     @FXML
@@ -64,6 +65,7 @@ public abstract class Controller {
     double navHeight;
     boolean isHeightCalling;
     final double DEFAULT_FONT_AWESOME_ICON_SIZE=resX*27/1280;
+    private final double minWidth,minHeight;
 
 
 
@@ -117,8 +119,8 @@ public abstract class Controller {
 
     //Main methods
 
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName,int stepIndex,String stepName){
-        this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false);
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName,int stepIndex,String stepName,double minWidth,double minHeight){
+        this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false,minWidth,minHeight);
         progressImage=new ImageView(new Image("Images/"+progressImageName));
         this.stepIndex=stepIndex;
         this.stepCounterIndicator.setProgress((int)(stepIndex/4.0*100));
@@ -129,7 +131,7 @@ public abstract class Controller {
 
 
 
-    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back, boolean isStepWindow,boolean isMaximised){
+    Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back, boolean isStepWindow,boolean isMaximised,double minWidth,double minHeight){
 
         this.myFXML="/FXML/"+fxmlName;
         this.myTitle=myTitle;
@@ -142,6 +144,8 @@ public abstract class Controller {
         this.isBeginMaximised=isMaximised;
         this.isStepWindow=isStepWindow;
         headersFontSize=resX*20/1280;
+        this.minWidth=minWidth;
+        this.minHeight=minHeight;
         initClassesFontSizes();
     }
 
@@ -204,19 +208,23 @@ public abstract class Controller {
             Pane root = loader.load();
 
             double sceneWidth=(resX==800 && this instanceof WeightsController)?673:resX/XSCALE; //to solve bar chart min width issue
+            double sceneHeight=resY / YSCALE;
 
             if(isStepWindow){
                 outerBorderPane.setCenter(rootPane);
-                scene = new Scene(outerBorderPane, sceneWidth, resY / YSCALE);
+                scene = new Scene(outerBorderPane, sceneWidth, sceneHeight);
             }
             else
-                scene=new Scene(root,sceneWidth, resY / YSCALE);
+                scene=new Scene(root,sceneWidth, sceneHeight);
 
 
             if(isStepWindow)
                 stage.setTitle(isOpenMode?projectName:"New Project");
             else
                 stage.setTitle(myTitle);
+
+            stage.setMinWidth(Math.min(minWidth,sceneWidth));
+            stage.setMinHeight(Math.min(minHeight,sceneHeight*1.05));
 
 
             scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());

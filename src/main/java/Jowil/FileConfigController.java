@@ -126,7 +126,8 @@ public class FileConfigController extends Controller {
     //Main methods
     FileConfigController() {
 
-        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"1.png",0,"Files Configuration");
+
+        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"1.png",0,"Files Configuration",resX*700/1280, Integer.MAX_VALUE);
 
 
     }
@@ -137,7 +138,7 @@ public class FileConfigController extends Controller {
 
         contentVbox.setLayoutX(rootWidthToPixels(0.072));
         contentVbox.setLayoutY(rootHeightToPixels(0.13));
-        contentVbox.setSpacing(rootHeightToPixels(0.1));
+        contentVbox.setSpacing(rootHeightToPixels(0.105));
         contentVbox.setAlignment(Pos.BASELINE_LEFT);
 
         mainHBox.setSpacing(resXToPixels(0.005));

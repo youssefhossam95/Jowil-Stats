@@ -113,7 +113,8 @@ public class ColumnSet extends HBox {
         colorPane.setPrefWidth((int)(0.15*scrollPaneWidth));
         nameTextField.setPrefHeight((int)(scrollPaneHeight/12));
         typeTextField.setPrefHeight((int)(scrollPaneHeight/12));
-        innerColorPane.setPrefWidth((int)(nameTextField.getPrefHeight()));
+        innerColorPane.setPrefWidth((int)(parentController.rootWidth*26/1024));
+
         this.setSpacing((int)(scrollPaneWidth*0.03));
 
     }
