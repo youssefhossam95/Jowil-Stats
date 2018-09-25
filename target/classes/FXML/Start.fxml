@@ -14,9 +14,9 @@
     <center>
         <StackPane>
                 <children>
-                    <ImageView fx:id="backImageView" opacity="0.83">
+                    <ImageView fx:id="backImageView" opacity="1">
                         <image>
-                            <Image url="@../Images/bluee.jpg" />
+                            <Image url="@../Images/blueeEdit.jpg" />
                         </image>
                     </ImageView>
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
@@ -47,7 +47,7 @@
                         <Image url="@../Images/coloredLogoBlue.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="jowilLabel" text="Jowil Stats" >
+                <Label fx:id="jowilLabel" text="Jowil Stats" textFill="#0e6ba4" >
                 </Label>
                 <StackPane fx:id="openStack" >
                     <children>
