@@ -382,7 +382,7 @@ JFXListView:focused {
 }
 
 .weightsBarChart .chart-bar {
--fx-bar-fill: #157880;
+-fx-bar-fill: 	#095c90;
 }
 
 .weightsBarChart .axis-label { -fx-font-size: 0.9em ; }

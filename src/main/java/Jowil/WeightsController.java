@@ -263,6 +263,8 @@ public class WeightsController extends Controller {
     CheckBox contextMenuCheckBox=new JFXCheckBox("Allow exceeding full mark",14);
     CustomMenuItem checkBoxMenuItem=new CustomMenuItem(checkBoxAnc);
 
+    int maxBarIndex=0;
+
 
 
 
@@ -1154,14 +1156,29 @@ public class WeightsController extends Controller {
 
     private void refreshBarChart(){
 
-        int max = 0  ;
 
+
+        double max=0;
         barChartSeries.getData().clear();
+        int i=0;
         for(Grade grade:gradesFreqData) {
             int freq = Integer.parseInt(grade.getFrequency());
-            max=Math.max(max,freq);
             barChartSeries.getData().add(new XYChart.Data(grade.getGradeName(), freq));
+            if(freq>max){
+                max=freq;
+                maxBarIndex=i;
+            }
+            i++;
         }
+
+
+
+//        Platform.runLater(()->{
+//            barChart.lookup(".data"+maxBarIndex+".chart-bar").setStyle("-fx-bar-fill:green");
+//        });
+
+
+
 
     }
 
