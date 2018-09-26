@@ -72,7 +72,7 @@ public abstract class Controller {
     BorderPane outerBorderPane=new BorderPane();
     AnchorPane topWrapperPane=new AnchorPane();
     ImageView progressImage=new ImageView();
-    ImageView logoImage=new ImageView(new Image("Images/coloredLogo.png"));
+    ImageView logoImage=new ImageView(new Image("Images/logojsSmall.png"));
     RingProgressIndicator stepCounterIndicator=new RingProgressIndicator(4);
     Label stepLabel;
 

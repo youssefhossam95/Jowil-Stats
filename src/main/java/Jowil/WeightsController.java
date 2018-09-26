@@ -277,7 +277,7 @@ public class WeightsController extends Controller {
     //Main methods
 
     WeightsController(Controller back) {
-        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "4.png", 2, "Questions Weights",resX*800/1280,0);
+        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "3.png", 2, "Questions Weights",resX*800/1280,0);
         gradeScalesJsonObj=null; //reload grade scales json object for every project
     }
 
