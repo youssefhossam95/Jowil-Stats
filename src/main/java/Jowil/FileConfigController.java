@@ -215,8 +215,8 @@ public class FileConfigController extends Controller {
         }
 
 
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestAll.csv");
+        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysAll.csv");
 
     }
 
@@ -1022,11 +1022,12 @@ public class FileConfigController extends Controller {
     }
 
     private void openManualMode() {
-        new ManualModeController(this).startWindow();
         CSVHandler.setRealIDGroups(null);//populate combos wasn't called -> reintialize realIDGroups
         CSVHandler.setIdentifierColStartIndex(NOT_AVAILABLE);
         CSVHandler.setIdentifierColEndIndex(NOT_AVAILABLE);
         CSVHandler.setFormColIndex(NOT_AVAILABLE);
+        new ManualModeController(this).startWindow();
+
     }
 
 

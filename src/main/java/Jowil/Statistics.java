@@ -942,7 +942,7 @@ public class Statistics {
 
     public static ArrayList<ArrayList<ArrayList<String>>> report5stats (int formIndex ){
 
-        int numberOfStudents = studentScores.size();
+        int numberOfStudents = formsScors.get(formIndex).size() ;
 
 
         ArrayList<ArrayList<Double>> formStats = answersStats.get(formIndex) ;

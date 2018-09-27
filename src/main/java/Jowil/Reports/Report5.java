@@ -218,6 +218,8 @@ public class Report5 extends Report {
 
     private void editRowForPrintablePdf (ArrayList<String> tableRow) {
 //        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
+        if(tableRow.get(1).equals("2.9"))
+            System.out.println("zeby");
         int numberOfSolvers = Integer.valueOf(tableRow.get(1));
 //        String addedImgName;
 //        if(rowClass.equals("greenBar"))
