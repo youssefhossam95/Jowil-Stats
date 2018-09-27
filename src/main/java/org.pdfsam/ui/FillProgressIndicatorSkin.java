@@ -62,7 +62,7 @@ public class FillProgressIndicatorSkin implements Skin<FillProgressIndicator> {
             initIndeterminate(newVal);
         });
         this.indicator.progressProperty().addListener((o, oldVal, newVal) -> {
-            setProgressLabel(newVal.intValue());
+            setProgressLabel(newVal.doubleValue());
             this.cover.setHeight(coverPane.getHeight() * ((100 - newVal.intValue()) / 100d));
         });
 
@@ -111,17 +111,17 @@ public class FillProgressIndicatorSkin implements Skin<FillProgressIndicator> {
         borderCircle.setRadius(this.indicator.getInnerCircleRadius());
     }
 
-    private void initLabel(int value) {
+    private void initLabel(double value) {
         setProgressLabel(value);
         percentLabel.getStyleClass().add("circleindicator-label");
     }
 
-    private void setProgressLabel(int value) {
+    private void setProgressLabel(double value) {
         if (value >= 0) {
             if(indicator.isDiscreteProgress)
-                percentLabel.setText(String.format("%d/%d",(int)((double)value/100*indicator.totalCount),indicator.totalCount));
+                percentLabel.setText(String.format("%d/%d",(int)(value/100 *indicator.totalCount),indicator.totalCount));
             else
-                percentLabel.setText(String.format("%d%%", value));
+                percentLabel.setText(String.format("%d%%", (int)value));
         }
     }
 

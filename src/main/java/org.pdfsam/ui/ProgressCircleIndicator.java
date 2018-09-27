@@ -19,11 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.*;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableDoubleProperty;
@@ -41,7 +37,7 @@ import com.sun.javafx.css.converters.SizeConverter;
 abstract class ProgressCircleIndicator extends Control {
     private static final int INDETERMINATE_PROGRESS = -1;
 
-    private ReadOnlyIntegerWrapper progress = new ReadOnlyIntegerWrapper(0);
+    private ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper(0);
     private ReadOnlyBooleanWrapper indeterminate = new ReadOnlyBooleanWrapper(false);
     protected boolean isDiscreteProgress=false;
     protected int totalCount;
@@ -53,7 +49,7 @@ abstract class ProgressCircleIndicator extends Control {
 
 
 
-    public int getProgress() {
+    public double getProgress() {
         return progress.get();
     }
 
@@ -63,12 +59,12 @@ abstract class ProgressCircleIndicator extends Control {
      * @param progressValue
      * @see ProgressCircleIndicator#makeIndeterminate()
      */
-    public void setProgress(int progressValue) {
+    public void setProgress(double progressValue) {
         progress.set(defaultToHundred(progressValue));
         indeterminate.set(progressValue < 0);
     }
 
-    public ReadOnlyIntegerProperty progressProperty() {
+    public ReadOnlyDoubleProperty progressProperty() {
         return progress.getReadOnlyProperty();
     }
 
@@ -84,7 +80,7 @@ abstract class ProgressCircleIndicator extends Control {
         return indeterminate.getReadOnlyProperty();
     }
 
-    private int defaultToHundred(int value) {
+    private double defaultToHundred(double value) {
         if (value > 100) {
             return 100;
         }
