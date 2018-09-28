@@ -32,6 +32,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -94,6 +95,8 @@ public class StartController extends Controller{
 
     StartController() {
         super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true,0,0);
+        loadTranslationsJson();
+
     }
 
 
@@ -163,10 +166,19 @@ public class StartController extends Controller{
     public void startWindow(){
         super.startWindow();
         loadProjectsJson();
-        stage.setOnCloseRequest(event -> {
+        stage.setOnCloseRequest(event -> { //to override parent behaviour
 
         });
     }
+
+    private void loadTranslationsJson() {
+
+        translations=loadJsonObj(TRANSLATIONS_FILE_NAME);
+        if(translations==null) //if failed in loading let it be an empty map so everything will be in English
+            translations=new HashMap<>();
+
+    }
+
     @Override
     protected void saveChanges() {
 

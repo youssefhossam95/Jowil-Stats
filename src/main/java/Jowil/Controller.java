@@ -66,6 +66,8 @@ public abstract class Controller {
     boolean isHeightCalling;
     final double DEFAULT_FONT_AWESOME_ICON_SIZE=resX*27/1280;
     private final double minWidth,minHeight;
+    static boolean isTranslationMode=true;
+
 
 
 
@@ -85,6 +87,7 @@ public abstract class Controller {
 
     static JSONObject gradeScalesJsonObj;
     HashMap<String,Double> classesFontSizes;
+    static HashMap<String,String> translations;
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
@@ -95,8 +98,11 @@ public abstract class Controller {
     boolean isBeginMaximised;
     boolean isStepWindow;
     static String projectName;
-    static String SAVED_PROJECTS_FILE_NAME="Projects.json";
-    static JSONObject savedProjectsJson,currentOpenedProjectJson,generalPrefsJson;
+
+    static String SAVED_PROJECTS_FILE_NAME="Projects.json",TRANSLATIONS_FILE_NAME="Translations.json";
+    static JSONObject savedProjectsJson,currentOpenedProjectJson,generalPrefsJson;;
+
+
     static String selectedIdentifierName;
     static String selectedFormColName;
     final double CHECK_BOXES_SIZE=resX*14/1280;
@@ -461,13 +467,19 @@ public abstract class Controller {
             if(classesFontSizes.containsKey(pClassName))
                 parent.setStyle("-fx-font-size:"+classesFontSizes.get(pClassName));
 
+            if(isTranslationMode)
+                tryTranslate(parent);
+
             for(Node node:parent.getChildrenUnmodifiable()){
                 if(node instanceof Parent)
                     queue.add((Parent)node);
                 else{
                     String nClassName=node.getClass().getSimpleName();
-                    if(classesFontSizes.containsKey(nClassName))
-                        node.setStyle("-fx-font-size:"+classesFontSizes.get(nClassName));
+                    if(classesFontSizes.containsKey(nClassName)) {
+                        node.setStyle("-fx-font-size:" + classesFontSizes.get(nClassName));
+                        if(isTranslationMode)
+                            tryTranslate(node);
+                    }
                 }
             }
         }
@@ -475,6 +487,18 @@ public abstract class Controller {
     }
 
 
+    public void tryTranslate(Node node){
+
+
+        String newText;
+        if(node instanceof Labeled && (newText=translations.get(((Labeled)node).getText()))!=null)
+            ((Labeled)node).setText(newText);
+        else  if(node instanceof TextInputControl && (newText=translations.get(((TextInputControl)node).getPromptText()))!=null)
+            ((TextInputControl)node).setPromptText(newText);
+        else if(node instanceof ComboBox && (newText=translations.get(((ComboBox)node).getPromptText()))!=null)
+            ((ComboBox)node).setPromptText(newText);
+
+    }
 
     protected void initNextButton(){
         //nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");

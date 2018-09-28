@@ -1,0 +1,56 @@
+{
+  "Next":"kadem",
+  "Back":"khalf",
+  "Finish":"enhy",
+  "Save Changes":"ehfaz el taghyerat",
+
+
+  "Students Responses File Path":"malaf egabat el talaba",
+  "Answer Key File Path":"malaf el egaba el namozgya",
+  "Identifier Column":"3amod el ta3ref",
+  "Form Column":"3amod el form",
+  "Manual Configuration":"ta3del goz2y",
+
+
+  "Groups Overview":"groups mn fo2",
+  "Group":"magmo3a",
+  "Questions Count":"3dad el as2ela",
+  "Groups Choices":"ekhtyarat el mgame3",
+  "Test Info":"ma3lomat el emthan",
+  "Number of Objective Questions":"3dad el as2ela el choose",
+  "Number of Objective Groups":"3dad el el mgame3 el choose",
+  "Number of Subjective Questions":"3dad el as2ela el makalya",
+  "Number of Students":"3dad el talaba",
+  "Number of Forms":"3dad el forms",
+
+
+  "Objective Questions":"as2ela choose",
+  "Subjective Questions":"as2ela makalya",
+  "Question":"el so2al",
+  "Weight":"el draga",
+  "Update Selection":"hades el mokhtar",
+  "Grade":"elta2der",
+  "Relative Freq.":"elkam elNesby",
+
+
+
+  "Grading Scale":"el takderat",
+  "Grading Scale Configuration":"e3dad el takderat",
+  "Name":"al esm",
+  "Score":"al draga",
+  "Score %":"al nesba",
+  "Reports Directory Path":"folder el tkarer",
+  "Reports Preferences":"e3dad el tkarer",
+  "Reports":"tkarer",
+  "File Formats":"anwa3",
+  "No Subjective Questions Detected":"la yogad as2ela maklya",
+  "Student Responses File Overview":"wesh egabat el talaba",
+  "Column Set Name":"esm magmo3t el3wamed",
+  "Column Set Type":"no3 magmo3t el3wamed",
+  "Add Selection":"addef el ekhtyarat",
+  "Reset Column Sets":"emsah magame3 el 3wamed",
+  "Type":"elno3",
+  "Range":"magal",
+  "Color":"loon",
+  "No Column Sets Added":"la yogad magame3"
+}
