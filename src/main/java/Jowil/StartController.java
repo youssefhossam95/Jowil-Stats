@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -166,6 +167,8 @@ public class StartController extends Controller{
     public void startWindow(){
         super.startWindow();
         loadProjectsJson();
+
+
         stage.setOnCloseRequest(event -> { //to override parent behaviour
 
         });
@@ -262,10 +265,12 @@ public class StartController extends Controller{
     private void showNewProjectNameDialog(String initialText){
 
 
-        TextInputDialog dialog = new TextInputDialog(initialText.isEmpty()?"New Project":initialText);
+
+        String defaultText=isTranslationMode&& translations.containsKey("New Project")?translations.get("New Project"):"New Project";
+        TextInputDialog dialog = new TextInputDialog(initialText.isEmpty()?defaultText:initialText);
         dialog.setTitle("Set Project Name");
         dialog.setHeaderText(null);
-        dialog.setContentText("Project Name:");
+        dialog.setContentText(isTranslationMode && translations.containsKey("Project Name:")?translations.get("Project Name:"):"Project Name:");
         ImageView pic=new ImageView();
         String file="";
         System.out.println(file);
@@ -275,6 +280,7 @@ public class StartController extends Controller{
         pic.setFitHeight(resX*30/1280);
 
         dialog.getDialogPane().setStyle("-fx-font-size:"+resX*12/1280);
+        processDialog(dialog);
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
@@ -285,7 +291,7 @@ public class StartController extends Controller{
             }
             else if(isProjectExists(projName)) {
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Project Name Error", "" +
-                        "A project with the name \"" + projName + "\" already exists.");
+                        constructMessage("A project with the name"," \"" + projName + "\" ","already exists."));
                 showNewProjectNameDialog(projName);
             }
 
@@ -342,7 +348,7 @@ public class StartController extends Controller{
 
     private void  showExistingProjects(){
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Open Existing Project");
+        dialog.setTitle("Existing Projects");
         dialog.setHeaderText("Projects");
         dialog.setGraphic(null);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
@@ -379,7 +385,7 @@ public class StartController extends Controller{
         }
 
 
-        Label emptyLabel=new Label("No Projects Exist");
+        Label emptyLabel=new Label(isTranslationMode && translations.containsKey("No Projects Exist")?translations.get("No Projects Exist"):"No Projects Exist");
         emptyLabel.setFont(new Font("System Bold",15));
         projectsList.setPlaceholder(emptyLabel);
 
@@ -437,7 +443,7 @@ public class StartController extends Controller{
     public void deleteProject(String projName) {
 
 
-        if(!showConfirmationDialog("Delete Project", "Are you sure you want to delete project \""+projName+"\" ?",stage.getOwner()))
+        if(!showConfirmationDialog("Delete Project", constructMessage("Are you sure you want to delete project"," \""+projName+"\" ","?"),stage.getOwner()))
             return;
         JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
         for(int i=0;i<projects.size();i++){

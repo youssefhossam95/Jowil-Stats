@@ -1,7 +1,7 @@
 package Jowil.Reports;
 
 import Jowil.GradeBoundariesController;
-import Jowil.ReportProgressController;
+import Jowil.ReportProgressWindow;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -104,7 +104,7 @@ public class ReportsHandler {
                 handleNoPDF();
 
             if(!isTestMode)
-                ReportProgressController.incrementProgressCount();
+                ReportProgressWindow.incrementProgressCount();
 
         }
 
@@ -119,14 +119,14 @@ public class ReportsHandler {
 
         if(Thread.currentThread().isInterrupted())
             return; //stop report generation if interrupted without pdf
-        ReportProgressController.setReportProgress(1);
+        ReportProgressWindow.setReportProgress(1);
         try {
             Thread.sleep(200); //simulating filling effect without pdf
         } catch (InterruptedException e) {
             System.out.println("dkhal el hramy wna nayma");
             return; //stop report generation if interrupted without pdf
         }
-        ReportProgressController.setReportProgress(0.0);
+        ReportProgressWindow.setReportProgress(0.0);
     }
 
 

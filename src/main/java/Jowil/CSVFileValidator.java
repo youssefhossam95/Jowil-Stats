@@ -14,6 +14,7 @@ import javafx.scene.control.TextInputControl;
 import java.io.File;
 import java.io.IOException;
 
+import static Jowil.Controller.translations;
 
 
 @DefaultProperty(value = "icon")
@@ -35,7 +36,8 @@ public class CSVFileValidator extends ValidatorBase {
             REQUIRED_FIELD_MESSAGE="Required field.",CSV_EXTENSION_MESSAGE="File must have a \".csv\" extension.",
             ERROR_READING_MESSAGE="Error in reading file.",NO_HEADERS_MESSAGE="No headers detected.",
             INCONSISTENT_ANSWER_KEY_MESSAGE="Blank answers positions are inconsistent.",
-            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d.",HEADERS_ONLY_MESSAGE="File contains headers only.";
+            ILLFORMED_CSV_MESSAGE="Invalid number of columns at row %d.",HEADERS_ONLY_MESSAGE="File contains headers only.",
+            ILLFORMED_CSV_EXTRA_MESSAGE=" Make sure that the CSV headers have no commas.";
 
 
 
@@ -116,41 +118,41 @@ public class CSVFileValidator extends ValidatorBase {
         //basic csv checks
 
         if(file.getPath().length()==0){
-            setMessage(REQUIRED_FIELD_MESSAGE);
+            setMessage(getTranslation(REQUIRED_FIELD_MESSAGE));
             hasErrors.set(true);
             return;
         }
 
         if (!file.exists()) {
-            setMessage(DOES_NOT_EXIST_MESSAGE);
+            setMessage(getTranslation(DOES_NOT_EXIST_MESSAGE));
             hasErrors.set(true);
             return;
         }
         if (!file.getPath().toLowerCase().endsWith(".csv")) {
-            setMessage(CSV_EXTENSION_MESSAGE);
+            setMessage(getTranslation(CSV_EXTENSION_MESSAGE));
             hasErrors.set(true);
             return;
         }
         try{
             if(CSVHandler.isCSVFileEmpty(file)){
-                setMessage(EMPTY_CSV_MESSAGE);
+                setMessage(getTranslation(EMPTY_CSV_MESSAGE));
                 hasErrors.set(true);
                 return;
             }
         } catch (IOException e) {
-            setMessage(ERROR_READING_MESSAGE);
+            setMessage(getTranslation(ERROR_READING_MESSAGE));
             hasErrors.set(true);
             return;
         }
 
         try{
             if(CSVHandler.isFileContainsNoRows(file)){
-                setMessage(HEADERS_ONLY_MESSAGE);
+                setMessage(getTranslation(HEADERS_ONLY_MESSAGE));
                 hasErrors.set(true);
                 return;
             }
         } catch (IOException e) {
-            setMessage(ERROR_READING_MESSAGE);
+            setMessage(getTranslation(ERROR_READING_MESSAGE));
             hasErrors.set(true);
             return;
         }
@@ -169,7 +171,7 @@ public class CSVFileValidator extends ValidatorBase {
         CSVHandler.setResponsesFilePath(file.getPath());
         try {
             if (!CSVHandler.processHeaders(false)) {
-                setMessage(NO_HEADERS_MESSAGE);
+                setMessage(getTranslation(NO_HEADERS_MESSAGE));
                 myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
                 setIcon(mainWarningIcon);
                 messageType=WARNING;
@@ -177,12 +179,12 @@ public class CSVFileValidator extends ValidatorBase {
                 return;
             }
         } catch (IOException e) {
-            setMessage(ERROR_READING_MESSAGE);
+            setMessage(getTranslation(ERROR_READING_MESSAGE));
             hasErrors.set(true);
             return;
 
         } catch (CSVHandler.EmptyCSVException e) {
-            setMessage(EMPTY_CSV_MESSAGE);
+            setMessage(getTranslation(EMPTY_CSV_MESSAGE));
             hasErrors.set(true);
             return;
         }
@@ -205,21 +207,21 @@ public class CSVFileValidator extends ValidatorBase {
         }
         catch(CSVHandler.IllFormedCSVException e){
             int rowNumber=e.getRowNumber();
-            setMessage(String.format(ILLFORMED_CSV_MESSAGE,rowNumber)+(rowNumber==2?" Make sure that the CSV headers have no commas.":""));
+            setMessage(String.format(ILLFORMED_CSV_MESSAGE,rowNumber)+(rowNumber==2?ILLFORMED_CSV_EXTRA_MESSAGE:""));
             hasErrors.set(true);
             return;
         }  catch(IOException e) {
-            setMessage(ERROR_READING_MESSAGE);
+            setMessage(getTranslation(ERROR_READING_MESSAGE));
             hasErrors.set(true);
             return;
         } catch (CSVHandler.InConsistentAnswerKeyException e) {
-            setMessage(INCONSISTENT_ANSWER_KEY_MESSAGE);
+            setMessage(getTranslation(INCONSISTENT_ANSWER_KEY_MESSAGE));
             hasErrors.set(true);
             return;
         }
 
         if(!isHeadersExist){
-            setMessage(NO_HEADERS_MESSAGE);
+            setMessage(getTranslation(NO_HEADERS_MESSAGE));
             myTextField.getMySkin().getErrorContainer().updateErrorLabelStyle("warning-label");
             setIcon(answersWarningIcon);
             messageType=WARNING;
@@ -237,6 +239,11 @@ public class CSVFileValidator extends ValidatorBase {
             setMessage("");
             hasErrors.set(true);
         }
+    }
+    
+    private String getTranslation(String message){
+        return Controller.isTranslationMode&& translations.containsKey(message)? translations.get(message):message;
+        
     }
 
 }

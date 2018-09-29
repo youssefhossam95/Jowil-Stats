@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import static Jowil.Controller.isTranslationMode;
 import static Jowil.Controller.resX;
 
 
@@ -104,7 +105,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 Label maxLabel=new Label(max);
                 minLabel.setPadding(new Insets(0,0,0,0));
                 maxLabel.setPadding(new Insets(0,0,0,0));
-                Node rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.ARROW_RIGHT).size(Double.toString(resX/111)).styleClass("error").build();
+                Node rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(isTranslationMode?FontAwesomeIcon.ARROW_LEFT:FontAwesomeIcon.ARROW_RIGHT).size(Double.toString(resX/111)).styleClass("error").build();
                 this.selectedProperty().addListener((observable,oldValue,newValue)->{
                     if(newValue)
                         rightArrowIcon.setStyle("-fx-fill:white");

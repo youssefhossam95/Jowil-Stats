@@ -298,8 +298,8 @@ public class GroupsController  extends Controller{
             String invalid=null;
             if ((invalid=newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i)))!=null) {
                 showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Groups Choices Error",
-                        "Removing choice \""+invalid+"\" in group \""+newDetectedGroups.get(i).getCleanedName()+
-                "\" is not allowed. \""+invalid+"\" is set as the correct answer for one or more of the questions in this group.");
+                        constructMessage("Removing choice"," \""+invalid+"\" ","in group"," \""+newDetectedGroups.get(i).getCleanedName()+
+                "\" ","is not allowed."," \""+invalid+"\" ","is set as the correct answer for one or more of the questions in this group."));
                 return false;
             }
         }
@@ -570,6 +570,7 @@ public class GroupsController  extends Controller{
         cancelButt.setText("No");
 
         alert.initOwner(stage.getOwner());
+        processDialog(alert);
         //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
 

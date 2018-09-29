@@ -42,7 +42,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import Jowil.GradeBoundariesController;
-import Jowil.ReportProgressController;
+import Jowil.ReportProgressWindow;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -383,7 +383,7 @@ public class ITextRenderer {
         setDidValues(doc); // set PDF header fields from meta data
 
         if(!isTestMood)
-            ReportProgressController.setReportProgress(0.0);
+            ReportProgressWindow.setReportProgress(0.0);
 
         for (int i = 0; i < pageCount; i++) {
 
@@ -403,7 +403,7 @@ public class ITextRenderer {
                 _outputDevice.initializePage(writer.getDirectContent(), nextPageSize.getHeight());
             }
             if(!isTestMood)
-                ReportProgressController.setReportProgress((i+1.0)/pageCount);
+                ReportProgressWindow.setReportProgress((i+1.0)/pageCount);
 
 
         }

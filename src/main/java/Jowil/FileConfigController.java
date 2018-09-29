@@ -295,12 +295,12 @@ public class FileConfigController extends Controller {
             }
 
             if (mainTextFieldResult == CSVFileValidator.ERROR) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "Error in students responses file: " + mainTextFieldMessage);
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", constructMessage("Error in students responses file: ", mainTextFieldMessage));
                 return;
             }
 
             if (answersTextFieldResult == CSVFileValidator.ERROR) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "Error in answer key file: " + answersTextFieldMessage);
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", constructMessage("Error in answer key file: ", answersTextFieldMessage));
                 return;
             }
 
@@ -311,7 +311,7 @@ public class FileConfigController extends Controller {
 
             if (formsCount > 1 && formComboSelectedIndex == 0 && !isManualMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                        formsCount + " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.");
+                        constructMessage(formsCount+"" , " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue."));
                 return;
             }
 
@@ -326,8 +326,8 @@ public class FileConfigController extends Controller {
             int answersColCount = CSVHandler.getAnswersColsCount();
 
             if (responsesColCount != answersColCount) { //check if columns count doesn't match -> in open mode both will be zero
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", "Student responses file contains " +
-                        responsesColCount + " columns, while the answer key file contains " + answersColCount + " columns.");
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", constructMessage("Student responses file contains " ,
+                        responsesColCount+"" , " columns, while the answer key file contains " ,answersColCount+"" , " columns."));
                 return;
             }
 
@@ -364,9 +364,9 @@ public class FileConfigController extends Controller {
                         CSVHandler.loadSavedCSV();
                     } catch (CSVHandler.InvalidFormNumberException e) {
                         showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                                "Error in students responses file: " + e.getMessage()+". Make sure that you have selected the form column correctly.");
+                                constructMessage("Error in students responses file: " , e.getMessage(),". Make sure that you have selected the form column correctly."));
                         return;
-                    } catch (CSVHandler.InvalidSubjColumnException e) { //won't happen because subjective columns were already validated when was first project created.
+                    } catch (CSVHandler.InvalidSubjColumnException e) { //won't happen because subjective columns were already validated when was first project created. ->ignore translation
                         showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                                 "Error in students responses file: " + e.getMessage());
                         return;
@@ -424,7 +424,7 @@ public class FileConfigController extends Controller {
                 try {
                     isMismatched = CSVHandler.isFilesHeadersMismatched(new File(mainFileTextField.getText()), new File(answersFileTextField.getText()));
                 } catch (IOException e) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                             "Error in reloading files.");
                     return;
                 }
@@ -452,7 +452,7 @@ public class FileConfigController extends Controller {
 
                     CSVHandler.processHeaders(true); //clean the blanks
                 } catch (Exception e) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Responses File Error",
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
                             "Error in reloading responses file.");
                     return;
                 }
@@ -464,8 +464,8 @@ public class FileConfigController extends Controller {
             try {
                 CSVHandler.loadCsv(true);
             } catch (CSVHandler.IllFormedCSVException e) {
-                String message="Error in students responses file at row " + e.getRowNumber() +
-                        ". File must contain the same number of columns in all rows."+(e.getRowNumber()==2?" Make sure that the CSV headers have no commas.":"");
+                String message=constructMessage("Error in students responses file at row " , e.getRowNumber()+"" ,
+                        ". File must contain the same number of columns in all rows.",(e.getRowNumber()==2?" Make sure that the CSV headers have no commas.":""));
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",message);
 
                 return;
@@ -475,7 +475,7 @@ public class FileConfigController extends Controller {
                 return;
             } catch (CSVHandler.InvalidFormNumberException | CSVHandler.InvalidSubjColumnException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file: " + e.getMessage());
+                        constructMessage("Error in students responses file: " , e.getMessage()));
                 return;
             }
 
@@ -487,6 +487,8 @@ public class FileConfigController extends Controller {
 
 
     }
+
+
 
     private void loadSavedProjectJson() {
         loadObjectiveGroups();
@@ -529,7 +531,8 @@ public class FileConfigController extends Controller {
     private void initMainFileChooser() {
 
 
-        Tooltip tooltip = new Tooltip("Open CSV file");
+        TranslatableTooltip tooltip = new TranslatableTooltip("Open CSV file");
+
         Tooltip.install(mainFileChooser, tooltip);
 
         mainFileChooser.setOnMouseClicked(new EventHandler<MouseEvent>
@@ -557,7 +560,7 @@ public class FileConfigController extends Controller {
 
     private void initAnswersFileChooser() {
 
-        Tooltip tooltip = new Tooltip("Open CSV file");
+        TranslatableTooltip tooltip = new TranslatableTooltip("Open CSV file");
         Tooltip.install(answersFileChooser, tooltip);
 
 

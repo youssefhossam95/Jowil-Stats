@@ -1,8 +1,16 @@
 {
+
+  "New Project":"translation",
+  "Open Existing Project":"translation",
   "Next":"kadem",
   "Back":"khalf",
   "Finish":"enhy",
   "Save Changes":"ehfaz el taghyerat",
+  "OK":"translation",
+  "Cancel":"translation",
+  "Close":"translation",
+  "Yes":"translation",
+  "No":"translation",
 
 
   "Students Responses File Path":"malaf egabat el talaba",
@@ -28,9 +36,13 @@
   "Subjective Questions":"as2ela makalya",
   "Question":"el so2al",
   "Weight":"el draga",
+  "Correct%":"Ngah%",
   "Update Selection":"hades el mokhtar",
   "Grade":"elta2der",
   "Relative Freq.":"elkam elNesby",
+  "Bonus Marks:":"translation",
+  "Full Mark:":"translation",
+  "Allow exceeding full mark":"translation",
 
 
 
@@ -52,5 +64,176 @@
   "Type":"elno3",
   "Range":"magal",
   "Color":"loon",
-  "No Column Sets Added":"la yogad magame3"
+  "No Column Sets Added":"la yogad magame3",
+
+
+
+  "Reports Generation Progress":"translation",
+  "Generating reports...this may take a while.":"translation",
+  "Reports Generated":"translation",
+  "Report In Progress":"translation",
+
+
+
+
+  "Students Responses File Error":"translation",
+  "Answer Key File Error":"translation",
+  "Columns Count Mismatch":"translation",
+  "Headers Mismatch Error":"translation",
+  "Output Directory Error":"translation",
+  "CheckBoxes Selection Error":"translation",
+  "Grade Scale Error":"translation",
+  "Directory Error":"translation",
+  "Invalid Weight Value":"translation",
+  "Loading Preferences Error":"translation",
+  "Configuration Name Error":"translation",
+  "Column Set Error":"translation",
+  "CSV Reloading Error":"translation",
+  "Project Name Error":"translation",
+  "Invalid Form Weights":"translation",
+  "Invalid Full Mark Value":"translation",
+  "Invalid Bonus Marks Value":"translation",
+  "Grade Configurations Error":"translation",
+  "Groups Choices Error":"translation",
+  "Objective Question Groups Error":"translation",
+  "Form Number Column Set Error":"translation",
+  "Column Set Addition Error":"translation",
+  "Invalid Selection":"translation",
+  "Answer Key Error":"translation",
+  "Objective Questions Error":"translation",
+  "Grade Scale Value Error":"translation",
+
+
+
+  "Confirm Column Set Deletion":"translation",
+  "Cancel Project":"translation",
+  "Close Project":"translation",
+  "Delete Grade Scale Configuration":"translation",
+  "Confirm Column Set Addition":"translation",
+  "Quit Reports Generation":"translation",
+  "Delete Project":"translation",
+
+
+
+
+  "Empty CSV file.":"translation",
+  "File doesn't exist.":"translation",
+  "Required field.":"translation",
+  "File must have a \".csv\" extension.":"translation",
+  "Error in reading file.":"translation",
+  "No headers detected.":"translation",
+  "Blank answers positions are inconsistent.":"translation",
+  "Invalid number of columns at row %d.":"translation",
+  "File contains headers only.":"translation",
+  " Make sure that the CSV headers have no commas.":"translation",
+
+
+
+
+  "Invalid Form number at row ":"translation",
+  "Invalid subjective question score":"translation", "at row ":"translation",
+
+
+
+
+  "Error in students responses file: ":"translation",
+  "Error in answer key file: ":"translation",
+  "An error has occurred while loading the preferences file.":"translation",
+  "No students responses file provided.":"translation",
+  "No answer key file provided.":"translation",
+  " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.":"translation",
+  "Answer key file must contain the answers for at least one form":"translation",
+  "Student responses file contains ":"translation"," columns, while the answer key file contains ":"translation", " columns.":"translation",
+  ". Make sure that you have selected the form column correctly.":"translation",
+  "Error in reloading files.":"translation",
+  "Headers of answers and student responses files are not identical.":"translation",
+  "Error in reloading responses file.":"translation",
+  "Error in students responses file at row ":"translation",". File must contain the same number of columns in all rows.":"translation",
+  "Error in reading students responses file.":"translation",
+
+
+
+
+  "Reports Directory Path is required.":"translation",
+  "Reports Directory":"translation", "doesn't exist.":"translation",
+  "Path":"translation","is not a valid directory path.":"translation",
+  "You must select at least one report and one output format.":"translation",
+  "Cannot write to the specified reports directory. Make sure that you are permitted to edit in this directory":"translation",
+  "Configuration name cannot be empty":"translation",
+  "already exists.":"translation",
+  "Error in Grade number ":"translation", "Grade name cannot be empty.":"translation",
+  "Grade scale value":"translation", "is invalid.":"translation",
+
+
+
+  "Removing choice":"translation", "in group":"translation", "is not allowed.":"translation","is set as the correct answer for one or more of the questions in this group.":"translation",
+
+
+
+  "You must add at least one objective questions group column set.":"translation",
+  "Objective questions groups must be consecutive. A gap exists at":"translation",
+  "Objective questions groups must be consecutive. Column set":"translation", "of type":"translation", "cannot be placed between objective column sets.":"translation",
+  " forms were detected. A form number column must be added.":"translation",
+  "Column Set Name cannot be empty.":"translation",
+  "No columns selected.":"translation",
+  "Error in reloading student responses file.":"translation",
+  "A column set of type":"translation", "cannot have more than one column.":"translation",
+  "A column set with the name" :"translation",
+  "Selected range must not overlap with an existing column set.":"translation",
+  "Error in reloading answer key file.":"translation",
+  ". Make sure that you have selected a valid form column.":"translation",
+  "Invalid objective column set \"":"translation", "\". Choices in an objective column set must be of the same type.":"translation",
+
+
+
+
+  "Cannot open reports directory.":"translation",
+
+
+  "Project name cannot be empty.":"translation",
+  "A project with the name":"translation",
+  "Invalid project name. Project Name cannot contain any of the following characters: < > : \" / \\ | ? *":"translation",
+
+
+
+
+  "All forms must have the same max score.":"translation",
+  "Cannot update objective weights: weight value":"translation",
+  "Cannot update subjective weights: weight value":"translation",
+  "Full mark value":"translation",
+  "Bonus marks value":"translation",
+  "Error in loading Grade Scale Configurations":"translation",
+
+
+  "Changes you made will not be saved. ":"translation", "Are you sure you want to ":"translation","close":"translation", "cancel":"translation", " this project?":"translation",
+  "Are you sure you want to delete":"translation",
+  "grade scale configuration?":"translation",
+  "Resetting will delete all existing column sets. Are you sure you want to reset column sets?":"translation",
+  " column set already exists. Do you want to replace the existing column set?":"translation",
+  "Are you sure you want to quit reports generation?":"translation",
+  "Are you sure you want to delete project":"translation", "?":"translation",
+
+
+
+  "Projects Loading Error" :"translation","Cannot load existing projects. Would you like to restart Jowil Stats?":"translation",
+  "Project Name:":"translation", "Set Project Name":"translation",
+  "Existing Projects":"translation", "Projects":"translation", "No Projects Exist":"translation",
+  "Continue to File Configuration":"translation","Going back to file configuration may reset some of the changes made in manual configuration. Are you sure you want to continue to file configuration?":"translation",
+  "Save New Configuration":"translation", "Ignore Changes":"translation", "Configuration Name":"translation", "Configuration Name:":"translation",
+  "Reset Question Weights":"translation", "Objective questions was just edited. Would you like to reset the existing objective weights?":"translation", "Yes, Reset Weights" :"translation","No, Load Saved Weights":"translation",
+  "Number of Objective Questions Changed":"translation", "The number of objective questions has changed. All the saved objective weights for this project will be lost.":"translation",
+  "Reports Generation Error":"translation", "Retry":"translation", "An error has occurred during report generation.":"translation", " Make sure that the file" :"translation","is not opened in another application":"translation",
+
+
+  "Open CSV file":"translation",
+
+  "Choose Output Directory":"translation",
+  "Add Grade Below":"translation",
+  "Delete Grade":"translation",
+  "Tweak Grades":"translation",
+  "Delete Column Set":"translation",
+  "Show Project in Explorer":"translation"
+
+
+
 }

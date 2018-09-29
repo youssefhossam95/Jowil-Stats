@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
+import static Jowil.Controller.isTranslationMode;
 import static Jowil.Controller.resX;
 
 public class ColumnSet extends HBox {
@@ -38,7 +39,7 @@ public class ColumnSet extends HBox {
     ManualModeController parentController;
 
     private Font innerLabelsFont;
-    private GlyphIcon rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.ARROW_RIGHT).styleClass("error").build();
+    private GlyphIcon rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph((isTranslationMode?FontAwesomeIcon.ARROW_LEFT:FontAwesomeIcon.ARROW_RIGHT)).styleClass("error").build();
     private final  GlyphIcon removeIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(FontAwesomeIcon.TRASH_ALT).styleClass("gradesMinusIcon").build();
 
 
@@ -96,7 +97,8 @@ public class ColumnSet extends HBox {
                     "delete this column set?",parentController.stage.getOwner()))
                 parentController.deleteColumnSet(this);
         });
-        Tooltip tooltipRemove = new Tooltip("Delete Column Set");
+        TranslatableTooltip tooltipRemove = new TranslatableTooltip("Delete Column Set");
+
         Tooltip.install(removeButton, tooltipRemove);
 
         this.getChildren().addAll(nameTextField,typeTextField,rangeHBox,colorPane,removeButton);

@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -24,6 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import org.bouncycastle.util.Arrays;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -31,10 +33,10 @@ import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
+import static java.util.Arrays.asList;
 
 public abstract class Controller {
 
@@ -87,7 +89,7 @@ public abstract class Controller {
 
     static JSONObject gradeScalesJsonObj;
     HashMap<String,Double> classesFontSizes;
-    static HashMap<String,String> translations;
+    public static HashMap<String,String> translations;
 
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
@@ -270,6 +272,15 @@ public abstract class Controller {
             rootPane.requestFocus();
             rootPane.setOnMouseClicked(t->rootPane.requestFocus());
 
+            if(isTranslationMode) {
+                if(!(this instanceof StartController))
+                    scene.getRoot().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                if(translations.containsKey(stage.getTitle()))
+                    stage.setTitle(translations.get(stage.getTitle()));
+
+                progressImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            }
+
             if(this instanceof StartController)
                 stage.initStyle(StageStyle.UNDECORATED);
             else
@@ -278,7 +289,7 @@ public abstract class Controller {
                 String small=isOpenMode?"close":"cancel";
                 String capital=isOpenMode?"Close":"Cancel";
                 String extra=isOpenMode?"Changes you made will not be saved. ":"";
-                if(!showConfirmationDialog(capital+" Project",extra+"Are you sure you want to "+small+" this project?",stage.getOwner()))
+                if(!showConfirmationDialog(capital+" Project",constructMessage(extra,"Are you sure you want to ",small," this project?"),stage.getOwner()))
                     event.consume();
             });
             stage.show();
@@ -378,20 +389,17 @@ public abstract class Controller {
 
     //helper methods
     protected static void showAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
-        Alert alert = new Alert(alertType);
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
-
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.initOwner(owner);
-        alert.show();
+        constructAlert(alertType,owner,title,message).show();
     }
 
+
     protected static void showAlertAndWait(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message) {
+        constructAlert(alertType,owner,title,message).showAndWait();
+    }
+
+    private static Alert constructAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message){
         Alert alert = new Alert(alertType);
         //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
-
         alert.getButtonTypes().setAll(ButtonType.CLOSE);
         Button closeButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE);
         closeButt.setText("OK");
@@ -399,7 +407,8 @@ public abstract class Controller {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
-        alert.showAndWait();
+        processDialog(alert);
+        return alert;
     }
 
 
@@ -460,12 +469,15 @@ public abstract class Controller {
     private void updateFonts() {
 
         LinkedBlockingQueue<Parent> queue=new LinkedBlockingQueue<>();
-        queue.add(rootPane);
+        queue.add(scene.getRoot());
         while(!queue.isEmpty()){
             Parent parent=queue.poll();
             String pClassName=parent.getClass().getSimpleName();
             if(classesFontSizes.containsKey(pClassName))
                 parent.setStyle("-fx-font-size:"+classesFontSizes.get(pClassName));
+
+
+
 
             if(isTranslationMode)
                 tryTranslate(parent);
@@ -473,13 +485,13 @@ public abstract class Controller {
             for(Node node:parent.getChildrenUnmodifiable()){
                 if(node instanceof Parent)
                     queue.add((Parent)node);
-                else{
+                else{ //leaf nodes
                     String nClassName=node.getClass().getSimpleName();
-                    if(classesFontSizes.containsKey(nClassName)) {
+                    if(classesFontSizes.containsKey(nClassName))
                         node.setStyle("-fx-font-size:" + classesFontSizes.get(nClassName));
-                        if(isTranslationMode)
-                            tryTranslate(node);
-                    }
+
+                    if(isTranslationMode)
+                        tryTranslate(node);
                 }
             }
         }
@@ -487,18 +499,23 @@ public abstract class Controller {
     }
 
 
-    public void tryTranslate(Node node){
+    public static void tryTranslate(Node node){
 
 
-        String newText;
-        if(node instanceof Labeled && (newText=translations.get(((Labeled)node).getText()))!=null)
-            ((Labeled)node).setText(newText);
-        else  if(node instanceof TextInputControl && (newText=translations.get(((TextInputControl)node).getPromptText()))!=null)
-            ((TextInputControl)node).setPromptText(newText);
-        else if(node instanceof ComboBox && (newText=translations.get(((ComboBox)node).getPromptText()))!=null)
-            ((ComboBox)node).setPromptText(newText);
+        try {
+            String newText;
+            if (node instanceof Labeled && (newText = translations.get(((Labeled) node).getText())) != null)
+                ((Labeled) node).setText(newText);
+            else if (node instanceof TextInputControl && (newText = translations.get(((TextInputControl) node).getPromptText())) != null)
+                ((TextInputControl) node).setPromptText(newText);
+            else if (node instanceof ComboBox && (newText = translations.get(((ComboBox) node).getPromptText())) != null)
+                ((ComboBox) node).setPromptText(newText);
+        }catch(RuntimeException e){//setting bound text in dialogs can cause runtime exception
+            e.printStackTrace();
+        }
 
     }
+
 
     protected void initNextButton(){
         //nextButton.setStyle("-fx-border-width:1;-fx-border-color:#949797");
@@ -594,6 +611,8 @@ public abstract class Controller {
         cancelButt.setText("No");
 
         alert.initOwner(owner);
+
+        processDialog(alert);
         //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
 
@@ -650,14 +669,59 @@ public abstract class Controller {
         pw.close();
     }
 
-//    protected static double setPrefWidth(Region element,relativeVal){
-//
-//        //element.setPrefWidth();
-//
-//    }
+    public static String constructMessage(String... subMessages){
+
+        List<String> orderedMessages=asList(subMessages);
+
+        if(isTranslationMode)
+            Collections.reverse(orderedMessages);
+
+        StringBuilder sb=new StringBuilder();
+
+        for(String message:orderedMessages)
+            sb.append(isTranslationMode&& translations.containsKey(message)?translations.get(message):message);
 
 
+        return sb.toString();
+    }
 
+
+    public static void processDialog(Dialog dialog){
+
+
+        if(isTranslationMode){
+            DialogPane dialogPane=dialog.getDialogPane();
+            String title=dialog.getTitle();
+            if(translations.containsKey(title))
+                dialog.setTitle(translations.get(title));
+
+            for(ButtonType buttonType:dialogPane.getButtonTypes()){
+                Button butt=(Button)dialogPane.lookupButton(buttonType);
+                tryTranslate(butt);
+            }
+
+            dialog.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            translateAllNodes(dialogPane);
+        }
+
+    }
+
+
+    public static void translateAllNodes(Parent root) {
+        LinkedBlockingQueue<Parent> queue=new LinkedBlockingQueue<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            Parent parent=queue.poll();
+            tryTranslate(parent);
+
+            for(Node node:parent.getChildrenUnmodifiable()){
+                if(node instanceof Parent)
+                    queue.add((Parent)node);
+                else
+                    tryTranslate(node);
+            }
+        }
+    }
 
 
 

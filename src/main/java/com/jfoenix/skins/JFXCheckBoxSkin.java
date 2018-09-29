@@ -30,6 +30,7 @@ import com.sun.javafx.scene.control.skin.LabeledSkinBase;
 import javafx.animation.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -59,6 +60,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
     private JFXFillTransition select;
     public final StackPane boxContainer;
 
+
     public JFXCheckBoxSkin(JFXCheckBox control) {
         super(control, new ButtonBehavior<>(control));
 
@@ -73,6 +75,8 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         mark.setScaleY(0);
 
 
+        //joe start
+        box.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         if(control.isDynamicBoxSize) {
             double size=control.boxSize;
             box.setPrefSize(size,size);
@@ -82,6 +86,8 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         }
         else
             box.getStyleClass().setAll("box");
+
+        //joe end
 
         box.setBorder(new Border(new BorderStroke(control.getUnCheckedColor(),
             BorderStrokeStyle.SOLID,

@@ -25,6 +25,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.BarChart;
@@ -435,8 +436,8 @@ public class WeightsController extends Controller {
         initContextMenu();
 
 
-        Tooltip tooltipAdd = new Tooltip("Tweak Grades");
-        Tooltip.install(contextMenuExpandButton, tooltipAdd);
+        TranslatableTooltip tooltip = new TranslatableTooltip("Tweak Grades");
+        Tooltip.install(contextMenuExpandButton, tooltip);
         contextMenuExpandButton.setOnMouseEntered(event->contextMenuCircle.setStyle("-fx-fill:#87CEEB"));
         contextMenuExpandButton.setOnMouseExited(event ->  contextMenuCircle.setStyle("-fx-fill:#095c90"));
 
@@ -529,6 +530,9 @@ public class WeightsController extends Controller {
             errorMessage=errorMessage.substring(0,errorMessage.length()-1);
             errorMessage+=") respectively.";
 
+            if(isTranslationMode) //ignore dynamic message in arabic
+                errorMessage="All forms must have the same max score.";
+
             showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Form Weights",errorMessage);
             return false;
         }
@@ -607,8 +611,6 @@ public class WeightsController extends Controller {
     @Override
     public void startWindow(){
         super.startWindow();
-
-
         Platform.runLater(()->gradesFreqTable.refresh());
 
 
@@ -650,7 +652,8 @@ public class WeightsController extends Controller {
 
                 String w;
                 if ((w = tryDouble(objWeightText.getText())) == null) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Weight Value", "Cannot update objective weights: weight value \"" + objWeightText.getText() + "\" is invalid.");
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Weight Value",
+                            constructMessage("Cannot update objective weights: weight value"," \"" + objWeightText.getText() + "\" ","is invalid."));
                     return;
                 }
 
@@ -680,7 +683,8 @@ public class WeightsController extends Controller {
             public void handle(ActionEvent e) {
                 String w;
                 if ((w = tryDouble(subjWeightText.getText())) == null) {
-                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Weight Value", "Cannot update subjective weights: weight value \"" + subjWeightText.getText() + "\" is invalid.");
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Weight Value",
+                            constructMessage("Cannot update subjective weights: weight value"," \"" + subjWeightText.getText() + "\" ","is invalid."));
                     return;
                 }
 
@@ -829,10 +833,10 @@ public class WeightsController extends Controller {
             if(!saveContextMenuChanges(false))
                 Platform.runLater(()->contextMenu.show(contextMenuExpandButton,contextXPos,contextYPos)); //if invalid show context menu again
 
-
-
         }
         );
+
+        contextMenu.setOnShown(event -> translateAllNodes(contextMenu.getScene().getRoot()));
 
 
 
@@ -919,7 +923,7 @@ public class WeightsController extends Controller {
             if(isCalledFromEnter) //triggered by Enter button -> hide context menu so that full validation will take place, to avoid double alerts
                 contextMenu.hide();
             else //triggered by context menu hide-> show alert
-                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", "Full mark value\"" + fullMarksTextField.getText() + "\" is invalid.");
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", constructMessage("Full mark value"," \"" + fullMarksTextField.getText() + "\" ","is invalid."));
 
             fullMarksTextField.setText(Double.toString(Statistics.getMaxScore()));
 
@@ -941,7 +945,7 @@ public class WeightsController extends Controller {
             if(isCalledFromEnter)
                 contextMenu.hide();
             else
-                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Bonus Marks Value", "Bonus marks value\"" + bonusMarksTextField.getText() + "\" is invalid.");
+                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Bonus Marks Value", constructMessage("Bonus marks value"," \"" + bonusMarksTextField.getText() + "\" ","is invalid."));
 
             bonusMarksTextField.setText(Double.toString(Statistics.getBonus()));
 

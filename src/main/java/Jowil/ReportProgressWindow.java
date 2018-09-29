@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class ReportProgressController {
+import static Jowil.Controller.constructMessage;
+import static Jowil.Controller.translations;
+
+public class ReportProgressWindow {
 
     private final ArrayList<Boolean> isGenerateReports;
     Scene scene;
@@ -65,7 +68,7 @@ public class ReportProgressController {
     Label titleLabel;
 
 
-    ReportProgressController(int reportsCount,ArrayList<Boolean> isGenerateReports,ArrayList<Integer>formatsOut){
+    ReportProgressWindow(int reportsCount,ArrayList<Boolean> isGenerateReports,ArrayList<Integer>formatsOut){
 
         reportProgress=new SimpleDoubleProperty();
         progressCount=new SimpleIntegerProperty();
@@ -145,10 +148,12 @@ public class ReportProgressController {
             loader.setController(this);
             root= loader.load();
             scene = new Scene(root,rootWidth,rootHeight);
-            stage.setTitle("Reports Generation Progress");
+            String windowTitle="Reports Generation Progress";
+            stage.setTitle(Controller.isTranslationMode &&translations.containsKey(windowTitle)?translations.get(windowTitle):windowTitle);
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
+            Controller.translateAllNodes(scene.getRoot());
 
         }
         catch (IOException e) {
@@ -176,7 +181,7 @@ public class ReportProgressController {
 
 
     public static void setReportProgress(double reportProgress) {
-        ReportProgressController.reportProgress.set(reportProgress);
+        ReportProgressWindow.reportProgress.set(reportProgress);
     }
 
 
@@ -197,7 +202,7 @@ public class ReportProgressController {
             try {
                 reportsHandler.generateReports(reportsOut, formatsOut);
             } catch (IOException e) {
-                showReportsErrorMessage(" Make sure that the file "+"\""+reportsOut.get(progressCount.get()).getOutputFileName()+".pdf\" is not opened in another application");
+                showReportsErrorMessage(constructMessage(" Make sure that the file"," \""+reportsOut.get(progressCount.get()).getOutputFileName()+".pdf\" ", "is not opened in another application"));
 
 
             } catch (DocumentException e) {
@@ -245,14 +250,14 @@ public class ReportProgressController {
 
         alert.setTitle("Reports Generation Error");
         alert.setHeaderText(null);
-        alert.setContentText("An error has occurred during report generation."+extraStatement);
+        alert.setContentText(constructMessage("An error has occurred during report generation.",extraStatement));
         alert.initOwner(stage.getOwner());
         Optional<ButtonType> option = alert.showAndWait();
 
         stage.hide();
 
         if(option.get()==ButtonType.OK)
-            new ReportProgressController(reportsCount,isGenerateReports,formatsOut).startWindow();
+            new ReportProgressWindow(reportsCount,isGenerateReports,formatsOut).startWindow();
 
         stage.close();
         });

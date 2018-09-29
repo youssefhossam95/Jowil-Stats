@@ -20,6 +20,7 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 
+import static Jowil.Controller.constructMessage;
 import static Jowil.Controller.resX;
 
 
@@ -77,12 +78,12 @@ public class GradeHBox extends HBox {
 
         addButton.getChildren().add(addIcon);
         addButton.setOnMouseClicked(t-> parentController.addNextGrade(this.index));
-        Tooltip tooltipAdd = new Tooltip("Add Grade Below");
+        TranslatableTooltip tooltipAdd = new TranslatableTooltip("Add Grade Below");
         Tooltip.install(addButton, tooltipAdd);
 
         removeButton.getChildren().add(removeIcon);
         removeButton.setOnMouseClicked(t-> parentController.deleteGrade(this.index));
-        Tooltip tooltipRemove = new Tooltip("Delete Grade");
+        TranslatableTooltip tooltipRemove = new TranslatableTooltip("Delete Grade");
         Tooltip.install(removeButton, tooltipRemove);
 
 
@@ -139,7 +140,7 @@ public class GradeHBox extends HBox {
                 if(isPercentScoreTextFieldInValid()){
                     isIgnorePercentScoreLosingFocus=true;
                     parentController.showAlertAndWait(Alert.AlertType.ERROR, parentController.stage.getOwner(), "Grade Scale Value Error",
-                            "Grade scale value \""+percentScoreTextField.getText()+"\" is invalid.");
+                            constructMessage("Grade scale value"," \""+percentScoreTextField.getText(),"\" ","is invalid."));
                     percentScoreTextField.setText(String.format("%.1f",scoreSlider.getValue()));
                 }
                 else {
@@ -170,7 +171,7 @@ public class GradeHBox extends HBox {
 
             if(isPercentScoreTextFieldInValid()){
                 parentController.showAlertAndWait(Alert.AlertType.ERROR, parentController.stage.getOwner(), "Grade Scale Value Error",
-                        "Grade scale value \""+percentScoreTextField.getText()+"\" is invalid.");
+                        constructMessage("Grade scale value"," \""+percentScoreTextField.getText(),"\" ","is invalid."));
                 percentScoreTextField.setText(String.format("%.1f",scoreSlider.getValue()));
             }
             else {

@@ -94,7 +94,8 @@ public class ManualModeController extends Controller{
     @FXML
     ImageView resetButtonGraphic;
 
-    Label placeHolder=new Label("No Column Sets Added");
+    static final String PLACE_HOLDER_TEXT="No Column Sets Added";
+    Label placeHolder=new Label(isTranslationMode && translations.containsKey(PLACE_HOLDER_TEXT)?translations.get(PLACE_HOLDER_TEXT):PLACE_HOLDER_TEXT);
 
 
     ObservableList<ObservableList<StringProperty>> tableContent= FXCollections.observableArrayList();
@@ -420,22 +421,22 @@ public class ManualModeController extends Controller{
         if((gapStart=getObjGapStart(objStartIndex,objEndIndex))!=-1){
             String gapStartName=tableHeaders==null?"Column "+(gapStart+1):tableHeaders.get(gapStart);
             showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Question Groups Error","" +
-                    "Objective questions groups must be consecutive. A gap exists at "+gapStartName+".");
+                    constructMessage("Objective questions groups must be consecutive. A gap exists at"," "+gapStartName+"."));
             return false;
         }
 
         ArrayList<String> unexpectedColSetInfo;
         if((unexpectedColSetInfo=getUnExpectedColSet(firstObjCS,lastObjCS))!=null){
-            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Question Groups Error","" +
-                    "Objective questions groups must be consecutive. Column set \""+unexpectedColSetInfo.get(0)+"\" " +
-                    "of type \"" +unexpectedColSetInfo.get(1)+"\" cannot be placed between objective column sets.");
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Objective Question Groups Error",constructMessage("" +
+                    "Objective questions groups must be consecutive. Column set"," \""+unexpectedColSetInfo.get(0)+"\" ",
+                    "of type"," \"" +unexpectedColSetInfo.get(1)+"\" ","cannot be placed between objective column sets."));
             return false;
         }
 
 
         if(CSVHandler.getFormsCount()!=1 && formIndex==-1){
             showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Form Number Column Set Error","" +
-                    CSVHandler.getFormsCount()+" forms were detected. A form number column must be added.");
+                    constructMessage(CSVHandler.getFormsCount()+""," forms were detected. A form number column must be added."));
             return false;
         }
         System.out.println("number of forms:"+CSVHandler.getFormsCount());
@@ -614,7 +615,7 @@ public class ManualModeController extends Controller{
 
             if(isRangeInValid(minIndex,maxIndex)){
                 resetTable(true);
-                showInvalidSelectionMessage("range");
+                showInvalidSelectionMessage();
                 return false;
             }
             else {
@@ -655,7 +656,7 @@ public class ManualModeController extends Controller{
 
         if(comboOptions[type].equals(FORM_TYPE) && firstColIndex!=secondColIndex){
             showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Column Set Addition Error",
-                    "A column set of type \""+FORM_TYPE+"\" cannot have more than one column.");
+                    constructMessage("A column set of type"," \""+FORM_TYPE+"\" ","cannot have more than one column."));
             return false;
         }
 
@@ -663,13 +664,13 @@ public class ManualModeController extends Controller{
 
             if(columnSet.getName().equals(newGroupName)){ //check for repeated name
                 showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Column Set Addition Error",
-                        "A column set with the name \""+newGroupName+"\" already exists.");
+                        constructMessage("A column set with the name", " \""+newGroupName+"\" ","already exists."));
                 return false;
             }
 
             if (!comboOptions[type].equals(OBJECTIVE_TYPE) && columnSet.getType().equals(comboOptions[type])) { //check for repeated type except if objective group
                 boolean isReplaceExisting = showConfirmationDialog("Confirm Column Set Addition",
-                        "A " + comboOptions[type] + " column set already exists. Do you want to replace the existing column set?"
+                        constructMessage(isTranslationMode?"":"A " + comboOptions[type], " column set already exists. Do you want to replace the existing column set?")
                         , stage.getOwner());
 
                 if (isReplaceExisting) {
@@ -736,9 +737,9 @@ public class ManualModeController extends Controller{
         this.secondColIndex=NOT_AVAILABLE;
     }
 
-    private void showInvalidSelectionMessage(String type){
-        showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Invalid Selection","Selected " +
-                type+" must not overlap with an existing column set.");
+    private void showInvalidSelectionMessage(){
+        showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Invalid Selection","Selected range "
+                +"must not overlap with an existing column set.");
     }
 
     public void deleteColumnSet(ColumnSet deleted) {
@@ -820,11 +821,11 @@ public class ManualModeController extends Controller{
                 System.out.println("3malt el maslaha");
             } catch (CSVHandler.InvalidFormNumberException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file: " + e.getMessage()+". Make sure that you have selected a valid form column.");
+                        constructMessage("Error in students responses file: " , e.getMessage(),". Make sure that you have selected a valid form column."));
                 return false;
             } catch (CSVHandler.InvalidSubjColumnException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file: " + e.getMessage());
+                        constructMessage("Error in students responses file: " , e.getMessage()));
                 return false;
             }
         }
@@ -833,8 +834,9 @@ public class ManualModeController extends Controller{
             try {
                 CSVHandler.loadCsv(CSVHandler.isIsResponsesContainsHeaders());
             } catch (CSVHandler.IllFormedCSVException e) {
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file at row " + e.getRowNumber() + ". File must contain the same number of columns in all rows.");
+                String message=constructMessage("Error in students responses file at row " , e.getRowNumber()+"" ,
+                        ". File must contain the same number of columns in all rows.",(e.getRowNumber()==2?" Make sure that the CSV headers have no commas.":""));
+                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",message);
                 return false;
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
@@ -842,7 +844,7 @@ public class ManualModeController extends Controller{
                 return false;
             } catch (CSVHandler.InvalidFormNumberException | CSVHandler.InvalidSubjColumnException e) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error",
-                        "Error in students responses file: " + e.getMessage());
+                        constructMessage("Error in students responses file: " , e.getMessage()));
                 return false;
             }
         }
@@ -889,6 +891,7 @@ public class ManualModeController extends Controller{
         closeButt.setText("Cancel");
 
 
+        processDialog(alert);
         Optional<ButtonType> result = alert.showAndWait();
 
         return result.get()==ButtonType.OK;
@@ -907,6 +910,7 @@ public class ManualModeController extends Controller{
         Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
         cancelButt.setText("No, Load Saved Weights");
 
+        processDialog(alert);
         alert.initOwner(stage.getOwner());
         //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();

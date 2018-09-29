@@ -263,14 +263,14 @@ public class GradeBoundariesController extends Controller {
 
         if (!outDir.exists()) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
-                    "Reports Directory \"" + reportsDirTextField.getText() + "\" doesn't exist.");
+                    constructMessage("Reports Directory"," \"" , reportsDirTextField.getText() ,"\" ","doesn't exist."));
             return;
         }
 
 
         if (!outDir.isDirectory()) {
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
-                    "Path \"" + reportsDirTextField.getText() + "\" is not a valid directory path.");
+                    constructMessage("Path"," \"" ,reportsDirTextField.getText() ,"\" ","is not a valid directory path."));
             return;
         }
 
@@ -525,7 +525,7 @@ public class GradeBoundariesController extends Controller {
 
 
     private void initDeleteConfigButton() {
-        Tooltip tooltip = new Tooltip("Delete Grade Scale Configuration");
+        TranslatableTooltip tooltip = new TranslatableTooltip("Delete Grade Scale Configuration");
         Tooltip.install(deleteConfigButton, tooltip);
         deleteConfigButton.setOnMouseClicked(t -> deleteCurrentConfig());
 
@@ -559,7 +559,7 @@ public class GradeBoundariesController extends Controller {
 
     private void initReportsDirChooser() {
 
-        Tooltip tooltip = new Tooltip("Choose Output Directory");
+        TranslatableTooltip tooltip = new TranslatableTooltip("Choose Output Directory");
         Tooltip.install(reportsDirChooser, tooltip);
 
         reportsDirChooser.setOnMouseClicked(new EventHandler<MouseEvent>
@@ -803,7 +803,7 @@ public class GradeBoundariesController extends Controller {
 
     private boolean showGradeScaleDeleteConfirmation() {
 
-        return showConfirmationDialog("Delete Grade Scale Configuration","Are you sure you want to delete \""+comboItems.get(gradesConfigComboSelectedIndex)+"\" grade scale configuration?",stage.getOwner());
+        return  showConfirmationDialog("Delete Grade Scale Configuration",constructMessage("Are you sure you want to delete"," \""+comboItems.get(gradesConfigComboSelectedIndex)+"\" ","grade scale configuration?"),stage.getOwner());
     }
 
     private String showSaveChangesDialog() {
@@ -818,7 +818,8 @@ public class GradeBoundariesController extends Controller {
 
 
         TextField configNameTextField = new TextField();
-        configNameTextField.setPromptText("Configuration Name");
+        String text="Configuration Name";
+        configNameTextField.setPromptText(isTranslationMode && translations.containsKey(text)?translations.get(text):text);
 
         HBox box = new HBox();
         Label label = new Label("Configuration Name:");
@@ -851,11 +852,12 @@ public class GradeBoundariesController extends Controller {
             } else if (isScaleExists(configNameTextField.getText().trim())) {
                 event.consume();
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
-                        "\"" + configNameTextField.getText().trim() + "\" already exists.");
+                        constructMessage("\"" ,configNameTextField.getText().trim(), "\" ", "already exists."));
             }
 
         });
 
+        processDialog(dialog);
         Optional<String> result = dialog.showAndWait();
 
         if (result == null || !result.isPresent())
@@ -880,7 +882,7 @@ public class GradeBoundariesController extends Controller {
 
 
     private void showProgressDialog(ArrayList<Boolean> isGenerateReport, ArrayList<Integer> formatsOut) {
-        new ReportProgressController(reportsCount,isGenerateReport,formatsOut).startWindow();
+        new ReportProgressWindow(reportsCount,isGenerateReport,formatsOut).startWindow();
     }
 
 
@@ -1061,7 +1063,7 @@ public class GradeBoundariesController extends Controller {
             Pair<String, Double> grade = hbox.getGrade();
             if (grade.getKey().trim().isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Grade Scale Error",
-                        "Error in Grade number " + counter + ": Grade name cannot be empty.");
+                        constructMessage("Error in Grade number ",counter+": ","Grade name cannot be empty."));
                 return null;
             }
             scale.add(grade);

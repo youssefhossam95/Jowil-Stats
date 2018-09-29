@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
+
 import static Jowil.Controller.resX;
 
 class OpenProjectCell extends JFXListCell {
@@ -77,7 +78,8 @@ class OpenProjectCell extends JFXListCell {
 
             StackPane deleteButton=new StackPane();
             deleteButton.getChildren().add(removeIcon);
-            Tooltip tooltipRemove = new Tooltip("Delete Project");
+            TranslatableTooltip tooltipRemove = new TranslatableTooltip("Delete Project");
+
             Tooltip.install(deleteButton, tooltipRemove);
             deleteButton.setOnMouseClicked(event ->{
                 lastClick=0;
@@ -85,7 +87,8 @@ class OpenProjectCell extends JFXListCell {
 
             StackPane openButton=new StackPane();
             openButton.getChildren().add(openFolderIcon);
-            Tooltip tooltipOpen = new Tooltip("Show Project in Explorer");
+            TranslatableTooltip tooltipOpen = new TranslatableTooltip("Show Project in Explorer");
+
             Tooltip.install(openButton, tooltipOpen);
             openButton.setOnMouseClicked(event ->{
                 lastClick=0;
