@@ -96,23 +96,23 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
-
-        ArrayList<Double> hardness = new ArrayList<>( );
-//        for(double i = 0 ; i < 40 ; i ++) {
-////            hardness.add(0.0) ;
-//            hardness.add(i/4);
-//            hardness.add(i-10);
-//        }
-       hardness.add(0.0);hardness.add(3.0);
-        hardness.add(0.0); hardness.add(5.0) ;  hardness.add(1.0) ;  hardness.add(10.0) ;
-        hardness.add(6.0) ; hardness.add(9.0) ; hardness.add(7.0); hardness.add(5.0);
-        Pair<Double , Double> pair = getTrendDataSimple(hardness ) ;
-        double slope = pair.getKey();
-        double Rss = pair.getValue() ;
-        System.out.println("slope: " + slope);
-        System.out.println("standard Error: " + Rss);
-
-        System.out.println("Jowil Param: "+calcJowilParam(slope, Rss)) ;
+//
+//        ArrayList<Double> hardness = new ArrayList<>( );
+////        for(double i = 0 ; i < 40 ; i ++) {
+//////            hardness.add(0.0) ;
+////            hardness.add(i/4);
+////            hardness.add(i-10);
+////        }
+//       hardness.add(0.0);hardness.add(3.0);
+//        hardness.add(0.0); hardness.add(5.0) ;  hardness.add(1.0) ;  hardness.add(10.0) ;
+//        hardness.add(6.0) ; hardness.add(9.0) ; hardness.add(7.0); hardness.add(5.0);
+//        Pair<Double , Double> pair = getTrendDataSimple(hardness ) ;
+//        double slope = pair.getKey();
+//        double Rss = pair.getValue() ;
+//        System.out.println("slope: " + slope);
+//        System.out.println("standard Error: " + Rss);
+//
+//        System.out.println("Jowil Param: "+calcJowilParam(slope, Rss)) ;
 
 
 
@@ -196,10 +196,11 @@ public class Test {
 
         //////////////////////// to create pdf from html //////////////////////////////////
 
-//         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-//        ReportsHandler reportsHandler = new ReportsHandler();
-//        reportsHandler.generatePDF(reportsPath + "report8\\Report8.html", reportsPath + "report8\\test.pdf");
-//
+         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+        ReportsHandler reportsHandler = new ReportsHandler();
+//        Report1 r1 = new Report1() ;
+        reportsHandler.generatePDF(reportsPath + "report4\\Report4 - Students Grades Report.html", reportsPath + "report4\\test.pdf");
+
 
 
 

@@ -33,8 +33,8 @@ public class ReportChartsTest extends Application {
 
                 CSVHandler.setResponsesFilePath(inputFilesFolderPath+"StudentAnswers.csv");
                 CSVHandler.setFormColIndex(3);
-                CSVHandler.setIdentifierColStartIndex(0);
-                CSVHandler.setIdentifierColEndIndex(1);
+                CSVHandler.setIdentifierColStartIndex(1);
+                CSVHandler.setIdentifierColEndIndex(2);
                 boolean isHeaders=CSVHandler.processHeaders(false);
                 CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
                 CSVHandler.processHeaders(true);
@@ -62,10 +62,10 @@ public class ReportChartsTest extends Application {
 //                reports.add(new Report7()) ;
 //                reports.add(new Report8()) ;
                 ArrayList<Integer> formats = new ArrayList<>() ;
-//                formats.add(ReportsHandler.HTML) ;
-//                formats.add(ReportsHandler.PDF);
+                formats.add(ReportsHandler.HTML) ;
+                formats.add(ReportsHandler.PDF);
 //                formats.add(ReportsHandler.PRINTABLE_PDF) ;
-//                formats.add(ReportsHandler.TXT) ;
+                formats.add(ReportsHandler.TXT) ;
 //                formats.add(ReportsHandler.CSV);
 //                formats.add(ReportsHandler.TSV) ;
                 formats.add(ReportsHandler.WORD) ;
