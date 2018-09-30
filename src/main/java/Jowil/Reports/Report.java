@@ -5,6 +5,7 @@ import Jowil.RectGenerator;
 import Jowil.Test;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
@@ -105,6 +106,7 @@ abstract public class Report {
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer(ReportsHandler.isTestMode);
 
+        renderer.getFontResolver().addFont(resourcesPath+"font\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         renderer.setDocument(url);
         renderer.layout();
         renderer.createPDF(out);
