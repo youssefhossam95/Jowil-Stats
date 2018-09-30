@@ -186,13 +186,13 @@ public class Report8 extends Report {
         ArrayList<ArrayList<String>> table = new ArrayList<>( );
         ArrayList<String> tableRow = new ArrayList<>( );
 
-        tableRow.add("Slope") ; tableRow.add(Utils.formatNumber( data.get(0) , 1 )) ;
+        tableRow.add("Slope (-1 - 1)") ; tableRow.add(Utils.formatNumber( data.get(0) , 1 )) ;
         table.add(tableRow );
         tableRow = new ArrayList<>( );
-        tableRow.add("Error") ; tableRow.add(Utils.formatNumber( data.get(1) , 1 )) ;
+        tableRow.add("Error (0 - 1)") ; tableRow.add(Utils.formatNumber( data.get(1) , 1 )) ;
         table.add(tableRow );
         tableRow = new ArrayList<>( );
-        tableRow.add("Jowil") ; tableRow.add(Utils.formatNumber( data.get(2) , 1 )) ;
+        tableRow.add("Jowil (0 - 10)") ; tableRow.add(Utils.formatNumber( data.get(2) , 1 )) ;
         table.add(tableRow) ;
 
         return table ;

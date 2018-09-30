@@ -1125,8 +1125,10 @@ public class Statistics {
                 for (int i = 0; i < qCount; i++) { // interate over each question in the group
                     pointBiserialSum += calcPointBiserial(formIndex, qIndex + i);
                     for (Double answerPercent : answersStats.get(formIndex).get(qIndex + i)) {  // iterate over percent of Responses for each question
-                        if (answerPercent > formCorrectPercents.get(qIndex + i)) //check for distractors
+                        if (answerPercent > formCorrectPercents.get(qIndex + i)) {  //check for distractors
                             questionsWithDistractorCount++;
+                            break;
+                        }
                     }
                 }
                 tableRow.add(Utils.formatNumber((double) questionsWithDistractorCount / qCount * 100 ,1 ) + "%"); // questions with Distractors
@@ -1227,28 +1229,38 @@ public class Statistics {
             }
 
 
-            SortByDiffAsc sorterAsc = new SortByDiffAsc();
+            SortByCorrectPercentsAsc sorterAsc = new SortByCorrectPercentsAsc();
             Collections.sort(questionsTable, sorterAsc);
-            ArrayList<ArrayList<String>> easiestQuestionsTable ;
-            if(questionsTable.size()>10)
-              easiestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 2).subList(0, 10));
-            else
-              easiestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(questionsTable) ,2) ;
-
-
-
-            Collections.sort(badQuestionsTable , sorterAsc);
-            if(badQuestionsTable.size()>10) // if more than ten question return the worst 10 questions
-                badQuestionsTable = new ArrayList<>(badQuestionsTable.subList(0,10)) ;
-
-            SortByDiffDesc sorterDesc = new SortByDiffDesc();
-            Collections.sort(questionsTable, sorterDesc);
-
             ArrayList<ArrayList<String>> hardestQuestionsTable ;
+
+            ArrayList<ArrayList<String>> easiestQuestionsTable = new ArrayList<>() ;
             if(questionsTable.size()>10)
                 hardestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 3).subList(0, 10));
             else
-                hardestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(questionsTable) , 3) ;
+                hardestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(questionsTable) ,3) ;
+
+            int counter = 0 ;
+            for(int i = questionsTable.size()-1 ; i >-1 ; i--) {
+                easiestQuestionsTable.add(questionsTable.get(i));
+                if(counter == 10)
+                    break;
+                else
+                    counter++ ;
+            }
+            easiestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(easiestQuestionsTable) , 2) ;
+
+            SortByPointBiserialAsc pointBiserialSorter = new SortByPointBiserialAsc() ;
+            Collections.sort(badQuestionsTable , pointBiserialSorter);
+            if(badQuestionsTable.size()>10) // if more than ten question return the worst 10 questions
+                badQuestionsTable = new ArrayList<>(badQuestionsTable.subList(0,10)) ;
+
+//            SortByCorrectPercentsDesc sorterDesc = new SortByCorrectPercentsDesc();
+//            Collections.sort(questionsTable, sorterDesc);
+//
+//            if(questionsTable.size()>10)
+//                hardestQuestionsTable = new ArrayList<>(Utils.removeTableCol(questionsTable, 3).subList(0, 10));
+//            else
+//                hardestQuestionsTable = Utils.removeTableCol(Utils.cloneTable(questionsTable) , 3) ;
 
             oneFormTables.add(hardestQuestionsTable);
             oneFormTables.add(easiestQuestionsTable);
@@ -1259,6 +1271,41 @@ public class Statistics {
         return formsTableStats ;
     }
 
+    public static ArrayList<ArrayList<ArrayList<String>>> questReportStats() {
+
+        double count;
+        int studentsCount=studentAnswers.size();
+        ArrayList<ArrayList<Double>> questAnswerStats = new ArrayList<>() ;
+        for(int questionIndex=0;questionIndex<questionsChoices.size();questionIndex++){
+            questAnswerStats.add(new ArrayList<Double>());
+            for(String choice: questionsChoices.get(questionIndex)){
+                count=0;
+                for(int studentIndex=0;studentIndex<studentAnswers.size();studentIndex++){
+                    if(studentAnswers.get(studentIndex).get(questionIndex).equals(choice) )
+                        count++;
+                }
+                questAnswerStats.get(questionIndex).add(count/studentsCount);
+            }
+        }
+
+        ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<ArrayList<ArrayList<String>>>();
+
+        for(int questionIndex = 0 ; questionIndex < questAnswerStats.size() ; questionIndex++ ){
+            ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>() ;
+            ArrayList<String> questionChoices = questionsChoices.get(questionIndex) ;
+            ArrayList<Double> questionStats = questAnswerStats.get(questionIndex) ;
+            for(int choiceIndex = 0 ; choiceIndex< questionChoices.size() ; choiceIndex ++) {
+                ArrayList<String>tableRow = new ArrayList<>() ;
+                tableRow.add(questionChoices.get(choiceIndex)) ;
+                tableRow.add(Utils.formatNumber(questionStats.get(choiceIndex)*studentsCount , 0 )) ;
+                tableRow.add(Utils.formatNumber(questionStats.get(choiceIndex)*100 , 1 )) ;
+                table.add(tableRow);
+            }
+            tables.add(table);
+        }
+        System.out.println(tables);
+        return tables ;
+    }
     private static Pair<Double , Double> getTrendData (ArrayList<Double> hardness) {
         double[] hardnessArray = hardness.stream().mapToDouble(d -> d).toArray();
         double [][] X = new double[hardnessArray.length][1] ;
@@ -1352,11 +1399,13 @@ class SortByScore implements Comparator<ArrayList<String>>
         else
             return 1 ;     }
 }
-class SortByDiffAsc implements Comparator<ArrayList<String>>
+class SortByCorrectPercentsAsc implements Comparator<ArrayList<String>>
 {
     public int compare(ArrayList<String> a, ArrayList<String> b)
     {
-        double diff = Double.parseDouble(a.get(1))-Double.parseDouble(b.get(1)) ;
+        String s1 = a.get(4) ;
+        String s2 = b.get(4) ;
+        double diff = Double.parseDouble(s1.substring(0,s1.length()-1))-Double.parseDouble(s2.substring(0,s2.length()-1)) ;
         if(diff<0)
             return -1 ;
         else if( diff == 0)
@@ -1364,11 +1413,14 @@ class SortByDiffAsc implements Comparator<ArrayList<String>>
         else
             return 1 ;     }
 }
-class SortByDiffDesc implements Comparator<ArrayList<String>>
+class SortByPointBiserialAsc implements Comparator<ArrayList<String>>
 {
     public int compare(ArrayList<String> a, ArrayList<String> b)
     {
-        double diff = Double.parseDouble(b.get(1))-Double.parseDouble(a.get(1)) ;
+        String s1 = a.get(1) ;
+        String s2 = b.get(1) ;
+        double diff = Double.parseDouble(s1.substring(0,s1.length()-1))-Double.parseDouble(s2.substring(0,s2.length()-1)) ;
+
         if(diff<0)
             return -1 ;
         else if( diff == 0)
