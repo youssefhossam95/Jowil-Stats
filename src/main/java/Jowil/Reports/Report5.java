@@ -47,10 +47,10 @@ public class Report5 extends Report {
         String groupNameHtml = doc.select("div.line").outerHtml() ;
 //        doc.select("div.line").last().remove(); // remove the first line as it will be put by the function below
 
-        final int  NUMBER_OF_ROWS_IN_PAGE = 41 ;
+        final int  NUMBER_OF_ROWS_IN_PAGE = 50 ;
         final int  ROWS_OF_MAIN_HEADER = 12 ;
         final double  ROWS_OF_TABLE_HEADER = 5 ;
-        final int  ROWS_OF_GROUP_NAME  = 6;
+        final int  ROWS_OF_GROUP_NAME  = 3;
 
         ArrayList<Group> groups = CSVHandler.getDetectedGroups();
         for (int formIndex = 0; formIndex <Statistics.getNumberOfForms() ; formIndex++) {
@@ -80,11 +80,13 @@ public class Report5 extends Report {
                         doc.select("div.wrapper").last().after(wrapperHtml);
                         if (remainingRows < 0) {
                             doc.select("div.wrapper").last().before(pageBreakHtml);
-                            remainingRows = NUMBER_OF_ROWS_IN_PAGE;
+                            remainingRows = NUMBER_OF_ROWS_IN_PAGE -(table.size() + ROWS_OF_TABLE_HEADER);
                         }
 
-                    }else //for first table
+                    }else { //for first table
                         doc.select("span.group-title").last().text(groups.get(groupIndex).getCleanedName());
+                        remainingRows -= table.size() ;
+                    }
                     if(tableIndex>nextGroupTableIndex) {
                         Elements rightTables =  doc.select("span.second") ;
                         int numberOfRightTables = rightTables.size() ;
@@ -98,7 +100,7 @@ public class Report5 extends Report {
                         remainingRows -= ROWS_OF_GROUP_NAME;
                         if(remainingRows< 0 ){
                             lastGroupNameElement.before(pageBreakHtml);
-                            remainingRows = NUMBER_OF_ROWS_IN_PAGE;
+                            remainingRows = NUMBER_OF_ROWS_IN_PAGE - ROWS_OF_GROUP_NAME;
                         }
                         nextGroupTableIndex += groups.get(groupIndex).getqCount() ;
                     }
