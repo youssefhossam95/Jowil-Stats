@@ -61,8 +61,8 @@ public class RingProgressIndicatorSkin implements Skin<RingProgressIndicator> {
             initIndeterminate(newVal);
         });
         this.indicator.progressProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal.intValue() >= 0) {
-                setProgressLabel(newVal.intValue());
+            if (newVal.doubleValue() >= 0) {
+                setProgressLabel(newVal.doubleValue());
                 fillerArc.setLength(newVal.intValue() * -3.6);
             }
         });
@@ -88,15 +88,15 @@ public class RingProgressIndicatorSkin implements Skin<RingProgressIndicator> {
         container.getChildren().addAll(fillerArc, outerCircle, innerCircle, percentLabel);
     }
 
-    private void setProgressLabel(int value) {
+    private void setProgressLabel(double value) {
         if (value >= 0) {
             if(indicator.isDiscreteProgress) {
-                int prog=(int) ((double) value / 100 * indicator.totalCount);
+                int prog= (int)(value/100 *indicator.totalCount);
                 percentLabel.setText(String.format("%d/%d", prog, indicator.totalCount));
                 System.out.println("prog "+prog);
             }
             else
-                percentLabel.setText(String.format("%d%%", value));
+                percentLabel.setText(String.format("%d%%", (int)value));
         }
     }
 
@@ -133,7 +133,7 @@ public class RingProgressIndicatorSkin implements Skin<RingProgressIndicator> {
         innerCircle.setRadius(innerCircleRadius);
     }
 
-    private void initLabel(int value) {
+    private void initLabel(double value) {
         setProgressLabel(value);
         percentLabel.getStyleClass().add("circleindicator-label");
     }

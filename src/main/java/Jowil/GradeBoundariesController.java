@@ -37,7 +37,7 @@ public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports");
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports",resX*950/1280,resY*500/680);
 
 
     }
@@ -695,7 +695,7 @@ public class GradeBoundariesController extends Controller {
             trashIcon.setStyle("-fx-fill:#87CEEB");
         });
 
-        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#084d78"));
+        trashIcon.setOnMouseExited(t -> trashIcon.setStyle("-fx-fill:#095c90"));
     }
 
     private void initFinishButton() {

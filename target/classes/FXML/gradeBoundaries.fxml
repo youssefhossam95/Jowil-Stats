@@ -20,14 +20,14 @@
       </VBox>
    </children>
     <HBox fx:id="comboHBox">
-        <JFXComboBox fx:id="gradesConfigCombo" labelFloat="true" promptText="Grading Scale Configuration" focusColor="#084d78"></JFXComboBox>
+        <JFXComboBox fx:id="gradesConfigCombo" labelFloat="true" promptText="Grading Scale Configuration" focusColor="#095c90"></JFXComboBox>
         <StackPane fx:id="deleteConfigButton">
             <FontAwesomeIconView fx:id="trashIcon" styleClass="trashIcon" glyphName="TRASH" size="27.0"></FontAwesomeIconView>
         </StackPane>
     </HBox>
 
     <HBox fx:id="reportsDirHBox">
-    <JFXTextField fx:id="reportsDirTextField" promptText="Reports Directory Path" labelFloat="true" focusColor="#084d78"></JFXTextField>
+    <JFXTextField fx:id="reportsDirTextField" promptText="Reports Directory Path" labelFloat="true" focusColor="#095c90"></JFXTextField>
     <StackPane fx:id="reportsDirChooser">
         <FontAwesomeIconView fx:id="folderIcon" styleClass="FolderIcon" glyphName="FOLDER" size="27.0"></FontAwesomeIconView>
     </StackPane>

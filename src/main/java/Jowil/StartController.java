@@ -93,7 +93,7 @@ public class StartController extends Controller{
 
 
     StartController() {
-        super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true);
+        super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true,0,0);
     }
 
 

@@ -120,7 +120,7 @@ public class ManualModeController extends Controller{
 
 
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Configuration",1.25,1.25,true,null,false,false);
+        super("ManualMode.fxml","Manual Configuration",1.25,1.25,true,null,false,false,resX*900/1280,0);
         this.caller=caller;
 
     }

@@ -263,6 +263,8 @@ public class WeightsController extends Controller {
     CheckBox contextMenuCheckBox=new JFXCheckBox("Allow exceeding full mark",14);
     CustomMenuItem checkBoxMenuItem=new CustomMenuItem(checkBoxAnc);
 
+    int maxBarIndex=0;
+
 
 
 
@@ -277,7 +279,7 @@ public class WeightsController extends Controller {
     //Main methods
 
     WeightsController(Controller back) {
-        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "4.png", 2, "Questions Weights");
+        super("Weights.fxml", "Weights", 1.25, 1.23, true, back, "3.png", 2, "Questions Weights",resX*800/1280,0);
         gradeScalesJsonObj=null; //reload grade scales json object for every project
     }
 
@@ -322,10 +324,19 @@ public class WeightsController extends Controller {
         subjWeightsButton.setGraphicTextGap(resX*4/1280);
         subjWeightsButton.setPadding(new Insets(verPadding,sidePadding,verPadding,sidePadding));
 
+        objTableVbox.setLayoutX(buttonsHbox.getLayoutX());
+        subjTableVbox.setLayoutX(objTableVbox.getLayoutX() + objTable.getPrefWidth() + rootWidth * 0.06);
+
+
+        midSeparator.setLayoutX(rootWidthToPixels(0.665));
+        midSeparator.setLayoutY(rootHeight * 0.03);
+        midSeparator.setPrefHeight(rootHeightToPixels(0.8));
+
+
 
         //contextMenuIcon.setSize(Double.toString(resX*18/1280));
-        contextMenuIcon.setFitWidth(resX*14/1280);
-        contextMenuIcon.setFitHeight(resX*14/1280);
+        contextMenuIcon.setFitWidth(resX*13.2/1280);
+        contextMenuIcon.setFitHeight(resX*13.2/1280);
         contextMenuCircle.setRadius(contextMenuIcon.getFitWidth()*0.7);
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2-contextMenuIcon.getFitWidth()/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
@@ -367,12 +378,8 @@ public class WeightsController extends Controller {
 
 
 
-        midSeparator.setLayoutX(rootWidthToPixels(0.665));
-        midSeparator.setLayoutY(rootHeight * 0.03);
-        midSeparator.setPrefHeight(rootHeightToPixels(0.8));
 
-        objTableVbox.setLayoutX(buttonsHbox.getLayoutX());
-        subjTableVbox.setLayoutX(objTableVbox.getLayoutX() + objTable.getPrefWidth() + rootWidth * 0.06);
+
 
         gradesFreqTable.setPrefWidth(objTable.getPrefWidth());
         gradesFreqTable.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-gradesFreqTable.getPrefWidth());
@@ -430,10 +437,10 @@ public class WeightsController extends Controller {
 
         Tooltip tooltipAdd = new Tooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltipAdd);
-//        contextMenuExpandButton.setOnMouseEntered(event->contextMenuIcon.setImage(new Image("Images/lightBlueMenu.png")));
-//        contextMenuExpandButton.setOnMouseExited(event -> contextMenuIcon.setImage(new Image("Images/blueMenu.png")));
+        contextMenuExpandButton.setOnMouseEntered(event->contextMenuCircle.setStyle("-fx-fill:#87CEEB"));
+        contextMenuExpandButton.setOnMouseExited(event ->  contextMenuCircle.setStyle("-fx-fill:#095c90"));
 
-        contextMenuCircle.getStyleClass().add("FolderIcon");
+        contextMenuCircle.setStyle("-fx-fill:#095c90");
         contextMenuIcon.setRotate(90);
 
         midSeparator.setVisible(true);
@@ -1149,14 +1156,29 @@ public class WeightsController extends Controller {
 
     private void refreshBarChart(){
 
-        int max = 0  ;
 
+
+        double max=0;
         barChartSeries.getData().clear();
+        int i=0;
         for(Grade grade:gradesFreqData) {
             int freq = Integer.parseInt(grade.getFrequency());
-            max=Math.max(max,freq);
             barChartSeries.getData().add(new XYChart.Data(grade.getGradeName(), freq));
+            if(freq>max){
+                max=freq;
+                maxBarIndex=i;
+            }
+            i++;
         }
+
+
+
+//        Platform.runLater(()->{
+//            barChart.lookup(".data"+maxBarIndex+".chart-bar").setStyle("-fx-bar-fill:green");
+//        });
+
+
+
 
     }
 

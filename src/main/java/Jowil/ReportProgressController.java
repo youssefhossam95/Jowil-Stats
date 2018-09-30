@@ -79,7 +79,7 @@ public class ReportProgressController {
         reportProgress.addListener(t -> {
 
             Platform.runLater(() -> {
-                reportProgressIndicator.setProgress((int)(reportProgress.get()*100));
+                reportProgressIndicator.setProgress((reportProgress.get()*100));
 
                 //counterIndicator.setProgress((int)((reportProgress.get()+progressCount.get())/(double)reportsCount*100));
             });
@@ -87,7 +87,7 @@ public class ReportProgressController {
 
         progressCount.addListener(t -> {
 
-            int progressValue = (int) ((double) progressCount.get() / reportsCount * 100);
+            double progressValue = ((double) progressCount.get() / reportsCount *100);
 
             Platform.runLater(() -> {
                 counterIndicator.setProgress(progressValue);
