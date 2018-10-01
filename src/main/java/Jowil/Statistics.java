@@ -227,6 +227,10 @@ public class Statistics {
     }
 
 
+    public static ArrayList<String> getGrades() {
+        return grades;
+    }
+
     // print fuctions
     public static void printStudentScores() {
         System.out.print("Student Scores: ");

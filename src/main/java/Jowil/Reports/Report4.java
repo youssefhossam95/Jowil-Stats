@@ -6,12 +6,29 @@ import Jowil.Reports.Utils.WordUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.*;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -28,12 +45,42 @@ public class Report4 extends Report{
         workSpacePath = reportsPath + "report4\\" ;
         templatePath = workSpacePath + "report4Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
+
     }
 
+    public void generateTextImgs () throws IOException {
+        ArrayList<String> grades = Statistics.getGrades();
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                Stage stage = new Stage() ;
+                Label label = new Label("اهلا") ;
+                Pane pane = new Pane() ;
+                pane.getChildren().add(label);
+                pane.setStyle("-fx-background-color:white");
+                Scene scene  = new Scene(pane, Color.WHITE);
+
+
+//        scene.getStylesheets().add("reports/report1/style.css");
+                stage.setScene(scene);
+
+                WritableImage snapShot = label.snapshot(new SnapshotParameters() , null);
+                try {
+                    ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath+"label.png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+    }
     private Document generatePdfHtml() throws IOException {
 
-        final int NUMBER_OF_ROWS_FIRST_PAGE = 20 ;
-        final int NUMBER_OF_ROWS_BALNK_PAGE = 24 ;
+        final int NUMBER_OF_ROWS_FIRST_PAGE = 19 ;
+        final int NUMBER_OF_ROWS_BALNK_PAGE = 23 ;
 
         Format format = new DecimalFormat("0.#");
         final String dataCellCommonClass = "tg-l711" ;
@@ -70,6 +117,11 @@ public class Report4 extends Report{
         int startIndex = 0 ;
         int endIndex = (int)Utils.getNumberWithinLimits(tempStatsTable.size() , 0 , NUMBER_OF_ROWS_FIRST_PAGE) ;
 
+        generateTextImgs();
+//        while ()
+//        for(int i = 0 ; i < tempStatsTable.size(); i++) {
+//            tempStatsTable.get(i).set(1, "<img class=\"text-img\" src=\"label.png\"> </img>");
+//        }
         do  {
             ArrayList<ArrayList<String>> pageTable ;
             if(endIndex == tempStatsTable.size()) {
@@ -96,6 +148,30 @@ public class Report4 extends Report{
 
         return doc ;
     }
+
+    public static void processPDF(String src, String dest) throws IOException, DocumentException
+    {
+        PdfReader reader = new PdfReader(src);
+        PdfDictionary dict = reader.getPageN(1);
+        PdfObject object = dict.getDirectObject(PdfName.CONTENTS);
+
+        if (object instanceof PRStream)
+        {
+            PRStream stream = (PRStream)object;
+            byte[] data = PdfReader.getStreamBytes(stream);
+            String dd = new String(data);
+            dd = dd.replace("F", "good");
+//            dd = dd.replace("EEE:", "Our Ref:");
+//            dd = dd.replace("WR", "IT TEST");
+//            dd = dd.replace("2016", "2020");
+            stream.setData(dd.getBytes());
+        }
+
+        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
+        stamper.close();
+        reader.close();
+    }
+
     @Override
     public void generateHtmlReport() throws IOException {
         Document doc = generatePdfHtml() ;
@@ -109,6 +185,7 @@ public class Report4 extends Report{
         Document doc = generatePdfHtml() ;
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
+        processPDF(outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf" , reportsPath+"/report4/test.pdf");
     }
 
     private ArrayList<ArrayList<String>> getTableWithHeaders () {
