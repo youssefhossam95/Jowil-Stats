@@ -764,13 +764,16 @@ public class GradeBoundariesController extends Controller {
             ArrayList<GradeHBox> vBoxGrades = new ArrayList<>();
 
             JSONObject scale = (JSONObject) scales.get(i);
-            comboItems.add((String) scale.keySet().iterator().next());
+            String item=(String) scale.keySet().iterator().next();
+            comboItems.add(isTranslationMode && translations.containsKey(item)?translations.get(item):item);
             JSONArray grades = (JSONArray) scale.values().iterator().next();
 
             for (int j = 0; j < grades.size(); j++) {
 
                 JSONObject grade = (JSONObject) grades.get(j);
-                vBoxGrades.add(new GradeHBox(j, (String) grade.keySet().iterator().next(), (String) grade.values().iterator().next(), this));
+                String gradeName=(String) grade.keySet().iterator().next();
+                gradeName=isTranslationMode&&translations.containsKey(gradeName)?translations.get(gradeName):gradeName;
+                vBoxGrades.add(new GradeHBox(j,gradeName , (String) grade.values().iterator().next(), this));
 
             }
 

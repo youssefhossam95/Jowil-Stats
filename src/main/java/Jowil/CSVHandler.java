@@ -31,7 +31,7 @@ public class CSVHandler {
 
 
         InvalidFormNumberException(int rowNumber){
-            super(constructMessage("Invalid Form number at row ",rowNumber+"."));
+            super(constructMessage("Invalid form number at row ",rowNumber+"."));
         }
     }
     public static class EmptyCSVException extends Exception{
@@ -915,10 +915,10 @@ public class CSVHandler {
     public static String getObjColumnSetErrorMessage(ColumnSet columnSet) {
 
         if(isInconsistentAnswerTypes(columnSet))
-            return constructMessage("Invalid objective column set \"",columnSet.getName(),"\". Choices in an objective column set must be of the same type.");
+            return constructMessage("Invalid objective column set"," \""+columnSet.getName()+"\". ","Choices in an objective column set must be of the same type.");
 
         if(isContainsInvalidChoices(columnSet))
-            return "Invalid responses at objective column set \""+columnSet.getName()+"\". A valid response must be either a number in the range (0-99) or an English letter.";
+            return constructMessage("Invalid responses at objective column set", " \""+columnSet.getName()+"\". ","A valid response must be either a number in the range (0-99) or an English letter.");
 
         return null;
     }

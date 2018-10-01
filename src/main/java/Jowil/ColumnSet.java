@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 
 import static Jowil.Controller.isTranslationMode;
 import static Jowil.Controller.resX;
+import static Jowil.Controller.translations;
 
 public class ColumnSet extends HBox {
 
@@ -145,15 +146,13 @@ public class ColumnSet extends HBox {
 
     public String getCroppedType(){
 
-        String obj="Objective",id="ID",form="Form",subj="Subjective";
-        if(type.contains(obj))
-            return obj;
-        if(type.contains(id))
-            return id;
-        if(type.contains(form))
-            return form;
-        if(type.contains(subj))
-            return subj;
+        String[] croppedTypes={"Objective","ID"," Form ","Subjective"}; //space in form is a hack for correct translation
+
+        for (String cType:croppedTypes){
+            String clean=cType.trim();
+            if(type.contains(clean))
+                return isTranslationMode && translations.containsKey(cType)?translations.get(cType):clean;
+        }
 
         return "";
     }

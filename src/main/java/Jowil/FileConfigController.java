@@ -236,17 +236,6 @@ public class FileConfigController extends Controller {
 
     }
 
-    @Override
-    public void startWindow() {
-        super.startWindow();
-
-        if (savedProjectsJson == null) {
-            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Loading Preferences Error",
-                    "An error has occurred while loading the preferences file.");
-            stage.close();
-        }
-
-    }
 
     @Override
     protected void buildComponentsGraph() {
@@ -317,7 +306,7 @@ public class FileConfigController extends Controller {
 
             if(formsCount==0){
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                         "Answer key file must contain the answers for at least one form");
+                         "Answer key file must contain the answers for at least one form.");
                 return;
             }
 
@@ -388,7 +377,7 @@ public class FileConfigController extends Controller {
                 CSVHandler.setIsAnswerKeyContainsHeaders(selectedAction == SKIPROW);
                 if(selectedAction==SKIPROW && formsCount==1){ //the forms count includes the headers row
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                            "Answer key file must contain the answers for at least one form");
+                            "Answer key file must contain the answers for at least one form.");
                     return;
                 }
 

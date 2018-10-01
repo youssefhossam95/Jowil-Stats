@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -121,7 +122,7 @@ public class ManualModeController extends Controller{
 
 
     ManualModeController(Controller caller){
-        super("ManualMode.fxml","Manual Configuration",1.25,1.25,true,null,false,false,resX*900/1280,0);
+        super("ManualMode.fxml","Manual Configuration",1.25,1.25,true,null,false,false,resX*944/1280,0);
         this.caller=caller;
 
     }
@@ -260,6 +261,9 @@ public class ManualModeController extends Controller{
 
         loadTableContents();
         table.setItems(tableContent);
+
+        if(isTranslationMode) //override default behaviour
+            table.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
 
         int colsCount=tableContent.get(0).size();
 
@@ -460,9 +464,10 @@ public class ManualModeController extends Controller{
         ObservableList<String> items=FXCollections.observableArrayList();
 
         for(String s:comboOptions)
-            items.add(s);
+            items.add(isTranslationMode&& translations.containsKey(s)?translations.get(s):s);
 
         columnSetCombo.setItems(items);
+
 
         columnSetCombo.setVisibleRowCount(3);
         columnSetCombo.setOnShown(t -> columnSetCombo.getSelectionModel().clearSelection());
@@ -578,6 +583,8 @@ public class ManualModeController extends Controller{
 
 
 
+
+
         column.setCellFactory((t) -> ManualModeCell.createManualModeCell(columnIndex,table,this));
         column.setSortable(false);
         column.setEditable(false);
@@ -656,7 +663,7 @@ public class ManualModeController extends Controller{
 
         if(comboOptions[type].equals(FORM_TYPE) && firstColIndex!=secondColIndex){
             showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Column Set Addition Error",
-                    constructMessage("A column set of type"," \""+FORM_TYPE+"\" ","cannot have more than one column."));
+                    constructMessage("A column set of type"," \"",FORM_TYPE,"\" ","cannot have more than one column."));
             return false;
         }
 
@@ -664,13 +671,13 @@ public class ManualModeController extends Controller{
 
             if(columnSet.getName().equals(newGroupName)){ //check for repeated name
                 showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Column Set Addition Error",
-                        constructMessage("A column set with the name", " \""+newGroupName+"\" ","already exists."));
+                        constructMessage("A column set with the name", " \""+newGroupName+"\" ","already exists. ")); //space b3d already exists 3shan yb2a mo2anas fl targama (see translations)
                 return false;
             }
 
             if (!comboOptions[type].equals(OBJECTIVE_TYPE) && columnSet.getType().equals(comboOptions[type])) { //check for repeated type except if objective group
                 boolean isReplaceExisting = showConfirmationDialog("Confirm Column Set Addition",
-                        constructMessage(isTranslationMode?"":"A " + comboOptions[type], " column set already exists. Do you want to replace the existing column set?")
+                        constructMessage((isTranslationMode?"":"A ") + comboOptions[type], " column set already exists. Do you want to replace the existing column set?")
                         , stage.getOwner());
 
                 if (isReplaceExisting) {

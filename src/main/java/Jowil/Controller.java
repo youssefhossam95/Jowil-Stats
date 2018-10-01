@@ -168,7 +168,7 @@ public abstract class Controller {
 
         stepCounterIndicator.setScaleX(0.2);
         stepCounterIndicator.setScaleY(0.2);
-        this.stepLabel=new Label("Step "+Integer.toString(stepIndex+1)+" of 4: "+stepName);
+        this.stepLabel=new Label(constructMessage("Step ",Integer.toString(stepIndex+1)," of 4: ",stepName));
         //this.stepLabel=new Label(stepName);
         stepLabel.setStyle("-fx-font-weight: bold;-fx-font-size:"+resX*12/1280);
 
@@ -292,9 +292,11 @@ public abstract class Controller {
                 if(!showConfirmationDialog(capital+" Project",constructMessage(extra,"Are you sure you want to ",small," this project?"),stage.getOwner()))
                     event.consume();
             });
+
             stage.show();
+            updateControlsText();
             stage.setMaximized(isBeginMaximised);
-            updateFonts();
+
 
         }
         catch (IOException e) {
@@ -466,7 +468,7 @@ public abstract class Controller {
         //buttonsHbox.setStyle("-fx-border-width: 1 0 0 0;-fx-border-color:#095c90");
     }
 
-    private void updateFonts() {
+    private void updateControlsText() {
 
         LinkedBlockingQueue<Parent> queue=new LinkedBlockingQueue<>();
         queue.add(scene.getRoot());
@@ -671,16 +673,10 @@ public abstract class Controller {
 
     public static String constructMessage(String... subMessages){
 
-        List<String> orderedMessages=asList(subMessages);
-
-        if(isTranslationMode)
-            Collections.reverse(orderedMessages);
-
         StringBuilder sb=new StringBuilder();
 
-        for(String message:orderedMessages)
-            sb.append(isTranslationMode&& translations.containsKey(message)?translations.get(message):message);
-
+        for(String message:subMessages)
+            sb.append(isTranslationMode&&translations.containsKey(message)?translations.get(message):message);
 
         return sb.toString();
     }
@@ -708,6 +704,8 @@ public abstract class Controller {
 
 
     public static void translateAllNodes(Parent root) {
+        if(!isTranslationMode)
+            return;
         LinkedBlockingQueue<Parent> queue=new LinkedBlockingQueue<>();
         queue.add(root);
         while(!queue.isEmpty()){

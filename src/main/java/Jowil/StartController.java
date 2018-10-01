@@ -297,7 +297,7 @@ public class StartController extends Controller{
 
             else if(isProjectNameInvalid(projName)){
                 showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Project Name Error","Invalid project name. Project Name cannot" +
-                        " contain any of the following characters: "+"< > : \" / \\ | ? *");
+                        " contain any of the following characters: "+"\n< > : \" / \\ | ? *");
                 showNewProjectNameDialog(projName);
             }
             else {
@@ -401,6 +401,7 @@ public class StartController extends Controller{
         projectsList.setItems(existingProjectsListItems);
 
         dialog.getDialogPane().setContent(projectsList);
+        processDialog(dialog);
         dialog.showAndWait();
 
     }

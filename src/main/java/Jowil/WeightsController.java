@@ -182,7 +182,10 @@ public class WeightsController extends Controller {
         private SimpleStringProperty maxScore = new SimpleStringProperty("10");
 
         SubjQuestion(String name, String maxScore) {
-            this.name = new SimpleStringProperty("Subjective Question " + name);
+
+            String initialName="Subjective Question ";
+            initialName=isTranslationMode&& translations.containsKey(initialName)?translations.get(initialName):initialName;
+            this.name = new SimpleStringProperty( initialName+name);
             this.maxScore = new SimpleStringProperty(maxScore);
         }
 
@@ -675,7 +678,7 @@ public class WeightsController extends Controller {
 
         ////subjective hbox
 
-        subjWeightText.setPromptText("New weight");
+        subjWeightText.setPromptText("New Weight");
         subjWeightsButton.setGraphic(subjButtonGraphic);
         subjWeightsButton.getStyleClass().add("BlueJFXButton");
         subjWeightsButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1000,7 +1003,7 @@ public class WeightsController extends Controller {
 
             for (int i = 0; i < formsCount; i++) {
 
-                TableColumn parentCol=new TableColumn("Form "+(i+1));
+                TableColumn parentCol=new TableColumn(constructMessage("Form ",(i+1)+""));
                 objTable.getColumns().add(parentCol);
                 parentCol.getColumns().add(createColumn(i*2+1,"Correct%"));
                 parentCol.getColumns().add(createColumn(i*2+2, "Weight"));
@@ -1088,7 +1091,7 @@ public class WeightsController extends Controller {
 
         if ((gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null) {
             showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
-                    "Error in loading Grade Scale Configurations");
+                    "Error in loading Grade Scale Configurations.");
             return;
         }
 
@@ -1108,7 +1111,9 @@ public class WeightsController extends Controller {
 
         for(int i=0;i<grades.size();i++){
             JSONObject grade = (JSONObject) grades.get(i);
-            tempScale.add(new Grade((String) grade.keySet().iterator().next(),(String) grade.values().iterator().next()));
+            String gradeName=(String) grade.keySet().iterator().next();
+            gradeName=isTranslationMode&&translations.containsKey(gradeName)?translations.get(gradeName):gradeName;
+            tempScale.add(new Grade(gradeName,(String) grade.values().iterator().next()));
         }
 
         Collections.sort(tempScale,new GradeSorter());
