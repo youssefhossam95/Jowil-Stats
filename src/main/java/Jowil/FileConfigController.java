@@ -945,27 +945,28 @@ public class FileConfigController extends Controller {
         //alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         alert.setTitle("No Headers Detected");
         alert.setHeaderText(null);
-        alert.setContentText("No headers were detected in "+fileName+" file. Does the file contain headers?");
+        alert.setContentText(constructMessage("No headers were detected in ",fileName+" file",". Was the detection correct?"));
         //alert.setOnCloseRequest(t->alert.hide());
-        ButtonType skipRowButton= new ButtonType("Yes, the first line contains headers");
-        ButtonType  noButton= new ButtonType("No");
+        ButtonType yesButton= new ButtonType("Yes, the detection was correct");
+        ButtonType  skipRowButton= new ButtonType("No, the file contains headers");
         ButtonType close = ButtonType.CLOSE;
 
 
 
-        alert.getButtonTypes().setAll(skipRowButton,noButton, close);
+        alert.getButtonTypes().setAll(yesButton,skipRowButton, close);
 
         Button closeButt=((Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE));
 
         closeButt.setVisible(false);
         closeButt.setMaxWidth(0);
         closeButt.setPrefWidth(0);
+        processDialog(alert);
         Optional<ButtonType> result = alert.showAndWait();
 
         int selected;
         if (result.get() == skipRowButton)
             selected = SKIPROW;
-        else if (result.get() == noButton)
+        else if (result.get() == yesButton)
             selected = CONTINUE;
         else
             selected = CANCEL;

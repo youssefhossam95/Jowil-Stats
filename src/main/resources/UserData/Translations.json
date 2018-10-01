@@ -28,6 +28,7 @@
   "Manual Configuration":"الضبط اليدوي",
 
 
+
   "Groups Overview": "مجموعات الأسئلة",
   "Group":"المجموعة",
   "Questions Count":"عدد الأسئلة",
@@ -159,7 +160,7 @@
   "Required field.":"ادخل مسار الملف",
   "File must have a \".csv\" extension.":"يجب ان يكون امتداد الملف \".csv\"",
   "Error in reading file.":"خطأ في قراءة الملف",
-  "No headers detected.":"لم يتم العثور على صف الرأس",
+  "No headers detected.":"صف الرأس غير موجود",
   "Blank answers positions are inconsistent.":"أماكن الاجابات الخالية غير متوافقة",
   "Invalid number of columns at row %d.":"عدد العواميد غير صحيح في الصف رقم d%",
   "File contains headers only.":"الملف يحتوي على صف الرأس فقط",
@@ -260,7 +261,7 @@
   "Reset Question Weights":"اعادة تعيين درجات الأسئلة", "Objective questions was just edited. Would you like to reset the existing objective weights?":"تم تعديل الأسئلة الموضوعية. هل ترغب في اعادة تعيين درجة الأسئلة الموضوعية؟", "Yes, Reset Weights" :"نعم, أعد تعيين الدرجات","No, Load Saved Weights":"لا, حمل الدرجات المحفوظة",
   "Number of Objective Questions Changed":"تغير عدد الأسئلة الموضوعية", "The number of objective questions has changed. All the saved objective weights for this project will be lost.":"تم تغيير عدد الأسئلة الموضوعية. سوف يتم اعادة تعيين درجات جميع الأسئلة.",
   "Reports Generation Error":"خطأ في عملية تجهيز التقارير", "Retry":"اعادة المحاولة", "An error has occurred during report generation.":"حدث خطأ أثناء عملية تجهيز القرارات", " Make sure that the file" :"تأكد من ان الملف","is not opened in another application":"غير مفتوح في برنامج اخر",
-
+  "No Headers Detected":"صف الرأس غير موجود","No headers were detected in ":"لم يتم العثور على صف الرأس في ","student responses file":"ملف اجابات الطلبة", "answer key file":"ملف الإجابة النموذجية",". Was the detection correct?":". هل كانت عملية البحث عن صف الرأس صحيحة؟","Yes, the detection was correct":"عملية البحث كانت صحيحة","No, the file contains headers":"الملف يحتوي على صف الرأس",
 
   "Open CSV file":"فتح الملف",
 
