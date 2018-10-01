@@ -138,7 +138,7 @@ public class FileConfigController extends Controller {
 
         contentVbox.setLayoutX(rootWidthToPixels(0.072));
         contentVbox.setLayoutY(rootHeightToPixels(0.13));
-        contentVbox.setSpacing(rootHeightToPixels(0.105));
+        contentVbox.setSpacing(rootHeightToPixels(0.115));
         contentVbox.setAlignment(Pos.BASELINE_LEFT);
 
         mainHBox.setSpacing(resXToPixels(0.005));
