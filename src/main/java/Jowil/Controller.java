@@ -112,7 +112,7 @@ public abstract class Controller {
     static final String GRADE_SCALE_FILE_NAME = "GradeScales.json";
     static final String GENERAL_PREFS_FILE_NAME="GeneralPrefs.json",LAST_CSV_DIR_JSON_KEY="lastCSVDir";
     static final String Q_NAMES_JSON_KEY="qNames",OBJ_GROUPS_JSON_KEY="objGroups",Q_CHOICES_JSON_KEY="questionsChoices",
-            OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="lastSelectedScaleIndex",
+            OBJ_WEIGHTS_JSON_KEY="objWeights",SUBJ_WEIGHTS_JSON_KEY="subjWeights",SELECTED_SCALE_JSON_KEY="lastSelectedScale",
             REPORTS_CHOSEN_JSON_KEY="reportsChosen",FORMATS_CHOSEN_JSON_KEY="formatsChosen",REPORTS_OUT_PATH_JSON_KEY="reportsOutputDir",
             Q_COL_START_INDEX_JSON_KEY="qColStartIndex",Q_COL_END_INDEX_JSON_KEY="qColEndIndex",SUBJ_COL_START_INDEX_JSON_KEY="subjColStartIndex",
             SUBJ_COL_END_INDEX_JSON_KEY="subjColEndIndex", SUBJ_Q_COUNT_JSON_KEY="subjQuestionsCount",FORM_COL_INDEX_JSON_KEY="formColIndex",
@@ -121,7 +121,7 @@ public abstract class Controller {
             RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
             ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
             SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name", ALLOW_EXCEED_FULL_MARK_JSON_KEY="allowExceedFullMark",
-            BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore";
+            BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore",SCALES_JSON_KEY="scales";
 
 
 

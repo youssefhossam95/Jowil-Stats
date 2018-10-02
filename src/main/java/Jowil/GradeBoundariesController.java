@@ -120,14 +120,16 @@ public class GradeBoundariesController extends Controller {
     JSONObject prefsJsonObj;
     
 
-    ArrayList<ArrayList<GradeHBox>> configs = new ArrayList<>();
+    ArrayList<ArrayList<GradeHBox>> configs ;
 
 
     ArrayList<CheckBox> reportsCheckBoxes = new ArrayList<>();
     ArrayList<CheckBox> formatsCheckBoxes = new ArrayList<>();
 
 
-    ObservableList<String> comboItems = FXCollections.observableArrayList();
+    ObservableList<String> comboItems;
+
+    ArrayList<String> origConfigsNames; //default configs names are saved in json file in english -> this array contains all configs names in english.
 
 
     @Override
@@ -296,9 +298,9 @@ public class GradeBoundariesController extends Controller {
 
 
 
-        String selectedIndex=saveGradeScaleChanges();
+        String selectedScale=saveGradeScaleChanges();
 
-        if(selectedIndex==null)
+        if(selectedScale==null)
             return;
 
 
@@ -403,7 +405,7 @@ public class GradeBoundariesController extends Controller {
         saveSavedAnswerKeyCSV(projObject);
         saveInfoHeaders(projObject);
 
-        projObject.put(SELECTED_SCALE_JSON_KEY,selectedIndex);
+        projObject.put(SELECTED_SCALE_JSON_KEY,selectedScale);
         projObject.put(REPORTS_CHOSEN_JSON_KEY,reportsConfig);
         projObject.put(FORMATS_CHOSEN_JSON_KEY,formatsConfig);
         projObject.put(REPORTS_OUT_PATH_JSON_KEY, reportsDirTextField.getText());
@@ -425,8 +427,9 @@ public class GradeBoundariesController extends Controller {
     @Override public void showWindow(){
         super.showWindow();
 
-        for(GradeHBox hbox:gradesHBoxes) //
-            hbox.refreshRawScore();
+        initGradesConfigCombo();
+        initGradesVBox();
+
 
     }
 
@@ -516,10 +519,11 @@ public class GradeBoundariesController extends Controller {
             return cell;
         });
 
-        //System.out.println(gradeScalesJsonObj.get(SELECTED_SCALE_JSON_KEY)+" ya joeeeee");
         JSONObject obj=isOpenMode?currentOpenedProjectJson:gradeScalesJsonObj;
-        int index=Integer.parseInt((String) obj.get(SELECTED_SCALE_JSON_KEY));
-        gradesConfigCombo.getSelectionModel().select(index);
+        String selected=(String) obj.get(SELECTED_SCALE_JSON_KEY);
+        int index=origConfigsNames.indexOf(selected);
+
+        gradesConfigCombo.getSelectionModel().select(index==-1?0:index);
 
     }
 
@@ -718,9 +722,9 @@ public class GradeBoundariesController extends Controller {
             return;
 
         if (showGradeScaleDeleteConfirmation()) {
-            JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+            JSONArray scales = (JSONArray) gradeScalesJsonObj.get(SCALES_JSON_KEY);
             scales.remove(gradesConfigComboSelectedIndex);
-            gradeScalesJsonObj.put("scales", scales);
+            gradeScalesJsonObj.put(SCALES_JSON_KEY, scales);
             comboItems.remove(gradesConfigComboSelectedIndex);
             gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,Integer.toString(gradesConfigComboSelectedIndex));
             saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
@@ -734,7 +738,7 @@ public class GradeBoundariesController extends Controller {
         if (gradeScalesJsonObj == null)
             return;
 
-        JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+        JSONArray scales = (JSONArray) gradeScalesJsonObj.get(SCALES_JSON_KEY);
         JSONArray grades = new JSONArray();
 
         for (Pair<String, Double> grade : scale) {
@@ -748,24 +752,32 @@ public class GradeBoundariesController extends Controller {
         newScale.put(scaleName, grades);
         scales.add(newScale);
 
-        gradeScalesJsonObj.put("scales", scales);
+        gradeScalesJsonObj.put(SCALES_JSON_KEY, scales);
+
+        gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, scaleName);
 
 
     }
 
 
     private void loadGradeConfigs() {
-        
 
-        JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+
+        configs = new ArrayList<>();
+        comboItems = FXCollections.observableArrayList();
+        origConfigsNames=new ArrayList<>();
+        JSONArray scales = (JSONArray) gradeScalesJsonObj.get(SCALES_JSON_KEY);
+
+
 
 
         for (int i = 0; i < scales.size(); i++) {
             ArrayList<GradeHBox> vBoxGrades = new ArrayList<>();
 
             JSONObject scale = (JSONObject) scales.get(i);
-            String item=(String) scale.keySet().iterator().next();
-            comboItems.add(isTranslationMode && translations.containsKey(item)?translations.get(item):item);
+            String scaleName=(String) scale.keySet().iterator().next();
+            origConfigsNames.add(scaleName);
+            comboItems.add(isTranslationMode && translations.containsKey(scaleName)?translations.get(scaleName):scaleName);
             JSONArray grades = (JSONArray) scale.values().iterator().next();
 
             for (int j = 0; j < grades.size(); j++) {
@@ -817,7 +829,7 @@ public class GradeBoundariesController extends Controller {
         ButtonType saveButton = new ButtonType("Save New Configuration", ButtonBar.ButtonData.OK_DONE);
         ButtonType continueButton = new ButtonType("Ignore Changes", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButton, continueButton);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+        //dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 
 
         TextField configNameTextField = new TextField();
@@ -872,10 +884,10 @@ public class GradeBoundariesController extends Controller {
 
     private boolean isScaleExists(String targetScale) {
 
-        JSONArray scales = ((JSONArray) gradeScalesJsonObj.get("scales"));
+        JSONArray scales = ((JSONArray) gradeScalesJsonObj.get(SCALES_JSON_KEY));
 
-        for (Object scale : scales) {
-            if (((JSONObject) scale).keySet().iterator().next().equals(targetScale))
+        for(int i=0;i<comboItems.size();i++){
+            if(comboItems.get(i).equals(targetScale) || origConfigsNames.get(i).equals(targetScale)) //check both translated and original scale names
                 return true;
         }
 
@@ -1095,33 +1107,35 @@ public class GradeBoundariesController extends Controller {
         Statistics.setGradesLowerRange(gradeMins);
 
 
-        String selectedIndex;
+        String selectedScale=origConfigsNames.get(gradesConfigComboSelectedIndex);
 
-        gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedIndex=Integer.toString(gradesConfigComboSelectedIndex));
+
         //save new changes if user wants to
 
         if (isContentEdited) {
 
-            if(isNewScaleSavedBefore)
-                gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, selectedIndex = Integer.toString(comboItems.size()));
+            isContentEdited=false;
+            String result = showSaveChangesDialog();
+            if (result == null)  //ignore changes
+                initGradesVBox(); // reset all changes
+
             else{
-                String result = showSaveChangesDialog();
-                if (result != null) {
-                    saveNewConfig(result, origScale);
-                    isNewScaleSavedBefore = true;
-                    gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY, selectedIndex = Integer.toString(comboItems.size()));
-                }
+                saveNewConfig(result, origScale);
+                selectedScale=result;
             }
         }
+        
+        
+        gradeScalesJsonObj.put(SELECTED_SCALE_JSON_KEY,selectedScale);
 
 
         if(isOpenMode)
-            currentOpenedProjectJson.put(SELECTED_SCALE_JSON_KEY,selectedIndex);
+            currentOpenedProjectJson.put(SELECTED_SCALE_JSON_KEY,selectedScale);
 
 
         saveJsonObj(GRADE_SCALE_FILE_NAME, gradeScalesJsonObj);
 
-        return selectedIndex;
+        return selectedScale;
     }
 
 

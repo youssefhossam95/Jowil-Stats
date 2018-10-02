@@ -1099,12 +1099,25 @@ public class WeightsController extends Controller {
 
     private void loadGradesFreqData(){
 
-        JSONArray scales = (JSONArray) gradeScalesJsonObj.get("scales");
+        JSONArray scales = (JSONArray) gradeScalesJsonObj.get(SCALES_JSON_KEY);
         JSONObject obj=isOpenMode?currentOpenedProjectJson:gradeScalesJsonObj;
-        int index=Integer.parseInt((String) obj.get(SELECTED_SCALE_JSON_KEY));
+        String selectedScale=(String) obj.get(SELECTED_SCALE_JSON_KEY);
 
 
-        JSONObject scale=(JSONObject)scales.get(index);
+
+
+        int selectedIndex=0; //default to zero if  selected scale not found (scale was deleted)
+
+        for (int i = 0; i < scales.size(); i++) {
+            JSONObject scale = (JSONObject) scales.get(i);
+            String scaleName=(String) scale.keySet().iterator().next();
+            if(scaleName.equals(selectedScale)){
+                selectedIndex=i;
+                break;
+            }
+        }
+
+        JSONObject scale=(JSONObject)scales.get(selectedIndex);
 
         JSONArray grades=(JSONArray) scale.values().iterator().next();
         ArrayList<Grade> tempScale=new ArrayList<>();
