@@ -280,6 +280,11 @@ public class Report3 extends Report {
     }
 
     @Override
+    public void generateXlsReport() {
+
+    }
+
+    @Override
     public void init() {
 
         report3Maps = Statistics.report3Stats() ;

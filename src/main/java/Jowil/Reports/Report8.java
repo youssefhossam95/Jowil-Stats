@@ -345,6 +345,11 @@ public class Report8 extends Report {
     }
 
     @Override
+    public void generateXlsReport() {
+
+    }
+
+    @Override
     public void init() {
 
         formsData = Statistics.report8Stats();

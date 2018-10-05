@@ -550,6 +550,11 @@ public class Report2 extends Report {
     }
 
     @Override
+    public void generateXlsReport() {
+
+    }
+
+    @Override
     public void init()  {
         formsStatsMaps = new ArrayList<>() ;
         formsStatsTables = new ArrayList<>();

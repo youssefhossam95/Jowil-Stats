@@ -337,4 +337,9 @@ public class Report6 extends Report {
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
     }
 
+    @Override
+    public void generateXlsReport() {
+
+    }
+
 }

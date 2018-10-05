@@ -105,6 +105,9 @@ public class ReportsHandler {
             if(formats.contains(WORD))
                 report.generateWordReport();
 
+            if(formats.contains(XLS))
+                report.generateXlsReport();
+
             if(formats.contains(PRINTABLE_PDF))
                 report.generatePrintablePdfReport();
 

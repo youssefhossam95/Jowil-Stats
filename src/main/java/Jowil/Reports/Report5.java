@@ -493,6 +493,11 @@ public class Report5 extends Report {
     }
 
     @Override
+    public void generateXlsReport() {
+
+    }
+
+    @Override
     public void init() {
         formsStatsTables = new ArrayList<>();
         for (int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {

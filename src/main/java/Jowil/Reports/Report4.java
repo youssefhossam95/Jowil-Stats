@@ -39,6 +39,7 @@ public class Report4 extends Report{
 
 
     private ArrayList<ArrayList<String>> statsTable ;
+    volatile boolean arabicTextReady = false ;
 
     public Report4(){
         reportTitle = "Students Grades Report" ;
@@ -46,6 +47,22 @@ public class Report4 extends Report{
         templatePath = workSpacePath + "report4Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
 
+    }
+
+
+    protected void handleArabicPdf(ArrayList<ArrayList<String>> table ) throws IOException {
+        for (String grade : Statistics.getGrades()) {
+            if (!grade.matches("\\w+")) { // check if any grade is arabic
+                generateTextImgs();
+                while (arabicTextReady) ; // wait for the imgs to be created
+                for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
+                    ArrayList<String> tableRow = table.get(i);
+                    String tableGrade = tableRow.get(1).replace(" " , "%20");;
+                    tableRow.set(1, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
+                }
+                break;
+            }
+        }
     }
 
     public void generateTextImgs () throws IOException {
@@ -56,31 +73,36 @@ public class Report4 extends Report{
             public void run() {
 
                 Stage stage = new Stage() ;
-                Label label = new Label("اهلا") ;
                 Pane pane = new Pane() ;
-                pane.getChildren().add(label);
                 pane.setStyle("-fx-background-color:white");
                 Scene scene  = new Scene(pane, Color.WHITE);
-
+                stage.setScene(scene);
+                Label label = new Label("man");
+                pane.getChildren().add(label);
+                for (int i =0 ; i < grades.size(); i ++) {
+                    Label label2 = new Label(grades.get(i));
+                    label2.setStyle("-fx-font-weight: bold");
+                    pane.getChildren().set(0, label2);
 
 //        scene.getStylesheets().add("reports/report1/style.css");
-                stage.setScene(scene);
 
-                WritableImage snapShot = label.snapshot(new SnapshotParameters() , null);
-                try {
-                    ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath+"label.png"));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
+                    try {
+                        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i)+".png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+                arabicTextReady = true ;
             }
         });
 
 
     }
-    private Document generatePdfHtml() throws IOException {
+    private Document generatePdfHtml(boolean pdf) throws IOException {
 
-        final int NUMBER_OF_ROWS_FIRST_PAGE = 19 ;
-        final int NUMBER_OF_ROWS_BALNK_PAGE = 23 ;
+        final int NUMBER_OF_ROWS_BALNK_PAGE = 22 ;
+        final int NUMBER_OF_ROWS_FIRST_PAGE = NUMBER_OF_ROWS_BALNK_PAGE - 4  ;
 
         Format format = new DecimalFormat("0.#");
         final String dataCellCommonClass = "tg-l711" ;
@@ -117,11 +139,9 @@ public class Report4 extends Report{
         int startIndex = 0 ;
         int endIndex = (int)Utils.getNumberWithinLimits(tempStatsTable.size() , 0 , NUMBER_OF_ROWS_FIRST_PAGE) ;
 
-        generateTextImgs();
-//        while ()
-//        for(int i = 0 ; i < tempStatsTable.size(); i++) {
-//            tempStatsTable.get(i).set(1, "<img class=\"text-img\" src=\"label.png\"> </img>");
-//        }
+        if(pdf) {
+            handleArabicPdf(tempStatsTable);
+        }
         do  {
             ArrayList<ArrayList<String>> pageTable ;
             if(endIndex == tempStatsTable.size()) {
@@ -174,7 +194,7 @@ public class Report4 extends Report{
 
     @Override
     public void generateHtmlReport() throws IOException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(false) ;
         doc.select("tr.headerRow").remove();
         doc.select("div#footer").remove();
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
@@ -182,7 +202,7 @@ public class Report4 extends Report{
 
     @Override
     public void generatePdfReport() throws IOException, DocumentException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(true) ;
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
         processPDF(outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf" , reportsPath+"/report4/test.pdf");
@@ -232,7 +252,7 @@ public class Report4 extends Report{
 
     @Override
     public void generatePrintablePdfReport() throws IOException, DocumentException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(true) ;
         doc.select("th.bar-header").remove() ;
         doc.select("td.bar").remove() ;
         styleTitlePrintable(doc) ;
@@ -327,6 +347,11 @@ public class Report4 extends Report{
 
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
 
+
+    }
+
+    @Override
+    public void generateXlsReport() {
 
     }
 
