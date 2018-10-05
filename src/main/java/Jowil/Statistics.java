@@ -1275,7 +1275,7 @@ public class Statistics {
         return formsTableStats ;
     }
 
-    public static ArrayList<ArrayList<ArrayList<String>>> questReportStats() {
+    public static ArrayList<ArrayList<ArrayList<ArrayList<String>>>> report9Stats() {
 
         double count;
         int studentsCount=studentAnswers.size();
@@ -1292,20 +1292,30 @@ public class Statistics {
             }
         }
 
-        ArrayList<ArrayList<ArrayList<String>>> tables = new ArrayList<ArrayList<ArrayList<String>>>();
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> tables = new ArrayList();
 
-        for(int questionIndex = 0 ; questionIndex < questAnswerStats.size() ; questionIndex++ ){
-            ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>() ;
-            ArrayList<String> questionChoices = questionsChoices.get(questionIndex) ;
-            ArrayList<Double> questionStats = questAnswerStats.get(questionIndex) ;
-            for(int choiceIndex = 0 ; choiceIndex< questionChoices.size() ; choiceIndex ++) {
-                ArrayList<String>tableRow = new ArrayList<>() ;
-                tableRow.add(questionChoices.get(choiceIndex)) ;
-                tableRow.add(Utils.formatNumber(questionStats.get(choiceIndex)*studentsCount , 0 )) ;
-                tableRow.add(Utils.formatNumber(questionStats.get(choiceIndex)*100 , 1 )) ;
-                table.add(tableRow);
+        ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
+        int questionIndex = 0 ;
+        for( int gIndex = 0 ; gIndex < groups.size() ; gIndex++ ) {
+
+            ArrayList<ArrayList<ArrayList<String>>> groupTables = new ArrayList<>();
+
+            for(int i = 0 ; i < groups.get(gIndex).getqCount() ; i++ ) {
+                ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+                ArrayList<String> questionChoices = questionsChoices.get(questionIndex);
+                ArrayList<Double> questionStats = questAnswerStats.get(questionIndex);
+                for (int choiceIndex = 0; choiceIndex < questionChoices.size(); choiceIndex++) {
+                    ArrayList<String> tableRow = new ArrayList<>();
+                    tableRow.add(questionChoices.get(choiceIndex)); // response
+                    tableRow.add(Utils.formatNumber(questionStats.get(choiceIndex) * studentsCount, 0)); // number of students
+                    tableRow.add(Utils.formatNumber(questionStats.get(choiceIndex) * 100, 1));// percentage of students
+                    tableRow.add("greenBar") ; // bar class
+                    table.add(tableRow);
+                }
+                questionIndex++ ;
+                groupTables.add(table) ;
             }
-            tables.add(table);
+            tables.add(groupTables);
         }
         System.out.println(tables);
         return tables ;
