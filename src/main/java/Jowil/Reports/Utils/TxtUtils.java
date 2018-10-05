@@ -56,7 +56,7 @@ public class TxtUtils {
 
     public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ) {
 
-        System.out.println("fuck you ");
+//        System.out.println("fuck you");
         String txtTable = "" ;
         ArrayList<Integer> cellsWidths = calcCellsWidths(table , cellHorizontalPadding) ;
         int tableWidth = calcTableWidth( table ,  cellHorizontalPadding) ;
@@ -67,11 +67,14 @@ public class TxtUtils {
             for( int colIndex = 0 ; colIndex < table.get(1).size() ; colIndex++) {
                 String cellString = table.get(rowIndex).get(colIndex) ;
                 int numberOfSpacesNeeded = (int)Math.ceil((double)(cellsWidths.get(colIndex)- cellString.length())/2) ;
+                int numberOfSpacesNeeded2 = 0 ;
                 if(colIndex!=0) {
                     String prevString =  table.get(rowIndex).get(colIndex-1) ;
-                    numberOfSpacesNeeded += Math.floor((cellsWidths.get(colIndex - 1)  - prevString.length()) / 2) ;
+                    numberOfSpacesNeeded2 += Math.floor((cellsWidths.get(colIndex - 1)  - prevString.length()) / 2) ;
                 }
-                txtTable += Utils.generatePattern(" ",numberOfSpacesNeeded) + cellString ;
+//                txtTable +=Utils.generatePattern(" " , numberOfSpacesNeeded2) +"I" + Utils.generatePattern(" ",numberOfSpacesNeeded) + cellString ;
+                txtTable +=Utils.generatePattern(" " , numberOfSpacesNeeded2 + numberOfSpacesNeeded) + cellString ;
+
             }
             // add line after the first Row
             if (rowIndex ==0 || showLines)

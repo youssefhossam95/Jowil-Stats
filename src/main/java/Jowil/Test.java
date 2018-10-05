@@ -3,6 +3,8 @@ package Jowil;
 import Jowil.Reports.Report;
 import Jowil.Reports.Report1;
 import Jowil.Reports.ReportsHandler;
+import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import com.lowagie.text.DocumentException;
 
 
@@ -96,7 +98,21 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
-//
+        StringBuilder builder = new StringBuilder();
+        builder.append("hi Man") ;
+        builder.append("كيفك");
+        builder.append(" ") ;
+        builder.append("10");
+
+        String h = "hi man " + "fuck"  +"10";
+
+        System.out.println(h);
+        h.replace("fuck" , "كيفك");
+        System.out .println(h);
+        System.out.println( builder.toString());
+//        TxtUtils.writeTxtToFile(builder.toString() , "test.txt");
+
+
 //        ArrayList<Double> hardness = new ArrayList<>( );
 ////        for(double i = 0 ; i < 40 ; i ++) {
 //////            hardness.add(0.0) ;
@@ -196,10 +212,10 @@ public class Test {
 
         //////////////////////// to create pdf from html //////////////////////////////////
 
-         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
-        ReportsHandler reportsHandler = new ReportsHandler();
-//        Report1 r1 = new Report1() ;
-        reportsHandler.generatePDF(reportsPath + "report4\\Report4 - Students Grades Report.html", reportsPath + "report4\\test.pdf");
+//         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
+//        ReportsHandler reportsHandler = new ReportsHandler();
+////        Report1 r1 = new Report1() ;
+//        reportsHandler.generatePDF(reportsPath + "report1\\ Report1 - Grades Distribution Report.html", reportsPath + "report1\\test.pdf");
 
 
 
