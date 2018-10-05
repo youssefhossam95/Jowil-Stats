@@ -23,12 +23,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;
@@ -42,6 +42,8 @@ import java.io.*;
 import java.util.ArrayList;
 
 
+import static Jowil.Reports.Utils.XlsUtils.addPictureToCell;
+import static Jowil.Reports.Utils.XlsUtils.getColor;
 import static org.apache.commons.math3.stat.StatUtils.sum;
 
 public class Report1 extends Report{
@@ -315,36 +317,23 @@ public class Report1 extends Report{
 
     @Override
     public void generateXlsReport() throws IOException {
-        HSSFWorkbook workbook = new HSSFWorkbook() ;
-
-        HSSFSheet sheet =workbook.createSheet();
 
         ArrayList<ArrayList<String>>  tableWithHeaders = getTableWithHeaders();
+        int pageWidth = tableWithHeaders.get(0).size() +2;
+
+        XlsUtils.createXls(pageWidth);
+
+        XlsUtils.addTitle(reportTitle , 3);
 
 
-        HSSFCellStyle style = workbook.createCellStyle();
-        style.setAlignment(HorizontalAlignment.CENTER);
+        XlsUtils.addTableAlignCenter(tableWithHeaders , 1);
 
-        int pageWidth = tableWithHeaders.get(0).size();
+        addPictureToCell("" ,XlsUtils.lastRowIndex , 1  , XlsUtils.pageWidth-2 , 8);
 
-        for(int i = 0 ; i < pageWidth ; i ++  ) {
-            sheet.setDefaultColumnStyle(i , style);
-        }
+        XlsUtils.postProcessSheet();
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
 
 
-        for (int rowIndex = 0 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
-            ArrayList<String> tableRow = tableWithHeaders.get(rowIndex);
-            HSSFRow row  =sheet.createRow(rowIndex);
-            for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
-                HSSFCell cell = row.createCell(colIndex);
-                cell.setCellValue(tableRow.get(colIndex)) ;
-            }
-
-        }
-
-        for( int i = 0 ; i < pageWidth ; i++ )
-            sheet.autoSizeColumn(i);
-        XlsUtils.writeXlsFile(workbook,outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
     }
 
 }

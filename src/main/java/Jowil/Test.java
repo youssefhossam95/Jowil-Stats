@@ -17,6 +17,7 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.math3.stat.StatUtils.* ;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
+import java.awt.*;
 import java.io.*;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -98,18 +99,38 @@ public class Test {
         }
     public static void main(String [] args) throws IOException, DocumentException {
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("hi Man") ;
-        builder.append("كيفك");
-        builder.append(" ") ;
-        builder.append("10");
 
-        String h = "hi man " + "fuck"  +"10";
+        System.out.println(Integer.parseInt("cd" , 16));
 
-        System.out.println(h);
-        h.replace("fuck" , "كيفك");
-        System.out .println(h);
-        System.out.println( builder.toString());
+//        File file = new File("E:\\work\\Jowil\\output folder test\\Jowil\\XLS Reports\\Report1 - Grades Distribution Report.xls");
+//
+//        //first check if Desktop is supported by Platform or not
+//
+//        if(!Desktop.isDesktopSupported()){
+//            System.out.println("Desktop is not supported");
+//            return;
+//        }
+//
+//
+//        Desktop desktop = Desktop.getDesktop();
+//        if(file.exists()) desktop.open(file);
+
+        //let's try to open PDF file
+//        file = new File("/Users/pankaj/java.pdf");
+//        if(file.exists()) desktop.open(file);
+
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("hi Man") ;
+//        builder.append("كيفك");
+//        builder.append(" ") ;
+//        builder.append("10");
+//
+//        String h = "hi man " + "fuck"  +"10";
+//
+//        System.out.println(h);
+//        h.replace("fuck" , "كيفك");
+//        System.out .println(h);
+//        System.out.println( builder.toString());
 //        TxtUtils.writeTxtToFile(builder.toString() , "test.txt");
 
 
