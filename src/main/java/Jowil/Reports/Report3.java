@@ -3,6 +3,7 @@ package Jowil.Reports;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -275,13 +276,31 @@ public class Report3 extends Report {
         }
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
 
-
-
     }
 
     @Override
-    public void generateXlsReport() {
+    public void generateXlsReport() throws IOException {
 
+        int pageWidth = 4 ;
+        XlsUtils.createXls(pageWidth);
+
+        for (int mapIndex = 0; mapIndex < report3Maps.size(); mapIndex++) {
+
+            boolean addMeanToTitle =report3Maps.size()>1 && mapIndex == 0 ? true:false ;
+
+            ArrayList<ArrayList<ArrayList<String>>> tables = processMap(report3Maps.get(mapIndex) , addMeanToTitle);
+
+            String form = "";
+            if (mapIndex > 0) {
+                form = ": Form " + mapIndex;
+            }
+            XlsUtils.addTitle(reportTitle+form, 3 );
+
+            for (int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
+                XlsUtils.addTableAlignLR(tables.get(tableIndex),tablesTitles[tableIndex]);
+            }
+        }
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
     }
 
     @Override

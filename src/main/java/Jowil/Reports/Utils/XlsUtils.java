@@ -6,6 +6,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.util.IOUtils;
 
 import java.awt.*;
@@ -105,6 +106,17 @@ public class XlsUtils {
         return  defaultTableCellStyle ;
     }
 
+    public static HSSFCellStyle getLRTableCellStyle(){
+        HSSFCellStyle defaultTableCellStyle = workbook.createCellStyle();
+
+        defaultTableCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+//        defaultTableCellStyle.setBorderTop(BorderStyle.THIN);
+//        defaultTableCellStyle.setBorderBottom(BorderStyle.THIN);
+//        defaultTableCellStyle.setBorderRight(BorderStyle.THIN);
+//        defaultTableCellStyle.setBorderLeft(BorderStyle.THIN);
+        return  defaultTableCellStyle ;
+    }
+
     public static HSSFCellStyle getDefaltColumnStyle(){
         HSSFCellStyle defaultColStyle = workbook.createCellStyle();
         defaultColStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -125,7 +137,9 @@ public class XlsUtils {
                     HSSFFont font= workbook.createFont();
                     font.setBold(true);
                     cellStyle.setFont(font);
+
                 }
+
                 cell.setCellStyle(cellStyle);
 
             }
@@ -134,8 +148,45 @@ public class XlsUtils {
         lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE ;
     }
 
+
+    public static void addTableAlignLR( ArrayList<ArrayList<String>> table , String title ) {
+        int colStartIndex = 1 ;
+        HSSFRow row = sheet.createRow(lastRowIndex++) ;
+        row.createCell(colStartIndex).setCellValue(title);
+        HSSFCellStyle cellStyle = getLRTableCellStyle() ;
+
+//        HSSFCellStyle style = getLRTableCellStyle() ;
+//        style.setAlignment(HorizontalAlignment.RIGHT);
+        for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
+
+            ArrayList<String> tableRow = table.get(rowIndex);
+            row  =sheet.createRow(lastRowIndex +rowIndex);
+            row.setHeight((short)TABLE_ROW_HEIGHT);
+            for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
+
+                HSSFCell cell = row.createCell(colStartIndex+colIndex);
+                cell.setCellValue(tableRow.get(colIndex)) ;
+                cell.setCellStyle(cellStyle);
+
+                if(rowIndex==0) {
+                    CellUtil.setCellStyleProperty(cell , CellUtil.BORDER_TOP ,BorderStyle.MEDIUM );
+                }
+
+
+                if(colIndex%2==0)
+                    CellUtil.setAlignment(cell , HorizontalAlignment.LEFT);
+                else
+                    CellUtil.setAlignment(cell , HorizontalAlignment.RIGHT);
+
+
+            }
+
+        }
+        lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE ;
+    }
+
     public static void addPictureToCell(String imgPath , int rowIndex  , int colIndex , int width , int height ) throws IOException {
-        InputStream inputStream = new FileInputStream("E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\report1\\GradesDistributionHistogram.png");
+        InputStream inputStream = new FileInputStream(imgPath);
 
         byte[] imageBytes = IOUtils.toByteArray(inputStream);
 
@@ -167,6 +218,7 @@ public class XlsUtils {
             sheet.autoSizeColumn(i);
     }
     public static void writeXlsFile(String filePath) throws IOException {
+        postProcessSheet();
         FileOutputStream out = new FileOutputStream(new File(filePath));
         workbook.write(out);
         out.close();

@@ -328,9 +328,9 @@ public class Report1 extends Report{
 
         XlsUtils.addTableAlignCenter(tableWithHeaders , 1);
 
-        addPictureToCell("" ,XlsUtils.lastRowIndex , 1  , XlsUtils.pageWidth-2 , 8);
+        addPictureToCell(report1ImgFullPath ,XlsUtils.lastRowIndex , 1  , XlsUtils.pageWidth-2 , 8);
 
-        XlsUtils.postProcessSheet();
+
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
 
 
