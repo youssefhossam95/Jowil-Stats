@@ -22,7 +22,7 @@ public class WordUtils {
 
     public final static int inch = 1440 ;
     final static int TITLE_FONT_SIZE = 24 ;
-    public final static String REPORTS_COLOR = "157880" ;
+    public final static String REPORTS_COLOR = "095c90" ;
     final static String GRAY_ROW_COLOR = "EFEFEF" ;
     public final static int  A4_PAGE_WIDTH = (int)(6.5 * inch) ; // used width of the A4 page
     public final static int LANDSCAPE_PAGE_WIDHT = 15840 ; // total width of the land scape page

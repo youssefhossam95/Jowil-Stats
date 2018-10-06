@@ -5,6 +5,7 @@ import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -550,7 +551,60 @@ public class Report2 extends Report {
     }
 
     @Override
-    public void generateXlsReport() {
+    public void generateXlsReport() throws IOException {
+
+
+
+        int pageWidth = CsvUtils.calcPageWidth(formsStatsPrintableTables.get(0)) + 2; // calc page width based on first form tables
+        XlsUtils.createXls(pageWidth);
+        for(int formIndex = 0 ; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
+            Map<String, String> statsMap = formsStatsMaps.get(formIndex);
+            ArrayList<ArrayList<ArrayList<String>>> formStatsTables = formsStatsTables.get(formIndex);
+
+
+            ArrayList<ArrayList<String>> mapAsTable = processMap(statsMap);
+//            String generalStatsTxt = CsvUtils.generateTable(mapAsTable, separator);
+
+            String xlsReportTitle = reportTitle  ;
+            if(Statistics.getNumberOfForms()>1)
+                xlsReportTitle =  xlsReportTitle +": Form "+(formIndex+1) ;
+//
+//            String txtTitle = CsvUtils.generateTitleLine(csvReportTitle, separator,
+//                    pageWidth,2) ;
+
+
+//            outputCsv+= txtTitle ;
+//
+//            outputCsv+= generalStatsTxt  ;
+
+            XlsUtils.addTitle(xlsReportTitle,3);
+
+            XlsUtils.addTableAlignLR(mapAsTable,"");
+
+//            String legend = "* : Distractor"+CsvUtils.NEW_LINE ;
+//
+//            outputCsv+= Utils.generatePattern(TxtUtils.newLine , 2 ) + legend ;
+//
+//            ArrayList<String> csvTables = new ArrayList<>();
+
+
+            int questionIndex = 0;
+
+            for(int tableIndex = 0 ; tableIndex< formsStatsTables.size() ; tableIndex++ ) {
+                ArrayList<ArrayList<String>> statsTable = formStatsTables.get(tableIndex);
+                ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);
+                tableWithHeaders.add(0, getHeaders(questionIndex));
+                XlsUtils.addTableAlignCenter(tableWithHeaders, 1);
+//                csvTables.add(CsvUtils.generateTable(tableWithHeaders, separator));
+                questionIndex += statsTable.size() ;
+            }
+
+//            outputCsv += CsvUtils.stackTablesV(csvTables, PADDING_BETWEEN_TABLES) ;
+        }
+//        String outputCsv = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
+//        System.out.println(outputCsv);
+
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
 
     }
 

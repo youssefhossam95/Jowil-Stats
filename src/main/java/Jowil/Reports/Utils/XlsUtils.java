@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.util.IOUtils;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
 import java.awt.*;
 import java.io.*;
@@ -24,12 +25,19 @@ public class XlsUtils {
     public static int nextColorIndex =40;
     public static int lastRowIndex = 0 ;
     public static final int  NUMBER_OF_LINES_AFTER_TABLE = 2 ;
+    private static HSSFFont boldFont ;
+    private static HSSFCellStyle defaultTableCellStyle ;
 
     public static void createXls (int width) {
         workbook = new HSSFWorkbook() ;
         sheet = workbook.createSheet();
 
         pageWidth = width ;
+
+        boldFont= workbook.createFont();
+        boldFont.setBold(true);
+
+        defaultTableCellStyle= getDefaltTableCellStyle() ;
 //        sHSSFCellStyle defaultColumnStyle = getDefaltColumnStyle();
 //        for(int i = 0 ; i < pageWidth ; i ++  ) {
 //            sheet.setDefaultColumnStyle(i ,defaultColumnStyle );
@@ -124,23 +132,64 @@ public class XlsUtils {
         return defaultColStyle;
     }
 
-    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex ) {
+    public static void parseCellClass(HSSFCell cell , String cellClassesString) {
+        String [] cellClasses = cellClassesString.split(" ") ;
+        ArrayList<String> cellClassesList = new ArrayList<>();
+        for(int i =0 ; i < cellClasses.length ; i++)
+            cellClassesList.add(cellClasses[i]) ;
+
+        if(cellClassesList.contains("red")) {
+            CellUtil.setCellStyleProperty(cell, CellUtil.FILL_FOREGROUND_COLOR, getColor("f87878"));
+            CellUtil.setCellStyleProperty(cell, CellUtil.FILL_PATTERN, FillPatternType.SOLID_FOREGROUND);
+        }
+        if(cellClassesList.contains("gold")) {
+            CellUtil.setCellStyleProperty(cell, CellUtil.FILL_FOREGROUND_COLOR, getColor("ffe44d"));
+            CellUtil.setCellStyleProperty(cell, CellUtil.FILL_PATTERN, FillPatternType.SOLID_FOREGROUND);
+        }
+        if(cellClassesList.contains("green")) {
+            CellUtil.setCellStyleProperty(cell, CellUtil.FILL_FOREGROUND_COLOR, getColor("71e08d"));
+            CellUtil.setCellStyleProperty(cell, CellUtil.FILL_PATTERN, FillPatternType.SOLID_FOREGROUND);
+        }
+
+        if(cellClassesList.contains("bold")) {
+            CellUtil.setFont(cell , boldFont);
+        }
+    }
+
+    private static void processCellData( HSSFCell cell ,   String cellData ) throws IOException {
+        String cellText = cellData ; // the normal case no classes
+        if(cellData.length()>7 && cellData.substring(0 , 5).equals("<<img")){
+            String [] parts = cellData.split(">>");
+            String imgPath = parts[1] ;
+//            String[] parts2 = parts[0].split(",") ;
+//            int imgWidth = Integer.valueOf(parts2[1]) ;
+//            int imgHeight = Integer.valueOf(parts2[2])  ;
+            addPictureToCell(imgPath , cell);
+            return;
+        }else if(cellData.contains(";")) {
+            String [] parts = cellData.split(";");
+            cellText = parts[0] ;
+            String cellClass= parts[1] ;
+            parseCellClass(cell , cellClass);
+        }
+        cell.setCellValue(cellText);
+    }
+
+    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex ) throws IOException {
+
+        HSSFCellStyle cellStyle = defaultTableCellStyle ;
+
         for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
             ArrayList<String> tableRow = table.get(rowIndex);
             HSSFRow row  =sheet.createRow(lastRowIndex +rowIndex);
             row.setHeight((short)TABLE_ROW_HEIGHT);
             for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
-                HSSFCellStyle cellStyle = getDefaltTableCellStyle() ;
                 HSSFCell cell = row.createCell(colStartIndex+colIndex);
-                cell.setCellValue(tableRow.get(colIndex)) ;
-                if(rowIndex==0) {
-                    HSSFFont font= workbook.createFont();
-                    font.setBold(true);
-                    cellStyle.setFont(font);
-
-                }
-
                 cell.setCellStyle(cellStyle);
+                processCellData(cell ,tableRow.get(colIndex));
+                if(rowIndex==0) {
+                    CellUtil.setFont(cell , boldFont);
+                }
 
             }
 
@@ -151,12 +200,15 @@ public class XlsUtils {
 
     public static void addTableAlignLR( ArrayList<ArrayList<String>> table , String title ) {
         int colStartIndex = 1 ;
-        HSSFRow row = sheet.createRow(lastRowIndex++) ;
-        row.createCell(colStartIndex).setCellValue(title);
-        HSSFCellStyle cellStyle = getLRTableCellStyle() ;
+        // add title
+        HSSFRow row ;
+        if(!title.equals("")) {
+            row = sheet.createRow(lastRowIndex++);
+            row.createCell(colStartIndex).setCellValue(title);
+        }
 
-//        HSSFCellStyle style = getLRTableCellStyle() ;
-//        style.setAlignment(HorizontalAlignment.RIGHT);
+        HSSFCellStyle cellStyle = getLRTableCellStyle();
+
         for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
 
             ArrayList<String> tableRow = table.get(rowIndex);
@@ -172,7 +224,6 @@ public class XlsUtils {
                     CellUtil.setCellStyleProperty(cell , CellUtil.BORDER_TOP ,BorderStyle.MEDIUM );
                 }
 
-
                 if(colIndex%2==0)
                     CellUtil.setAlignment(cell , HorizontalAlignment.LEFT);
                 else
@@ -183,6 +234,10 @@ public class XlsUtils {
 
         }
         lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE ;
+    }
+
+    public static void addPictureToCell(String imgPath , HSSFCell cell ) throws IOException {
+        addPictureToCell(imgPath , cell.getRowIndex() , cell.getColumnIndex() , 1, 1 );
     }
 
     public static void addPictureToCell(String imgPath , int rowIndex  , int colIndex , int width , int height ) throws IOException {
@@ -216,6 +271,8 @@ public class XlsUtils {
         }
         for( int i = 0 ; i < pageWidth ; i++ )
             sheet.autoSizeColumn(i);
+
+        lastRowIndex = 0 ;
     }
     public static void writeXlsFile(String filePath) throws IOException {
         postProcessSheet();
