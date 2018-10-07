@@ -572,6 +572,9 @@ public class Report2 extends Report {
 
             XlsUtils.addTableAlignLR(mapAsTable,"");
 
+            XlsUtils.addPictureToCell(workSpacePath+ "legend.PNG",XlsUtils.lastRowIndex , XlsUtils.DEFAULT_COl_STARTING_INDEX ,
+                    1 , 3 , 1);
+
 //            String legend = "* : Distractor"+CsvUtils.NEW_LINE ;
 //
 //            outputCsv+= Utils.generatePattern(TxtUtils.newLine , 2 ) + legend ;
@@ -581,7 +584,9 @@ public class Report2 extends Report {
 
             int questionIndex = 0;
 
+            ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
             for(int tableIndex = 0 ; tableIndex< formsStatsTables.size() ; tableIndex++ ) {
+                XlsUtils.addHeaderLine(groups.get(tableIndex).getCleanedName());
                 ArrayList<ArrayList<String>> statsTable = formStatsTables.get(tableIndex);
                 ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);
                 tableWithHeaders.add(0, getHeaders(questionIndex));

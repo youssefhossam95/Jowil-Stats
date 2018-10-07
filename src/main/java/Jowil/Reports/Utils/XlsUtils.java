@@ -81,6 +81,8 @@ public class XlsUtils {
         return  myColor.getIndex() ;
     }
 
+
+
     public static void addTableTitle(String title ) {
         addTableTitle(title , DEFAULT_COl_STARTING_INDEX , true);
     }
@@ -275,11 +277,34 @@ public class XlsUtils {
         lastRowIndex += table.size() + DEFAULT_NUMBER_OF_LINES_AFTER_TABLE ;
     }
 
-    public static void addPictureToCell(String imgPath , HSSFCell cell ) throws IOException {
-        addPictureToCell(imgPath , cell.getRowIndex() , cell.getColumnIndex() , 1, 1 );
+    public static void addHeaderLine (String header){
+
+        HSSFCellStyle underLineCellStyle = workbook.createCellStyle() ;
+        underLineCellStyle.setBorderBottom(BorderStyle.MEDIUM);
+
+
+        HSSFRow row = sheet.createRow(lastRowIndex++) ;
+
+        for(int i = 1 ; i < pageWidth-1 ; i++)
+            row.createCell(i).setCellStyle(underLineCellStyle);
+
+        int cellIndex= (int)Math.floor(pageWidth/2) ;
+        HSSFCell cell = row.createCell(cellIndex);
+        cell.setCellStyle(tableTitleStyle);
+        CellUtil.setAlignment(cell , HorizontalAlignment.CENTER);
+        cell.setCellValue(header);
+//        row = sheet.createRow(lastRowIndex++) ;
+//        for(int i = 1 ; i <pageWidth-1 ; i++);
+
+        lastRowIndex+= 2 ;
     }
 
-    public static void addPictureToCell(String imgPath , int rowIndex  , int colIndex , int width , int height ) throws IOException {
+
+    public static void addPictureToCell(String imgPath , HSSFCell cell ) throws IOException {
+        addPictureToCell(imgPath , cell.getRowIndex() , cell.getColumnIndex() , 1, 1 , 0 );
+    }
+
+    public static void addPictureToCell(String imgPath , int rowIndex  , int colIndex , int width , int height , int numberOfLinesAfterImg ) throws IOException {
         InputStream inputStream = new FileInputStream(imgPath);
 
         byte[] imageBytes = IOUtils.toByteArray(inputStream);
@@ -300,7 +325,7 @@ public class XlsUtils {
         HSSFPicture pic = drawing.createPicture(anchor, pictureureIdx);
         pic.resize(width , height );
         if(height>1)
-            lastRowIndex += height + 2  ;
+            lastRowIndex += height + numberOfLinesAfterImg  ;
     }
     public static void postProcessSheet() {
         for(int i =0 ; i < lastRowIndex ; i ++) {

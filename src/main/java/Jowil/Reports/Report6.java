@@ -363,7 +363,8 @@ public class Report6 extends Report {
 
             XlsUtils.addTableAlignCenter(tableWithHeaders);
 
-            addPictureToCell(imgsDirectoryFullPath+imgName+(formIndex+1)+".png", XlsUtils.lastRowIndex, 3, 3, 10);
+            addPictureToCell(imgsDirectoryFullPath+imgName+(formIndex+1)+".png", XlsUtils.lastRowIndex,
+                    3, 3, 10 , XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
 
         }
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
