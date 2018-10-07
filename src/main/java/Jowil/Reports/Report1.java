@@ -326,7 +326,7 @@ public class Report1 extends Report{
         XlsUtils.addTitle(reportTitle , 3);
 
 
-        XlsUtils.addTableAlignCenter(tableWithHeaders , 1);
+        XlsUtils.addTableAlignCenter(tableWithHeaders );
 
         addPictureToCell(report1ImgFullPath ,XlsUtils.lastRowIndex , 1  , XlsUtils.pageWidth-2 , 8);
 

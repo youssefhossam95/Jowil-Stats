@@ -594,7 +594,7 @@ public class Report2 extends Report {
                 ArrayList<ArrayList<String>> statsTable = formStatsTables.get(tableIndex);
                 ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);
                 tableWithHeaders.add(0, getHeaders(questionIndex));
-                XlsUtils.addTableAlignCenter(tableWithHeaders, 1);
+                XlsUtils.addTableAlignCenter(tableWithHeaders);
 //                csvTables.add(CsvUtils.generateTable(tableWithHeaders, separator));
                 questionIndex += statsTable.size() ;
             }

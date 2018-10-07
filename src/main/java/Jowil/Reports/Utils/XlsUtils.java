@@ -175,13 +175,25 @@ public class XlsUtils {
         cell.setCellValue(cellText);
     }
 
-    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex ) throws IOException {
+    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table) throws IOException {
+        addTableAlignCenter(table, 1 , "" , true );
+    }
+    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex  , String title , boolean addLinesAfter) throws IOException {
+
+
+        HSSFRow row ;
+        int extraRow = 0 ;
+        if(!title.equals("")) {
+            row = sheet.createRow(lastRowIndex);
+            extraRow  = 1 ;
+            row.createCell(colStartIndex).setCellValue(title);
+        }
 
         HSSFCellStyle cellStyle = defaultTableCellStyle ;
 
         for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
             ArrayList<String> tableRow = table.get(rowIndex);
-            HSSFRow row  =sheet.createRow(lastRowIndex +rowIndex);
+            row  =sheet.createRow(lastRowIndex + extraRow +rowIndex);
             row.setHeight((short)TABLE_ROW_HEIGHT);
             for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
                 HSSFCell cell = row.createCell(colStartIndex+colIndex);
@@ -194,7 +206,8 @@ public class XlsUtils {
             }
 
         }
-        lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE ;
+        if(addLinesAfter)
+            lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE + extraRow ;
     }
 
 

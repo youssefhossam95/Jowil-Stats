@@ -366,7 +366,7 @@ public class Report4 extends Report{
         XlsUtils.addTitle(reportTitle ,3);
 
 //        processTableForOffice(tableWithHeaders);
-        XlsUtils.addTableAlignCenter(tableWithHeaders,1);
+        XlsUtils.addTableAlignCenter(tableWithHeaders);
         XlsUtils.postProcessSheet();
 //        XlsUtils.sheet.setColumnWidth(5,4000);
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" , false );
