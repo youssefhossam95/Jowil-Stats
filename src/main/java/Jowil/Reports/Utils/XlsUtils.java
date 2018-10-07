@@ -24,10 +24,14 @@ public class XlsUtils {
     final static String REPORTS_COLOR = "095c90" ;
     public static int nextColorIndex =40;
     public static int lastRowIndex = 0 ;
-    public static final int  NUMBER_OF_LINES_AFTER_TABLE = 2 ;
-    private static HSSFFont boldFont ;
+    public static final int  DEFAULT_NUMBER_OF_LINES_AFTER_TABLE = 2 ;
+    public static HSSFFont boldFont ;
+    private static HSSFCellStyle tableTitleStyle ;
     private static HSSFCellStyle defaultTableCellStyle ;
+    private static HSSFCellStyle defaultCellStyle ;
 
+    public static final int  DEFAULT_COl_STARTING_INDEX = 1 ;
+//    public static final int
     public static void createXls (int width) {
         workbook = new HSSFWorkbook() ;
         sheet = workbook.createSheet();
@@ -38,12 +42,25 @@ public class XlsUtils {
         boldFont.setBold(true);
 
         defaultTableCellStyle= getDefaltTableCellStyle() ;
+        defaultCellStyle = getDefaltCellStyle() ;
+        tableTitleStyle = getTableTitleStyle() ;
 //        sHSSFCellStyle defaultColumnStyle = getDefaltColumnStyle();
 //        for(int i = 0 ; i < pageWidth ; i ++  ) {
 //            sheet.setDefaultColumnStyle(i ,defaultColumnStyle );
 //        }
     }
 
+    private static HSSFCellStyle getTableTitleStyle() {
+
+        HSSFCellStyle style = workbook.createCellStyle() ;
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        HSSFFont font = workbook.createFont() ;
+        font.setBold(true);
+        font.setFontHeightInPoints((short)11);
+        style.setFont(font);
+
+        return style ;
+    }
 
     public static short getColor(String color) {
 
@@ -62,6 +79,22 @@ public class XlsUtils {
         }
         // get the palette index of that color
         return  myColor.getIndex() ;
+    }
+
+    public static void addTableTitle(String title ) {
+        addTableTitle(title , DEFAULT_COl_STARTING_INDEX , true);
+    }
+    public static void addTableTitle(String title , int colIndex ,  boolean incrementLastRow) {
+        HSSFRow row  = sheet.createRow(lastRowIndex);
+        HSSFCell cell = row.createCell(colIndex);
+        cell.setCellValue(title);
+        cell.setCellStyle(tableTitleStyle);
+        if(incrementLastRow)
+            lastRowIndex+=1 ;
+    }
+
+    public static void addTitle(String title ) {
+        addTitle(title , 3);
     }
 
     public static void addTitle(String title  , int numberOfLinesBelow) {
@@ -85,7 +118,7 @@ public class XlsUtils {
 //        HSSFCell cell2 = row2.createCell(0);
 
 
-        HSSFCellStyle titleStyle = getDefaltColumnStyle();
+        HSSFCellStyle titleStyle = defaultCellStyle;
 
         //set background color
         titleStyle.setFillForegroundColor(getColor(REPORTS_COLOR));
@@ -118,14 +151,10 @@ public class XlsUtils {
         HSSFCellStyle defaultTableCellStyle = workbook.createCellStyle();
 
         defaultTableCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-//        defaultTableCellStyle.setBorderTop(BorderStyle.THIN);
-//        defaultTableCellStyle.setBorderBottom(BorderStyle.THIN);
-//        defaultTableCellStyle.setBorderRight(BorderStyle.THIN);
-//        defaultTableCellStyle.setBorderLeft(BorderStyle.THIN);
         return  defaultTableCellStyle ;
     }
 
-    public static HSSFCellStyle getDefaltColumnStyle(){
+    public static HSSFCellStyle getDefaltCellStyle(){
         HSSFCellStyle defaultColStyle = workbook.createCellStyle();
         defaultColStyle.setAlignment(HorizontalAlignment.CENTER);
         defaultColStyle.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -176,17 +205,16 @@ public class XlsUtils {
     }
 
     public static void addTableAlignCenter( ArrayList<ArrayList<String>> table) throws IOException {
-        addTableAlignCenter(table, 1 , "" , true );
+        addTableAlignCenter(table, DEFAULT_COl_STARTING_INDEX , "" , DEFAULT_NUMBER_OF_LINES_AFTER_TABLE );
     }
-    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex  , String title , boolean addLinesAfter) throws IOException {
+    public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex  , String title , int numberOfLinesAfterTable) throws IOException {
 
 
         HSSFRow row ;
         int extraRow = 0 ;
         if(!title.equals("")) {
-            row = sheet.createRow(lastRowIndex);
             extraRow  = 1 ;
-            row.createCell(colStartIndex).setCellValue(title);
+            addTableTitle(title , DEFAULT_COl_STARTING_INDEX , false);
         }
 
         HSSFCellStyle cellStyle = defaultTableCellStyle ;
@@ -206,8 +234,7 @@ public class XlsUtils {
             }
 
         }
-        if(addLinesAfter)
-            lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE + extraRow ;
+            lastRowIndex += table.size() + numberOfLinesAfterTable + extraRow ;
     }
 
 
@@ -216,8 +243,7 @@ public class XlsUtils {
         // add title
         HSSFRow row ;
         if(!title.equals("")) {
-            row = sheet.createRow(lastRowIndex++);
-            row.createCell(colStartIndex).setCellValue(title);
+         addTableTitle(title);
         }
 
         HSSFCellStyle cellStyle = getLRTableCellStyle();
@@ -246,7 +272,7 @@ public class XlsUtils {
             }
 
         }
-        lastRowIndex += table.size() + NUMBER_OF_LINES_AFTER_TABLE ;
+        lastRowIndex += table.size() + DEFAULT_NUMBER_OF_LINES_AFTER_TABLE ;
     }
 
     public static void addPictureToCell(String imgPath , HSSFCell cell ) throws IOException {

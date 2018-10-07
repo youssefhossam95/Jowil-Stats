@@ -563,19 +563,10 @@ public class Report2 extends Report {
 
 
             ArrayList<ArrayList<String>> mapAsTable = processMap(statsMap);
-//            String generalStatsTxt = CsvUtils.generateTable(mapAsTable, separator);
 
             String xlsReportTitle = reportTitle  ;
             if(Statistics.getNumberOfForms()>1)
                 xlsReportTitle =  xlsReportTitle +": Form "+(formIndex+1) ;
-//
-//            String txtTitle = CsvUtils.generateTitleLine(csvReportTitle, separator,
-//                    pageWidth,2) ;
-
-
-//            outputCsv+= txtTitle ;
-//
-//            outputCsv+= generalStatsTxt  ;
 
             XlsUtils.addTitle(xlsReportTitle,3);
 
@@ -595,14 +586,10 @@ public class Report2 extends Report {
                 ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);
                 tableWithHeaders.add(0, getHeaders(questionIndex));
                 XlsUtils.addTableAlignCenter(tableWithHeaders);
-//                csvTables.add(CsvUtils.generateTable(tableWithHeaders, separator));
                 questionIndex += statsTable.size() ;
             }
 
-//            outputCsv += CsvUtils.stackTablesV(csvTables, PADDING_BETWEEN_TABLES) ;
         }
-//        String outputCsv = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
-//        System.out.println(outputCsv);
 
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
 

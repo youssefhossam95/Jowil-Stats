@@ -361,7 +361,7 @@ public class Report6 extends Report {
             XlsUtils.addTitle(title, 3);
 
 
-            XlsUtils.addTableAlignCenter(tableWithHeaders, 1);
+            XlsUtils.addTableAlignCenter(tableWithHeaders);
 
             addPictureToCell(imgsDirectoryFullPath+imgName+(formIndex+1)+".png", XlsUtils.lastRowIndex, 3, 3, 10);
 
