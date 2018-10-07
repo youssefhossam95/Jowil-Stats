@@ -260,7 +260,8 @@ public class XlsUtils {
 
         HSSFPicture pic = drawing.createPicture(anchor, pictureureIdx);
         pic.resize(width , height );
-        lastRowIndex += height + 2  ;
+        if(height>1)
+            lastRowIndex += height + 2  ;
     }
     public static void postProcessSheet() {
         for(int i =0 ; i < lastRowIndex ; i ++) {
@@ -272,10 +273,15 @@ public class XlsUtils {
         for( int i = 0 ; i < pageWidth ; i++ )
             sheet.autoSizeColumn(i);
 
+
         lastRowIndex = 0 ;
     }
     public static void writeXlsFile(String filePath) throws IOException {
-        postProcessSheet();
+        writeXlsFile(filePath , true);
+    }
+    public static void writeXlsFile(String filePath , boolean postProcess ) throws IOException {
+        if(postProcess)
+            postProcessSheet();
         FileOutputStream out = new FileOutputStream(new File(filePath));
         workbook.write(out);
         out.close();

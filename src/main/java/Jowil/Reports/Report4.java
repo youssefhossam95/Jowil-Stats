@@ -3,6 +3,7 @@ package Jowil.Reports;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -296,6 +297,17 @@ public class Report4 extends Report{
 
     }
 
+    private void processTableForOffice(ArrayList<ArrayList<String>> tableWithHeaders ) {
+        tableWithHeaders.get(0).add("") ;
+        for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
+            ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
+            int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
+            if(rectWidth>100)
+                rectWidth = 100 ;
+            tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
+        }
+    }
+
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
 
@@ -307,15 +319,8 @@ public class Report4 extends Report{
 
 
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
-        tableWithHeaders.get(0).add("") ;
-        for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
-            ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
-            int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
-            if(rectWidth>100)
-                rectWidth = 100 ;
-            tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
-        }
 
+        processTableForOffice(tableWithHeaders);
         XWPFTable docTable = WordUtils.addTable(document,new ArrayList<>( tableWithHeaders.subList(0 , tableWithHeaders.size()-1)));
         XWPFTableRow row = docTable.createRow();
         ArrayList<String> lastRow = tableWithHeaders.get(tableWithHeaders.size()-1) ;
@@ -351,7 +356,20 @@ public class Report4 extends Report{
     }
 
     @Override
-    public void generateXlsReport() {
+    public void generateXlsReport() throws IOException {
+
+        ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders();
+
+        int pageWidth = CsvUtils.calcTableWidth(tableWithHeaders) + 2;
+        XlsUtils.createXls(pageWidth);
+
+        XlsUtils.addTitle(reportTitle ,3);
+
+//        processTableForOffice(tableWithHeaders);
+        XlsUtils.addTableAlignCenter(tableWithHeaders,1);
+        XlsUtils.postProcessSheet();
+//        XlsUtils.sheet.setColumnWidth(5,4000);
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" , false );
 
     }
 
