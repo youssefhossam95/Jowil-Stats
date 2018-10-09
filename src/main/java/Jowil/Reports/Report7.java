@@ -322,20 +322,20 @@ public class Report7 extends Report {
                 if(statsTables.get(tableIndex).size()==0) {
                     XlsUtils.addTableTitle(tableTitles[tableIndex]);
 //                    HSSFRow row = sheet.createRow(XlsUtils.lastRowIndex++) ;
-//                    row.createCell(XlsUtils.DEFAULT_COl_STARTING_INDEX).setCellValue(tableTitles[tableIndex]) ;
+//                    row.createCell(XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX).setCellValue(tableTitles[tableIndex]) ;
                     String GoodJobMsg = prepareGoodJobMsg(formIndex) ;
                     String[] parts =GoodJobMsg.split("no");
 
                     HSSFRow row  = sheet.createRow(XlsUtils.lastRowIndex++) ;
                     for(int i = 0 ; i < parts.length ; i++) {
                         String no = i == 0? "no":"" ;
-                        HSSFCell cell  = row.createCell(XlsUtils.DEFAULT_COl_STARTING_INDEX + i);
+                        HSSFCell cell  = row.createCell(XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX + i);
                         cell.setCellValue(parts[i]+no);
                         CellUtil.setFont(cell , XlsUtils.boldFont);
                     }
                     XlsUtils.lastRowIndex += XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE;
                 }else {
-                    XlsUtils.addTableAlignCenter(tableWithHeaders , XlsUtils.DEFAULT_COl_STARTING_INDEX,
+                    XlsUtils.addTableAlignCenter(tableWithHeaders , XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX,
                             tableTitles[tableIndex],XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
                 }
             }

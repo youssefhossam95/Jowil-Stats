@@ -319,7 +319,8 @@ public class Report1 extends Report{
     public void generateXlsReport() throws IOException {
 
         ArrayList<ArrayList<String>>  tableWithHeaders = getTableWithHeaders();
-        int pageWidth = tableWithHeaders.get(0).size() +2;
+
+        int pageWidth = tableWithHeaders.get(0).size() +XlsUtils.PAGE_COl_PADDING *2;
 
         XlsUtils.createXls(pageWidth);
 
@@ -329,7 +330,7 @@ public class Report1 extends Report{
         XlsUtils.addTableAlignCenter(tableWithHeaders );
 
         addPictureToCell(report1ImgFullPath ,XlsUtils.lastRowIndex ,
-                1  , XlsUtils.pageWidth-2 , 8 , XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
+                XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX  , XlsUtils.pageWidth-2 , 8 , XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
 
 
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );

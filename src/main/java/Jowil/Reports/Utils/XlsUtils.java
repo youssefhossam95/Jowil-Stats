@@ -23,22 +23,28 @@ public class XlsUtils {
     public final static int TABLE_ROW_HEIGHT = 400 ;
     final static String REPORTS_COLOR = "095c90" ;
     public static int nextColorIndex =40;
-    private static final int ROW_START_INDEX = 1 ;
-    public static int lastRowIndex = ROW_START_INDEX ;
     public static final int  DEFAULT_NUMBER_OF_LINES_AFTER_TABLE = 2 ;
     public static HSSFFont boldFont ;
     private static HSSFCellStyle tableTitleStyle ;
     private static HSSFCellStyle defaultTableCellStyle ;
     private static HSSFCellStyle defaultCellStyle ;
 
-    public static final int  DEFAULT_COl_STARTING_INDEX = 2 ;
-//    public static final int
+
+    private static final int ROW_START_INDEX = 1 ;
+    public static int lastRowIndex = ROW_START_INDEX ;
+
+    public static final int REPORT_COL_START_INDEX =1;
+    public static final int  PAGE_COl_PADDING = 1;
+    public static final int  DEFAULT_TABLE_COl_STARTING_INDEX = REPORT_COL_START_INDEX+PAGE_COl_PADDING ;
+    public static int REPORT_COL_END_INDEX ;
+    //    public static final int
     public static void createXls (int width) {
         workbook = new HSSFWorkbook() ;
         sheet = workbook.createSheet();
 
         pageWidth = width ;
 
+        REPORT_COL_END_INDEX = REPORT_COL_START_INDEX + pageWidth - 1 ;
         boldFont= workbook.createFont();
         boldFont.setBold(true);
 
@@ -97,7 +103,7 @@ public class XlsUtils {
 
 
     public static void addTableTitle(String title ) {
-        addTableTitle(title , DEFAULT_COl_STARTING_INDEX , true);
+        addTableTitle(title , DEFAULT_TABLE_COl_STARTING_INDEX , true);
     }
     public static void addTableTitle(String title , int colIndex ,  boolean incrementLastRow) {
 //        HSSFRow row  = sheet.createRow(lastRowIndex);
@@ -120,14 +126,14 @@ public class XlsUtils {
                 new CellRangeAddress(
                         lastRowIndex, //first row (0-based)
                         lastRowIndex, //last row (0-based)
-                        0, //first column (0-based)
-                        pageWidth-1 //last column (0-based)
+                        REPORT_COL_START_INDEX, //first column (0-based)
+                        REPORT_COL_END_INDEX //last column (0-based)
                 )
         );
 
         HSSFRow row = sheet.createRow(lastRowIndex);
         row.setHeight((short) 500);
-        HSSFCell cell = row.createCell(0);
+        HSSFCell cell = row.createCell(REPORT_COL_START_INDEX);
         cell.setCellValue(title);
 
 //        HSSFRow row2 = sheet.createRow(10) ;
@@ -221,7 +227,7 @@ public class XlsUtils {
     }
 
     public static void addTableAlignCenter( ArrayList<ArrayList<String>> table) throws IOException {
-        addTableAlignCenter(table, DEFAULT_COl_STARTING_INDEX , "" , DEFAULT_NUMBER_OF_LINES_AFTER_TABLE );
+        addTableAlignCenter(table, DEFAULT_TABLE_COl_STARTING_INDEX , "" , DEFAULT_NUMBER_OF_LINES_AFTER_TABLE );
     }
     public static void addTableAlignCenter( ArrayList<ArrayList<String>> table , int colStartIndex  , String title , int numberOfLinesAfterTable) throws IOException {
 
@@ -258,13 +264,12 @@ public class XlsUtils {
         addTableAlignLR( table,  title , DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
     }
     public static void addTableAlignLR( ArrayList<ArrayList<String>> table , String title  , int numberOfLinesAfterTable) {
-        int colStartIndex = 1 ;
         // add title
         HSSFRow row ;
         int extraRow = 0;
         if(!title.equals("")) {
           extraRow  = 1 ;
-         addTableTitle(title,DEFAULT_COl_STARTING_INDEX , false);
+         addTableTitle(title,DEFAULT_TABLE_COl_STARTING_INDEX , false);
         }
 
         HSSFCellStyle cellStyle = getLRTableCellStyle();
@@ -277,7 +282,7 @@ public class XlsUtils {
             row.setHeight((short)TABLE_ROW_HEIGHT);
             for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
 
-                HSSFCell cell = row.createCell(colStartIndex+colIndex);
+                HSSFCell cell = row.createCell(DEFAULT_TABLE_COl_STARTING_INDEX+colIndex);
                 cell.setCellValue(tableRow.get(colIndex)) ;
                 cell.setCellStyle(cellStyle);
 
@@ -310,16 +315,16 @@ public class XlsUtils {
                     new CellRangeAddress(
                             lastRowIndex +rowIndex, //first row (0-based)
                             lastRowIndex +rowIndex, //last row (0-based)
-                            DEFAULT_COl_STARTING_INDEX, //first column (0-based)
-                            DEFAULT_COl_STARTING_INDEX+numberOfFirstColCells-1 //last column (0-based)
+                            DEFAULT_TABLE_COl_STARTING_INDEX, //first column (0-based)
+                            DEFAULT_TABLE_COl_STARTING_INDEX+numberOfFirstColCells-1 //last column (0-based)
                     )
             );
             sheet.addMergedRegion(
                     new CellRangeAddress(
                             lastRowIndex +rowIndex, //first row (0-based)
                             lastRowIndex +rowIndex, //last row (0-based)
-                            DEFAULT_COl_STARTING_INDEX+numberOfFirstColCells, //first column (0-based)
-                            DEFAULT_COl_STARTING_INDEX+numberOfFirstColCells+numberOfSecondColCells-1 //last column (0-based)
+                            DEFAULT_TABLE_COl_STARTING_INDEX+numberOfFirstColCells, //first column (0-based)
+                            DEFAULT_TABLE_COl_STARTING_INDEX+numberOfFirstColCells+numberOfSecondColCells-1 //last column (0-based)
                     )
             );
             ArrayList<String> tableRow = table.get(rowIndex);
@@ -327,7 +332,7 @@ public class XlsUtils {
             row.setHeight((short)TABLE_ROW_HEIGHT);
             for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
 
-                HSSFCell cell = row.createCell(DEFAULT_COl_STARTING_INDEX+colIndex+((numberOfFirstColCells-1)*colIndex));
+                HSSFCell cell = row.createCell(DEFAULT_TABLE_COl_STARTING_INDEX+colIndex+((numberOfFirstColCells-1)*colIndex));
                 cell.setCellValue(tableRow.get(colIndex)) ;
                 cell.setCellStyle(cellStyle);
 
@@ -338,10 +343,10 @@ public class XlsUtils {
             }
             if(rowIndex==0) {
                 for(int i = 0 ; i < numberOfTableCols ; i++) {
-                    HSSFCell cell = row.getCell(DEFAULT_COl_STARTING_INDEX+ i) ;
+                    HSSFCell cell = row.getCell(DEFAULT_TABLE_COl_STARTING_INDEX+ i) ;
 //                    CellStyle style = cell.getCellStyle() ;
                     if(cell == null) {
-                        cell = row.createCell(DEFAULT_COl_STARTING_INDEX + i);
+                        cell = row.createCell(DEFAULT_TABLE_COl_STARTING_INDEX + i);
                         cell.setCellStyle(defaultCellStyle);
                     }
                     CellUtil.setCellStyleProperty(cell, CellUtil.BORDER_TOP, BorderStyle.MEDIUM);
@@ -361,10 +366,10 @@ public class XlsUtils {
 
         HSSFRow row = sheet.createRow(lastRowIndex++) ;
 
-        for(int i = 1 ; i < pageWidth-1 ; i++)
+        for(int i = DEFAULT_TABLE_COl_STARTING_INDEX ; i <= REPORT_COL_END_INDEX - PAGE_COl_PADDING ; i++)
             row.createCell(i).setCellStyle(underLineCellStyle);
 
-        int cellIndex= (int)Math.floor(pageWidth/2) ;
+        int cellIndex= REPORT_COL_START_INDEX+ (int)Math.floor(pageWidth/2) ;
         HSSFCell cell = row.createCell(cellIndex);
         cell.setCellStyle(tableTitleStyle);
         CellUtil.setAlignment(cell , HorizontalAlignment.CENTER);
@@ -405,7 +410,7 @@ public class XlsUtils {
     }
 
     public static void addReportBorder(){
-        BorderStyle reportBorderStyle = BorderStyle.THICK;
+        BorderStyle reportBorderStyle = BorderStyle.MEDIUM;
 //        HSSFCellStyle leftStyle = workbook.createCellStyle() ;
 //        leftStyle.setBorderLeft(reportBorderStyle);
 //
@@ -418,10 +423,10 @@ public class XlsUtils {
 //        HSSFCellStyle bottomStyle = workbook.createCellStyle() ;
 //        leftStyle.setBorderBottom(reportBorderStyle);
         //loop over the rows of the document
-        for(int i  = 0 ; i < lastRowIndex ; i++ ) {
+        for(int i  = ROW_START_INDEX ; i < lastRowIndex ; i++ ) {
             HSSFRow row = createRow(i) ;
-            HSSFCell cellLeft = createCell(row,0) ;
-            HSSFCell cellRight = createCell(row,pageWidth-1) ;
+            HSSFCell cellLeft = createCell(row,REPORT_COL_START_INDEX) ;
+            HSSFCell cellRight = createCell(row,REPORT_COL_END_INDEX) ;
             CellUtil.setCellStyleProperty(cellLeft,CellUtil.BORDER_LEFT , reportBorderStyle);
             CellUtil.setCellStyleProperty(cellRight, CellUtil.BORDER_RIGHT,reportBorderStyle);
         }
@@ -429,7 +434,7 @@ public class XlsUtils {
         HSSFRow topRow = createRow( ROW_START_INDEX);
         HSSFRow bottomRow = createRow(lastRowIndex-1) ;
 
-        for(int i = 0 ; i < pageWidth ; i++) {
+        for(int i = REPORT_COL_START_INDEX ; i <= REPORT_COL_END_INDEX ; i++) {
             HSSFCell topCell = createCell(topRow ,i);
             HSSFCell bottomCell = createCell( bottomRow , i) ;
             CellUtil.setCellStyleProperty(topCell ,CellUtil.BORDER_TOP , reportBorderStyle);
@@ -437,11 +442,11 @@ public class XlsUtils {
         }
     }
     public static void postProcessSheet() {
-        for(int i =0 ; i < lastRowIndex ; i ++) {
+        for(int i =ROW_START_INDEX ; i < lastRowIndex ; i ++) {
             HSSFRow row = createRow(i);
             row.setHeight((short)TABLE_ROW_HEIGHT);
         }
-        for( int i = 0 ; i < pageWidth ; i++ )
+        for( int i = REPORT_COL_START_INDEX ; i <= REPORT_COL_END_INDEX ; i++ )
             sheet.autoSizeColumn(i);
 
         addReportBorder();

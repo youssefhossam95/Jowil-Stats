@@ -572,7 +572,7 @@ public class Report2 extends Report {
 
             XlsUtils.addTableAlignLR(mapAsTable,"");
 
-            XlsUtils.addPictureToCell(workSpacePath+ "legend.PNG",XlsUtils.lastRowIndex , XlsUtils.DEFAULT_COl_STARTING_INDEX ,
+            XlsUtils.addPictureToCell(workSpacePath+ "legend.PNG",XlsUtils.lastRowIndex , XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX ,
                     1 , 3 , 1);
 
 //            String legend = "* : Distractor"+CsvUtils.NEW_LINE ;

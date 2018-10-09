@@ -353,8 +353,8 @@ public class Report8 extends Report {
         final int TABLE_COLS = 6 ;
         final int TABLE_IMG_COL_SEPARATION = 3 ;
 
-        final int IMG_COL_START_INDEX = XlsUtils.DEFAULT_COl_STARTING_INDEX +TABLE_COLS +TABLE_IMG_COL_SEPARATION ;
-        int pageWidth = XlsUtils.DEFAULT_COl_STARTING_INDEX*2+ TABLE_COLS + TABLE_IMG_COL_SEPARATION + IMG_COLS ;
+        final int IMG_COL_START_INDEX = XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX +TABLE_COLS +TABLE_IMG_COL_SEPARATION ;
+        int pageWidth = XlsUtils.PAGE_COl_PADDING*2+ TABLE_COLS + TABLE_IMG_COL_SEPARATION + IMG_COLS ;
 
         XlsUtils.createXls(pageWidth) ;
         ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;

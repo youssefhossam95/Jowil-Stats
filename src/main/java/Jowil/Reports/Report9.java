@@ -441,17 +441,17 @@ public class Report9 extends Report {
 
         final int NUMBER_OF_COLS_BETWEEN_TABLES  = 3 ;
         final int NUMBER_OF_TABLE_COLS=3;
-        int pageWidth = XlsUtils.DEFAULT_COl_STARTING_INDEX * 2 + NUMBER_OF_TABLE_COLS   * 2+NUMBER_OF_COLS_BETWEEN_TABLES ;
+        int pageWidth = XlsUtils.PAGE_COl_PADDING * 2 + NUMBER_OF_TABLE_COLS   * 2+NUMBER_OF_COLS_BETWEEN_TABLES ;
 
         XlsUtils.createXls(pageWidth);
 
         XlsUtils.addTitle(reportTitle);
 
         ArrayList<Group>groups = CSVHandler.getDetectedGroups() ;
+        int questionIndex= 0 ;
+
         for( int groupIndex = 0 ;groupIndex < groups.size() ; groupIndex++ ) {
             ArrayList<ArrayList<ArrayList<String>>> groupTables = groupsStatsTables.get(groupIndex);
-
-            int questionIndex= 0 ;
 
             Group group = groups.get(groupIndex);
 
@@ -468,7 +468,7 @@ public class Report9 extends Report {
                 if(tableIndex + 1 == groupTables.size())
                     linesAddedAfterLeftTable = XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE;
 
-                XlsUtils.addTableAlignCenter(tableWithHeaders,XlsUtils.DEFAULT_COl_STARTING_INDEX,
+                XlsUtils.addTableAlignCenter(tableWithHeaders,XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX,
                         Statistics.getQuestionNames().get(questionIndex),linesAddedAfterLeftTable);
 
                 if (tableIndex + 1 < groupTables.size()) {
@@ -477,7 +477,7 @@ public class Report9 extends Report {
 
                     ArrayList<ArrayList<String>> tableWithHeaders2 = getTableWithHeaders(table2);
                     tableWithHeaders2 = Utils.removeTableCol(tableWithHeaders2 , 3);
-                    XlsUtils.addTableAlignCenter(tableWithHeaders2,XlsUtils.DEFAULT_COl_STARTING_INDEX+
+                    XlsUtils.addTableAlignCenter(tableWithHeaders2,XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX+
                                     NUMBER_OF_TABLE_COLS+NUMBER_OF_COLS_BETWEEN_TABLES, Statistics.getQuestionNames().get(questionIndex),
                                     XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
                 }
@@ -487,8 +487,9 @@ public class Report9 extends Report {
         }
         XlsUtils.postProcessSheet();
         int imgLabelWidth = 1000 ;
-        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS, imgLabelWidth);
-        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS+2, imgLabelWidth);
+        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS, imgLabelWidth);
+        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS+NUMBER_OF_COLS_BETWEEN_TABLES-1
+                , imgLabelWidth);
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" , false );
     }
 
