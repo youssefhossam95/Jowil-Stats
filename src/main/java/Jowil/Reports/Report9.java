@@ -446,7 +446,7 @@ public class Report9 extends Report {
         XlsUtils.createXls(pageWidth);
 
         XlsUtils.addTitle(reportTitle);
-        
+
         ArrayList<Group>groups = CSVHandler.getDetectedGroups() ;
         for( int groupIndex = 0 ;groupIndex < groups.size() ; groupIndex++ ) {
             ArrayList<ArrayList<ArrayList<String>>> groupTables = groupsStatsTables.get(groupIndex);
@@ -490,14 +490,11 @@ public class Report9 extends Report {
         XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS, imgLabelWidth);
         XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS+2, imgLabelWidth);
         XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" , false );
-
-
     }
 
     @Override
     public void init() {
         groupsStatsTables = new ArrayList<>();
         groupsStatsTables=Statistics.report9Stats() ;
-
     }
 }

@@ -5,6 +5,7 @@ import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import javafx.application.Platform;
@@ -345,8 +346,47 @@ public class Report8 extends Report {
     }
 
     @Override
-    public void generateXlsReport() {
+    public void generateXlsReport() throws IOException {
 
+        final int IMG_COLS = 6 ;
+        final int IMG_ROWS = 6 ;
+        final int TABLE_COLS = 6 ;
+        final int TABLE_IMG_COL_SEPARATION = 3 ;
+
+        final int IMG_COL_START_INDEX = XlsUtils.DEFAULT_COl_STARTING_INDEX +TABLE_COLS +TABLE_IMG_COL_SEPARATION ;
+        int pageWidth = XlsUtils.DEFAULT_COl_STARTING_INDEX*2+ TABLE_COLS + TABLE_IMG_COL_SEPARATION + IMG_COLS ;
+
+        XlsUtils.createXls(pageWidth) ;
+        ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
+        for ( int formIndex = 0 ; formIndex <formsData.size() ; formIndex++ ) {
+            ArrayList<ArrayList<Double>> formGraphsData = formsData.get(formIndex);
+            String title = reportTitle ;
+            if( formsData.size() >1) {
+                title =title +": Form "  + (formIndex+1) ;
+            }
+
+            XlsUtils.addTitle(title);
+
+            for (int graphIndex = 0; graphIndex < formGraphsData.size(); graphIndex++) {
+
+                ArrayList<Double> graphData = formGraphsData.get(graphIndex);
+                ArrayList<ArrayList<String>> table = getTableWithHeaders(graphData);
+
+                String titleLine = "All Test" ;
+                if(graphIndex>0)
+                    titleLine = groups.get(graphIndex-1).getCleanedName();
+
+                XlsUtils.addHeaderLine(titleLine);
+
+                XlsUtils.addReport8Table( table , TABLE_COLS);
+                String imgFullPath = imagesFullPath + this.imgName + formIndex + graphIndex + ".png";
+
+                XlsUtils.addPictureToCell(imgFullPath ,XlsUtils.lastRowIndex,
+                        IMG_COL_START_INDEX,IMG_COLS,IMG_ROWS,XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE+1);
+
+            }
+        }
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls"  );
     }
 
     @Override

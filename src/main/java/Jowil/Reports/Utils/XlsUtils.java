@@ -23,14 +23,15 @@ public class XlsUtils {
     public final static int TABLE_ROW_HEIGHT = 400 ;
     final static String REPORTS_COLOR = "095c90" ;
     public static int nextColorIndex =40;
-    public static int lastRowIndex = 0 ;
+    private static final int ROW_START_INDEX = 1 ;
+    public static int lastRowIndex = ROW_START_INDEX ;
     public static final int  DEFAULT_NUMBER_OF_LINES_AFTER_TABLE = 2 ;
     public static HSSFFont boldFont ;
     private static HSSFCellStyle tableTitleStyle ;
     private static HSSFCellStyle defaultTableCellStyle ;
     private static HSSFCellStyle defaultCellStyle ;
 
-    public static final int  DEFAULT_COl_STARTING_INDEX = 1 ;
+    public static final int  DEFAULT_COl_STARTING_INDEX = 2 ;
 //    public static final int
     public static void createXls (int width) {
         workbook = new HSSFWorkbook() ;
@@ -86,6 +87,12 @@ public class XlsUtils {
         if(row == null)
             row = sheet.createRow(rowIndex) ;
         return row ;
+    }
+    public static HSSFCell createCell (HSSFRow row , int cellIndex) {
+       HSSFCell cell =  row.getCell(cellIndex) ;
+       if(cell == null)
+           cell = row.createCell(cellIndex) ;
+       return cell ;
     }
 
 
@@ -247,21 +254,26 @@ public class XlsUtils {
                 lastRowIndex += table.size() + numberOfLinesAfterTable + extraRow ;
     }
 
-
-    public static void addTableAlignLR( ArrayList<ArrayList<String>> table , String title ) {
+    public static void addTableAlignLR( ArrayList<ArrayList<String>> table , String title  ) {
+        addTableAlignLR( table,  title , DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
+    }
+    public static void addTableAlignLR( ArrayList<ArrayList<String>> table , String title  , int numberOfLinesAfterTable) {
         int colStartIndex = 1 ;
         // add title
         HSSFRow row ;
+        int extraRow = 0;
         if(!title.equals("")) {
-         addTableTitle(title);
+          extraRow  = 1 ;
+         addTableTitle(title,DEFAULT_COl_STARTING_INDEX , false);
         }
 
         HSSFCellStyle cellStyle = getLRTableCellStyle();
 
         for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
 
+
             ArrayList<String> tableRow = table.get(rowIndex);
-            row  =sheet.createRow(lastRowIndex +rowIndex);
+            row  =sheet.createRow(lastRowIndex +rowIndex+extraRow);
             row.setHeight((short)TABLE_ROW_HEIGHT);
             for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
 
@@ -282,7 +294,63 @@ public class XlsUtils {
             }
 
         }
-        lastRowIndex += table.size() + DEFAULT_NUMBER_OF_LINES_AFTER_TABLE ;
+
+        if(numberOfLinesAfterTable!=0)
+            lastRowIndex += table.size() + numberOfLinesAfterTable+extraRow;
+    }
+
+    public static void addReport8Table(ArrayList<ArrayList<String>> table , int numberOfTableCols){
+
+        HSSFCellStyle cellStyle = getLRTableCellStyle();
+
+        int numberOfFirstColCells = (int)Math.ceil(numberOfTableCols/2) ;
+        int numberOfSecondColCells = numberOfTableCols - numberOfFirstColCells;
+        for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
+            sheet.addMergedRegion(
+                    new CellRangeAddress(
+                            lastRowIndex +rowIndex, //first row (0-based)
+                            lastRowIndex +rowIndex, //last row (0-based)
+                            DEFAULT_COl_STARTING_INDEX, //first column (0-based)
+                            DEFAULT_COl_STARTING_INDEX+numberOfFirstColCells-1 //last column (0-based)
+                    )
+            );
+            sheet.addMergedRegion(
+                    new CellRangeAddress(
+                            lastRowIndex +rowIndex, //first row (0-based)
+                            lastRowIndex +rowIndex, //last row (0-based)
+                            DEFAULT_COl_STARTING_INDEX+numberOfFirstColCells, //first column (0-based)
+                            DEFAULT_COl_STARTING_INDEX+numberOfFirstColCells+numberOfSecondColCells-1 //last column (0-based)
+                    )
+            );
+            ArrayList<String> tableRow = table.get(rowIndex);
+            HSSFRow row  =sheet.createRow(lastRowIndex +rowIndex);
+            row.setHeight((short)TABLE_ROW_HEIGHT);
+            for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
+
+                HSSFCell cell = row.createCell(DEFAULT_COl_STARTING_INDEX+colIndex+((numberOfFirstColCells-1)*colIndex));
+                cell.setCellValue(tableRow.get(colIndex)) ;
+                cell.setCellStyle(cellStyle);
+
+                if(colIndex%2==0)
+                    CellUtil.setAlignment(cell , HorizontalAlignment.LEFT);
+                else
+                    CellUtil.setAlignment(cell , HorizontalAlignment.RIGHT);
+            }
+            if(rowIndex==0) {
+                for(int i = 0 ; i < numberOfTableCols ; i++) {
+                    HSSFCell cell = row.getCell(DEFAULT_COl_STARTING_INDEX+ i) ;
+//                    CellStyle style = cell.getCellStyle() ;
+                    if(cell == null) {
+                        cell = row.createCell(DEFAULT_COl_STARTING_INDEX + i);
+                        cell.setCellStyle(defaultCellStyle);
+                    }
+                    CellUtil.setCellStyleProperty(cell, CellUtil.BORDER_TOP, BorderStyle.MEDIUM);
+                }
+            }
+
+
+        }
+
     }
 
     public static void addHeaderLine (String header){
@@ -331,9 +399,42 @@ public class XlsUtils {
         anchor.setRow1(rowIndex);
 
         HSSFPicture pic = drawing.createPicture(anchor, pictureureIdx);
-        pic.resize(width , height );
+            pic.resize(width , height );
         if(height>1)
             lastRowIndex += height + numberOfLinesAfterImg  ;
+    }
+
+    public static void addReportBorder(){
+        BorderStyle reportBorderStyle = BorderStyle.THICK;
+//        HSSFCellStyle leftStyle = workbook.createCellStyle() ;
+//        leftStyle.setBorderLeft(reportBorderStyle);
+//
+//        HSSFCellStyle rightStyle = workbook.createCellStyle() ;
+//        leftStyle.setBorderRight(reportBorderStyle);
+//
+//        HSSFCellStyle topStyle = workbook.createCellStyle() ;
+//        leftStyle.setBorderTop(reportBorderStyle);
+//
+//        HSSFCellStyle bottomStyle = workbook.createCellStyle() ;
+//        leftStyle.setBorderBottom(reportBorderStyle);
+        //loop over the rows of the document
+        for(int i  = 0 ; i < lastRowIndex ; i++ ) {
+            HSSFRow row = createRow(i) ;
+            HSSFCell cellLeft = createCell(row,0) ;
+            HSSFCell cellRight = createCell(row,pageWidth-1) ;
+            CellUtil.setCellStyleProperty(cellLeft,CellUtil.BORDER_LEFT , reportBorderStyle);
+            CellUtil.setCellStyleProperty(cellRight, CellUtil.BORDER_RIGHT,reportBorderStyle);
+        }
+
+        HSSFRow topRow = createRow( ROW_START_INDEX);
+        HSSFRow bottomRow = createRow(lastRowIndex-1) ;
+
+        for(int i = 0 ; i < pageWidth ; i++) {
+            HSSFCell topCell = createCell(topRow ,i);
+            HSSFCell bottomCell = createCell( bottomRow , i) ;
+            CellUtil.setCellStyleProperty(topCell ,CellUtil.BORDER_TOP , reportBorderStyle);
+            CellUtil.setCellStyleProperty(bottomCell ,CellUtil.BORDER_BOTTOM , reportBorderStyle);
+        }
     }
     public static void postProcessSheet() {
         for(int i =0 ; i < lastRowIndex ; i ++) {
@@ -343,8 +444,8 @@ public class XlsUtils {
         for( int i = 0 ; i < pageWidth ; i++ )
             sheet.autoSizeColumn(i);
 
-
-        lastRowIndex = 0 ;
+        addReportBorder();
+        lastRowIndex = ROW_START_INDEX ;
     }
     public static void writeXlsFile(String filePath) throws IOException {
         writeXlsFile(filePath , true);
@@ -356,6 +457,5 @@ public class XlsUtils {
         workbook.write(out);
         out.close();
     }
-
 
 }
