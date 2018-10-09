@@ -5,6 +5,7 @@ import Jowil.Group;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -493,7 +494,80 @@ public class Report5 extends Report {
     }
 
     @Override
-    public void generateXlsReport() {
+    public void generateXlsReport() throws IOException {
+
+
+        final int NUMBER_OF_COLS_BETWEEN_TABLES  = 3 ;
+        final int NUMBER_OF_TABLE_COLS=4;
+        int pageWidth = XlsUtils.DEFAULT_COl_STARTING_INDEX * 2 + NUMBER_OF_TABLE_COLS   * 2+NUMBER_OF_COLS_BETWEEN_TABLES ;
+        XlsUtils.createXls(pageWidth);
+
+        ArrayList<Group>groups = CSVHandler.getDetectedGroups() ;
+        ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsProcessedTables = getProcessedTables(ReportsHandler.WORD) ;
+
+        for( int formIndex = 0 ;formIndex < formsProcessedTables.size() ; formIndex++ ) {
+            ArrayList<ArrayList<ArrayList<String>>> formTables = formsProcessedTables.get(formIndex);
+            String title = reportTitle ;
+            if( formsProcessedTables.size() >1) {
+                title = title + ": Form " + (formIndex+1) ;
+            }
+
+            XlsUtils.addTitle(title);
+
+            XlsUtils.addPictureToCell(workSpacePath+ "legend.PNG",XlsUtils.lastRowIndex , XlsUtils.DEFAULT_COl_STARTING_INDEX ,
+                    2 , 3 , 1);
+
+
+            int questionIndex= 0 ;
+            for( int groupIndex = 0 ; groupIndex < groups.size() ; groupIndex ++ ) {
+
+                Group group = groups.get(groupIndex);
+
+                XlsUtils.addHeaderLine(group.getCleanedName());
+
+                int groupNumberOfQuestions = group.getqCount();
+
+                ArrayList<ArrayList<ArrayList<String>>> groupTables =
+                        new ArrayList<>(formTables.subList(questionIndex, questionIndex + groupNumberOfQuestions));
+
+                for (int tableIndex = 0; tableIndex < groupTables.size(); tableIndex += 2) {
+                    ArrayList<ArrayList<String>> table = groupTables.get(tableIndex);
+
+                    ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(table);
+
+                    tableWithHeaders = Utils.removeTableCol(tableWithHeaders , 4);
+
+                    int linesAddedAfterLeftTable =0 ;
+                    if(tableIndex + 1 == groupTables.size())
+                        linesAddedAfterLeftTable = XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE;
+
+                    XlsUtils.addTableAlignCenter(tableWithHeaders,XlsUtils.DEFAULT_COl_STARTING_INDEX,
+                            Statistics.getQuestionNames().get(questionIndex),linesAddedAfterLeftTable);
+
+                    if (tableIndex + 1 < groupTables.size()) {
+                        questionIndex++ ;
+                        ArrayList<ArrayList<String>> table2 = groupTables.get(tableIndex + 1);
+
+                        ArrayList<ArrayList<String>> tableWithHeaders2 = getTableWithHeaders(table2);
+                        tableWithHeaders2 = Utils.removeTableCol(tableWithHeaders2 , 4);
+                        XlsUtils.addTableAlignCenter(tableWithHeaders2,5+NUMBER_OF_COLS_BETWEEN_TABLES,
+                                Statistics.getQuestionNames().get(questionIndex),XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
+
+                    }
+
+                    questionIndex ++ ;
+                }
+            }
+        }
+
+        XlsUtils.postProcessSheet();
+        int imgLabelWidth = 1000 ;
+        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS-1, imgLabelWidth);
+        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+(NUMBER_OF_TABLE_COLS-1)*2 + 1 + NUMBER_OF_COLS_BETWEEN_TABLES
+                , imgLabelWidth);
+        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS, imgLabelWidth);
+        XlsUtils.sheet.setColumnWidth(XlsUtils.DEFAULT_COl_STARTING_INDEX+ NUMBER_OF_TABLE_COLS+2, imgLabelWidth);
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" , false );
 
     }
 

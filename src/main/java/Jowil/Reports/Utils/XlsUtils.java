@@ -20,7 +20,7 @@ public class XlsUtils {
     public static HSSFWorkbook workbook ;
     public static HSSFSheet sheet ;
     public static int pageWidth ;
-    final static int TABLE_ROW_HEIGHT = 400 ;
+    public final static int TABLE_ROW_HEIGHT = 400 ;
     final static String REPORTS_COLOR = "095c90" ;
     public static int nextColorIndex =40;
     public static int lastRowIndex = 0 ;
@@ -81,13 +81,20 @@ public class XlsUtils {
         return  myColor.getIndex() ;
     }
 
+    public static HSSFRow createRow(int rowIndex){
+        HSSFRow row = sheet.getRow(rowIndex);
+        if(row == null)
+            row = sheet.createRow(rowIndex) ;
+        return row ;
+    }
 
 
     public static void addTableTitle(String title ) {
         addTableTitle(title , DEFAULT_COl_STARTING_INDEX , true);
     }
     public static void addTableTitle(String title , int colIndex ,  boolean incrementLastRow) {
-        HSSFRow row  = sheet.createRow(lastRowIndex);
+//        HSSFRow row  = sheet.createRow(lastRowIndex);
+        HSSFRow row = createRow(lastRowIndex) ;
         HSSFCell cell = row.createCell(colIndex);
         cell.setCellValue(title);
         cell.setCellStyle(tableTitleStyle);
@@ -216,14 +223,14 @@ public class XlsUtils {
         int extraRow = 0 ;
         if(!title.equals("")) {
             extraRow  = 1 ;
-            addTableTitle(title , DEFAULT_COl_STARTING_INDEX , false);
+            addTableTitle(title , colStartIndex , false);
         }
 
         HSSFCellStyle cellStyle = defaultTableCellStyle ;
 
         for (int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
             ArrayList<String> tableRow = table.get(rowIndex);
-            row  =sheet.createRow(lastRowIndex + extraRow +rowIndex);
+            row  = createRow(lastRowIndex + extraRow +rowIndex);
             row.setHeight((short)TABLE_ROW_HEIGHT);
             for(int colIndex = 0 ; colIndex < tableRow.size(); colIndex++) {
                 HSSFCell cell = row.createCell(colStartIndex+colIndex);
@@ -236,7 +243,8 @@ public class XlsUtils {
             }
 
         }
-            lastRowIndex += table.size() + numberOfLinesAfterTable + extraRow ;
+            if(numberOfLinesAfterTable!=0)
+                lastRowIndex += table.size() + numberOfLinesAfterTable + extraRow ;
     }
 
 
@@ -329,9 +337,7 @@ public class XlsUtils {
     }
     public static void postProcessSheet() {
         for(int i =0 ; i < lastRowIndex ; i ++) {
-            HSSFRow row = sheet.getRow(i) ;
-            if(row == null)
-               row =  sheet.createRow(i);
+            HSSFRow row = createRow(i);
             row.setHeight((short)TABLE_ROW_HEIGHT);
         }
         for( int i = 0 ; i < pageWidth ; i++ )
