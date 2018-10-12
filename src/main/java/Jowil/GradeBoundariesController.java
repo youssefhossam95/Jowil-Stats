@@ -78,7 +78,7 @@ public class GradeBoundariesController extends Controller {
 
 
     @FXML
-    HBox reportsConfigHBox;
+    AnchorPane reportsConfigHBox;
 
     @FXML
     VBox reportsVBox;
@@ -221,7 +221,8 @@ public class GradeBoundariesController extends Controller {
         reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
         reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
         reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight()*0.97);
-        reportsConfigHBox.setSpacing(resXToPixels(0.06));
+
+        AnchorPane.setRightAnchor(formatsVBox,rootWidth*0.02);
 
         reportsLabel.setFont(gradesLabelsFonts);
         reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
@@ -618,7 +619,7 @@ public class GradeBoundariesController extends Controller {
     }
 
     private void initReportsConfigHBox() {
-        reportsConfigHBox.setStyle("-fx-border-color: #A9A9A9;");
+        reportsConfigHBox.setStyle("-fx-border-color: #A9A9A9;-fx-background-color:transparent");
     }
 
     private void initReportsVBox() {

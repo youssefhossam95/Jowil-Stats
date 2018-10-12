@@ -21,10 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
+import javafx.stage.*;
 import org.bouncycastle.util.Arrays;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -67,8 +64,9 @@ public abstract class Controller {
     double navHeight;
     boolean isHeightCalling;
     final double DEFAULT_FONT_AWESOME_ICON_SIZE=resX*27/1280;
-    private final double minWidth,minHeight;
+    protected final double minWidth,minHeight;
     static boolean isTranslationMode=true;
+    static boolean isNormalScalingMode=true;
 
 
 
@@ -91,6 +89,7 @@ public abstract class Controller {
     HashMap<String,Double> classesFontSizes;
     public static HashMap<String,String> translations;
 
+    double origSceneWidth,origSceneHeight;
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
     protected double headersFontSize=resX/64;
@@ -215,8 +214,21 @@ public abstract class Controller {
             loader.setController(this);
             Pane root = loader.load();
 
-            double sceneWidth=(resX==800 && this instanceof WeightsController)?673:resX/XSCALE; //to solve bar chart min width issue
+            double sceneWidth=(resX==800 && this instanceof WeightsController)?673:resX/XSCALE; //673 to solve bar chart min width issue
             double sceneHeight=resY / YSCALE;
+
+            origSceneWidth=sceneWidth;
+            origSceneHeight=sceneHeight;
+
+            if(isNormalScalingMode){
+                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+                if(sceneWidth>=primaryScreenBounds.getWidth() && sceneHeight>=primaryScreenBounds.getHeight())
+                    isBeginMaximised=true;
+                else {
+                    sceneWidth = Math.min(sceneWidth, primaryScreenBounds.getWidth());
+                    sceneHeight = Math.min(sceneHeight, primaryScreenBounds.getHeight());
+                }
+            }
 
             if(isStepWindow){
                 outerBorderPane.setCenter(rootPane);
@@ -293,9 +305,11 @@ public abstract class Controller {
                     event.consume();
             });
 
+
             stage.show();
             updateControlsText();
             stage.setMaximized(isBeginMaximised);
+            updateSizes();
 
 
         }
@@ -308,6 +322,7 @@ public abstract class Controller {
         Insets navPadding=new Insets(0,0,0,0);
         navWidth=resX/15;
         navHeight=resX/47.5;
+
 
 
 
@@ -384,6 +399,11 @@ public abstract class Controller {
         buttonsHbox.setAlignment(Pos.TOP_RIGHT);
         System.out.println(rootWidth);
         System.out.println(rootHeight);
+
+//        if(isNormalScalingMode && scene!=null && rootWidth<minWidth)
+//            updateControlsText(rootWidth/origSceneWidth);
+//
+//
 
     }
 
@@ -469,14 +489,17 @@ public abstract class Controller {
     }
 
     private void updateControlsText() {
+        updateControlsText(1.0);
 
+    }
+    private void updateControlsText(double fontScalingFactor) {
         LinkedBlockingQueue<Parent> queue=new LinkedBlockingQueue<>();
         queue.add(scene.getRoot());
         while(!queue.isEmpty()){
             Parent parent=queue.poll();
             String pClassName=parent.getClass().getSimpleName();
             if(classesFontSizes.containsKey(pClassName))
-                parent.setStyle("-fx-font-size:"+classesFontSizes.get(pClassName));
+                parent.setStyle("-fx-font-size:"+classesFontSizes.get(pClassName)*fontScalingFactor);
 
 
 
@@ -490,14 +513,13 @@ public abstract class Controller {
                 else{ //leaf nodes
                     String nClassName=node.getClass().getSimpleName();
                     if(classesFontSizes.containsKey(nClassName))
-                        node.setStyle("-fx-font-size:" + classesFontSizes.get(nClassName));
+                        node.setStyle("-fx-font-size:" + classesFontSizes.get(nClassName)*fontScalingFactor);
 
                     if(isTranslationMode)
                         tryTranslate(node);
                 }
             }
         }
-
     }
 
 

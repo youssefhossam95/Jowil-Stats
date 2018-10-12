@@ -646,7 +646,7 @@ public class WeightsController extends Controller {
 
         //objective hbox
 
-        objWeightText.setPromptText("New weight");
+        objWeightText.setPromptText("New Weight");
         objWeightsButton.setGraphic(objButtonGraphic);
         objWeightsButton.getStyleClass().add("BlueJFXButton");
         objWeightsButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -809,8 +809,8 @@ public class WeightsController extends Controller {
         rootPane.getChildren().add(barChart);
 
         barChart.setTitle(null);
-        xAxis.setLabel("Grade");
-        yAxis.setLabel("Number of Students");
+        xAxis.setLabel(isTranslationMode &&translations.containsKey("Grade")?translations.get("Grade"):"Grade");
+        yAxis.setLabel(isTranslationMode &&translations.containsKey("Number of Students")?translations.get("Number of Students"):"Number of Students");
 
         barChart.setLegendVisible(false);
         barChart.setAnimated(true);

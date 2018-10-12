@@ -101,6 +101,11 @@ public class GroupsController  extends Controller{
     private static ArrayList<Group> treeViewGroups;
     private static HashMap<String,Integer> groupsIndices=new HashMap<String,Integer>();
 
+    Label [] gridKeyLabels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
+            new Label("Number of Subjective Questions"),new Label("Number of Students"),
+            new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};;
+    ArrayList<Label>gridValueLabels;
+
     //main methods
     GroupsController(Controller back){
 
@@ -210,12 +215,19 @@ public class GroupsController  extends Controller{
         //infoGridPane.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
 
 
-        manualButton.toFront();
+        manualButton.toFront(); //so that it's clickable and not the buttons hbox
 
 
 
-
-
+//
+//        if(rootWidth<origSceneWidth) {
+//            for (int i = 0; i < gridKeyLabels.length; i++) {
+//                Font labelsFont = new Font(rootWidth*12/1280*1.25);
+//                gridKeyLabels[i].setFont(labelsFont);
+//                gridValueLabels.get(i).setFont(labelsFont);
+//            }
+//        }
+//
 
     }
 
@@ -430,10 +442,10 @@ public class GroupsController  extends Controller{
         Insets leftLabelsPadding=new Insets(vSpace,resX*0.015,vSpace,resX*0.004);
         Insets rightLabelsPadding=new Insets(vSpace,resX*0.007,vSpace,0);
 
-        Label [] labels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
-                new Label("Number of Subjective Questions"),new Label("Number of Students"),
-                new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};
 
+
+
+        gridValueLabels=new ArrayList<>();
 
 
         String [] values={Integer.toString(CSVHandler.getDetectedQHeaders().size()),
@@ -458,14 +470,15 @@ public class GroupsController  extends Controller{
 
         Font labelsFont=new Font(resX*12/1280);
 
-        for (int i=0;i<labels.length;i++){
-            infoGridPane.add(labels[i],0,i);
-            labels[i].setPadding(leftLabelsPadding);
+        for (int i=0;i<gridKeyLabels.length;i++){
+            infoGridPane.add(gridKeyLabels[i],0,i);
+            gridKeyLabels[i].setPadding(leftLabelsPadding);
 
-            labels[i].setFont(labelsFont);
+            gridKeyLabels[i].setFont(labelsFont);
 
-            labels[i].setStyle("-fx-font-weight: bold;");
+            gridKeyLabels[i].setStyle("-fx-font-weight: bold;");
             Label valueLabel=new Label(values[i]);
+            gridValueLabels.add(valueLabel);
             valueLabel.setPadding(rightLabelsPadding);
             valueLabel.setAlignment(Pos.CENTER);
             valueLabel.setPrefWidth(resX*0.05);
