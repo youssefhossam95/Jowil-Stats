@@ -33,7 +33,7 @@ public class StatisticsTest extends TestCase {
         Jowil.CSVHandler.loadCsv(isHeaders);
 
         TestUtils.setQuestionChoicesFromFile(inputFilesFolderPath+"QuestionChoices.csv");
-        TestUtils.setQuestionsWeights(Statistics.getQuestionNames().size() , Statistics.getNumberOfForms());
+        TestUtils.setQuestionsWeights(Statistics.getQuestionsChoices().size() , Statistics.getNumberOfForms());
 
         TestUtils.fillGradeRanges() ;
 //        Statistics.setStudentIdentifier(TestUtils.generateAutoIds(Statistics.getNumberOfStudents())) ;
@@ -43,8 +43,14 @@ public class StatisticsTest extends TestCase {
         Jowil.Statistics.printBasicInfo();
         Jowil.Statistics.printCalculations();
 
-        Report5 report8 = new Report5() ;
-        report8.generateHtmlReport(); ;
+        Report4 report4 = new Report4() ;
+        report4.generateTextImgs();
+
+//        Statistics.report5stats(0) ;
+//        Statistics.questReportStats() ;
+//
+//        Report5 report8 = new Report5() ;
+//        report8.generateHtmlReport(); ;
 //        ArrayList<Report> reports = new ArrayList<>();
 //
 //        reports.add(new Report1()) ;

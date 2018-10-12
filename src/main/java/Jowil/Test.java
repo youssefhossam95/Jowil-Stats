@@ -3,6 +3,8 @@ package Jowil;
 import Jowil.Reports.Report;
 import Jowil.Reports.Report1;
 import Jowil.Reports.ReportsHandler;
+import Jowil.Reports.Utils.TxtUtils;
+import Jowil.Reports.Utils.WordUtils;
 import com.lowagie.text.DocumentException;
 
 
@@ -15,6 +17,7 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.math3.stat.StatUtils.* ;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
+import java.awt.*;
 import java.io.*;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -97,22 +100,56 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
-        ArrayList<Double> hardness = new ArrayList<>( );
-//        for(double i = 0 ; i < 40 ; i ++) {
-////            hardness.add(0.0) ;
-//            hardness.add(i/4);
-//            hardness.add(i-10);
-//        }
-       hardness.add(0.0);hardness.add(3.0);
-        hardness.add(0.0); hardness.add(5.0) ;  hardness.add(1.0) ;  hardness.add(10.0) ;
-        hardness.add(6.0) ; hardness.add(9.0) ; hardness.add(7.0); hardness.add(5.0);
-        Pair<Double , Double> pair = getTrendDataSimple(hardness ) ;
-        double slope = pair.getKey();
-        double Rss = pair.getValue() ;
-        System.out.println("slope: " + slope);
-        System.out.println("standard Error: " + Rss);
+        System.out.println(Integer.parseInt("cd" , 16));
 
-        System.out.println("Jowil Param: "+calcJowilParam(slope, Rss)) ;
+//        File file = new File("E:\\work\\Jowil\\output folder test\\Jowil\\XLS Reports\\Report1 - Grades Distribution Report.xls");
+//
+//        //first check if Desktop is supported by Platform or not
+//
+//        if(!Desktop.isDesktopSupported()){
+//            System.out.println("Desktop is not supported");
+//            return;
+//        }
+//
+//
+//        Desktop desktop = Desktop.getDesktop();
+//        if(file.exists()) desktop.open(file);
+
+        //let's try to open PDF file
+//        file = new File("/Users/pankaj/java.pdf");
+//        if(file.exists()) desktop.open(file);
+
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("hi Man") ;
+//        builder.append("كيفك");
+//        builder.append(" ") ;
+//        builder.append("10");
+//
+//        String h = "hi man " + "fuck"  +"10";
+//
+//        System.out.println(h);
+//        h.replace("fuck" , "كيفك");
+//        System.out .println(h);
+//        System.out.println( builder.toString());
+//        TxtUtils.writeTxtToFile(builder.toString() , "test.txt");
+
+
+//        ArrayList<Double> hardness = new ArrayList<>( );
+////        for(double i = 0 ; i < 40 ; i ++) {
+//////            hardness.add(0.0) ;
+////            hardness.add(i/4);
+////            hardness.add(i-10);
+////        }
+//       hardness.add(0.0);hardness.add(3.0);
+//        hardness.add(0.0); hardness.add(5.0) ;  hardness.add(1.0) ;  hardness.add(10.0) ;
+//        hardness.add(6.0) ; hardness.add(9.0) ; hardness.add(7.0); hardness.add(5.0);
+//        Pair<Double , Double> pair = getTrendDataSimple(hardness ) ;
+//        double slope = pair.getKey();
+//        double Rss = pair.getValue() ;
+//        System.out.println("slope: " + slope);
+//        System.out.println("standard Error: " + Rss);
+//
+//        System.out.println("Jowil Param: "+calcJowilParam(slope, Rss)) ;
 
 
 
@@ -198,8 +235,9 @@ public class Test {
 
 //         final String reportsPath=  "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\reports\\";
 //        ReportsHandler reportsHandler = new ReportsHandler();
-//        reportsHandler.generatePDF(reportsPath + "report8\\Report8.html", reportsPath + "report8\\test.pdf");
-//
+////        Report1 r1 = new Report1() ;
+//        reportsHandler.generatePDF(reportsPath + "report1\\ Report1 - Grades Distribution Report.html", reportsPath + "report1\\test.pdf");
+
 
 
 

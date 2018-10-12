@@ -3,15 +3,33 @@ package Jowil.Reports;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.*;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -22,18 +40,70 @@ public class Report4 extends Report{
 
 
     private ArrayList<ArrayList<String>> statsTable ;
+    volatile boolean arabicTextReady = false ;
 
     public Report4(){
         reportTitle = "Students Grades Report" ;
         workSpacePath = reportsPath + "report4\\" ;
         templatePath = workSpacePath + "report4Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
+
     }
 
-    private Document generatePdfHtml() throws IOException {
 
-        final int NUMBER_OF_ROWS_FIRST_PAGE = 20 ;
-        final int NUMBER_OF_ROWS_BALNK_PAGE = 24 ;
+    protected void handleArabicPdf(ArrayList<ArrayList<String>> table ) throws IOException {
+        for (String grade : Statistics.getGrades()) {
+            if (!grade.matches("\\w+")) { // check if any grade is arabic
+                generateTextImgs();
+                while (arabicTextReady) ; // wait for the imgs to be created
+                for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
+                    ArrayList<String> tableRow = table.get(i);
+                    String tableGrade = tableRow.get(1).replace(" " , "%20");;
+                    tableRow.set(1, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
+                }
+                break;
+            }
+        }
+    }
+
+    public void generateTextImgs () throws IOException {
+        ArrayList<String> grades = Statistics.getGrades();
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                Stage stage = new Stage() ;
+                Pane pane = new Pane() ;
+                pane.setStyle("-fx-background-color:white");
+                Scene scene  = new Scene(pane, Color.WHITE);
+                stage.setScene(scene);
+                Label label = new Label("man");
+                pane.getChildren().add(label);
+                for (int i =0 ; i < grades.size(); i ++) {
+                    Label label2 = new Label(grades.get(i));
+                    label2.setStyle("-fx-font-weight: bold");
+                    pane.getChildren().set(0, label2);
+
+//        scene.getStylesheets().add("reports/report1/style.css");
+
+                    WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
+                    try {
+                        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i)+".png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                arabicTextReady = true ;
+            }
+        });
+
+
+    }
+    private Document generatePdfHtml(boolean pdf) throws IOException {
+
+        final int NUMBER_OF_ROWS_BALNK_PAGE = 22 ;
+        final int NUMBER_OF_ROWS_FIRST_PAGE = NUMBER_OF_ROWS_BALNK_PAGE - 4  ;
 
         Format format = new DecimalFormat("0.#");
         final String dataCellCommonClass = "tg-l711" ;
@@ -70,6 +140,9 @@ public class Report4 extends Report{
         int startIndex = 0 ;
         int endIndex = (int)Utils.getNumberWithinLimits(tempStatsTable.size() , 0 , NUMBER_OF_ROWS_FIRST_PAGE) ;
 
+        if(pdf) {
+            handleArabicPdf(tempStatsTable);
+        }
         do  {
             ArrayList<ArrayList<String>> pageTable ;
             if(endIndex == tempStatsTable.size()) {
@@ -96,9 +169,33 @@ public class Report4 extends Report{
 
         return doc ;
     }
+
+    public static void processPDF(String src, String dest) throws IOException, DocumentException
+    {
+        PdfReader reader = new PdfReader(src);
+        PdfDictionary dict = reader.getPageN(1);
+        PdfObject object = dict.getDirectObject(PdfName.CONTENTS);
+
+        if (object instanceof PRStream)
+        {
+            PRStream stream = (PRStream)object;
+            byte[] data = PdfReader.getStreamBytes(stream);
+            String dd = new String(data);
+            dd = dd.replace("F", "good");
+//            dd = dd.replace("EEE:", "Our Ref:");
+//            dd = dd.replace("WR", "IT TEST");
+//            dd = dd.replace("2016", "2020");
+            stream.setData(dd.getBytes());
+        }
+
+        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
+        stamper.close();
+        reader.close();
+    }
+
     @Override
     public void generateHtmlReport() throws IOException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(false) ;
         doc.select("tr.headerRow").remove();
         doc.select("div#footer").remove();
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
@@ -106,9 +203,10 @@ public class Report4 extends Report{
 
     @Override
     public void generatePdfReport() throws IOException, DocumentException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(true) ;
         writeHtmlFile(pdfHtmlPath , doc);
         generatePDF(pdfHtmlPath, outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf");
+        processPDF(outputFormatsFolderPaths[ReportsHandler.PDF]+outputFileName+".pdf" , reportsPath+"/report4/test.pdf");
     }
 
     private ArrayList<ArrayList<String>> getTableWithHeaders () {
@@ -155,7 +253,7 @@ public class Report4 extends Report{
 
     @Override
     public void generatePrintablePdfReport() throws IOException, DocumentException {
-        Document doc = generatePdfHtml() ;
+        Document doc = generatePdfHtml(true) ;
         doc.select("th.bar-header").remove() ;
         doc.select("td.bar").remove() ;
         styleTitlePrintable(doc) ;
@@ -199,6 +297,17 @@ public class Report4 extends Report{
 
     }
 
+    private void processTableForOffice(ArrayList<ArrayList<String>> tableWithHeaders ) {
+        tableWithHeaders.get(0).add("") ;
+        for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
+            ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
+            int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
+            if(rectWidth>100)
+                rectWidth = 100 ;
+            tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
+        }
+    }
+
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
 
@@ -210,15 +319,8 @@ public class Report4 extends Report{
 
 
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
-        tableWithHeaders.get(0).add("") ;
-        for(int rowIndex = 1 ; rowIndex < tableWithHeaders.size() ; rowIndex++) {
-            ArrayList<String> tableRow = tableWithHeaders.get(rowIndex) ;
-            int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
-            if(rectWidth>100)
-                rectWidth = 100 ;
-            tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
-        }
 
+        processTableForOffice(tableWithHeaders);
         XWPFTable docTable = WordUtils.addTable(document,new ArrayList<>( tableWithHeaders.subList(0 , tableWithHeaders.size()-1)));
         XWPFTableRow row = docTable.createRow();
         ArrayList<String> lastRow = tableWithHeaders.get(tableWithHeaders.size()-1) ;
@@ -250,6 +352,24 @@ public class Report4 extends Report{
 
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
 
+
+    }
+
+    @Override
+    public void generateXlsReport() throws IOException {
+
+        ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders();
+
+        int pageWidth = CsvUtils.calcTableWidth(tableWithHeaders) + 2;
+        XlsUtils.createXls(pageWidth);
+
+        XlsUtils.addTitle(reportTitle ,3);
+
+//        processTableForOffice(tableWithHeaders);
+        XlsUtils.addTableAlignCenter(tableWithHeaders);
+        XlsUtils.postProcessSheet();
+//        XlsUtils.sheet.setColumnWidth(5,4000);
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" , false );
 
     }
 

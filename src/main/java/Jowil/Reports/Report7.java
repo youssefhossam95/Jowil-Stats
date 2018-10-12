@@ -3,9 +3,15 @@ package Jowil.Reports;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -107,13 +113,13 @@ public class Report7 extends Report {
         ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(table) ;
         ArrayList<String> headers = new ArrayList<>();
         if(tableIndex ==0 ) {
-            headers.add("Question Name"); headers.add("Difficulty (0-10)"); headers.add("Correct Response Percentage");
-            headers.add("Distractors") ;
+            headers.add("Question Name"); headers.add("Difficulty (0-10)");headers.add("Distractors") ;
+            headers.add("Correct Response Percentage");
 
         }
         else if (tableIndex == 1) {
-            headers.add("Question Name"); headers.add("Difficulty (0-10)"); headers.add("Correct Response Percentage");
-            headers.add("Non Distractors") ;
+            headers.add("Question Name"); headers.add("Difficulty (0-10)");headers.add("Non Distractors") ;
+            headers.add("Correct Response Percentage");
         }
         else if (tableIndex == 2 ) {
             headers.add("Question Name");  headers.add("Point Biserial"); headers.add("Smart Distractors");
@@ -290,6 +296,54 @@ public class Report7 extends Report {
             }
         }
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+
+    }
+    @Override
+    public void generateXlsReport() throws IOException {
+
+
+        int pageWidth = 8;
+        XlsUtils.createXls(pageWidth);
+
+        HSSFSheet sheet = XlsUtils.sheet ;
+
+
+        for (int formIndex = 0; formIndex < formsTableStats.size(); formIndex++) {
+            String form = "";
+            if (formsTableStats.size() > 1)
+                form = ": Form " + (formIndex + 1);
+
+            XlsUtils.addTitle(reportTitle+form);
+
+            ArrayList<ArrayList<ArrayList<String>>> statsTables = formsTableStats.get(formIndex);
+
+            for (int tableIndex = 0; tableIndex < statsTables.size(); tableIndex++) {
+                ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders(statsTables.get(tableIndex), tableIndex);
+                if(statsTables.get(tableIndex).size()==0) {
+                    XlsUtils.addTableTitle(tableTitles[tableIndex]);
+//                    HSSFRow row = sheet.createRow(XlsUtils.lastRowIndex++) ;
+//                    row.createCell(XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX).setCellValue(tableTitles[tableIndex]) ;
+                    String GoodJobMsg = prepareGoodJobMsg(formIndex) ;
+                    String[] parts =GoodJobMsg.split("no");
+
+                    HSSFRow row  = sheet.createRow(XlsUtils.lastRowIndex++) ;
+                    for(int i = 0 ; i < parts.length ; i++) {
+                        String no = i == 0? "no":"" ;
+                        HSSFCell cell  = row.createCell(XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX + i);
+                        cell.setCellValue(parts[i]+no);
+                        CellUtil.setFont(cell , XlsUtils.boldFont);
+                    }
+                    XlsUtils.lastRowIndex += XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE;
+                }else {
+                    XlsUtils.addTableAlignCenter(tableWithHeaders , XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX,
+                            tableTitles[tableIndex],XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
+                }
+            }
+
+
+        }
+
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
 
     }
 

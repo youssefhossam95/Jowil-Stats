@@ -5,6 +5,7 @@ import Jowil.ReportProgressWindow;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -53,8 +54,11 @@ public class ReportsHandler {
 
     public void generatePDF(String inputHtmlPath, String outputPdfPath) throws IOException, com.lowagie.text.DocumentException {
 
+       String resourcesPath= ".\\src\\main\\resources\\" ;
+
         String url = new File(inputHtmlPath).toURI().toURL().toString();
         System.out.println("URL: " + url);
+
 
 
         OutputStream out = new FileOutputStream(outputPdfPath);
@@ -64,11 +68,21 @@ public class ReportsHandler {
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer(true);
 
+        renderer.getFontResolver().addFont(resourcesPath+"font\\NotoNaskhArabic-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         renderer.setDocument(url);
         renderer.layout();
         renderer.createPDF(out);
 
         out.close();
+
+//        PdfReader pdfReader = new PdfReader(outputPdfPath);
+//        pdfReader.selectPages("1");
+//
+//        PdfStamper pdfStamper = new PdfStamper(pdfReader,
+//                new FileOutputStream(outputPdfPath));
+//
+//        pdfStamper.close();
+
 
     }
 
@@ -90,6 +104,9 @@ public class ReportsHandler {
 
             if(formats.contains(WORD))
                 report.generateWordReport();
+
+            if(formats.contains(XLS))
+                report.generateXlsReport();
 
             if(formats.contains(PRINTABLE_PDF))
                 report.generatePrintablePdfReport();

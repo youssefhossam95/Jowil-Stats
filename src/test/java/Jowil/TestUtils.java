@@ -43,7 +43,9 @@ public class TestUtils {
     //grade lower range contains the lower range of the corresponding grade and one extra element which is 1 (the lower range of what is after A+)
     public static void fillGradeRanges() {
         ArrayList<String> grades = new ArrayList<String>();
-        grades.add("F") ;grades.add("D") ;grades.add("C") ; grades.add("B");grades.add("A");
+        grades.add("ضعيف") ;grades.add("مقبول") ;grades.add("جيد") ; grades.add("جيد جدا");grades.add("امتياز");
+//        grades.add("F") ;grades.add("D") ;grades.add("C") ; grades.add("B");grades.add("A");
+
         Statistics.setGrades(grades);
 
         ArrayList<Double> gradeLowerRange  =new ArrayList<Double>();

@@ -1,10 +1,8 @@
 package Jowil.Reports;
 
-import Jowil.Controller;
-import Jowil.RectGenerator;
-import Jowil.Test;
-import Jowil.Utils;
+import Jowil.*;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
@@ -29,7 +27,7 @@ abstract public class Report {
 
     public final static String [] reportsTitles={"Grades Distribution Report","Test Summary Report",
             "Test Statistics Report","Students Grades Report","Questions Analysis Report","Groups Insights Report",
-    "Questions Insights Report","Test Difficulty Report"};
+    "Questions Insights Report","Test Difficulty Report" , "Questionnaire Report"};
 
     protected String templatePath ;
     protected  String resourcesPath;
@@ -105,6 +103,7 @@ abstract public class Report {
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer(ReportsHandler.isTestMode);
 
+        renderer.getFontResolver().addFont(resourcesPath+"font\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         renderer.setDocument(url);
         renderer.layout();
         renderer.createPDF(out);
@@ -235,6 +234,9 @@ abstract public class Report {
     }
 
 
+
+
+
     abstract  public  void generateHtmlReport() throws IOException;
     abstract public void generatePdfReport() throws IOException, DocumentException;
     abstract public void generateTxtReport() ;
@@ -242,6 +244,7 @@ abstract public class Report {
     abstract public void generateCsvReport() throws IOException;
     abstract public void generateTsvReprot() ;
     abstract public void generateWordReport() throws FileNotFoundException, IOException, InvalidFormatException;
+    abstract public void generateXlsReport() throws IOException;
     abstract public void init(); // function to get the abrobriate statistics from the statistics class
 
 

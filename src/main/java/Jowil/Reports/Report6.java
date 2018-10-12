@@ -3,6 +3,7 @@ package Jowil.Reports;
 import Jowil.Reports.Utils.CsvUtils;
 import Jowil.Reports.Utils.TxtUtils;
 import Jowil.Reports.Utils.WordUtils;
+import Jowil.Reports.Utils.XlsUtils;
 import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
@@ -27,6 +28,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static Jowil.Reports.Utils.XlsUtils.addPictureToCell;
 
 public class Report6 extends Report {
     String imgsDirectoryFullPath  ;
@@ -335,6 +338,40 @@ public class Report6 extends Report {
 
         }
         WordUtils.writeWordDocument(document , outputFormatsFolderPaths[ReportsHandler.WORD]+outputFileName+".docx");
+    }
+
+    @Override
+    public void generateXlsReport() throws IOException {
+
+        int pageWidth = 9;
+
+        XlsUtils.createXls(pageWidth);
+
+
+        for(int formIndex = 0 ; formIndex < formsStatsTables.size() ; formIndex++) {
+
+            ArrayList<ArrayList<String>>  tableWithHeaders = getTableWithHeaders(formsStatsTables.get(formIndex));
+
+
+            String title = reportTitle;
+            if (formsStatsTables.size() > 1) {
+                title = title + ": Form " + (formIndex + 1);
+            }
+
+            XlsUtils.addTitle(title, 3);
+
+
+            XlsUtils.addTableAlignCenter(tableWithHeaders);
+
+            int imgColShift = 2 ;
+            addPictureToCell(imgsDirectoryFullPath+imgName+(formIndex+1)+".png", XlsUtils.lastRowIndex,
+                    XlsUtils.DEFAULT_TABLE_COl_STARTING_INDEX+imgColShift, 3, 10 , XlsUtils.DEFAULT_NUMBER_OF_LINES_AFTER_TABLE);
+
+        }
+        XlsUtils.writeXlsFile(outputFormatsFolderPaths[ReportsHandler.XLS]+outputFileName+".xls" );
+
+
+
     }
 
 }
