@@ -78,7 +78,7 @@ public class GradeBoundariesController extends Controller {
 
 
     @FXML
-    AnchorPane reportsConfigHBox;
+    AnchorPane reportsConfigAnc;
 
     @FXML
     VBox reportsVBox;
@@ -217,19 +217,19 @@ public class GradeBoundariesController extends Controller {
         HBox.setHgrow(reportsDirTextField, Priority.ALWAYS);
 
 
-        reportsConfigHBox.setLayoutX(reportsConfigTitle.getLayoutX());
-        reportsConfigHBox.setLayoutY(scrollPane.getLayoutY());
-        reportsConfigHBox.setPrefWidth(reportsDirHBox.getPrefWidth());
-        reportsConfigHBox.setPrefHeight(scrollPane.getPrefHeight()*0.97);
+        reportsConfigAnc.setLayoutX(reportsConfigTitle.getLayoutX());
+        reportsConfigAnc.setLayoutY(scrollPane.getLayoutY());
+        reportsConfigAnc.setPrefWidth(reportsDirHBox.getPrefWidth());
+        reportsConfigAnc.setPrefHeight(scrollPane.getPrefHeight()*0.97);
 
         AnchorPane.setRightAnchor(formatsVBox,rootWidth*0.02);
 
         reportsLabel.setFont(gradesLabelsFonts);
-        reportsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
+        reportsLabel.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, reportsConfigAnc.getPrefHeight() * 0.02, 0));
         formatsLabel.setFont(gradesLabelsFonts);
-        formatsLabel.setPadding(new Insets(reportsConfigHBox.getPrefHeight() * 0.05, 0, reportsConfigHBox.getPrefHeight() * 0.02, 0));
+        formatsLabel.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, reportsConfigAnc.getPrefHeight() * 0.02, 0));
         reportsVBox.setSpacing(resYToPixels(0.02));
-        reportsVBox.setPadding(new Insets(0, 0, 0, reportsConfigHBox.getPrefWidth() * 0.02));
+        reportsVBox.setPadding(new Insets(0, 0, 0, reportsConfigAnc.getPrefWidth() * 0.02));
         formatsVBox.setSpacing(resYToPixels(0.02));
 
 
@@ -619,7 +619,7 @@ public class GradeBoundariesController extends Controller {
     }
 
     private void initReportsConfigHBox() {
-        reportsConfigHBox.setStyle("-fx-border-color: #A9A9A9;-fx-background-color:transparent");
+        reportsConfigAnc.setStyle("-fx-border-color: #A9A9A9;-fx-background-color:transparent");
     }
 
     private void initReportsVBox() {

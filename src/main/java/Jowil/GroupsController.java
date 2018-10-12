@@ -74,13 +74,17 @@ public class GroupsController  extends Controller{
     Label  infoLabel;
 
     @FXML
+    VBox infoContainerVBox;
+
+
+
+    @FXML
     VBox infoVBox;
 
     @FXML
-    Pane gridPaneContainer;
+    ScrollPane infoScrollPane;
 
-    @FXML
-    GridPane infoGridPane;
+
 
 
 
@@ -101,10 +105,10 @@ public class GroupsController  extends Controller{
     private static ArrayList<Group> treeViewGroups;
     private static HashMap<String,Integer> groupsIndices=new HashMap<String,Integer>();
 
-    Label [] gridKeyLabels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
+    Label [] infoKeyLabels={new Label("Number of Objective Questions"),new Label("Number of Objective Groups"),
             new Label("Number of Subjective Questions"),new Label("Number of Students"),
             new Label("Number of Forms"),new Label("Identifier Column"),new Label("Form Column")};;
-    ArrayList<Label>gridValueLabels;
+    ArrayList<Label>infoValueLabels;
 
     //main methods
     GroupsController(Controller back){
@@ -122,9 +126,9 @@ public class GroupsController  extends Controller{
         initGroupsTableVBox();
         initManualButton();
         initTreeView();
-        initInfoGridPane();
+        initInfoVBox();
         midSeparator.setVisible(true);
-        //initInfoGridPane();
+        //initInfoVBox();
         choicesTreeVBox.getChildren().add(choicesTreeView);
 
         backButton.setOnMouseClicked(event -> {
@@ -188,9 +192,13 @@ public class GroupsController  extends Controller{
 
 
 
-        infoGridPane.setPrefWidth(groupsTable.getPrefWidth());
-        infoGridPane.setPrefHeight(groupsTable.getPrefHeight());
-        gridPaneContainer.setMaxWidth(infoGridPane.getPrefWidth());
+        infoScrollPane.setPrefWidth(groupsTable.getPrefWidth());
+        infoScrollPane.setPrefHeight(groupsTable.getPrefHeight());
+        infoVBox.setPrefWidth(groupsTable.getPrefWidth()*0.98);
+
+        infoVBox.setMinWidth(900*0.27);
+
+        //gridPaneContainer.setMaxWidth(infoVBox.getPrefWidth());
 
         manualButton.setPrefHeight(navHeight);
         manualButton.setLayoutX(buttonsHbox.getLayoutX());
@@ -206,13 +214,13 @@ public class GroupsController  extends Controller{
         midSeparator.setLayoutY(rootHeight*0.03);
         midSeparator.setPrefHeight(rootHeightToPixels(0.8));
 
-        infoVBox.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-infoGridPane.getPrefWidth());
-        infoVBox.setLayoutY(groupsTableVbox.getLayoutY());
-        infoVBox.setSpacing(groupsTableVbox.getSpacing());
+        infoContainerVBox.setLayoutX(buttonsHbox.getLayoutX()+buttonsHbox.getPrefWidth()-infoScrollPane.getPrefWidth());
+        infoContainerVBox.setLayoutY(groupsTableVbox.getLayoutY());
+        infoContainerVBox.setSpacing(groupsTableVbox.getSpacing());
 
 
 
-        //infoGridPane.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
+        //infoVBox.setPrefWidth(midSeparator.getLayoutX()-gridPaneContainer.getLayoutX()-rootWidthToPixels(0.02));
 
 
         manualButton.toFront(); //so that it's clickable and not the buttons hbox
@@ -221,10 +229,10 @@ public class GroupsController  extends Controller{
 
 //
 //        if(rootWidth<origSceneWidth) {
-//            for (int i = 0; i < gridKeyLabels.length; i++) {
+//            for (int i = 0; i < infoKeyLabels.length; i++) {
 //                Font labelsFont = new Font(rootWidth*12/1280*1.25);
-//                gridKeyLabels[i].setFont(labelsFont);
-//                gridValueLabels.get(i).setFont(labelsFont);
+//                infoKeyLabels[i].setFont(labelsFont);
+//                infoValueLabels.get(i).setFont(labelsFont);
 //            }
 //        }
 //
@@ -436,16 +444,16 @@ public class GroupsController  extends Controller{
     }
 
 
-    private void initInfoGridPane() {
+    private void initInfoVBox() {
 
         double vSpace=resY*0.017;
-        Insets leftLabelsPadding=new Insets(vSpace,resX*0.015,vSpace,resX*0.004);
-        Insets rightLabelsPadding=new Insets(vSpace,resX*0.007,vSpace,0);
+        Insets leftLabelsPadding=new Insets(vSpace,0,vSpace,resX*0.004);
+        Insets rightLabelsPadding=new Insets(vSpace,0,vSpace,0);
 
 
 
 
-        gridValueLabels=new ArrayList<>();
+        infoValueLabels=new ArrayList<>();
 
 
         String [] values={Integer.toString(CSVHandler.getDetectedQHeaders().size()),
@@ -456,6 +464,9 @@ public class GroupsController  extends Controller{
 
 
 
+        infoVBox.setStyle("-fx-background-color:transparent");
+        infoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
 
 //        Label objCountLabel=new Label("Number of Objective Questions");
 //        Label objGroupsCount=new Label("Number of Objective Groups");
@@ -465,25 +476,29 @@ public class GroupsController  extends Controller{
 //        Label identifierColLabel=new Label("Identifier Column");
 //        Label formsColLabel=new Label("Form Column");
 
-        //infoGridPane.setAlignment(Pos.CENTER);
+        //infoVBox.setAlignment(Pos.CENTER);
 
 
         Font labelsFont=new Font(resX*12/1280);
 
-        for (int i=0;i<gridKeyLabels.length;i++){
-            infoGridPane.add(gridKeyLabels[i],0,i);
-            gridKeyLabels[i].setPadding(leftLabelsPadding);
+        for (int i=0;i<infoKeyLabels.length;i++){
+            AnchorPane anchorPane=new AnchorPane();
+            anchorPane.setStyle("-fx-background-color:transparent");
+            infoVBox.getChildren().add(anchorPane);
 
-            gridKeyLabels[i].setFont(labelsFont);
+            infoKeyLabels[i].setPadding(leftLabelsPadding);
 
-            gridKeyLabels[i].setStyle("-fx-font-weight: bold;");
+            infoKeyLabels[i].setFont(labelsFont);
+
+            infoKeyLabels[i].setStyle("-fx-font-weight: bold;");
             Label valueLabel=new Label(values[i]);
-            gridValueLabels.add(valueLabel);
+            infoValueLabels.add(valueLabel);
             valueLabel.setPadding(rightLabelsPadding);
             valueLabel.setAlignment(Pos.CENTER);
             valueLabel.setPrefWidth(resX*0.05);
             valueLabel.setFont(labelsFont);
-            infoGridPane.add(valueLabel,1,i);
+            anchorPane.getChildren().addAll(infoKeyLabels[i],valueLabel);
+            AnchorPane.setRightAnchor(valueLabel,resX*0.015);
         }
 
 
@@ -493,7 +508,7 @@ public class GroupsController  extends Controller{
 
 
 
-        gridPaneContainer.setStyle("-fx-border-width:1;-fx-border-color:#A9A9A9;-fx-background-color:white;-fx-border-color:derive(-fx-background,-20%);");
+        infoScrollPane.setStyle("-fx-border-width:1;-fx-border-color:#A9A9A9;-fx-background:white;-fx-border-color:derive(-fx-background,-20%);");
 
 
 

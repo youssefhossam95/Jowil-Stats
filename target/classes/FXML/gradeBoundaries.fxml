@@ -33,7 +33,7 @@
     </StackPane>
     </HBox>
 
-    <AnchorPane fx:id="reportsConfigHBox">
+    <AnchorPane fx:id="reportsConfigAnc">
     <VBox fx:id="reportsVBox">
 
     </VBox>

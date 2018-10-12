@@ -20,11 +20,13 @@
         <Label text="Groups Choices" fx:id="treeLabel"></Label>
     </VBox>
 
-    <VBox fx:id="infoVBox">
+    <VBox fx:id="infoContainerVBox">
         <Label fx:id="infoLabel" text="Test Info"></Label>
-        <Pane fx:id="gridPaneContainer">
-            <GridPane fx:id="infoGridPane"></GridPane>
-        </Pane>
+
+            <ScrollPane fx:id="infoScrollPane" >
+            <VBox fx:id="infoVBox"></VBox>
+            </ScrollPane>
+
     </VBox>
     <Button fx:id="manualButton" text="Manual Configuration">
         <graphic>
