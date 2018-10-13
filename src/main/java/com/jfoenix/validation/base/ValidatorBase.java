@@ -51,7 +51,7 @@ public abstract class ValidatorBase extends Parent {
     public final static int ERROR=0,WARNING=1,SUCCESS=2;
     protected int messageType=ERROR;
     public static final PseudoClass PSEUDO_CLASS_SUCCESS = PseudoClass.getPseudoClass("success");
-
+    protected String successMessage="";
 
     public ValidatorBase(String message) {
         this();
@@ -120,7 +120,7 @@ public abstract class ValidatorBase extends Parent {
             else if(messageType==SUCCESS) {
                 control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
 //                control.pseudoClassStateChanged(PSEUDO_CLASS_SUCCESS, true);
-                errorTooltip.setText("File parsed successfully");
+                errorTooltip.setText(successMessage);
                 ((Control) control).setTooltip(errorTooltip);
 
                 //control.setStyle("-jfx-focus-color: #3CB371;");

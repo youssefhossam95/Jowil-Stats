@@ -23,6 +23,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.util.Callback;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -358,7 +359,7 @@ public class StartController extends Controller{
         //dialog.getDialogPane().setStyle("-fx-background-color:transparent");
         dialog.setResizable(true);
         //dialog.getDialogPane().setMinSize(resX*0.5,resY*0.5);
-        dialog.setWidth(resX*0.6);
+        dialog.setWidth(Math.min(resX*0.6,Screen.getPrimary().getVisualBounds().getWidth()*0.85));
         dialog.setHeight(resY*0.8);
 
         dialog.getDialogPane().getButtonTypes().setAll(ButtonType.CLOSE);

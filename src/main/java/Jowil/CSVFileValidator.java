@@ -14,6 +14,7 @@ import javafx.scene.control.TextInputControl;
 import java.io.File;
 import java.io.IOException;
 
+import static Jowil.Controller.isTranslationMode;
 import static Jowil.Controller.translations;
 
 
@@ -236,6 +237,8 @@ public class CSVFileValidator extends ValidatorBase {
         if(!hasErrors.get()) {
             setIcon(successIcon);
             messageType = SUCCESS;
+            String message="File parsed successfully";
+            this.successMessage=isTranslationMode && translations.containsKey(message)?translations.get(message):message;
             setMessage("");
             hasErrors.set(true);
         }

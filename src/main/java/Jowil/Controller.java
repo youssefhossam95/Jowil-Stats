@@ -65,7 +65,7 @@ public abstract class Controller {
     boolean isHeightCalling;
     final double DEFAULT_FONT_AWESOME_ICON_SIZE=resX*27/1280;
     protected final double minWidth,minHeight;
-    static boolean isTranslationMode=false;  //Arabic -> true
+    static boolean isTranslationMode=true;  //Arabic -> true
     static boolean isNormalScalingMode=true; // normal scaling true-> resX will be set to 1280 and resY to 680 so that all calculations are made in absolute pixels count and not relative to screen resolution
 
 

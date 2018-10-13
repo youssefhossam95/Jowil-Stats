@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static Jowil.Controller.constructMessage;
+import static Jowil.Controller.isTranslationMode;
 import static Jowil.Controller.translations;
 
 public class ReportProgressWindow {
@@ -121,6 +123,7 @@ public class ReportProgressWindow {
 
         counterIndicator=new RingProgressIndicator(reportsCount);
 
+        counterIndicator.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT); //override translation behaviour
         counterVBox.getChildren().add(counterIndicator);
 
         counterIndicator.setStyle("-fx-background-color:transparent");
@@ -147,6 +150,8 @@ public class ReportProgressWindow {
             stage = new Stage();
             loader.setController(this);
             root= loader.load();
+            if(isTranslationMode)
+                root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             scene = new Scene(root,rootWidth,rootHeight);
             String windowTitle="Reports Generation Progress";
             stage.setTitle(Controller.isTranslationMode &&translations.containsKey(windowTitle)?translations.get(windowTitle):windowTitle);

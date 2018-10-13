@@ -155,6 +155,7 @@
 
 
 
+  "File parsed successfully":"تم قراءة الملف بنجاح",
   "Empty CSV file.":"الملف فارغ",
   "File doesn't exist.":"الملف غير موجود",
   "Required field.":"ادخل مسار الملف",
