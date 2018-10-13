@@ -37,7 +37,7 @@ public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports",resX*950/1280,resY*500/680);
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports",resX*790/1280,resY*500/680);
 
 
     }
@@ -94,11 +94,12 @@ public class GradeBoundariesController extends Controller {
 
 
 
+    static final String PERCENT_TEXT="Score %";
 
     HBox gradesLabelsHBox = new HBox();
 
     Label gradeName = new Label("Name");
-    Label gradePercent = new Label("Score %");
+    Label gradePercent = new Label(PERCENT_TEXT);
     Label gradeRaw = new Label("Score");
     Label reportsLabel = new Label("Reports");
     Label formatsLabel = new Label("File Formats");
@@ -197,6 +198,13 @@ public class GradeBoundariesController extends Controller {
         gradeName.setFont(gradesLabelsFonts);
         gradePercent.setFont(gradesLabelsFonts);
         gradeRaw.setFont(gradesLabelsFonts);
+
+        if(!isTranslationMode){
+            if(rootWidth<900)
+                gradePercent.setText("%");
+            else
+                gradePercent.setText(PERCENT_TEXT);
+        }
 
         trashIcon.setSize(Double.toString(DEFAULT_FONT_AWESOME_ICON_SIZE));
         folderIcon.setSize(Double.toString(DEFAULT_FONT_AWESOME_ICON_SIZE));
@@ -437,6 +445,7 @@ public class GradeBoundariesController extends Controller {
 
     public void addNextGrade(int callingIndex) {
         int newIndex = callingIndex + 1;
+        isContentEdited=true;
 
         for (int i = callingIndex + 1; i < gradesHBoxes.size(); i++)
             gradesHBoxes.get(i).incrementIndex();
@@ -451,6 +460,7 @@ public class GradeBoundariesController extends Controller {
         if (gradesHBoxes.size() == 1) //never delete last hbox
             return;
 
+        isContentEdited=true;
         for (int i = callingIndex + 1; i < gradesHBoxes.size(); i++)
             gradesHBoxes.get(i).decrementIndex();
 

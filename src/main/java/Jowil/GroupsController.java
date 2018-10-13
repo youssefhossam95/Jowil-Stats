@@ -91,9 +91,10 @@ public class GroupsController  extends Controller{
 
 
 
+    static final String Q_COUNT_COL_TITLE="Questions Count";
 
     JFXTreeTableColumn<Group,String> groupNamesCol = new JFXTreeTableColumn<>("Group");
-    JFXTreeTableColumn<Group,String> qCountCol = new JFXTreeTableColumn<>("Questions Count");
+    JFXTreeTableColumn<Group,String> qCountCol = new JFXTreeTableColumn<>(Q_COUNT_COL_TITLE);
 
 
 
@@ -196,7 +197,7 @@ public class GroupsController  extends Controller{
         infoScrollPane.setPrefHeight(groupsTable.getPrefHeight());
         infoVBox.setPrefWidth(groupsTable.getPrefWidth()*0.98);
 
-        infoVBox.setMinWidth(900*0.27);
+        infoVBox.setMinWidth(920*0.27);
 
         //gridPaneContainer.setMaxWidth(infoVBox.getPrefWidth());
 
@@ -224,6 +225,14 @@ public class GroupsController  extends Controller{
 
 
         manualButton.toFront(); //so that it's clickable and not the buttons hbox
+
+        if(!isTranslationMode){ // to prevent questions count title from being replaced by bubbles
+            if(rootWidth<900)
+                qCountCol.setText("Q. Count");
+            else
+                qCountCol.setText(Q_COUNT_COL_TITLE);
+        }
+
 
 
 
