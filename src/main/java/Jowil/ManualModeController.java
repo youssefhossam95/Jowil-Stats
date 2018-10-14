@@ -152,18 +152,19 @@ public class ManualModeController extends Controller{
         columnSetCombo.setPrefWidth(tableVBox.getPrefWidth()*0.25);
         //columnSetHBox.setPadding(new Insets(rootHeightToPixels(0.05),0,0,0));
 
-        if(rootWidth<minWidth) {
-            columnSetTextField.setStyle("-fx-font-size:" + rootWidth * 1.25 * 14 / 1280);
-            columnSetCombo.setStyle("-fx-font-size:"+rootWidth * 1.25 * 14 / 1280);
-            double scalingFactor=isTranslationMode?1.2:1.25;
-            addButton.setStyle("-fx-font-size:"+rootWidth * scalingFactor* 12 / 1280);
-            resetButton.setStyle("-fx-font-size:"+rootWidth * scalingFactor * 12 / 1280);
-        }
-        else{
-            columnSetTextField.setStyle("-fx-font-size:"+ resX*14/1280 );
-            columnSetCombo.setStyle("-fx-font-size:"+resX*14/1280);
-            addButton.setStyle("");
-            resetButton.setStyle("");
+        if(isNormalScalingMode) {
+            if (rootWidth < minWidth) {
+                columnSetTextField.setStyle("-fx-font-size:" + rootWidth * 1.25 * 14 / 1280);
+                columnSetCombo.setStyle("-fx-font-size:" + rootWidth * 1.25 * 14 / 1280);
+                double scalingFactor = isTranslationMode ? 1.2 : 1.25;
+                addButton.setStyle("-fx-font-size:" + rootWidth * scalingFactor * 12 / 1280);
+                resetButton.setStyle("-fx-font-size:" + rootWidth * scalingFactor * 12 / 1280);
+            } else {
+                columnSetTextField.setStyle("-fx-font-size:" + resX * 14 / 1280);
+                columnSetCombo.setStyle("-fx-font-size:" + resX * 14 / 1280);
+                addButton.setStyle("");
+                resetButton.setStyle("");
+            }
         }
 
         double buttImageSize=resX*13/1280;

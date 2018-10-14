@@ -1,8 +1,10 @@
 package Jowil;
 
 import Jowil.Reports.Report;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -17,10 +20,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
@@ -88,15 +88,69 @@ public class StartController extends Controller{
     StackPane minusButton;
 
     @FXML
+    StackPane settingsButton;
+
+    @FXML
     ImageView backImageView;
 
-    long lastClick;
+
+    @FXML
+    ImageView settingsImageView;
+
+    ContextMenu settingsMenu=new ContextMenu();
+
+    AnchorPane langAnc=new AnchorPane();
+    Label langLabel=new Label("Language");
+    RadioButton englishRadio=new RadioButton("English");
+    RadioButton arabicRadio=new RadioButton("العربية");
+    ToggleGroup langToggleGroup=new ToggleGroup();
+    CustomMenuItem langMenuItem=new CustomMenuItem(langAnc);
+    final double langAncWidth=150;
+
+    AnchorPane resScalingAnc=new AnchorPane();
+    Label resScalingLabel=new Label("Relative resolution scaling");
+    JFXToggleButton resScalingToggle=new JFXToggleButton();
+    CustomMenuItem resScalingMenuItem=new CustomMenuItem(resScalingAnc);
+    String onString="On", offString="Off";
+
+
+
+
+
+
 
     ObservableList<String> existingProjectsListItems;
 
 
     StartController() {
         super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true,0,0);
+
+        generalPrefsJson=loadJsonObj(GENERAL_PREFS_FILE_NAME);
+        if(generalPrefsJson==null){ //failed to load general prefs
+            isTranslationMode=false;
+            isNormalScalingMode=true;
+        }
+        else{
+            isTranslationMode=(Boolean)generalPrefsJson.get(IS_TRANSLATION_MODE_JSON_KEY);
+            isNormalScalingMode=(Boolean)generalPrefsJson.get(IS_NORMAL_SCALING_MODE_JSON_KEY);
+        }
+
+
+        /*in normal scaling set resX and resY to the default resolution used on the development PC so that all controls and
+        fonts will use absolute numbers of pixels otherwise resX and resY will use the realvalues of the
+        screen x and y resolutions and all controls sizes and fonts will be a function of screen resolution.*/
+        if(isNormalScalingMode){
+            resX=1280;
+            resY=680;
+        }
+        else{
+            Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+            resX=primaryScreenBounds.getWidth();
+            resY=primaryScreenBounds.getHeight();
+        }
+
+        System.out.println("resX:"+resX+",\tresY:"+resY);
+
         loadTranslationsJson();
 
     }
@@ -106,7 +160,8 @@ public class StartController extends Controller{
     @Override
     protected void initComponents() {
 
-        Font buttonsFont=new Font("System Bold",resX*0.011);
+        double buttFontSize=isNormalScalingMode && Screen.getPrimary().getVisualBounds().getWidth()<1280?11:resX*14/1280;  //prevent labels from being larger than rectangles
+        Font buttonsFont=new Font("System Bold",buttFontSize);
         openLabel.setFont(buttonsFont);
         newLabel.setFont(buttonsFont);
         //lowerAncPane.setStyle("-fx-background-color:transparent;-fx-border-width:1 0 0 0;-fx-border-color:#626365"); //anchor pane not white
@@ -155,21 +210,37 @@ public class StartController extends Controller{
         });
 
 
+
         newStack.setOnMouseClicked(event -> showNewProjectNameDialog(""));
         openStack.setOnMouseClicked(event -> showExistingProjects());
 
         closeButton.setOnMouseClicked(event -> Platform.exit());
         minusButton.setOnMouseClicked(event -> stage.setIconified(true));
 
+
+
+
+        settingsButton.setOnMouseEntered(event -> settingsImageView.setImage(new Image("Images/blackSettings.png")));
+        settingsButton.setOnMouseExited(event -> settingsImageView.setImage(new Image("Images/darkGreySettings.png")));
+        settingsButton.setOnMouseClicked(event ->{
+            settingsMenu.hide(); //if already open
+            settingsMenu.show(settingsButton,settingsButton.getLayoutX()-langAncWidth+settingsImageView.getFitWidth()/2,settingsButton.getLayoutY()+35);
+        });
+
+        initSettingsMenu();
+
+
+
     }
+
 
     @Override
     public void startWindow(){
         super.startWindow();
         loadProjectsJson();
-
-
-        stage.setOnCloseRequest(event -> { //to override parent behaviour
+        onString=isTranslationMode&& translations.containsKey(onString)?translations.get(onString):onString;
+        offString=isTranslationMode&& translations.containsKey(offString)?translations.get(offString):offString;
+        stage.setOnCloseRequest(event -> { //override parent behaviour
 
         });
     }
@@ -177,8 +248,11 @@ public class StartController extends Controller{
     private void loadTranslationsJson() {
 
         translations=loadJsonObj(TRANSLATIONS_FILE_NAME);
-        if(translations==null) //if failed in loading let it be an empty map so everything will be in English
-            translations=new HashMap<>();
+
+        if(translations==null) { //if failed in loading
+            isTranslationMode=false;
+            translations = new HashMap<>();
+        }
 
     }
 
@@ -195,6 +269,9 @@ public class StartController extends Controller{
     @Override
     protected void buildComponentsGraph(){
 
+        langAnc.getChildren().addAll(langLabel,englishRadio,arabicRadio);
+        resScalingAnc.getChildren().addAll(resScalingLabel,resScalingToggle);
+        settingsMenu.getItems().addAll(langMenuItem,new SeparatorMenuItem(),resScalingMenuItem);
     }
 
     @Override
@@ -202,6 +279,12 @@ public class StartController extends Controller{
 
 
         super.updateSizes();
+
+
+
+
+
+
         double upperHeight=(int)(rootHeight*0.245);
         double lowerHeight=1-upperHeight;
 
@@ -266,6 +349,89 @@ public class StartController extends Controller{
 
     }
 
+
+    private void initSettingsMenu() {
+
+        langAnc.setPrefWidth(langAncWidth);
+        langLabel.setFont(new Font("System Bold",resX*13/1280));
+        englishRadio.setToggleGroup(langToggleGroup);
+        arabicRadio.setToggleGroup(langToggleGroup);
+        englishRadio.setLayoutY(27);
+        arabicRadio.setLayoutY(englishRadio.getLayoutY());
+        AnchorPane.setLeftAnchor(englishRadio,5.0);
+        AnchorPane.setRightAnchor(arabicRadio,2.0);
+        if(isTranslationMode)
+            arabicRadio.setSelected(true);
+        else
+            englishRadio.setSelected(true);
+        arabicRadio.setPadding(Insets.EMPTY);
+        langToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+            if(isTranslationMode && newValue==arabicRadio || !isTranslationMode && newValue==englishRadio) //the selection wasn't made by user
+                return;
+
+            //the string will be translated in the opposite language option so in arabic string it will be change to english
+            boolean isChange=showConfirmationDialog("Change Language","Are you sure you want to change the program language to Arabic?",
+                    stage.getOwner());
+
+            if(isChange){
+                isTranslationMode=!isTranslationMode;
+                if(generalPrefsJson!=null)
+                    generalPrefsJson.put(IS_TRANSLATION_MODE_JSON_KEY,isTranslationMode);
+                saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+                stage.close();
+                new StartController().startWindow();
+            }
+            else
+                langToggleGroup.selectToggle(oldValue);
+
+        });
+        langMenuItem.getStyleClass().add("nonSelectableMenuItem");
+        langMenuItem.setHideOnClick(false);
+
+
+
+        resScalingLabel.setFont(langLabel.getFont());
+        resScalingLabel.setLayoutY(5);
+        resScalingToggle.setText(isNormalScalingMode?offString:onString);
+        resScalingToggle.setSelected(!isNormalScalingMode);
+        resScalingToggle.selectedProperty().addListener((observable, oldValue, newValue) -> {
+
+            resScalingToggle.setText(newValue ? onString : offString);
+            if(isNormalScalingMode!=newValue) //the selection wasn't made by user
+                return;
+            String option=newValue?"enable":"disable";
+            boolean isChange=showConfirmationDialog("Relative Resolution Scaling","Are you sure you want to "+option+" relative resolution scaling?",
+                    stage.getOwner());
+
+            if(isChange){
+                isNormalScalingMode=!isNormalScalingMode;
+                if(generalPrefsJson!=null)
+                    generalPrefsJson.put(IS_NORMAL_SCALING_MODE_JSON_KEY,isNormalScalingMode);
+                saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+                stage.close();
+                new StartController().startWindow();
+            }
+            else
+                resScalingToggle.setSelected(oldValue);
+
+        });
+        resScalingToggle.setLayoutY(17);
+        resScalingToggle.setStyle("-jfx-toggle-color:#095c90;");
+        resScalingToggle.setPadding(Insets.EMPTY);
+        resScalingMenuItem.getStyleClass().add("nonSelectableMenuItem");
+        resScalingMenuItem.setHideOnClick(false);
+
+
+
+
+        settingsMenu.setOnShown(event->translateAllNodes(settingsMenu.getScene().getRoot()));
+        if(isTranslationMode)
+            settingsMenu.getScene().getRoot().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+
+
+
+    }
 
 
     private void showNewProjectNameDialog(String initialText){

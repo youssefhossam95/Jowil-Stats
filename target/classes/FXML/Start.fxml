@@ -42,6 +42,15 @@
                     </children>
                 </StackPane>
                 </HBox>
+                <StackPane fx:id="settingsButton" style="-fx-background-color:transparent;-fx-border-width:0" prefWidth="40" prefHeight="40" AnchorPane.rightAnchor="27" AnchorPane.topAnchor="53">
+                    <children>
+                        <ImageView fx:id="settingsImageView" pickOnBounds="true" preserveRatio="true" fitWidth="25" fitHeight="25">
+                            <image>
+                                <Image url="@../Images/darkGreySettings.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../Images/logojsSmall.png" />

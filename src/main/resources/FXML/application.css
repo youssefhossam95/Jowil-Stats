@@ -417,3 +417,8 @@ JFXListView:focused {
 .nonSelectableMenuItem:focused .label {
     -fx-text-fill: -fx-text-base-color;
 }
+
+.blueJFXToggle{
+-jfx-untoggle-color:#095c90;
+-jfx-toggle-color:#095c90;
+}

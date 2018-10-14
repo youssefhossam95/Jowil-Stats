@@ -291,7 +291,7 @@ public class WeightsController extends Controller {
     protected void updateSizes() {
         super.updateSizes();
 
-        double tablesShift = 0.13;
+
 
         objTableVbox.setSpacing(rootHeightToPixels(0.019));
         objTableVbox.setLayoutY(rootHeight*0.04);
@@ -371,7 +371,7 @@ public class WeightsController extends Controller {
         bonusMarksLabel.setPadding(fullMarksLabel.getPadding());
 
 
-        contextMenuCheckBox.setStyle("");
+
 
 
         AnchorPane.setLeftAnchor(fullMarksLabel,0.0);
@@ -439,13 +439,14 @@ public class WeightsController extends Controller {
         initContextMenu();
 
 
+        contextMenuCheckBox.setStyle(""); // to override font size initialized in updateControlsText
         TranslatableTooltip tooltip = new TranslatableTooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltip);
         contextMenuExpandButton.setOnMouseEntered(event->contextMenuCircle.setStyle("-fx-fill:#87CEEB"));
         contextMenuExpandButton.setOnMouseExited(event ->  contextMenuCircle.setStyle("-fx-fill:#095c90"));
 
         contextMenuCircle.setStyle("-fx-fill:#095c90");
-        contextMenuIcon.setRotate(90);
+        contextMenuIcon.setRotate(90); //make bubbles horizontal
 
         midSeparator.setVisible(true);
         midSeparator.setOrientation(Orientation.VERTICAL);
@@ -923,7 +924,7 @@ public class WeightsController extends Controller {
         String s=tryDouble(fullMarksTextField.getText());
         if(s==null) {
 
-            if(isCalledFromEnter) //triggered by Enter button -> hide context menu so that full validation will take place, to avoid double alerts
+            if(isCalledFromEnter) //triggered by Enter button and not from normal closing of menu -> hide context menu so that full validation will take place, to avoid double alerts
                 contextMenu.hide();
             else //triggered by context menu hide-> show alert
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Invalid Full Mark Value", constructMessage("Full mark value"," \"" + fullMarksTextField.getText() + "\" ","is invalid."));

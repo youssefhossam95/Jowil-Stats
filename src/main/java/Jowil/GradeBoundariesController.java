@@ -37,7 +37,7 @@ public class GradeBoundariesController extends Controller {
 
 
     GradeBoundariesController(Controller back) {
-        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports",resX*790/1280,resY*500/680);
+        super("gradeBoundaries.fxml", "Grading Scale and Report Generation", 1.25, 1.25, true, back,"4.png",3,"Grading Scale & Reports",resX*795/1280,resY*500/680);
 
 
     }
@@ -200,7 +200,7 @@ public class GradeBoundariesController extends Controller {
         gradeRaw.setFont(gradesLabelsFonts);
 
         if(!isTranslationMode){
-            if(rootWidth<900)
+            if(rootWidth<resX*0.7)
                 gradePercent.setText("%");
             else
                 gradePercent.setText(PERCENT_TEXT);

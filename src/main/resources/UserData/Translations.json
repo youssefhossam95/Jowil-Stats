@@ -9,6 +9,10 @@
 
   "New Project":"امتحان جديد",
   "Open Existing Project":"فتح امتحان سابق",
+  "Language":"اللغة",
+  "Relative resolution scaling":"تناسب الأحجام مع دقة الشاشة",
+  "On":"تشغيل",
+  "Off":"إيقاف",
   "Next":"التالي",
   "Back":"السابق",
   "Finish":"انهاء",
@@ -144,6 +148,8 @@
 
 
 
+  "Change Language":"تغيير اللغة",
+  "Relative Resolution Scaling":"تناسب الأحجام مع دقة الشاشة",
   "Confirm Column Set Deletion":"تأكيد إلغاء مجموعة العواميد",
   "Cancel Project":"إلغاء الامتحان",
   "Close Project":"غلق الإمتحان",
@@ -245,6 +251,9 @@
   "Error in loading Grade Scale Configurations.":"خطأ في تحميل اعدادات نظام التقديرات.",
 
 
+  "Are you sure you want to change the program language to Arabic?":"هل أنت متأكد من رغبتك في تغيير لغة البرنامج إلى اللغة الانجليزية؟",
+  "Are you sure you want to enable relative resolution scaling?":"هل أنت متأكد من رغبتك في تشغيل خاصية تناسب الأحجام مع دقة الشاشة؟",
+  "Are you sure you want to disable relative resolution scaling?":"هل أنت متأكد من رغبتك في إيقاف خاصية تناسب الأحجام مع دقة الشاشة؟"
   "Changes you made will not be saved. ":"لن يتم حفظ التغييرات التي قمت بها. ", "Are you sure you want to ":"هل أنت متأكد من رغبتك في ","close":"غلق", "cancel":"إلغاء", " this project?":" هذا الامتحان؟",
   "Are you sure you want to delete":"هل أنت متأكد من رغبتك في حذف نظام التقديرات", "grade scale configuration?":"؟",
   "Resetting will delete all existing column sets. Are you sure you want to reset column sets?":"هل أنت متأكد من رغبتك في حذف جميع مجموعات الأسئلة؟",

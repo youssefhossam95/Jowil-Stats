@@ -194,7 +194,7 @@ public class FileConfigController extends Controller {
         initFormCombo();
         initManualModeToggle();
         isMainTextFieldValidated=false;
-        generalPrefsJson=loadJsonObj(GENERAL_PREFS_FILE_NAME);
+
         if(generalPrefsJson!=null)
             lastDir=(String)generalPrefsJson.get(LAST_CSV_DIR_JSON_KEY);
 
@@ -831,7 +831,7 @@ public class FileConfigController extends Controller {
     }
 
     private void initManualModeToggle() {
-        manualModeToggle.setStyle("-jfx-untoggle-color:#095c90;-jfx-toggle-color:#095c90");
+        manualModeToggle.getStyleClass().add("blueJFXToggle");
         manualModeToggle.selectedProperty().addListener((observable, oldValue, newValue) ->
         {
             if (newValue) {

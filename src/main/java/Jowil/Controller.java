@@ -92,7 +92,7 @@ public abstract class Controller {
     double origSceneWidth,origSceneHeight;
     protected boolean isContentEdited=false;
     protected HBox buttonsHbox= new HBox();
-    protected double headersFontSize=resX/64;
+    protected double headersFontSize;
     private boolean isMaximizedChanged=false;
     boolean isWait=false;
     static boolean isOpenMode;
@@ -120,7 +120,8 @@ public abstract class Controller {
             RESPONSES_FILE_PATH_JSON_KEY="responsesFilePath", ANSWERS_FILE_PATH_JSON_KEY="answersFilePath",IDENTIFIER_NAME_JSON_KEY="identifierName"
             ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
             SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name", ALLOW_EXCEED_FULL_MARK_JSON_KEY="allowExceedFullMark",
-            BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore",SCALES_JSON_KEY="scales";
+            BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore",SCALES_JSON_KEY="scales",IS_TRANSLATION_MODE_JSON_KEY="isTranslationMode",
+            IS_NORMAL_SCALING_MODE_JSON_KEY="isNormalScalingMode";
 
 
 

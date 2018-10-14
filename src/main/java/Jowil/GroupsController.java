@@ -197,7 +197,7 @@ public class GroupsController  extends Controller{
         infoScrollPane.setPrefHeight(groupsTable.getPrefHeight());
         infoVBox.setPrefWidth(groupsTable.getPrefWidth()*0.98);
 
-        infoVBox.setMinWidth(920*0.27);
+        infoVBox.setMinWidth(resX*0.72*0.27);
 
         //gridPaneContainer.setMaxWidth(infoVBox.getPrefWidth());
 
@@ -227,7 +227,7 @@ public class GroupsController  extends Controller{
         manualButton.toFront(); //so that it's clickable and not the buttons hbox
 
         if(!isTranslationMode){ // to prevent questions count title from being replaced by bubbles
-            if(rootWidth<900)
+            if(rootWidth<resX*0.7)
                 qCountCol.setText("Q. Count");
             else
                 qCountCol.setText(Q_COUNT_COL_TITLE);
@@ -475,7 +475,10 @@ public class GroupsController  extends Controller{
 
         infoVBox.setStyle("-fx-background-color:transparent");
         infoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
+        infoScrollPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue)
+                rootPane.requestFocus();
+        });
 
 //        Label objCountLabel=new Label("Number of Objective Questions");
 //        Label objGroupsCount=new Label("Number of Objective Groups");
