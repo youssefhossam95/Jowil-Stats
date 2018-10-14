@@ -105,8 +105,7 @@ public class StartController extends Controller{
 
     @Override
     protected void initComponents() {
-        Font jowilLabelFont=new Font("System Bold",resX*0.059);
-        jowilLabel.setFont(jowilLabelFont);
+
         Font buttonsFont=new Font("System Bold",resX*0.011);
         openLabel.setFont(buttonsFont);
         newLabel.setFont(buttonsFont);
@@ -200,13 +199,14 @@ public class StartController extends Controller{
 
     @Override
     protected void updateSizes(){
-        Insets buttonLabelsMargin=new Insets(0.2*resY,0,0,0);
-        Insets buttonImagesMargin=new Insets(0,0,0.04*resY,0);
+
 
         super.updateSizes();
         double upperHeight=(int)(rootHeight*0.245);
         double lowerHeight=1-upperHeight;
 
+        Font jowilLabelFont=new Font("System Bold",rootWidth*0.059);
+        jowilLabel.setFont(jowilLabelFont);
 
 //        upperImageView.setFitWidth(rootWidth);
 //        upperImageView.setFitHeight(upperHeight);
@@ -222,8 +222,8 @@ public class StartController extends Controller{
 
         double vSpacing=rootHeight*0.15;
 
-        logoImageView.setFitWidth(0.08*resX);
-        logoImageView.setFitHeight(0.11*resY);
+        logoImageView.setFitWidth(rootWidth*0.058);
+        logoImageView.setFitHeight(logoImageView.getFitWidth());
         logoImageView.setLayoutX(0.474*rootWidth);
         //logoImageView.setLayoutY(jowilLabel.getLayoutY()+rootHeight*0.09);
         logoImageView.setLayoutY(jowilLabel.getLayoutY()+vSpacing);
@@ -232,13 +232,18 @@ public class StartController extends Controller{
         openStack.setLayoutX(0.25*rootWidth);
         openStack.setLayoutY(logoImageView.getLayoutY()+vSpacing);
 
-        openRect.setWidth(0.15*resX); // kant 0.173
-        openRect.setHeight(0.34*resY); //kant 0.4
-        openRect.setArcWidth(resX*0.01);
-        openRect.setArcHeight(resY*0.02);
+        openRect.setWidth(0.15*rootWidth); // kant 0.173
+        openRect.setHeight(0.18*rootWidth); //kant 0.4
+        openRect.setArcWidth(rootWidth*0.01);
+        openRect.setArcHeight(openRect.getArcWidth());
 
-        openImageView.setFitWidth(0.055*resX);
-        openImageView.setFitHeight(0.11*resY);
+        openImageView.setFitWidth(0.055*rootWidth);
+        openImageView.setFitHeight(openImageView.getFitWidth());
+
+
+        Insets buttonLabelsMargin=new Insets(0.59*openRect.getHeight(),0,0,0);
+        Insets buttonImagesMargin=new Insets(0,0,0.118*openRect.getHeight(),0);
+
 
         StackPane.setMargin(openLabel,buttonLabelsMargin);
         StackPane.setMargin(openImageView,buttonImagesMargin);
