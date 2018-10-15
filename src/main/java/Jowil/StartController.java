@@ -105,7 +105,7 @@ public class StartController extends Controller{
     RadioButton arabicRadio=new RadioButton("العربية");
     ToggleGroup langToggleGroup=new ToggleGroup();
     CustomMenuItem langMenuItem=new CustomMenuItem(langAnc);
-    final double langAncWidth=150;
+    final double langAncWidth=180;
 
     AnchorPane resScalingAnc=new AnchorPane();
     Label resScalingLabel=new Label("Relative resolution scaling");
@@ -243,6 +243,9 @@ public class StartController extends Controller{
         stage.setOnCloseRequest(event -> { //override parent behaviour
 
         });
+
+
+
     }
 
     private void loadTranslationsJson() {
@@ -352,10 +355,19 @@ public class StartController extends Controller{
 
     private void initSettingsMenu() {
 
+        double flagsSize=15;
         langAnc.setPrefWidth(langAncWidth);
         langLabel.setFont(new Font("System Bold",resX*13/1280));
         englishRadio.setToggleGroup(langToggleGroup);
+        ImageView englishImageView=new ImageView("Images/USA.png");
+        englishImageView.setFitWidth(flagsSize);
+        englishImageView.setFitHeight(flagsSize);
+        englishRadio.setGraphic(englishImageView);
         arabicRadio.setToggleGroup(langToggleGroup);
+        ImageView arabicImageView=new ImageView("Images/Egypt.png");
+        arabicImageView.setFitWidth(flagsSize);
+        arabicImageView.setFitHeight(flagsSize);
+        arabicRadio.setGraphic(arabicImageView);
         englishRadio.setLayoutY(27);
         arabicRadio.setLayoutY(englishRadio.getLayoutY());
         AnchorPane.setLeftAnchor(englishRadio,5.0);

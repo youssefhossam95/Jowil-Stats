@@ -56,6 +56,7 @@ public class Statistics {
     private static double userMaxScore = -1 ;
     private static boolean allowExceedMaxScore = true ;
     private static double epslon = 0.0000001 ;
+    private static boolean addBonusToAll;
 
     private static ArrayList<Double> subjMaxScores;
     private static ArrayList<ArrayList<Double>> formsScors ;
@@ -145,8 +146,8 @@ public class Statistics {
         Statistics.allowExceedMaxScore = allowExceedMaxScore;
     }
 
-    public static boolean isAllowExceedMaxScore() {
-        return allowExceedMaxScore;
+    public static void setAddBonusToAll(boolean addBonusToAll) {
+        Statistics.addBonusToAll = addBonusToAll;
     }
 
 
@@ -196,6 +197,16 @@ public class Statistics {
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
         return (int)max(forms)+1 ;
     }
+
+    public static boolean isAllowExceedMaxScore() {
+        return allowExceedMaxScore;
+    }
+
+
+    public static boolean isAddBonusToAll() {
+        return addBonusToAll;
+    }
+
     public static ArrayList<ArrayList<String>> getQuestionsChoices(){
         return questionsChoices;
     }

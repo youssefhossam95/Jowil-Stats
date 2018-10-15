@@ -135,6 +135,14 @@ public class WeightsController extends Controller {
         }
 
 
+        @Override
+        public boolean equals(Object obj) {
+            if(!(obj instanceof Grade) )
+                return false;
+            Grade other=(Grade)obj;
+            return gradeName.get().equals(other.gradeName.get()) && minPercentScore.get().equals(other.minPercentScore.get()) &&
+                    frequency.get().equals(other.frequency.get());
+        }
     }
 
 
@@ -243,6 +251,8 @@ public class WeightsController extends Controller {
 
     ObservableList<Grade> gradesFreqData = FXCollections.observableArrayList();
 
+    boolean isGradesFreqDataChanged;
+
     ImageView objButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
 
     ImageView subjButtonGraphic=new ImageView(new Image("Images/whiteRefresh.png"));
@@ -256,16 +266,31 @@ public class WeightsController extends Controller {
     AnchorPane fullMarksAnc=new AnchorPane();
     Label fullMarksLabel=new Label("Full Mark:");
     TextField fullMarksTextField=new TextField();
+    ImageView resetFullMarkImageView=new ImageView("Images/blueReset.png");
+    StackPane resetFullMarkButton=new StackPane(resetFullMarkImageView);
     CustomMenuItem fullMarksMenuItem= new CustomMenuItem(fullMarksAnc);
+
 
     AnchorPane bonusMarksAnc=new AnchorPane();
     Label bonusMarksLabel=new Label("Bonus Marks:");
     TextField bonusMarksTextField=new TextField();
     CustomMenuItem bonusMarksMenuItem= new CustomMenuItem(bonusMarksAnc);
 
-    AnchorPane checkBoxAnc=new AnchorPane();
-    CheckBox contextMenuCheckBox=new JFXCheckBox("Allow exceeding full mark",14);
-    CustomMenuItem checkBoxMenuItem=new CustomMenuItem(checkBoxAnc);
+    AnchorPane bonusRadiosAnc=new AnchorPane();
+    RadioButton allRadio=new RadioButton("All");
+    RadioButton failingRadio=new RadioButton("Failing");
+    ToggleGroup radiosToggleGroup=new ToggleGroup();
+    CustomMenuItem bonusRadiosMenuItem=new CustomMenuItem(bonusRadiosAnc);
+
+
+    AnchorPane exceedCheckBoxAnc=new AnchorPane();
+    CheckBox exceedCheckBox=new JFXCheckBox("Allow exceeding full mark",14);
+    CustomMenuItem exceedCheckBoxMenuItem=new CustomMenuItem(exceedCheckBoxAnc);
+
+
+    AnchorPane bonusCheckBoxAnc=new AnchorPane();
+    CheckBox bonusCheckBox=new JFXCheckBox("Add bonus to failing only",14);
+    CustomMenuItem bonusCheckBoxMenuItem=new CustomMenuItem(bonusCheckBoxAnc);
 
     int maxBarIndex=0;
 
@@ -341,43 +366,43 @@ public class WeightsController extends Controller {
         //contextMenuIcon.setSize(Double.toString(resX*18/1280));
         contextMenuIcon.setFitWidth(resX*13.2/1280);
         contextMenuIcon.setFitHeight(resX*13.2/1280);
-        contextMenuCircle.setRadius(contextMenuIcon.getFitWidth()*0.7);
+        StackPane.setMargin(contextMenuIcon,new Insets(0,resX*1.4/1280,0,0));
+        contextMenuCircle.setRadius(contextMenuIcon.getFitWidth()*0.74);
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2-contextMenuIcon.getFitWidth()/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
-        contextMenuExpandButton.setOnMouseClicked(event -> {
-            
-            buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
-            buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
-            double buttSize=contextMenuIcon.getFitWidth();
-            contextMenu.show(rootPane,0,0);
-            contextMenu.hide();
-            contextXPos=buttAbsX+buttSize/4-contextMenuCheckBox.getWidth();
-            contextYPos=buttAbsY+buttSize;
-            contextMenu.show( contextMenuExpandButton,contextXPos,contextYPos);
 
-        });
+        double ancBaseWidth=125,resetImageSize=18,spacing=10;
 
-        double verPad=resY*4/680,sidePad=resX*5/1280;
-        fullMarksAnc.setPrefWidth(125);
+        fullMarksAnc.setPrefWidth(ancBaseWidth+resetImageSize+spacing);
         fullMarksTextField.setPrefWidth(50);
         //fullMarksLabel.setFont(new Font(resX*12/1280));
         fullMarksLabel.setPadding(new Insets(4,0,0,0));
+        resetFullMarkImageView.setFitWidth(resetImageSize);
+        resetFullMarkImageView.setFitHeight(resetFullMarkImageView.getFitWidth());
+        resetFullMarkButton.setPadding(new Insets(3,0,0,0));
+        //StackPane.setMargin(resetFullMarkImageView,new Insets(3,0,0,0));
 
 
 
-        bonusMarksAnc.setPrefWidth(fullMarksAnc.getPrefWidth());
+
+        bonusMarksAnc.setPrefWidth(ancBaseWidth);
         bonusMarksTextField.setPrefWidth(fullMarksTextField.getPrefWidth());
         //bonusMarksLabel.setFont(fullMarksLabel.getFont());
         bonusMarksLabel.setPadding(fullMarksLabel.getPadding());
 
+
+        bonusRadiosAnc.setPrefWidth(ancBaseWidth);
 
 
 
 
         AnchorPane.setLeftAnchor(fullMarksLabel,0.0);
         AnchorPane.setLeftAnchor(bonusMarksLabel,0.0);
-        AnchorPane.setRightAnchor(fullMarksTextField,0.0);
+        AnchorPane.setLeftAnchor(allRadio,0.0);
+        AnchorPane.setRightAnchor(resetFullMarkButton,0.0);
+        AnchorPane.setRightAnchor(fullMarksTextField,resetFullMarkImageView.getFitWidth()+spacing);
         AnchorPane.setRightAnchor(bonusMarksTextField,0.0);
+        AnchorPane.setRightAnchor(failingRadio,0.0);
 
 
 
@@ -426,6 +451,7 @@ public class WeightsController extends Controller {
 
 
 
+
         Statistics.setUserMaxScore(initialUserMaxScore);
         Statistics.setBonus(initialBonus);
 
@@ -439,7 +465,10 @@ public class WeightsController extends Controller {
         initContextMenu();
 
 
-        contextMenuCheckBox.setStyle(""); // to override font size initialized in updateControlsText
+        allRadio.setToggleGroup(radiosToggleGroup);
+        failingRadio.setToggleGroup(radiosToggleGroup);
+        exceedCheckBox.setStyle(""); // to override font size initialized in updateControlsText
+        bonusCheckBox.setStyle("");
         TranslatableTooltip tooltip = new TranslatableTooltip("Tweak Grades");
         Tooltip.install(contextMenuExpandButton, tooltip);
         contextMenuExpandButton.setOnMouseEntered(event->contextMenuCircle.setStyle("-fx-fill:#87CEEB"));
@@ -471,7 +500,8 @@ public class WeightsController extends Controller {
 
 
         if(generalPrefsJson!=null) {
-            generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY, contextMenuCheckBox.isSelected());
+            generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY, exceedCheckBox.isSelected());
+            generalPrefsJson.put(ADD_BONUS_TO_ALL_JSON_KEY,bonusCheckBox.isSelected());
             saveJsonObj(GENERAL_PREFS_FILE_NAME, generalPrefsJson);
         }
 
@@ -595,10 +625,13 @@ public class WeightsController extends Controller {
 
         contextMenuExpandButton.getChildren().addAll(contextMenuCircle,contextMenuIcon);
 
-        fullMarksAnc.getChildren().addAll(fullMarksLabel,fullMarksTextField);
+        fullMarksAnc.getChildren().addAll(fullMarksLabel,fullMarksTextField,resetFullMarkButton);
         bonusMarksAnc.getChildren().addAll(bonusMarksLabel,bonusMarksTextField);
-        checkBoxAnc.getChildren().add(contextMenuCheckBox);
-        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,new SeparatorMenuItem(),checkBoxMenuItem);
+        bonusRadiosAnc.getChildren().addAll(allRadio,failingRadio);
+        exceedCheckBoxAnc.getChildren().add(exceedCheckBox);
+        bonusCheckBoxAnc.getChildren().add(bonusCheckBox);
+
+        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,new SeparatorMenuItem(),bonusCheckBoxMenuItem,exceedCheckBoxMenuItem);
 
 
         rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable,contextMenuExpandButton);
@@ -616,6 +649,18 @@ public class WeightsController extends Controller {
     public void startWindow(){
         super.startWindow();
         Platform.runLater(()->gradesFreqTable.refresh());
+
+        contextMenuExpandButton.setOnMouseClicked(event -> {
+            contextMenu.hide(); //if already opened
+            buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
+            buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
+            double buttSize=contextMenuIcon.getFitWidth();
+            contextXPos=buttAbsX-(isTranslationMode?0:resX*154/1280);
+            contextYPos=buttAbsY+buttSize+2;
+            contextMenu.show( contextMenuExpandButton,contextXPos,contextYPos);
+
+        });
+
 
 
 
@@ -843,17 +888,43 @@ public class WeightsController extends Controller {
         contextMenu.setOnShown(event -> translateAllNodes(contextMenu.getScene().getRoot()));
 
 
-
-
         fullMarksMenuItem.setHideOnClick(false);
         bonusMarksMenuItem.setHideOnClick(false);
-        checkBoxMenuItem.setHideOnClick(false);
+        bonusRadiosMenuItem.setHideOnClick(false);
+        exceedCheckBoxMenuItem.setHideOnClick(false);
+        bonusCheckBoxMenuItem.setHideOnClick(false);
 
 
         fullMarksMenuItem.getStyleClass().add("nonSelectableMenuItem");
         bonusMarksMenuItem.getStyleClass().add("nonSelectableMenuItem");
-        checkBoxMenuItem.getStyleClass().add("nonSelectableMenuItem");
-        contextMenuCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
+        bonusRadiosMenuItem.getStyleClass().add("nonSelectableMenuItem");
+        exceedCheckBoxMenuItem.getStyleClass().add("nonSelectableMenuItem");
+        //exceedCheckBox.setStyle("-fx-text-fill:-fx-text-base-color;-fx-font-size:"+resX*12/1280);
+        bonusCheckBoxMenuItem.getStyleClass().add("nonSelectableMenuItem");
+
+
+
+        fullMarksAnc.setStyle("-fx-background-color:white");
+        bonusMarksAnc.setStyle("-fx-background-color:white");
+        exceedCheckBoxAnc.setStyle("-fx-background-color:white");
+        bonusCheckBoxAnc.setStyle("-fx-background-color:white");
+
+        resetFullMarkButton.setOnMouseEntered(event->resetFullMarkImageView.setImage(new Image("Images/hoveredBlueReset.png")));
+        resetFullMarkButton.setOnMouseExited(event -> resetFullMarkImageView.setImage(new Image("Images/blueReset.png")));
+        resetFullMarkButton.setOnMouseClicked(event -> {
+            boolean isReset=showConfirmationDialog("Reset Full Mark","Resetting the full mark will set its value to the sum of all question weights. Are you sure you want to reset?"
+            ,stage.getOwner());
+            if(isReset) {
+                Statistics.setUserMaxScore(-1);
+                refreshGradesDistribution();
+            }
+            contextMenu.show( contextMenuExpandButton,contextXPos,contextYPos);
+
+        });
+        TranslatableTooltip tooltip = new TranslatableTooltip("Reset Full Mark");
+        Tooltip.install(resetFullMarkButton, tooltip);
+
+
 
 
         bonusMarksTextField.setText(Double.toString(Statistics.getBonus()));
@@ -909,16 +980,26 @@ public class WeightsController extends Controller {
 
 
 
-        if(generalPrefsJson==null && !isOpenMode)
-            contextMenuCheckBox.setSelected(true);
+
+        if(generalPrefsJson==null && !isOpenMode) { //general prefs failed to load in non-open mode
+            exceedCheckBox.setSelected(true);
+            bonusCheckBox.setSelected(true);
+        }
         else {
             JSONObject obj=isOpenMode?currentOpenedProjectJson:generalPrefsJson;
-            contextMenuCheckBox.setSelected((Boolean) obj.get(ALLOW_EXCEED_FULL_MARK_JSON_KEY));
+            exceedCheckBox.setSelected((Boolean) obj.get(ALLOW_EXCEED_FULL_MARK_JSON_KEY));
+            bonusCheckBox.setSelected((Boolean) obj.get(ADD_BONUS_TO_ALL_JSON_KEY));
         }
-        contextMenuCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> Statistics.setAllowExceedMaxScore(newValue));
+        exceedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> Statistics.setAllowExceedMaxScore(newValue));
+        bonusCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) ->{
+            Statistics.setAddBonusToAll(!newValue); //not because the checkbox is checked for failing only
+            refreshGradesDistribution();
+        }));
 
 
     }
+
+
 
     private boolean saveFullMarkChange(boolean isCalledFromEnter) {
         String s=tryDouble(fullMarksTextField.getText());
@@ -1154,17 +1235,38 @@ public class WeightsController extends Controller {
 
         report1Table = Utils.transposeStringList(report1Table);
 
+        ArrayList<Grade> oldGradesFreq=new ArrayList<>(gradesFreqData);
+
+
+
+
+
         gradesFreqData.clear();
 
         for(int i=0;i<report1Table.get(0).size();i++)
             gradesFreqData.add(new Grade(report1Table.get(0).get(i),"0.0",report1Table.get(3).get(i))); //0.0 is just a dummy
+
+        if(gradesFreqData.size()!=oldGradesFreq.size())
+            isGradesFreqDataChanged=true;
+        else{
+            for(int i=0;i<gradesFreqData.size();i++){
+                if(!gradesFreqData.get(i).equals(oldGradesFreq.get(i))) {
+                    isGradesFreqDataChanged = true;
+                    System.out.println("Change detected");
+                    return;
+                }
+            }
+            isGradesFreqDataChanged=false;
+        }
 
     }
 
     public void refreshGradesDistribution(){
 
         refreshGradeFreqTable();
-        refreshBarChart();
+        if(isGradesFreqDataChanged) //only refresh bar chart if something changed in table to avoid the bug caused by rapid refreshing of barchart
+            refreshBarChart();
+
         double maxScore=Statistics.getUserMaxScore()==-1?Statistics.getMaxScore():Statistics.getUserMaxScore();
         fullMarksTextField.setText(Double.toString(maxScore));
 

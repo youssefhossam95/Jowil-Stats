@@ -56,6 +56,7 @@
   "Bonus Marks:":"درجات اضافية:",
   "Full Mark:":"الدرجة النهائية:",
   "Allow exceeding full mark":"السماح بتخطي الدرجة النهائية",
+  "Add bonus to failing only":"الدرجات الإضافية للراسبين فقط",
   "Form ":"نموذج ",
   "New Weight":"الدرجة الجديدة",
   "No Subjective Questions Detected":"لا يوجد أسئلة مقالية",
@@ -258,6 +259,7 @@
   "Are you sure you want to delete":"هل أنت متأكد من رغبتك في حذف نظام التقديرات", "grade scale configuration?":"؟",
   "Resetting will delete all existing column sets. Are you sure you want to reset column sets?":"هل أنت متأكد من رغبتك في حذف جميع مجموعات الأسئلة؟",
   " column set already exists. Do you want to replace the existing column set?":" موجودة من قبل. هل ترغب في استبدال المجموعة الموجودة بهذه المجموعة؟ ",
+  "Resetting the full mark will set its value to the sum of all question weights. Are you sure you want to reset?":"ستكون الدرجة النهائية هي مجموع درجات الاسئلة إذا قمت بإعادة التعيين. هل مازلت ترغب في إعادة تعيين الدرجة النهائية؟",
   "Are you sure you want to quit reports generation?":"هل أنت متأكد من رغبتك في إلغاء عملية تجهيز التقارير؟",
   "Are you sure you want to delete project":"هل أنت متأكد من رغبتك في حذف الامتحان", "?":"؟",
   "Are you sure you want to delete this column set?":"هل أنت متأكد من رغبتك في حذف هذه المجموعة؟",
@@ -279,6 +281,7 @@
   "Add Grade Below":"اضف تقدير",
   "Delete Grade":"حذف التقدير",
   "Tweak Grades":"تعديل درجات الطلبة",
+  "Reset Full Mark":"إعادة تعيين الدرجة النهائية",
   "Delete Column Set":"حذف المجموعة",
   "Show Project in Explorer":"فتح التقارير في المستكشف"
 
