@@ -371,7 +371,7 @@ public class WeightsController extends Controller {
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2-contextMenuIcon.getFitWidth()/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
 
-        double ancBaseWidth=125,resetImageSize=18,spacing=10;
+        double ancBaseWidth=132,resetImageSize=18,spacing=10;
 
         fullMarksAnc.setPrefWidth(ancBaseWidth+resetImageSize+spacing);
         fullMarksTextField.setPrefWidth(50);
@@ -631,8 +631,7 @@ public class WeightsController extends Controller {
         exceedCheckBoxAnc.getChildren().add(exceedCheckBox);
         bonusCheckBoxAnc.getChildren().add(bonusCheckBox);
 
-        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,new SeparatorMenuItem(),bonusCheckBoxMenuItem,exceedCheckBoxMenuItem);
-
+        contextMenu.getItems().addAll(fullMarksMenuItem,bonusMarksMenuItem,new SeparatorMenuItem(),exceedCheckBoxMenuItem,bonusCheckBoxMenuItem);
 
         rootPane.getChildren().addAll(objTableVbox, subjTableVbox,midSeparator,gradesFreqTable,contextMenuExpandButton);
 

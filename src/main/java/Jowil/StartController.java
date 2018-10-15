@@ -227,6 +227,11 @@ public class StartController extends Controller{
             settingsMenu.show(settingsButton,settingsButton.getLayoutX()-langAncWidth+settingsImageView.getFitWidth()/2,settingsButton.getLayoutY()+35);
         });
 
+        TranslatableTooltip tooltip = new TranslatableTooltip("Settings");
+        Tooltip.install(settingsButton, tooltip);
+
+
+
         initSettingsMenu();
 
 
