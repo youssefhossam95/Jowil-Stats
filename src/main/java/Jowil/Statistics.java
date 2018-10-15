@@ -13,6 +13,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Percentile ;
 
 import org.apache.commons.math3.distribution.TDistribution ;
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 import sun.rmi.server.InactiveGroupException;
 
 
@@ -301,21 +302,7 @@ public class Statistics {
         initMaxScore();
         studentScores = new ArrayList<Double>() ;
         for(int i = 0 ; i <studentAnswers.size() ; i ++) {
-            double studentScore = bonus ;
-            ArrayList<String> studentAnswer = studentAnswers.get(i) ;
-            for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
-                String questionAnswer = studentAnswer.get(j) ;
-                if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)).get(j))) {
-                    studentScore+= questionWeights.get(studentForms.get(i)).get(j);
-                    if(!allowExceedMaxScore)
-                        studentScore = studentScore>maxScore?maxScore:studentScore ;
-                }
-            }
-            if(subjScores.size()!=0) {
-                ArrayList<Double> studentSubjScores = subjScores.get(i);
-                Double subjScore = sum(studentSubjScores.stream().mapToDouble(d -> d).toArray());
-                studentScore+=subjScore ;
-            }
+            double studentScore = calcStudentScore(i) ;
             studentScores.add(studentScore) ;
         }
         printStudentScores();
@@ -336,16 +323,7 @@ public class Statistics {
             formsScors.add(formScores);
         }
         for(int i = 0 ; i <studentAnswers.size() ; i ++) {
-            double studentScore = bonus ;
-            ArrayList<String> studentAnswer = studentAnswers.get(i) ;
-            for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
-                String questionAnswer = studentAnswer.get(j) ;
-                if(questionAnswer.equals(correctAnswers.get(studentForms.get(i)).get(j))) {
-                    studentScore+= (questionWeights.get(studentForms.get(i)).get(j)) ;
-                    if(!allowExceedMaxScore)
-                        studentScore = studentScore>maxScore?maxScore:studentScore ;
-                }
-            }
+            double studentScore = calcStudentScore(i) ;
             formsScors.get(studentForms.get(i)).add(studentScore) ;
         }
 //        printStudentScores();
@@ -433,6 +411,29 @@ public class Statistics {
 
 
     //helper functions
+
+    private static double calcStudentScore(int studentIndex){
+        double studentScore =0;
+        ArrayList<String> studentAnswer = studentAnswers.get(studentIndex) ;
+        for (int j = 0 ; j <  studentAnswer.size() ; j ++) {
+            String questionAnswer = studentAnswer.get(j) ;
+            if(questionAnswer.equals(correctAnswers.get(studentForms.get(studentIndex)).get(j))) {
+                studentScore+= questionWeights.get(studentForms.get(studentIndex)).get(j);
+            }
+        }
+        if(subjScores.size()!=0) {
+            ArrayList<Double> studentSubjScores = subjScores.get(studentIndex);
+            Double subjScore = sum(studentSubjScores.stream().mapToDouble(d -> d).toArray());
+            studentScore+=subjScore ;
+        }
+
+        //if the student grade was below passing grade or if we are adding bonus to all students
+        if((double)studentScore/maxScore<getPassingPercent() || addBonusToAll)
+            studentScore+=bonus ;
+        if(!allowExceedMaxScore)
+            studentScore = studentScore>maxScore?maxScore:studentScore ;
+        return studentScore;
+    }
     private static void calcformAnswerStats(ArrayList<ArrayList<Double>> formAnswerStats , int formIndex){
 
         double count;
@@ -1332,21 +1333,15 @@ public class Statistics {
         return tables ;
     }
     private static Pair<Double , Double> getTrendData (ArrayList<Double> hardness) {
-        double[] hardnessArray = hardness.stream().mapToDouble(d -> d).toArray();
-        double [][] X = new double[hardnessArray.length][1] ;
+        SimpleRegression regression = new SimpleRegression() ;
 
+        double[] hardnessArray = hardness.stream().mapToDouble(d -> d).toArray();
         double maxHardness = max(hardnessArray);
-        for (int i = 0 ; i< hardnessArray.length ; i++) { // x axis = 0 --> 1
-            X[i][0] = (double)i / (double)(hardnessArray.length - 1);
-            hardnessArray[i]/=maxHardness ;  // to make hardness 0 --> 1
+
+        for(int i = 0 ; i < hardness.size() ; i ++) {
+            regression.addData((double)i/(hardness.size()-1) , hardness.get(i)/maxHardness);
         }
-        OLSMultipleLinearRegression ols = new OLSMultipleLinearRegression();
-        ols.newSampleData(hardnessArray , X) ;
-        RealMatrix coff = MatrixUtils.createColumnRealMatrix(ols.estimateRegressionParameters());
-        double slope = coff.getColumnVector(0).getEntry(1);
-        double Rss = ols.estimateRegressionStandardError();
-        System.out.println("Resedual sum squared: "+ols.calculateResidualSumOfSquares());
-        return new Pair<Double, Double>(slope , Rss) ;
+        return new Pair<Double, Double>(regression.getSlope() , Math.sqrt(regression.getMeanSquareError())) ;
     }
 
     private static  double calcHarMean (double x , double y ) {
@@ -1359,14 +1354,14 @@ public class Statistics {
         else
          slopeSign = slope/Math.abs(slope) ;
         double harMean = calcHarMean(Math.abs(slope) , 1-Math.abs(error)) ;
-        return (slopeSign* harMean + 2)*5;
+        return (slopeSign* harMean + 1)*5;
     }
 
     private static ArrayList<Double> addTrendDataToList( ArrayList<Double> hardness ) {
         ArrayList<Double> graphData = (ArrayList)hardness.clone() ;
         Pair<Double,Double> trendData  = getTrendData(graphData) ;
         double slope = trendData.getKey() ;
-        double error = trendData.getValue() ;
+        double error = trendData.getValue() *2 ; // multiply by to so that this value will be 0-1
         double jowil = calcJowilParam(slope , error) ;
         graphData.add(slope) ; graphData.add(error); graphData.add(jowil) ;
         return graphData  ;
