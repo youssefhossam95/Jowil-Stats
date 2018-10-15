@@ -51,20 +51,20 @@ public class ReportChartsTest extends Application {
                 Jowil.Statistics.printCalculations();
 
                 ArrayList<Report> reports = new ArrayList<>();
-                Report.initOutputFolderPaths("C:\\Users\\Youssef Hossam\\Desktop\\testReportsFinal\\testBug");
+                Report.initOutputFolderPaths("E:\\work\\Jowil\\output folder test\\Jowil");
 //
-//                reports.add(new Report1()) ;
+                reports.add(new Report1()) ;
 //                reports.add(new Report2()) ;
 //                reports.add(new Report3());
 //                reports.add(new Report4()) ;
-                reports.add(new Report5()) ;
+//                reports.add(new Report5()) ;
 //                reports.add(new Report6()) ;
 //                reports.add(new Report7()) ;
 //                reports.add(new Report8()) ;
                 ArrayList<Integer> formats = new ArrayList<>() ;
-//                formats.add(ReportsHandler.HTML) ;
-//                formats.add(ReportsHandler.PDF);
-                formats.add(ReportsHandler.PRINTABLE_PDF) ;
+                formats.add(ReportsHandler.HTML) ;
+                formats.add(ReportsHandler.PDF);
+//                formats.add(ReportsHandler.PRINTABLE_PDF) ;
 //                formats.add(ReportsHandler.TXT) ;
 //                formats.add(ReportsHandler.CSV);
 //                formats.add(ReportsHandler.TSV) ;
