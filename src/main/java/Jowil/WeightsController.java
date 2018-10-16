@@ -989,6 +989,10 @@ public class WeightsController extends Controller {
             exceedCheckBox.setSelected((Boolean) obj.get(ALLOW_EXCEED_FULL_MARK_JSON_KEY));
             bonusCheckBox.setSelected((Boolean) obj.get(ADD_BONUS_TO_ALL_JSON_KEY));
         }
+
+        Statistics.setAllowExceedMaxScore(exceedCheckBox.isSelected());
+        Statistics.setAddBonusToAll(!bonusCheckBox.isSelected());
+
         exceedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> Statistics.setAllowExceedMaxScore(newValue));
         bonusCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) ->{
             Statistics.setAddBonusToAll(!newValue); //not because the checkbox is checked for failing only

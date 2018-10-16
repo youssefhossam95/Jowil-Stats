@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.pdfsam.ui.FillProgressIndicator;
@@ -140,6 +141,7 @@ public class ReportProgressWindow {
         });
 
 
+
     }
 
     public void startWindow(){
@@ -157,6 +159,7 @@ public class ReportProgressWindow {
             stage.setTitle(Controller.isTranslationMode &&translations.containsKey(windowTitle)?translations.get(windowTitle):windowTitle);
             stage.setScene(scene);
             stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
             Controller.translateAllNodes(scene.getRoot());
 
