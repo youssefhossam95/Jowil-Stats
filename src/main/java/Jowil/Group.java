@@ -51,6 +51,10 @@ public class Group extends RecursiveTreeObject<Group> {
         return name.charAt(name.length()-1)=='-'?name.trim().substring(0,name.length()-1):name;
     }
 
+    public void setNumeric(boolean numeric) {
+        isNumeric = numeric;
+    }
+
 
     public Integer getqCount() {
         return qCount;
@@ -147,7 +151,7 @@ public class Group extends RecursiveTreeObject<Group> {
     }
 
     //returns null on success, otherwise returns the string that cannot be removed.
-    public String updatePossibleAnswers(ArrayList<Boolean> isPossible){
+    public String updatePossibleAnswers(ArrayList<Boolean> isPossible, boolean ignoreCorrectAnswers){
 
         ArrayList<String> newPossibleAnswers=new ArrayList<String>();
 
@@ -155,7 +159,7 @@ public class Group extends RecursiveTreeObject<Group> {
 
             if(isPossible.get(i))
                 newPossibleAnswers.add(possibleAnswers.get(i));
-            else if(correctAnswers.contains(possibleAnswers.get(i)))
+            else if(correctAnswers.contains(possibleAnswers.get(i)) && !ignoreCorrectAnswers)
                 return possibleAnswers.get(i);
 
         }

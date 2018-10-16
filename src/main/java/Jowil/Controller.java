@@ -57,17 +57,18 @@ public abstract class Controller {
     protected double rootHeight;
     protected static final Logger logger = Logger.getLogger( FileConfigController.class.getName());
     final String myFXML;
-    final String myTitle;
-    final double XSCALE,YSCALE;
+    String myTitle;
+    double XSCALE,YSCALE;
     final boolean isResizable;
     double navWidth;
     double navHeight;
     boolean isHeightCalling;
     final double DEFAULT_FONT_AWESOME_ICON_SIZE=resX*27/1280;
-    protected final double minWidth,minHeight;
+    protected double minWidth,minHeight;
     static boolean isTranslationMode=true;  //Arabic -> true
-    static boolean isNormalScalingMode=true; // normal scaling true-> resX will be set to 1280 and resY to 680 so that all calculations are made in absolute pixels count and not relative to screen resolution
-
+    static boolean isNormalScalingMode=true; // normal scaling true-> resX will be set to 1280 and resY to 680 so that all calculations are made in absolute pixels count and not relative to screen resolution (Note that the display used in development had visible resolution of 1280x680)
+    static boolean isQuestMode; //Questionnaire
+    static boolean isOpenMode;
 
 
 
@@ -95,7 +96,7 @@ public abstract class Controller {
     protected double headersFontSize;
     private boolean isMaximizedChanged=false;
     boolean isWait=false;
-    static boolean isOpenMode;
+
     boolean isBeginMaximised;
     boolean isStepWindow;
     static String projectName;
@@ -121,7 +122,7 @@ public abstract class Controller {
             ,FORM_COL_NAME_JSON_KEY="formColName",SAVED_RESPONSES_CSV_JSON_KEY="savedResponsesCSV",SAVED_ANSWER_KEY_CSV_JSON_KEY="savedAnswerKeyCSV",
             SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name", ALLOW_EXCEED_FULL_MARK_JSON_KEY="allowExceedFullMark",
             BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore",SCALES_JSON_KEY="scales",IS_TRANSLATION_MODE_JSON_KEY="isTranslationMode",
-            IS_NORMAL_SCALING_MODE_JSON_KEY="isNormalScalingMode",ADD_BONUS_TO_ALL_JSON_KEY="addBonusToAll";
+            IS_NORMAL_SCALING_MODE_JSON_KEY="isNormalScalingMode",ADD_BONUS_TO_ALL_JSON_KEY="addBonusToAll",IS_QUEST_MODE_JSON_KEY="isQuestMode";
 
 
 
@@ -168,7 +169,8 @@ public abstract class Controller {
 
         stepCounterIndicator.setScaleX(0.2);
         stepCounterIndicator.setScaleY(0.2);
-        this.stepLabel=new Label(constructMessage("Step ",Integer.toString(stepIndex+1)," of 4: ",stepName));
+        int stepsCount=isQuestMode?2:4;
+        this.stepLabel=new Label(constructMessage("Step ",Integer.toString(stepIndex+1)," of "+stepsCount+": ",stepName));
         //this.stepLabel=new Label(stepName);
         stepLabel.setStyle("-fx-font-weight: bold;-fx-font-size:"+resX*12/1280);
 
@@ -342,6 +344,8 @@ public abstract class Controller {
         progressImage.setFitWidth(resX*0.25);
         progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
 
+        if(isQuestMode)
+            progressImage.setFitWidth(progressImage.getFitWidth()*0.5);
 
         topWrapperPane.setPrefHeight(progressImage.getFitHeight());
 

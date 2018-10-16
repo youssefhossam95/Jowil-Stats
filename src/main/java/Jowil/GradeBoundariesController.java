@@ -42,6 +42,8 @@ public class GradeBoundariesController extends Controller {
 
     }
 
+
+
     @FXML
     ScrollPane scrollPane;
 
@@ -80,6 +82,8 @@ public class GradeBoundariesController extends Controller {
     @FXML
     AnchorPane reportsConfigAnc;
 
+
+
     @FXML
     VBox reportsVBox;
 
@@ -104,6 +108,7 @@ public class GradeBoundariesController extends Controller {
     Label reportsLabel = new Label("Reports");
     Label formatsLabel = new Label("File Formats");
 
+    ScrollPane questReportsScrollPane=new ScrollPane();
 
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
     private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json";
@@ -136,6 +141,9 @@ public class GradeBoundariesController extends Controller {
     @Override
     protected void initComponents() {
 
+        if(isQuestMode && (gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null)
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
+                    "Error in loading Grade Scale Configurations.");
 
         initTrashIcon();
         initScrollPane();
@@ -160,6 +168,7 @@ public class GradeBoundariesController extends Controller {
             back.showWindow();
             stage.close();
         });
+
 
 
     }
@@ -241,6 +250,7 @@ public class GradeBoundariesController extends Controller {
         formatsVBox.setSpacing(resYToPixels(0.02));
 
 
+
         for (GradeHBox hbox : gradesHBoxes)
             hbox.updateSizes(scrollPaneWidth, scrollPaneHeight);
 
@@ -251,8 +261,6 @@ public class GradeBoundariesController extends Controller {
     @Override
     protected void saveChanges() {
     }
-
-
 
 
 
@@ -322,7 +330,9 @@ public class GradeBoundariesController extends Controller {
         JSONArray reportsConfig = new JSONArray();
         JSONArray formatsConfig = new JSONArray();
 
-        Statistics.init();
+
+        if(!(this instanceof QuestionnaireReportsController))
+            Statistics.init();
 
 
 
@@ -380,6 +390,7 @@ public class GradeBoundariesController extends Controller {
 
 
         projObject.put(IS_MANUAL_MODE_JSON_KEY,ManualModeController.isIsManualModeUsedBefore());
+        projObject.put(IS_QUEST_MODE_JSON_KEY,isQuestMode);
 
 
 
@@ -423,7 +434,11 @@ public class GradeBoundariesController extends Controller {
         saveJsonObj(SAVED_PROJECTS_FILE_NAME,savedProjectsJson);
 
         Report.initOutputFolderPaths(outPath+projectDirName);
-        showProgressDialog(isGenerateReports,formatsOut);
+
+        if(this instanceof QuestionnaireReportsController)
+            showProgressDialog(formatsOut);
+        else
+            showProgressDialog(isGenerateReports,formatsOut);
 
 
         stage.close();
@@ -778,6 +793,9 @@ public class GradeBoundariesController extends Controller {
         configs = new ArrayList<>();
         comboItems = FXCollections.observableArrayList();
         origConfigsNames=new ArrayList<>();
+
+
+
         JSONArray scales = (JSONArray) gradeScalesJsonObj.get(SCALES_JSON_KEY);
 
 
@@ -908,9 +926,15 @@ public class GradeBoundariesController extends Controller {
     }
 
 
-    private void showProgressDialog(ArrayList<Boolean> isGenerateReport, ArrayList<Integer> formatsOut) {
-        new ReportProgressWindow(reportsCount,isGenerateReport,formatsOut).startWindow();
+    private void showProgressDialog(ArrayList<Boolean> isGenerateReports, ArrayList<Integer> formatsOut) {
+        new ReportProgressWindow(reportsCount,isGenerateReports,formatsOut).startWindow();
     }
+
+    //called in questMode
+    private void showProgressDialog( ArrayList<Integer> formatsOut) {
+        new ReportProgressWindow(1,null,formatsOut).startWindow();
+    }
+
 
 
 

@@ -495,6 +495,7 @@ public class Report9 extends Report {
 
     @Override
     public void init() {
+        Statistics.setQuestionNames(CSVHandler.getDetectedQHeaders());
         groupsStatsTables = new ArrayList<>();
         groupsStatsTables=Statistics.report9Stats() ;
     }

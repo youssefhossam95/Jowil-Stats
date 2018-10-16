@@ -823,19 +823,20 @@ public class ManualModeController extends Controller{
 
         if(isOpenMode){
 
-            if(CSVHandler.getDetectedQHeaders().size()==Statistics.getQuestionWeights().get(0).size()){
+            if(!isQuestMode) {
+                if (CSVHandler.getDetectedQHeaders().size() == Statistics.getQuestionWeights().get(0).size()) {
 
-                if(showWeightsResetConfirmationDialog())
-                    isIgnoreSavedObjectiveWeights=true;
-                else
-                    isIgnoreSavedObjectiveWeights=false;
+                    if (showWeightsResetConfirmationDialog())
+                        isIgnoreSavedObjectiveWeights = true;
+                    else
+                        isIgnoreSavedObjectiveWeights = false;
 
-            }
-            else{
-                if(showWeightsWarningDialog())
-                    isIgnoreSavedObjectiveWeights=true;
-                else
-                    return false;
+                } else {
+                    if (showWeightsWarningDialog())
+                        isIgnoreSavedObjectiveWeights = true;
+                    else
+                        return false;
+                }
             }
 
             try {

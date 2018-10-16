@@ -216,7 +216,10 @@ public class StartController extends Controller{
         newStack.setOnMouseClicked(event -> showNewProjectNameDialog(""));
         openStack.setOnMouseClicked(event -> showExistingProjects());
 
-        closeButton.setOnMouseClicked(event -> Platform.exit());
+        closeButton.setOnMouseClicked(event -> {
+            saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+            Platform.exit();
+        });
         minusButton.setOnMouseClicked(event -> stage.setIconified(true));
 
 
@@ -458,24 +461,63 @@ public class StartController extends Controller{
         String defaultText=isTranslationMode&& translations.containsKey("New Project")?translations.get("New Project"):"New Project";
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Set Project Name");
-        TextField projNameTextField = new TextField();
-        projNameTextField.setText(initialText.isEmpty()?defaultText:initialText);
-        Label label=new Label(isTranslationMode && translations.containsKey("Project Name:")?translations.get("Project Name:"):"Project Name:");
+
         ImageView pic=new ImageView();
         pic.setImage(new Image("Images/Add Folder_96px.png"));
         dialog.setGraphic(pic);
         pic.setFitWidth(resX*30/1280);
         pic.setFitHeight(resX*30/1280);
 
-        HBox hBox=new HBox(7);
+        VBox contentVBox=new VBox(resX*12/1280);
+
+        HBox textHBox=new HBox(resX*7/1280);
+        textHBox.setPadding(new Insets(resX*4/1280,0,0,0));
+        TextField projNameTextField = new TextField();
+        projNameTextField.setText(initialText.isEmpty()?defaultText:initialText);
+        Label label=new Label(isTranslationMode && translations.containsKey("Project Name:")?translations.get("Project Name:"):"Project Name:");
         label.prefHeightProperty().bind(projNameTextField.heightProperty());
         label.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(label, projNameTextField);
+        textHBox.getChildren().addAll(label, projNameTextField);
 
-        dialog.getDialogPane().setContent(hBox);
+
+        double radioIconsSize=resX*18/1280;
+        HBox radiosHBox=new HBox(resX*35/1280);
+        radiosHBox.setPadding(new Insets(0,0,0,resX*12/1280));
+        ToggleGroup toggleGroup= new ToggleGroup();
+        RadioButton testRadio=new RadioButton("Test");
+        ImageView testImageView=new ImageView("Images/Pass Fail_48px.png");
+        testImageView.setFitWidth(radioIconsSize);
+        testImageView.setFitHeight(radioIconsSize);
+        testRadio.setGraphic(testImageView);
+        RadioButton questRadio=new RadioButton("Questionnaire");
+        ImageView questImageView=new ImageView("Images/Questionnaire_48px.png");
+        questImageView.setFitWidth(radioIconsSize);
+        questImageView.setFitHeight(radioIconsSize);
+        questRadio.setGraphic(questImageView);
+        testRadio.setToggleGroup(toggleGroup);
+        questRadio.setToggleGroup(toggleGroup);
+        toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            generalPrefsJson.put(IS_QUEST_MODE_JSON_KEY,newValue==questRadio);
+        });
+        if((Boolean)generalPrefsJson.get(IS_QUEST_MODE_JSON_KEY))
+            questRadio.setSelected(true);
+        else
+            testRadio.setSelected(true);
+
+
+
+
+        radiosHBox.getChildren().addAll(testRadio,questRadio);
+
+
+
+        contentVBox.getChildren().addAll(textHBox,radiosHBox);
+
+        dialog.getDialogPane().setContent(contentVBox);
         dialog.getDialogPane().setStyle("-fx-font-size:"+resX*12/1280);
 
         dialog.getDialogPane().getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
+
 
         dialog.setResultConverter(dialogButton -> {
 
@@ -489,8 +531,9 @@ public class StartController extends Controller{
 
         processDialog(dialog);
         Platform.runLater(()->projNameTextField.requestFocus());
-// Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
+
+
         if (result.isPresent()){
             String projName=result.get();
             if(projName.trim().isEmpty()){
@@ -512,9 +555,9 @@ public class StartController extends Controller{
                 Controller.projectName=projName;
                 Controller.isOpenMode=false;
                 Controller.currentOpenedProjectJson=null;
+                Controller.isQuestMode=questRadio.isSelected();
                 new FileConfigController().startWindow();
             }
-
         }
 
     }

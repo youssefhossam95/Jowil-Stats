@@ -2,10 +2,14 @@
 
   "Files Configuration":"اعداد الملفات",
   "Test Overview":"نظرة عامة على الإمتحان",
+  "Questionnaire Overview":"نظرة عامة على الاستطلاع",
   "Questions Weights":"توزيع الدرجات",
   "Grading Scale & Reports":"التقديرات والتقارير",
   "Step ":"خطوة ",
   " of 4: ":" من 4: ",
+  " of 2: ":" من 2: ",
+
+
 
   "New Project":"امتحان جديد",
   "Open Existing Project":"فتح امتحان سابق",
@@ -38,6 +42,7 @@
   "Questions Count":"عدد الأسئلة",
   "Groups Choices":"الاختيارات لكل مجموعة",
   "Test Info":"نبذة عن الإمتحان",
+  "Questionnaire Info":"نبذة عن الاستطلاع",
   "Number of Objective Questions":"عدد الأسئلة الموضوعية",
   "Number of Objective Groups":"عدد مجموعات الأسئلة الموضوعية",
   "Number of Subjective Questions":"عدد الأسئلة المقالية",
@@ -266,7 +271,7 @@
 
 
   "Projects Loading Error" :"خطأ في تحميل الامتحانات السابقة","Cannot load existing projects. Would you like to restart Jowil Stats?":"فشل تحميل الامتحانات السابقة. هل ترغب في اعادة تشغيل البرنامج؟",
-  "Project Name:":"اسم الامتحان:", "Set Project Name":"تحديد اسم الإمتحان",
+  "Project Name:":"اسم الامتحان:", "Set Project Name":"تحديد اسم الإمتحان","Test":"إختبار","Questionnaire":"استطلاع رأي",
   "Existing Projects":"الامتحانات السابقة", "Projects":"الامتحانات", "No Projects Exist":"لا يوجد أي امتحانات سابقة",
   "Continue to File Configuration":"الذهاب إلى اعداد الملفات","Going back to file configuration may reset some of the changes made in manual configuration. Are you sure you want to continue to file configuration?":"الرجوع لإعداد الملفات قد يفقدك بعد التغييرات التي قمت بها في الضبط اليدوي. هل ما زلت ترغب في التكملة لإعداد الملفات؟",
   "Do you want to save your changes as a new grade scale configuration?":"هل تريد حفظ التغييرات كنظام تقديرات جديد؟","Save New Configuration":"حفظ النظام الجديد", "Ignore Changes":"تجاهل التغييرات", "Configuration Name":"اسم نظام التقديرات", "Configuration Name:":"اسم النظام الجديد:",

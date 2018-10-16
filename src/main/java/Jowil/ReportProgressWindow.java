@@ -114,6 +114,7 @@ public class ReportProgressWindow {
     }
 
 
+
     public void initialize() {
 
 
@@ -199,9 +200,13 @@ public class ReportProgressWindow {
 
             ArrayList<Report> reportsOut=new ArrayList<>();
 
-            for(int i=0;i<isGenerateReports.size();i++){
-                if(isGenerateReports.get(i))
-                    reportsOut.add(getReport(i+1));
+            if(isGenerateReports==null) //questMode
+                reportsOut.add(new Report9());
+            else {
+                for (int i = 0; i < isGenerateReports.size(); i++) {
+                    if (isGenerateReports.get(i))
+                        reportsOut.add(getReport(i + 1));
+                }
             }
 
 

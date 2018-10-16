@@ -30,12 +30,14 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import org.apache.commons.math3.stat.inference.TestUtils;
 
 import javax.swing.text.html.ImageView;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
+
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
 import static java.util.Arrays.asList;
@@ -114,7 +116,7 @@ public class GroupsController  extends Controller{
     //main methods
     GroupsController(Controller back){
 
-        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back,"2.png",1,"Test Overview",resX*740/1280,0);
+        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back,(isQuestMode?"quest":"")+"2.png",1,(isQuestMode?"Questionnaire":"Test")+" Overview",resX*750/1280,0);
         CSVHandler.initQuestionsChoices();
     }
 
@@ -144,6 +146,8 @@ public class GroupsController  extends Controller{
             stage.close();
         });
 
+        if(isQuestMode)
+            nextButton.setText("Finish");
 
         nextButton.setOnMouseClicked(event -> {
 
@@ -154,6 +158,8 @@ public class GroupsController  extends Controller{
 
             CSVHandler.updateQuestionsChoices();
 
+
+
             if(next==null || isContentEdited) { //if first time or edit manually has been pressed
                 next = getNextController();
                 next.startWindow();
@@ -162,7 +168,8 @@ public class GroupsController  extends Controller{
                 next.showWindow();
 
             isContentEdited=false;
-            stage.close();
+            if(!isQuestMode)
+                stage.close();
 
         });
 
@@ -170,6 +177,8 @@ public class GroupsController  extends Controller{
         treeLabel.setFont(titleFont);
         groupsLabel.setFont(titleFont);
         infoLabel.setFont(titleFont);
+        if(isQuestMode)
+            infoLabel.setText("Questionnaire Info");
 
     }
 
@@ -250,7 +259,7 @@ public class GroupsController  extends Controller{
 
     @Override
     protected Controller getNextController() {
-        return new WeightsController(this);
+        return isQuestMode?new QuestionnaireReportsController(this):new WeightsController(this);
     }
 
 
@@ -325,11 +334,12 @@ public class GroupsController  extends Controller{
 
         for(int i=0;i<newDetectedGroups.size();i++) {
             String invalid=null;
-            if ((invalid=newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i)))!=null) {
-                showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Groups Choices Error",
-                        constructMessage("Removing choice"," \""+invalid+"\" ","in group"," \""+newDetectedGroups.get(i).getCleanedName()+
-                "\" ","is not allowed."," \""+invalid+"\" ","is set as the correct answer for one or more of the questions in this group."));
-                return false;
+            if ((invalid=newDetectedGroups.get(i).updatePossibleAnswers(isPossible.get(i),isQuestMode))!=null ) {
+                    showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Groups Choices Error",
+                            constructMessage("Removing choice", " \"" + invalid + "\" ", "in group", " \"" + newDetectedGroups.get(i).getCleanedName() +
+                                    "\" ", "is not allowed.", " \"" + invalid + "\" ", "is set as the correct answer for one or more of the questions in this group."));
+                    return false;
+
             }
         }
 

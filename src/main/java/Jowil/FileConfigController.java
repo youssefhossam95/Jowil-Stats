@@ -127,7 +127,7 @@ public class FileConfigController extends Controller {
     FileConfigController() {
 
 
-        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"1.png",0,"Files Configuration",resX*700/1280, Integer.MAX_VALUE);
+        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,(isQuestMode?"quest":"")+"1.png",0,"Files Configuration",resX*700/1280, Integer.MAX_VALUE);
 
 
     }
@@ -198,7 +198,9 @@ public class FileConfigController extends Controller {
         if(generalPrefsJson!=null)
             lastDir=(String)generalPrefsJson.get(LAST_CSV_DIR_JSON_KEY);
 
+
         if (isOpenMode) {
+            Controller.isQuestMode=(Boolean)currentOpenedProjectJson.get(IS_QUEST_MODE_JSON_KEY);
             mainFileTextField.setText((String) currentOpenedProjectJson.get(RESPONSES_FILE_PATH_JSON_KEY));
             answersFileTextField.setText((String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY));
             mainFileTextField.setEditable(false);
@@ -213,10 +215,27 @@ public class FileConfigController extends Controller {
             mainFileChooser.addEventFilter(MouseEvent.ANY,event -> event.consume());
 
         }
+        if(isQuestMode) {
+            answersFileTextField.setDisable(true);
+            answersFileChooser.setOpacity(0.3);
+            answersFileChooser.addEventFilter(MouseEvent.ANY,event -> event.consume());
+            identifierCombo.setDisable(true);
+            identifierCombo.disabledProperty().addListener(((observable, oldValue, newValue) -> {
+                if(!newValue)
+                    identifierCombo.setDisable(true);
+            }));
+            formCombo.setDisable(true);
+            formCombo.disabledProperty().addListener(((observable, oldValue, newValue) -> {
+                if(!newValue)
+                    formCombo.setDisable(true);
+            }));
+        }
+        else
+            answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
 
 
         mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-        answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+
 
     }
 
@@ -261,7 +280,7 @@ public class FileConfigController extends Controller {
 
             rootPane.requestFocus();
 
-            if(!isMainTextFieldValidated)
+            if (!isMainTextFieldValidated)
                 validateMainTextField();
 
             boolean isManualMode = manualModeToggle.isSelected();
@@ -273,12 +292,12 @@ public class FileConfigController extends Controller {
                 isManualMode = true;
 
             //check for errors
-            if (mainFileTextField.getText().length() == 0) {
+            if (mainFileTextField.getText().length() == 0 && !isQuestMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "No students responses file provided.");
                 return;
             }
 
-            if (answersFileTextField.getText().length() == 0) {
+            if (answersFileTextField.getText().length() == 0 && !isQuestMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "No answer key file provided.");
                 return;
             }
@@ -288,43 +307,43 @@ public class FileConfigController extends Controller {
                 return;
             }
 
-            if (answersTextFieldResult == CSVFileValidator.ERROR) {
+            if (answersTextFieldResult == CSVFileValidator.ERROR && !isQuestMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", constructMessage("Error in answer key file: ", answersTextFieldMessage));
                 return;
             }
 
 
-
-            int formsCount = isOpenMode?((JSONArray)currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size():CSVHandler.getFormsCount();
+            int formsCount = isOpenMode ? ((JSONArray) currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size() : CSVHandler.getFormsCount();
 
 
             if (formsCount > 1 && formComboSelectedIndex == 0 && !isManualMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                        constructMessage(formsCount+"" , " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue."));
+                        constructMessage(formsCount + "", " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue."));
                 return;
             }
 
-            if(formsCount==0){
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
-                         "Answer key file must contain the answers for at least one form.");
-                return;
-            }
+            if(!isQuestMode) {
+                if (formsCount == 0) {
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
+                            "Answer key file must contain the answers for at least one form.");
+                    return;
+                }
 
 
-            int responsesColCount = CSVHandler.getResponsesColsCount();
-            int answersColCount = CSVHandler.getAnswersColsCount();
+                int responsesColCount = CSVHandler.getResponsesColsCount();
+                int answersColCount = CSVHandler.getAnswersColsCount();
 
-            if (responsesColCount != answersColCount) { //check if columns count doesn't match -> in open mode both will be zero
-                showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", constructMessage("Student responses file contains " ,
-                        responsesColCount+"" , " columns, while the answer key file contains " ,answersColCount+"" , " columns."));
-                return;
+                if (responsesColCount != answersColCount) { //check if columns count doesn't match -> in open mode both will be zero
+                    showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", constructMessage("Student responses file contains ",
+                            responsesColCount + "", " columns, while the answer key file contains ", answersColCount + "", " columns."));
+                    return;
+                }
             }
 
             if(generalPrefsJson!=null) {
                 generalPrefsJson.put(LAST_CSV_DIR_JSON_KEY, lastDir);
                 saveJsonObj(GENERAL_PREFS_FILE_NAME, generalPrefsJson);
             }
-
 
 
             ManualModeController.setIsManualModeUsedBefore(false);
@@ -1005,6 +1024,8 @@ public class FileConfigController extends Controller {
     }
 
     private void validateAnswersTextField() {
+        if(isQuestMode)
+            return;
 
         CSVFileValidator validator = new CSVFileValidator(answersFileTextField, CSVFileValidator.ANSWERSFILETEXTFIELD);
         answersFileTextField.getValidators().clear();

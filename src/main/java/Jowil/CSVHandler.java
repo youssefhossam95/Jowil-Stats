@@ -1,5 +1,6 @@
 package Jowil;
 
+import javax.naming.ldap.Control;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Jowil.Controller.constructMessage;
+import static Jowil.Controller.isOpenMode;
+import static Jowil.Controller.isQuestMode;
 
 
 public class CSVHandler {
@@ -336,6 +339,8 @@ public class CSVHandler {
             if(row.length!=responsesColsCount) //equals zero if no headers
                 throw new IllFormedCSVException(rowNumber);
 
+            if(Controller.isQuestMode && rowNumber==2)
+                Statistics.setCorrectAnswers(generateFakeAnswerKey(row));
 
             Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
             updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
@@ -346,6 +351,8 @@ public class CSVHandler {
 
 
     }
+
+
 
     private static String[] removeDoubleQuotes(String[] arr) {
         for(int i=0;i<arr.length;i++)
@@ -387,11 +394,24 @@ public class CSVHandler {
 
         isAnswerKeyContainsBlanks=false;
         answerKeyFilePath=answersFilePath;
-        BufferedReader input = new BufferedReader(new FileReader(answersFilePath));
-        String line;
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
         ArrayList<ArrayList<String>> cleanedCorrectAnswers=new ArrayList<>(); //without ignored questions
         savedAnswerKeyCSV=new ArrayList<>();
+
+        if(Controller.isQuestMode){
+            int qCount=questionsColEndIndex-questionsColStartIndex+1;
+            isQuestionsIgnored=new ArrayList<>();
+
+            for(int i=0;i<qCount;i++)
+                isQuestionsIgnored.add(false);
+            isAnswerKeyContainsHeaders=false;
+            formsCount=1;//only one fake form
+            return false;
+        }
+
+        BufferedReader input = new BufferedReader(new FileReader(answersFilePath));
+        String line;
+
 
         String firstLine=input.readLine(); //can't be null because empty csv check is already called in CSVFileValidator
 
@@ -446,7 +466,9 @@ public class CSVHandler {
             Statistics.setCorrectAnswers(cleanedCorrectAnswers);
 
 
+
         formsCount=correctAnswers.size();
+
         answersColsCount=colsCount;
 
         return isHeadersExist;
@@ -456,8 +478,16 @@ public class CSVHandler {
     public static void loadSavedAnswerKey(){
 
 
+        isAnswerKeyContainsBlanks=false;
         ArrayList<ArrayList<String>> cleanedCorrectAnswers=new ArrayList<>(); //without ignored questions
 
+        if(Controller.isQuestMode){
+            int qCount=questionsColEndIndex-questionsColStartIndex+1;
+            isQuestionsIgnored=new ArrayList<>();
+
+            for(int i=0;i<qCount;i++)
+                isQuestionsIgnored.add(false);
+        }
         boolean isHeadersExist=isAnswerKeyContainsHeaders;
 
         for(int i=(isHeadersExist?1:0);i<savedAnswerKeyCSV.size();i++)
@@ -505,7 +535,9 @@ public class CSVHandler {
 
     public static void initQuestionsChoices(){
 
-        Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
+
+        if(!isOpenMode)
+            Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
 
         int i=0;
         for(Group group : detectedGroups){
@@ -513,12 +545,25 @@ public class CSVHandler {
             int qCount=group.getqCount();
             String groupMax=getGroupMax(qCount,i);
             group.setCorrectAnswers(getGroupCorrectAnswers(qCount,i));
+
+            if(isOpenMode) {
+                group.setPossibleAnswers(Statistics.getQuestionsChoices().get(i));
+                try {
+                    Integer.parseInt(groupMax);
+                    group.setNumeric(true);
+                }catch(NumberFormatException e) {
+                    group.setNumeric(false);
+                }
+            }
+            else
+                group.generatePossibleAnswers(groupMax);
+
             i+=qCount;
-            group.generatePossibleAnswers(groupMax);
 
-
-            for(int j=0;j<qCount;j++)
-                Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
+            if(!isOpenMode) {
+                for (int j = 0; j < qCount; j++)
+                    Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
+            }
 
         }
     }
@@ -837,6 +882,53 @@ public class CSVHandler {
     private static boolean isUpperCase(String s){
 
         return s.toUpperCase().equals(s);
+    }
+
+    //used in questMode to generate a fakeanswerKey that uses the first student answers so that the logic of everything will flow normally
+    private static ArrayList<ArrayList<String>> generateFakeAnswerKey(String[] row) {
+
+        ArrayList<ArrayList<String>>correctAns=new ArrayList<>();
+        ArrayList<String>correctRow=new ArrayList<>();
+        savedAnswerKeyCSV=new ArrayList<>();
+        correctAns.add(correctRow);
+
+        String [] cleanedRow=removeQuestionsBlanks(row);
+        savedAnswerKeyCSV.add(cleanedRow);
+
+
+        for(int i=questionsColStartIndex;i<questionsColEndIndex;i++)
+            correctRow.add(cleanedRow[i]);
+
+        return correctAns;
+
+    }
+
+    private static String[] removeQuestionsBlanks(String[] row) {
+        String []cleanedRow=new String[row.length];
+
+        for(int i=0;i<row.length;i++)
+            cleanedRow[i]=row[i];
+
+        int i=questionsColStartIndex;
+        for(Group group:detectedGroups){
+            String dummyString=getFirstNonEmptyInGroup(cleanedRow,i,group.getqCount());
+
+            for(int j=0;j<group.getqCount();j++){
+                if(cleanedRow[i].trim().isEmpty())
+                    cleanedRow[i]=dummyString;
+                i++;
+            }
+        }
+        return cleanedRow;
+    }
+
+    private static String getFirstNonEmptyInGroup(String [] row,int groupStart, Integer qCount) {
+
+        for(int i=groupStart;i<i+qCount;i++){
+            if(!row[i].trim().isEmpty())
+                return row[i];
+        }
+        return "1"; // won't happen
     }
 
     //true if csv file contains headers only
