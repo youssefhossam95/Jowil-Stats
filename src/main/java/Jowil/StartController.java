@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
@@ -18,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -453,23 +455,40 @@ public class StartController extends Controller{
 
     private void showNewProjectNameDialog(String initialText){
 
-
-
         String defaultText=isTranslationMode&& translations.containsKey("New Project")?translations.get("New Project"):"New Project";
-        TextInputDialog dialog = new TextInputDialog(initialText.isEmpty()?defaultText:initialText);
+        Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Set Project Name");
-        dialog.setHeaderText(null);
-        dialog.setContentText(isTranslationMode && translations.containsKey("Project Name:")?translations.get("Project Name:"):"Project Name:");
+        TextField projNameTextField = new TextField();
+        projNameTextField.setText(initialText.isEmpty()?defaultText:initialText);
+        Label label=new Label(isTranslationMode && translations.containsKey("Project Name:")?translations.get("Project Name:"):"Project Name:");
         ImageView pic=new ImageView();
-        String file="";
-        System.out.println(file);
         pic.setImage(new Image("Images/Add Folder_96px.png"));
         dialog.setGraphic(pic);
         pic.setFitWidth(resX*30/1280);
         pic.setFitHeight(resX*30/1280);
 
+        HBox hBox=new HBox(7);
+        label.prefHeightProperty().bind(projNameTextField.heightProperty());
+        label.setAlignment(Pos.CENTER);
+        hBox.getChildren().addAll(label, projNameTextField);
+
+        dialog.getDialogPane().setContent(hBox);
         dialog.getDialogPane().setStyle("-fx-font-size:"+resX*12/1280);
+
+        dialog.getDialogPane().getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
+
+        dialog.setResultConverter(dialogButton -> {
+
+            if (dialogButton == ButtonType.OK)
+                return projNameTextField.getText();
+
+            return null;
+
+        });
+
+
         processDialog(dialog);
+        Platform.runLater(()->projNameTextField.requestFocus());
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
