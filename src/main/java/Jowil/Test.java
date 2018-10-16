@@ -8,6 +8,7 @@ import Jowil.Reports.Utils.WordUtils;
 import com.lowagie.text.DocumentException;
 
 
+import javafx.scene.SubScene;
 import javafx.scene.chart.StackedAreaChart;
 import javafx.util.Pair;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -22,6 +23,8 @@ import java.io.*;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import static com.sun.javafx.scene.control.skin.Utils.getResource;
 import static org.apache.commons.math3.stat.StatUtils.max;
@@ -97,10 +100,106 @@ public class Test {
             else
                 return 'a';
         }
+
+
+
+    public static String getSerialNumber() {
+
+        String dir = System.getProperty("user.dir");
+        String drive = dir.split(":")[0] ;
+        String result = "";
+        try {
+            File file = File.createTempFile("realhowto",".vbs");
+            file.deleteOnExit();
+            FileWriter fw = new java.io.FileWriter(file);
+
+            String vbs = "Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\n"
+                    +"Set colDrives = objFSO.Drives\n"
+                    +"Set objDrive = colDrives.item(\"" + drive + "\")\n"
+                    +"Wscript.Echo objDrive.SerialNumber";  // see note
+            fw.write(vbs);
+            fw.close();
+            Process p = Runtime.getRuntime().exec("cscript //NoLogo " + file.getPath());
+            BufferedReader input =
+                    new BufferedReader
+                            (new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = input.readLine()) != null) {
+                result += line;
+            }
+            input.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return result.trim();
+    }
+
+    public static String getVolSerialNumber(String drive) {
+
+        String result = "";
+        try {
+        Process p = Runtime.getRuntime().exec("vol C:");
+        BufferedReader input =
+                new BufferedReader
+                        (new InputStreamReader(p.getInputStream()));
+        String line;
+        while ((line = input.readLine()) != null) {
+            result += line;
+        }
+        input.close();
+    }
+        catch(Exception e){
+        e.printStackTrace();
+    }
+        return result.trim();
+    }
+
+    static ArrayList<Character> allChars;
+    public static void initAllChars(){
+
+        allChars = new ArrayList<>( );
+
+        for(int i = 48 ; i < 58 ; i++) {
+            allChars.add((char)(i)) ; // add numbers
+        }
+
+
+        for(int i = 65 ; i < 91 ; i++) {
+            allChars.add((char)(i)) ; // add numbers
+        }
+    }
+    public static String getActivationKey(long serialNumber){
+
+        Random gen = new Random(serialNumber) ;
+
+        ArrayList<Character> shuffeledChars = (ArrayList)allChars.clone() ;
+        Collections.shuffle((ArrayList)shuffeledChars,gen) ;
+        String output = "";
+        for (int i = 1; i < 17; i++) {
+            output+=allChars.get(Math.abs(gen.nextInt())%36) ;
+            if (i % 4 == 0 && i < 16)
+                output += "-";
+        }
+        return output;
+    }
     public static void main(String [] args) throws IOException, DocumentException {
 
+//        allChars.add('x');
 
-        System.out.println(Integer.parseInt("cd" , 16));
+        initAllChars();
+//        System.out.println(allChars.size());
+
+        long baseNumber = Long.valueOf(getSerialNumber()) ;
+//        System.out.println(getSerialNumber("c"));
+        String output = getActivationKey(baseNumber) ;
+        System.out.println("the serial Number: " + baseNumber);
+        System.out.println("the result output: " + output);
+//        String sn = getVolSerialNumber("C");
+
+//        System.out.println(sn);
+
+//        System.out.println(Integer.parseInt("cd" , 16));
 
 //        File file = new File("E:\\work\\Jowil\\output folder test\\Jowil\\XLS Reports\\Report1 - Grades Distribution Report.xls");
 //

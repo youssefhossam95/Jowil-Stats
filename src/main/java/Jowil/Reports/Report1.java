@@ -226,10 +226,10 @@ public class Report1 extends Report{
 
     @Override
     public void generateHtmlReport() throws IOException {
-        Document doc = generatePdfHtml(true) ;
+        Document doc = generatePdfHtml(false) ;
         doc.select("div#footer").remove() ;
-//        doc.select("img").attr("src" ,"file://"+ report1ImgFullPath);
-//        doc.select("img").attr("width" , "60%") ;
+        doc.select("img").attr("src" ,"file://"+ report1ImgFullPath);
+        doc.select("img").attr("width" , "60%") ;
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 
