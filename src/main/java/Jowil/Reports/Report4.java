@@ -93,7 +93,7 @@ public class Report4 extends Report{
         int endIndex = (int)Utils.getNumberWithinLimits(tempStatsTable.size() , 0 , NUMBER_OF_ROWS_FIRST_PAGE) ;
 
         if(pdf) {
-            handleArabicPdf(tempStatsTable);
+            handleArabicPdf(tempStatsTable , 1);
         }
         do  {
             ArrayList<ArrayList<String>> pageTable ;

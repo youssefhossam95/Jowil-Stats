@@ -386,7 +386,7 @@ public class Report9 extends Report {
 
             remainingRows-= LINE_ROWS ;
 
-            for( int tableIndex= 0 ; tableIndex <groupTables.size(); tableIndex ++ ) {
+            for( int tableIndex= 0 ; tableIndex <groupTables.size(); tableIndex +=2 ) {
 
 
                 ArrayList<ArrayList<String>> table = groupTables.get(tableIndex);

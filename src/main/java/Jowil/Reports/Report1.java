@@ -213,7 +213,7 @@ public class Report1 extends Report{
 
         ArrayList<ArrayList<String>> tempTable = Utils.cloneTable(statsTable) ;
         if(pdf){
-            handleArabicPdf(tempTable);
+            handleArabicPdf(tempTable , 0);
         }
         String tableRowsHtml = createRowsHtml(tempTable , ";grayRow" , "tg-l711") ;
 

@@ -190,7 +190,7 @@ public class Report6 extends Report {
         Document doc = generatePdfHtml() ;
         doc.select("div#footer").remove() ;
         changeImgPath(doc , imgsDirectoryFullPath);
-//        doc.select("img").attr("src" , "file://"+report6ImgFullPath);
+        doc.select("img").attr("width" , "60%") ;
         writeHtmlFile(outputFormatsFolderPaths[ReportsHandler.HTML]+outputFileName+".html" , doc);
     }
 

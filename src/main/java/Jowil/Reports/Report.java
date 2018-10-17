@@ -249,7 +249,8 @@ abstract public class Report {
 
 
 
-    protected void handleArabicPdf(ArrayList<ArrayList<String>> table ) throws IOException {
+    protected void handleArabicPdf(ArrayList<ArrayList<String>> table , int arabicColIndex ) throws IOException {
+        System.out.println("handling Arabic Pdf");
         if(Utils.checkListContainArabic(Statistics.getGrades())){ // check if any grade is arabic
             if(!arabicTextReady) {
                     generateGradesTextImgs();
@@ -257,8 +258,8 @@ abstract public class Report {
             }
             for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
                     ArrayList<String> tableRow = table.get(i);
-                    String tableGrade = tableRow.get(1).replace(" " , "%20");;
-                    tableRow.set(1, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
+                    String tableGrade = tableRow.get(arabicColIndex).replace(" " , "%20");;
+                    tableRow.set(arabicColIndex, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
             }
        }
     }

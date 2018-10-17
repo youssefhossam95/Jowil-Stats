@@ -326,7 +326,7 @@ public class Report8 extends Report {
                 XWPFTable wrapperTable = document.createTable(1, 3);
                 wrapperTable.setCellMargins(0, 0, 400, 0);
                 XWPFTableRow tablerow = wrapperTable.getRow(0);
-                WordUtils.createTableInCell(tablerow.getCell(0), table, WordUtils.TABLE_ALIGN_LR, "", 10, true , WordUtils.pageWidth*.45);
+                WordUtils.createTableInCell(tablerow.getCell(0), table, WordUtils.TABLE_ALIGN_LR, "", 10, true , WordUtils.pageWidth*.43);
                 String imgFullPath = imagesFullPath + this.imgName + formIndex + graphIndex + ".png";
                 XWPFRun run = tablerow.getCell(1).getParagraphArray(0).createRun();
                 run.setColor("FFFFFF");
