@@ -220,31 +220,13 @@ public class Report5 extends Report {
     }
 
     private void editRowForPrintablePdf (ArrayList<String> tableRow) {
-//        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
-        if(tableRow.get(1).equals("2.9"))
-            System.out.println("zeby");
+
         int numberOfSolvers = Integer.valueOf(tableRow.get(1));
-//        String addedImgName;
-//        if(rowClass.equals("greenBar"))
-//            addedImgName = "correct" ;
-//        else if(numberOfSolvers == 0)
-//            addedImgName = "nonDistractor";
-//        else if(rowClass.equals("distBar"))
-//            addedImgName = "distractor";
-//        else {
-//            addedImgName= null ;
-//        }
-//        String addedData = addedImgName!=null?
-//                "<img src='"+addedImgName+".png' height='15px' class='type-img'> </img>":" " ;
-//
-////                                            tableRow.set(tableRow.size()-1 , "printable-bar");
 
         if(numberOfSolvers!=0)
             tableRow.set(tableRow.size()-1 , "printable-bar");
         else
             tableRow.set(tableRow.size()-1 , "");
-
-//        tableRow.add(3 , addedData) ;
 
     }
 
@@ -264,7 +246,6 @@ public class Report5 extends Report {
         String barImgFullPath = resourcesPath+"RectImages\\Report5\\"+color+"\\"+percent+".png" ;
         String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
         tableRow.set(4,imgEncoding) ;
-//        System.out.println(imgEncoding);
     }
     private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getProcessedTables (int type){
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = new ArrayList<>();

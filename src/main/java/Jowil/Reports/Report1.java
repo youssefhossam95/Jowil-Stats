@@ -93,55 +93,57 @@ public class Report1 extends Report{
     }
 
 
-    protected void handleArabicPdf(ArrayList<ArrayList<String>> table ) throws IOException {
-        for (String grade : Statistics.getGrades()) {
-            if (!grade.matches("\\w+")) { // check if any grade is arabic
-                generateTextImgs();
-                while (arabicTextReady) ; // wait for the imgs to be created
-                for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
-                    ArrayList<String> tableRow = table.get(i);
-                    String tableGrade = tableRow.get(0).replace(" " , "%20");
-                    tableRow.set(0, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
-                }
-                break;
-            }
-        }
-    }
-
-    public void generateTextImgs () throws IOException {
-        ArrayList<String> grades = Statistics.getGrades();
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                Stage stage = new Stage() ;
-                Pane pane = new Pane() ;
-                pane.setStyle("-fx-background-color:white");
-                Scene scene  = new Scene(pane, Color.WHITE);
-                stage.setScene(scene);
-                Label label = new Label("man");
-                pane.getChildren().add(label);
-                for (int i =0 ; i < grades.size(); i ++) {
-                    Label label2 = new Label(grades.get(i));
-                    label2.setStyle("-fx-font-weight: bold");
-                    pane.getChildren().set(0, label2);
-
-//        scene.getStylesheets().add("reports/report1/style.css");
-
-                    WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
-                    try {
-                        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i)+".png"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                arabicTextReady = true ;
-            }
-        });
-
-
-    }
+//    protected void handleArabicPdf(ArrayList<ArrayList<String>> table ) throws IOException {
+//        for (String grade : Statistics.getGrades()) {
+//            if (!grade.matches("\\w+")) { // check if any grade is arabic
+//                if(!arabicTextReady) {
+//                    generateTextImgs();
+//                    while (!arabicTextReady) ; // wait for the imgs to be created
+//                }
+//                for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
+//                    ArrayList<String> tableRow = table.get(i);
+//                    String tableGrade = tableRow.get(0).replace(" " , "%20");
+//                    tableRow.set(0, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
+//                }
+//                break;
+//            }
+//        }
+//    }
+//
+//    public void generateTextImgs () throws IOException {
+//        ArrayList<String> grades = Statistics.getGrades();
+//
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                Stage stage = new Stage() ;
+//                Pane pane = new Pane() ;
+//                pane.setStyle("-fx-background-color:white");
+//                Scene scene  = new Scene(pane, Color.WHITE);
+//                stage.setScene(scene);
+//                Label label = new Label("man");
+//                pane.getChildren().add(label);
+//                for (int i =0 ; i < grades.size(); i ++) {
+//                    Label label2 = new Label(grades.get(i));
+//                    label2.setStyle("-fx-font-weight: bold");
+//                    pane.getChildren().set(0, label2);
+//
+////        scene.getStylesheets().add("reports/report1/style.css");
+//
+//                    WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
+//                    try {
+//                        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i)+".png"));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                arabicTextReady = true ;
+//            }
+//        });
+//
+//
+//    }
     /**
      * generate a bar chart for reprot 1 that represent the grade distribution, and stores it in image.
      * @param grades ArrayList that contians all the grades of studest i.e. A+ , B ...
@@ -257,10 +259,10 @@ public class Report1 extends Report{
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
         String txtTitle = TxtUtils.generateTitleLine(reportTitle,
                 TxtUtils.calcTableWidth(tableWithHeaders,cellHorizontalPadding),2) ;
-        String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding , false) ;
+        boolean arabicText = Utils.checkListContainArabic(Statistics.getGrades()) ;
+        String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding , false,arabicText) ;
 
         String outputTxt =TxtUtils.newLine+txtTitle + txtTable ;
-        System.out.println(outputTxt);
 
         TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
@@ -295,7 +297,6 @@ public class Report1 extends Report{
     public void generateTsvReprot() {
 
         String outputCsv = generateCharSeparatedValuesString('\t') ;
-        System.out.println(outputCsv);
         CsvUtils.writeCsvToFile(outputCsv , outputFormatsFolderPaths[ReportsHandler.TSV]+outputFileName+".tsv");
     }
 

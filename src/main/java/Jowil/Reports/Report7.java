@@ -219,7 +219,6 @@ public class Report7 extends Report {
 
             outputTxt+= TxtUtils.stackTablesV(txtTables, 2);
         }
-        System.out.println(outputTxt);
 
         TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }

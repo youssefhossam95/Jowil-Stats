@@ -62,7 +62,6 @@ public class Report2 extends Report {
 
             String tableHtml = doc.select("table.t2").last().outerHtml() ;
             String templateBodyHtml = doc.select("div#template").html() ;
-            System.out.println(templateBodyHtml);
 
             for (int formIndex = 0; formIndex < Statistics.getNumberOfForms() ; formIndex++) {
                 if(formIndex>0) {
@@ -335,7 +334,6 @@ public class Report2 extends Report {
              outputTxt += TxtUtils.stackTablesV(txtTables, PADDING_BETWEEN_TABLES) ;
             }
 //        String outputTxt = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
-        System.out.println(outputTxt);
 
         TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
 
@@ -415,8 +413,6 @@ public class Report2 extends Report {
 
             outputCsv += CsvUtils.stackTablesV(csvTables, PADDING_BETWEEN_TABLES) ;
         }
-//        String outputCsv = TxtUtils.stackTablesV(tables, PADDING_BETWEEN_TABLES) ;
-//        System.out.println(outputCsv);
 
         return outputCsv ;
     }

@@ -6,12 +6,22 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.imageio.ImageIO;
 import java.io.*;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
@@ -45,12 +55,15 @@ abstract public class Report {
 
     public final static int REPORTS_COUNT=8;
 
+
+    volatile boolean arabicTextReady = false ;
+
     Report() {
         try {
             resourcesPath= ".\\src\\main\\resources\\" ;
 //                    URLDecoder.decode(Report.class.getResource("../../").getPath(),"utf-8");
 //            resourcesPath= resourcesPath.substring(0 , resourcesPath.length()-8) ;
-            System.out.println("fuck this fucken shit"+resourcesPath);
+//            System.out.println("fuck this fucken shit"+resourcesPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,7 +105,7 @@ abstract public class Report {
     protected void generatePDF(String inputHtmlPath, String outputPdfPath) throws IOException, com.lowagie.text.DocumentException {
 
         String url = new File(inputHtmlPath).toURI().toURL().toString();
-        System.out.println("URL: " + url);
+//        System.out.println("URL: " + url);
 
 
 
@@ -236,6 +249,54 @@ abstract public class Report {
 
 
 
+    protected void handleArabicPdf(ArrayList<ArrayList<String>> table ) throws IOException {
+        if(Utils.checkListContainArabic(Statistics.getGrades())){ // check if any grade is arabic
+            if(!arabicTextReady) {
+                    generateGradesTextImgs();
+                    while (!arabicTextReady) ; // wait for the imgs to be created
+            }
+            for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
+                    ArrayList<String> tableRow = table.get(i);
+                    String tableGrade = tableRow.get(1).replace(" " , "%20");;
+                    tableRow.set(1, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
+            }
+       }
+    }
+
+    protected void generateGradesTextImgs () throws IOException {
+        ArrayList<String> grades = Statistics.getGrades();
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                Stage stage = new Stage() ;
+                Pane pane = new Pane() ;
+                pane.setStyle("-fx-background-color:white");
+                Scene scene  = new Scene(pane, Color.WHITE);
+                stage.setScene(scene);
+                Label label = new Label("man");
+                pane.getChildren().add(label);
+                for (int i =0 ; i < grades.size(); i ++) {
+                    Label label2 = new Label(grades.get(i));
+                    label2.setStyle("-fx-font-weight: bold");
+                    pane.getChildren().set(0, label2);
+
+//        scene.getStylesheets().add("reports/report1/style.css");
+
+                    WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
+                    try {
+                        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i)+".png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                arabicTextReady = true ;
+            }
+        });
+
+
+    }
 
     abstract  public  void generateHtmlReport() throws IOException;
     abstract public void generatePdfReport() throws IOException, DocumentException;

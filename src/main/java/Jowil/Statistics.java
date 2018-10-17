@@ -315,7 +315,6 @@ public class Statistics {
         double[]forms = studentForms.stream().mapToDouble(d -> d).toArray();
         int numberOfForms = (int)max(forms)+1 ;
 
-        System.out.println(numberOfForms);
         formsScors = new ArrayList<ArrayList<Double>>() ;
 
         for (int formIndex =0 ; formIndex < numberOfForms ; formIndex++) {
@@ -883,7 +882,6 @@ public class Statistics {
             }
             newTables.add(tableStats) ;
         }
-        System.out.println(newTables);
         return newTables ;
     }
 
@@ -952,7 +950,7 @@ public class Statistics {
         }
         tables.add(table) ;
 
-        System.out.println("el table ya man "+ tables);
+//        System.out.println("el table ya man "+ tables);
         return tables ;
     }
 
@@ -999,7 +997,6 @@ public class Statistics {
             }
             tables.add(table);
         }
-        System.out.println(tables);
         return tables ;
     }
 
@@ -1329,7 +1326,6 @@ public class Statistics {
             }
             tables.add(groupTables);
         }
-        System.out.println(tables);
         return tables ;
     }
     private static Pair<Double , Double> getTrendData (ArrayList<Double> hardness) {
@@ -1401,7 +1397,6 @@ public class Statistics {
 
             formsData.add(formGraphsData);
         }
-        System.out.println(formsData);
         return formsData ;
     }
 
