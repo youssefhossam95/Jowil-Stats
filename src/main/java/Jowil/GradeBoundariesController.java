@@ -141,9 +141,6 @@ public class GradeBoundariesController extends Controller {
     @Override
     protected void initComponents() {
 
-        if(isQuestMode && (gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null)
-            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
-                    "Error in loading Grade Scale Configurations.");
 
         initTrashIcon();
         initScrollPane();

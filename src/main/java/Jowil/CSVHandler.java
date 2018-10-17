@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import static Jowil.Controller.constructMessage;
 import static Jowil.Controller.isOpenMode;
-import static Jowil.Controller.isQuestMode;
+
 
 
 public class CSVHandler {
@@ -369,7 +369,7 @@ public class CSVHandler {
         Statistics.setStudentAnswers(new ArrayList<ArrayList<String>>());
         Statistics.setStudentForms(new ArrayList<Integer>());
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
-        Statistics.setSubjMaxScores(new ArrayList<Double>());
+
 
         boolean isHeadersExist=isResponsesContainsHeaders;
         int rowNumber=1;
@@ -535,9 +535,15 @@ public class CSVHandler {
 
     public static void initQuestionsChoices(){
 
+        initQuestionsChoices(false);
 
-        if(!isOpenMode)
-            Statistics.setQuestionsChoices(new ArrayList<ArrayList<String>>());
+    }
+
+    public static void initQuestionsChoices(boolean isObjColSetsChanged){
+
+
+
+        ArrayList<ArrayList<String>> qChoices=new ArrayList<ArrayList<String>>();
 
         int i=0;
         for(Group group : detectedGroups){
@@ -546,7 +552,7 @@ public class CSVHandler {
             String groupMax=getGroupMax(qCount,i);
             group.setCorrectAnswers(getGroupCorrectAnswers(qCount,i));
 
-            if(isOpenMode) {
+            if(isOpenMode && !isObjColSetsChanged) {
                 group.setPossibleAnswers(Statistics.getQuestionsChoices().get(i));
                 try {
                     Integer.parseInt(groupMax);
@@ -560,12 +566,15 @@ public class CSVHandler {
 
             i+=qCount;
 
-            if(!isOpenMode) {
-                for (int j = 0; j < qCount; j++)
-                    Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
-            }
+
+            for (int j = 0; j < qCount; j++)
+                qChoices.add(group.getPossibleAnswers());
 
         }
+
+        if(!isOpenMode || isObjColSetsChanged)
+            Statistics.setQuestionsChoices(qChoices);
+
     }
 
 
@@ -962,6 +971,9 @@ public class CSVHandler {
     }
 
     public static void generateObjectiveGroupsFromColSets(ArrayList<ColumnSet> objColSets) throws InConsistentAnswerKeyException, IOException, IllFormedCSVException {
+
+
+
 
         detectedGroups=new ArrayList<>();
         detectedQHeaders=new ArrayList<>();

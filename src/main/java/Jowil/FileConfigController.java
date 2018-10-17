@@ -292,7 +292,7 @@ public class FileConfigController extends Controller {
                 isManualMode = true;
 
             //check for errors
-            if (mainFileTextField.getText().length() == 0 && !isQuestMode) {
+            if (mainFileTextField.getText().length() == 0) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Students Responses File Error", "No students responses file provided.");
                 return;
             }
@@ -355,18 +355,18 @@ public class FileConfigController extends Controller {
                 CSVHandler.setSavedAnswerKeyCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_ANSWER_KEY_CSV_JSON_KEY));
                 CSVHandler.setSavedResponsesCSV((ArrayList<ArrayList<String>>)currentOpenedProjectJson.get(SAVED_RESPONSES_CSV_JSON_KEY));
                 CSVHandler.setFormsCount(Integer.parseInt((String)currentOpenedProjectJson.get(FORMS_COUNT_JSON_KEY)));
+                CSVHandler.setSubjStartIndex(Integer.parseInt((String) currentOpenedProjectJson.get(SUBJ_COL_START_INDEX_JSON_KEY)));
+                CSVHandler.setSubjEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_COL_END_INDEX_JSON_KEY)));
+                CSVHandler.setSubjQuestionsCount(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_Q_COUNT_JSON_KEY)));
+                CSVHandler.setQuestionsColStartIndex(Integer.parseInt((String)currentOpenedProjectJson.get(Q_COL_START_INDEX_JSON_KEY)));
+                CSVHandler.setQuestionsColEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(Q_COL_END_INDEX_JSON_KEY)));
+                loadSavedProjectJson();
                 if(isManualMode){
                     openManualMode();
                 }
                 else {
 
                     saveChanges();
-                    CSVHandler.setQuestionsColStartIndex(Integer.parseInt((String)currentOpenedProjectJson.get(Q_COL_START_INDEX_JSON_KEY)));
-                    CSVHandler.setQuestionsColEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(Q_COL_END_INDEX_JSON_KEY)));
-                    CSVHandler.setSubjStartIndex(Integer.parseInt((String) currentOpenedProjectJson.get(SUBJ_COL_START_INDEX_JSON_KEY)));
-                    CSVHandler.setSubjEndIndex(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_COL_END_INDEX_JSON_KEY)));
-                    CSVHandler.setSubjQuestionsCount(Integer.parseInt((String)currentOpenedProjectJson.get(SUBJ_Q_COUNT_JSON_KEY)));
-                    loadSavedProjectJson();
                     CSVHandler.loadSavedAnswerKey();
                     try {
                         CSVHandler.loadSavedCSV();

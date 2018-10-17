@@ -1,6 +1,7 @@
 package Jowil;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,9 @@ public class QuestionnaireReportsController extends GradeBoundariesController{
 
     @Override
     protected void initComponents() {
+        if( (gradeScalesJsonObj = loadJsonObj(GRADE_SCALE_FILE_NAME)) == null)
+            showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Grade Configurations Error",
+                    "Error in loading Grade Scale Configurations.");
         super.initComponents();
         rootPane.getChildren().remove(comboHBox);
         rootPane.getChildren().remove(scrollPane);

@@ -57,6 +57,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static Jowil.ManualModeController.isIgnoreSavedObjectiveWeights;
+import static Jowil.Statistics.getSubjMaxScores;
 
 public class WeightsController extends Controller {
 
@@ -528,7 +529,7 @@ public class WeightsController extends Controller {
 
     private boolean checkBalancedFormsSums() {
 
-        ArrayList<Double> subjWeights=Statistics.getSubjMaxScores();
+        ArrayList<Double> subjWeights=getSubjMaxScores();
         double subjSum=0;
 
         for(Double d:subjWeights)
@@ -783,8 +784,9 @@ public class WeightsController extends Controller {
 
         subjLabel.setFont(new Font("Arial", headersFontSize));
 
+        boolean isLoadSavedWeights=isOpenMode && getSubjMaxScores().size()==CSVHandler.getSubjQuestionsCount();
         for (int i = 0; i < CSVHandler.getSubjQuestionsCount(); i++)
-            subjQuestions.add(new SubjQuestion(Integer.toString(i + 1), "10.0"));
+            subjQuestions.add(new SubjQuestion(Integer.toString(i + 1), isLoadSavedWeights?Double.toString(getSubjMaxScores().get(i)):"10.0"));
 
 
         subjTable.setEditable(true);

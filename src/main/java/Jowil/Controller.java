@@ -194,6 +194,8 @@ public abstract class Controller {
         buildComponentsGraph();
         stabalizeTables();
 
+        if(isQuestMode)
+            progressImage.setVisible(false);
 
 
 
@@ -344,8 +346,7 @@ public abstract class Controller {
         progressImage.setFitWidth(resX*0.25);
         progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
 
-        if(isQuestMode)
-            progressImage.setFitWidth(progressImage.getFitWidth()*0.5);
+
 
         topWrapperPane.setPrefHeight(progressImage.getFitHeight());
 

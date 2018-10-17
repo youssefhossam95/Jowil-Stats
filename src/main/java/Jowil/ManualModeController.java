@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
+import static Jowil.CSVHandler.updateQuestionsChoices;
 
 public class ManualModeController extends Controller{
 
@@ -118,6 +119,7 @@ public class ManualModeController extends Controller{
     int columnSetComboSelectedIndex;
     Controller caller;
     static boolean isIgnoreSavedObjectiveWeights;
+    boolean isObjColSetsChanged=false;
 
 
 
@@ -468,6 +470,18 @@ public class ManualModeController extends Controller{
         }
 
 
+        if(isObjColSetsChanged){
+
+//            if(isOpenMode){
+//                if(!showConfirmationDialog("Reset Questions Choices","Changes was made to objective questions groups. All groups choices will be reset. Are you sure you want to continue?"
+//                        ,stage.getOwner()))
+//                    return false;
+//            }
+            CSVHandler.initQuestionsChoices(true);
+        }
+
+
+
         Statistics.setIdentifierName(identifierName);
         Controller.selectedIdentifierName=identifierName.equals("None")?"None":identifierName+MANUAL_MODE_INDICATOR;
         Controller.selectedFormColName=formColName.equals("None")?"None":formColName+MANUAL_MODE_INDICATOR;
@@ -725,11 +739,15 @@ public class ManualModeController extends Controller{
         resetTable(false);
 
 
-        columnSets.add(new ColumnSet(columnSetTextField.getText(),nextColor,start,end-start+1,this,comboOptions[columnSetCombo.getSelectionModel().getSelectedIndex()]));
+        String colSetType=comboOptions[columnSetCombo.getSelectionModel().getSelectedIndex()];
+        columnSets.add(new ColumnSet(columnSetTextField.getText(),nextColor,start,end-start+1,this,colSetType));
         columnSets.sort(new ColumnSetSorter());
 
         columnSetsVBox.getChildren().setAll(columnSets);
         updateSizes();
+
+        if(colSetType.equals(OBJECTIVE_TYPE))
+            isObjColSetsChanged=true;
 
     }
 
@@ -779,6 +797,9 @@ public class ManualModeController extends Controller{
             if(colColor.get().equals(deletedColor))
                 colColor.set("transparent");
         }
+
+        if(deleted.getType().equals(OBJECTIVE_TYPE))
+            isObjColSetsChanged=true;
     }
 
 
@@ -823,7 +844,7 @@ public class ManualModeController extends Controller{
 
         if(isOpenMode){
 
-            if(!isQuestMode) {
+            if(!isQuestMode && isObjColSetsChanged) {
                 if (CSVHandler.getDetectedQHeaders().size() == Statistics.getQuestionWeights().get(0).size()) {
 
                     if (showWeightsResetConfirmationDialog())
@@ -838,6 +859,7 @@ public class ManualModeController extends Controller{
                         return false;
                 }
             }
+
 
             try {
                 CSVHandler.loadSavedCSV();
@@ -933,10 +955,13 @@ public class ManualModeController extends Controller{
         Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
         cancelButt.setText("No, Load Saved Weights");
 
+
         processDialog(alert);
         alert.initOwner(stage.getOwner());
         //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
+
+        ;
 
         return option.get() == ButtonType.OK;
 
@@ -951,6 +976,7 @@ public class ManualModeController extends Controller{
         if(isAccept) {
             while (!columnSets.isEmpty())
                 deleteColumnSet(columnSets.get(0));
+            isObjColSetsChanged=true;
         }
 
 
