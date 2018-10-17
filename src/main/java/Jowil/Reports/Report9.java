@@ -221,7 +221,6 @@ public class Report9 extends Report {
         String barImgFullPath = resourcesPath+"RectImages\\Report5\\green\\"+percent+".png" ;
         String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
         tableRow.set(3,imgEncoding) ;
-//        System.out.println(imgEncoding);
     }
     private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getProcessedTables (int type){
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printablegroupsStatsTables = new ArrayList<>();
@@ -289,7 +288,6 @@ public class Report9 extends Report {
                 table = Utils.removeTableCol(table, 3) ;
                 table.add(0,headers) ;
                 String questionName = Statistics.getQuestionNames().get(questionIndex++);
-                System.out.println(questionIndex);
                 formTxtTables.add( CsvUtils.generateTable(table,separator,questionName));
             }
         }
@@ -388,7 +386,7 @@ public class Report9 extends Report {
 
             remainingRows-= LINE_ROWS ;
 
-            for( int tableIndex= 0 ; tableIndex <groupTables.size(); tableIndex ++ ) {
+            for( int tableIndex= 0 ; tableIndex <groupTables.size(); tableIndex +=2 ) {
 
 
                 ArrayList<ArrayList<String>> table = groupTables.get(tableIndex);

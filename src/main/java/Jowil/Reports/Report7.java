@@ -219,7 +219,6 @@ public class Report7 extends Report {
 
             outputTxt+= TxtUtils.stackTablesV(txtTables, 2);
         }
-        System.out.println(outputTxt);
 
         TxtUtils.writeTxtToFile(outputTxt , outputFormatsFolderPaths[ReportsHandler.TXT]+outputFileName+".txt");
     }
@@ -270,7 +269,7 @@ public class Report7 extends Report {
             ArrayList<ArrayList<ArrayList<String>>> statsTables = formsTableStats.get(formIndex);
 
             for(int tableIndex = 0 ; tableIndex<statsTables.size() ; tableIndex++) {
-                if(tableIndex==2)
+                if(tableIndex==2 && formIndex==0 )
                     WordUtils.addPageBreak(document);
                     
                 ArrayList<ArrayList<String>> table = statsTables.get(tableIndex);

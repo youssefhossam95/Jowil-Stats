@@ -220,31 +220,13 @@ public class Report5 extends Report {
     }
 
     private void editRowForPrintablePdf (ArrayList<String> tableRow) {
-//        String rowClass = tableRow.get(tableRow.size()-1) ; // get last element
-        if(tableRow.get(1).equals("2.9"))
-            System.out.println("zeby");
+
         int numberOfSolvers = Integer.valueOf(tableRow.get(1));
-//        String addedImgName;
-//        if(rowClass.equals("greenBar"))
-//            addedImgName = "correct" ;
-//        else if(numberOfSolvers == 0)
-//            addedImgName = "nonDistractor";
-//        else if(rowClass.equals("distBar"))
-//            addedImgName = "distractor";
-//        else {
-//            addedImgName= null ;
-//        }
-//        String addedData = addedImgName!=null?
-//                "<img src='"+addedImgName+".png' height='15px' class='type-img'> </img>":" " ;
-//
-////                                            tableRow.set(tableRow.size()-1 , "printable-bar");
 
         if(numberOfSolvers!=0)
             tableRow.set(tableRow.size()-1 , "printable-bar");
         else
             tableRow.set(tableRow.size()-1 , "");
-
-//        tableRow.add(3 , addedData) ;
 
     }
 
@@ -264,7 +246,6 @@ public class Report5 extends Report {
         String barImgFullPath = resourcesPath+"RectImages\\Report5\\"+color+"\\"+percent+".png" ;
         String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
         tableRow.set(4,imgEncoding) ;
-//        System.out.println(imgEncoding);
     }
     private  ArrayList<ArrayList<ArrayList<ArrayList<String>>>> getProcessedTables (int type){
         ArrayList<ArrayList<ArrayList<ArrayList<String>>>> printableFormsStatsTables = new ArrayList<>();
@@ -392,9 +373,9 @@ public class Report5 extends Report {
     public void generateWordReport() throws IOException, InvalidFormatException {
 
         final int LINE_ROWS = 4 ;
-        final int TITLE_ROWS = 7 ;
+        final int TITLE_ROWS = 6 ;
         final int WRAPPER_TABLE_ROWS = 5 ;
-        final int BLANK_PAGE_ROWS = 35 ;
+        final int BLANK_PAGE_ROWS = 34 ;
         final int TABLE_SPACING_ROWS = 3 ;
 //        final int FIRST_PAGE_ROWS = BLANK_PAGE_ROWS - TITLE_ROWS ;
         double tableWidth = WordUtils.pageWidth * 0.49 ;
@@ -415,7 +396,7 @@ public class Report5 extends Report {
                 title = title + ": Form " + (formIndex+1) ;
             }
             if(formIndex>0) {
-                if(remainingRows>1)
+                if(remainingRows>0)
                     WordUtils.addPageBreak(document);
             }
             remainingRows = BLANK_PAGE_ROWS ;
@@ -452,7 +433,7 @@ public class Report5 extends Report {
                     ArrayList<ArrayList<String>> table = groupTables.get(tableIndex);
 
                     if(remainingRows < WRAPPER_TABLE_ROWS+table.size() -TABLE_SPACING_ROWS) {
-                        if(remainingRows>1)
+                        if(remainingRows>0)
                             WordUtils.addPageBreak(document);
                         remainingRows = BLANK_PAGE_ROWS ;
                     }

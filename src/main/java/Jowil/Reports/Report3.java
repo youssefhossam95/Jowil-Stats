@@ -42,7 +42,6 @@ public class Report3 extends Report {
         doc.select("td.MaximumPossibleScore").last().text(statsMap.get("Maximum Possible Score")) ;
 //        doc.select("td.Benchmark").last().text(statsMap.get("Benchmark")) ;
 
-//        System.out.println("fuck you");
         //testInsights
         doc.select("td.EasiestQuestion").last().text(statsMap.get("Easiest Question")) ;
         doc.select("td.HardestQuestion").last().text(statsMap.get("Hardest Question")) ;
@@ -148,7 +147,6 @@ public class Report3 extends Report {
             currentTableRows++ ;
         }
 
-        System.out.println(tables);
         tables.add(table) ;
         return tables ;
     }

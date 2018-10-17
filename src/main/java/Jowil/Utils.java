@@ -110,4 +110,12 @@ public class Utils {
 
     }
 
+    public  static boolean checkListContainArabic(ArrayList<String> list) {
+        for(String s :list) {
+            if(!s.matches("\\w+"))
+                return true;
+        }
+        return false ;
+    }
+
 }

@@ -28,15 +28,15 @@ public class ReportChartsTest extends Application {
             public void run() {
                 System.out.println("Treads");
                 try {
-                String inputFilesFolderPath = ".\\src\\test\\ReportTestCSVs\\" ;
+                String inputFilesFolderPath = ".\\src\\test\\AppTestCSVs\\" ;
 
 
-                CSVHandler.setResponsesFilePath(inputFilesFolderPath+"StudentAnswers.csv");
+                CSVHandler.setResponsesFilePath(inputFilesFolderPath+"WelloStudentAnswers.csv");
                 CSVHandler.setFormColIndex(3);
                 CSVHandler.setIdentifierColStartIndex(0);
                 CSVHandler.setIdentifierColEndIndex(1);
                 boolean isHeaders=CSVHandler.processHeaders(false);
-                CSVHandler.loadAnswerKeys(inputFilesFolderPath+"AnswerKeys.csv",true);
+                CSVHandler.loadAnswerKeys(inputFilesFolderPath+"WelloAnswerKeys.csv",true);
                 CSVHandler.processHeaders(true);
                 Jowil.CSVHandler.loadCsv(isHeaders);
 
@@ -56,23 +56,28 @@ public class ReportChartsTest extends Application {
                 reports.add(new Report1()) ;
 //                reports.add(new Report2()) ;
 //                reports.add(new Report3());
-//                reports.add(new Report4()) ;
+                reports.add(new Report4()) ;
 //                reports.add(new Report5()) ;
 //                reports.add(new Report6()) ;
 //                reports.add(new Report7()) ;
 //                reports.add(new Report8()) ;
+//                reports.add(new Report9()) ;
                 ArrayList<Integer> formats = new ArrayList<>() ;
+//
                 formats.add(ReportsHandler.HTML) ;
                 formats.add(ReportsHandler.PDF);
 //                formats.add(ReportsHandler.PRINTABLE_PDF) ;
 //                formats.add(ReportsHandler.TXT) ;
 //                formats.add(ReportsHandler.CSV);
 //                formats.add(ReportsHandler.TSV) ;
-//                formats.add(ReportsHandler.WORD) ;
+                formats.add(ReportsHandler.WORD) ;
+//                formats.add(ReportsHandler.XLS) ;
 
                 ReportsHandler reportsHandler = new ReportsHandler(true);
 
                 reportsHandler.generateReports(reports , formats);
+
+                System.out.println("Finishied Generating All Reports");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

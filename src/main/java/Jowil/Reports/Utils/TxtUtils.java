@@ -55,6 +55,9 @@ public class TxtUtils {
     }
 
     public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ) {
+        return generateTxtTableAlignCenter(table, title,cellHorizontalPadding,showLines,false) ;
+    }
+    public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ,boolean arabic ) {
 
 //        System.out.println("fuck you");
         String txtTable = "" ;
@@ -72,8 +75,10 @@ public class TxtUtils {
                     String prevString =  table.get(rowIndex).get(colIndex-1) ;
                     numberOfSpacesNeeded2 += Math.floor((cellsWidths.get(colIndex - 1)  - prevString.length()) / 2) ;
                 }
-//                txtTable +=Utils.generatePattern(" " , numberOfSpacesNeeded2) +"I" + Utils.generatePattern(" ",numberOfSpacesNeeded) + cellString ;
-                txtTable +=Utils.generatePattern(" " , numberOfSpacesNeeded2 + numberOfSpacesNeeded) + cellString ;
+                if(arabic)
+                    txtTable +=Utils.generatePattern(" " , numberOfSpacesNeeded2) +"I" + Utils.generatePattern(" ",numberOfSpacesNeeded) + cellString ;
+                else
+                    txtTable +=Utils.generatePattern(" " , numberOfSpacesNeeded2 + numberOfSpacesNeeded) + cellString ;
 
             }
             // add line after the first Row

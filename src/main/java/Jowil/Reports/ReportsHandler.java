@@ -116,7 +116,7 @@ public class ReportsHandler {
             if(formats.contains(TSV))
                 report.generateTsvReprot();
 
-            System.out.println("Finished Generating Reports...");
+            System.out.println("Finished Generating " + report.getClass().getSimpleName());
             if(!isPDFExists)
                 handleNoPDF();
 
