@@ -56,12 +56,12 @@ public class QuestionnaireReportsController extends GradeBoundariesController{
         reportsDirHBox.setLayoutX(buttonsHbox.getLayoutX());
         reportsDirHBox.setLayoutY(resY*0.05);
         reportsDirHBox.setPrefWidth(buttonsHbox.getPrefWidth());
-        questReportsScrollPane.setLayoutX(reportsDirHBox.getLayoutX());
-        questReportsScrollPane.setLayoutY(resY*0.13);
-        questReportsScrollPane.setPrefWidth(reportsDirHBox.getPrefWidth());
-        questReportsScrollPane.setPrefHeight(rootHeight*0.5);
-        formatsVBox.setPadding(new Insets(questReportsScrollPane.getPrefHeight() * 0.05,0,0,
-                reportsConfigAnc.getPrefWidth() * 0.02));
+        questReportsScrollPane.setLayoutX((int)reportsDirHBox.getLayoutX());
+        questReportsScrollPane.setLayoutY((int)(resY*0.13));
+        questReportsScrollPane.setPrefWidth((int)reportsDirHBox.getPrefWidth());
+        questReportsScrollPane.setPrefHeight((int)rootHeight*0.5);
+        formatsVBox.setPadding(new Insets((int)(questReportsScrollPane.getPrefHeight() * 0.05),0,0,
+                (int)(reportsConfigAnc.getPrefWidth() * 0.02)));
 
         double hpos=0.877;
         buttonsHbox.setLayoutY(rootHeight-resY*(1-hpos));
