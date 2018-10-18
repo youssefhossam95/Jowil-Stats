@@ -378,11 +378,11 @@ public class Report5 extends Report {
         final int BLANK_PAGE_ROWS = 34 ;
         final int TABLE_SPACING_ROWS = 3 ;
 //        final int FIRST_PAGE_ROWS = BLANK_PAGE_ROWS - TITLE_ROWS ;
-        double tableWidth = WordUtils.pageWidth * 0.49 ;
 
 
         XWPFDocument document = WordUtils.createDocument((int)(WordUtils.inch * 0.9)) ;
 
+        double tableWidth = WordUtils.pageWidth * 0.47 ;
 
         WordUtils.createWordFooter(document); ;
 

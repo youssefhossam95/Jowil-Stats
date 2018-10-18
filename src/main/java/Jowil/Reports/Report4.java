@@ -186,8 +186,9 @@ public class Report4 extends Report{
         outputTxt+= txtTitle ;
 
 //        String tableTxt = TxtUtils.generateTxtTableAlignCenter((ArrayList)tableWithHeaders.subList(0 ,tableWithHeaders.size()-1 ) , "" , CHP ) ;
+        tableWithHeaders = translateTableCol(tableWithHeaders,1);
+        boolean arabicText = Utils.checkListContainArabic(Utils.transposeStringList(tableWithHeaders).get(1)) ;
 
-        boolean arabicText = Utils.checkListContainArabic(Statistics.getGrades()) ;
         String tableTxt = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , CHP  , false , arabicText) ;
 
         String [] tableLines = tableTxt.split(TxtUtils.newLine) ;
@@ -264,7 +265,7 @@ public class Report4 extends Report{
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
 
-        XWPFDocument document = new XWPFDocument();
+        XWPFDocument document = WordUtils.createDocument();
 
         WordUtils.createWordFooter(document); ;
 

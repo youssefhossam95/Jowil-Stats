@@ -581,7 +581,7 @@ public class Report2 extends Report {
             int questionIndex = 0;
 
             ArrayList<Group> groups = CSVHandler.getDetectedGroups() ;
-            for(int tableIndex = 0 ; tableIndex< formsStatsTables.size() ; tableIndex++ ) {
+            for(int tableIndex = 0 ; tableIndex< formStatsTables.size() ; tableIndex++ ) {
                 XlsUtils.addHeaderLine(groups.get(tableIndex).getCleanedName());
                 ArrayList<ArrayList<String>> statsTable = formStatsTables.get(tableIndex);
                 ArrayList<ArrayList<String>> tableWithHeaders = Utils.cloneTable(statsTable);

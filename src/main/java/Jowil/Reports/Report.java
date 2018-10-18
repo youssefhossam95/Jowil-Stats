@@ -57,6 +57,7 @@ abstract public class Report {
 
 
     volatile boolean arabicTextReady = false ;
+    protected Map<String,String> defaultGradesTranslation ;
 
     Report() {
         try {
@@ -72,6 +73,17 @@ abstract public class Report {
         int reportIndex=Integer.parseInt(this.getClass().getSimpleName().substring("Report".length()))-1;
         this.reportTitle=reportsTitles[reportIndex];
         this.outputFileName=this.getClass().getSimpleName()+" - "+this.reportTitle;
+        initTranslationMap();
+    }
+
+    private void initTranslationMap() {
+        defaultGradesTranslation = new HashMap<>();
+        defaultGradesTranslation.put("ضعيفجدا" , "Very Weak") ;
+        defaultGradesTranslation.put("ضعيف" , "Weak") ;
+        defaultGradesTranslation.put("مقبول" , "Acceptable") ;
+        defaultGradesTranslation.put("جيد" , "Good") ;
+        defaultGradesTranslation.put("جيدجدا" , "Very Good") ;
+        defaultGradesTranslation.put("امتياز" , "Excellent") ;
     }
 
     public String getOutputFileName() {
@@ -262,6 +274,22 @@ abstract public class Report {
                     tableRow.set(arabicColIndex, "<img class='text-img'  src='" + tableGrade + ".png'> </img>");
             }
        }
+    }
+
+    // this function tries to translate the given col and returns the translated table
+    // if it couldn't translate any one of its entries it returns the original table
+    protected ArrayList<ArrayList<String>> translateTableCol(ArrayList<ArrayList<String>> table , int colIndex) {
+        ArrayList<ArrayList<String>> translatedTable = Utils.cloneTable(table) ;
+        for(int rowIndex = 0 ; rowIndex<translatedTable.size(); rowIndex++) {
+            String tableCellText = translatedTable.get(rowIndex).get(colIndex).replace(" " , "");
+            if(defaultGradesTranslation.containsKey(tableCellText))
+                translatedTable.get(rowIndex).set(colIndex , defaultGradesTranslation.get(tableCellText)) ;
+        }
+        boolean allColTranslated = !Utils.checkListContainArabic(Utils.transposeStringList(translatedTable).get(colIndex));
+        if(allColTranslated)
+            return translatedTable;
+        else
+            return table ;
     }
 
     protected void generateGradesTextImgs () throws IOException {

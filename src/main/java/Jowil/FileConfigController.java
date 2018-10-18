@@ -231,10 +231,10 @@ public class FileConfigController extends Controller {
             }));
         }
         else
-            answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnly.csv");
+            answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloAnswerKeys.csv");
 
 
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
+        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloStudentAnswers.csv");
 
 
     }

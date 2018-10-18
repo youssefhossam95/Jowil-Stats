@@ -22,7 +22,8 @@ public class XlsUtils {
     public static int pageWidth ;
     public final static int TABLE_ROW_HEIGHT = 400 ;
     final static String REPORTS_COLOR = "095c90" ;
-    public static int nextColorIndex =40;
+    public static int nextColorIndex;
+    public static int nextColorStartIndex = 40 ;
     public static final int  DEFAULT_NUMBER_OF_LINES_AFTER_TABLE = 2 ;
     public static HSSFFont boldFont ;
     private static HSSFCellStyle tableTitleStyle ;
@@ -43,7 +44,7 @@ public class XlsUtils {
         sheet = workbook.createSheet();
 
         pageWidth = width ;
-
+        nextColorIndex = nextColorStartIndex ;
         REPORT_COL_END_INDEX = REPORT_COL_START_INDEX + pageWidth - 1 ;
         boldFont= workbook.createFont();
         boldFont.setBold(true);
