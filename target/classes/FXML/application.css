@@ -422,3 +422,7 @@ JFXListView:focused {
 -jfx-untoggle-color:#095c90;
 -jfx-toggle-color:#095c90;
 }
+
+.blueSpinner .arc {
+    -fx-stroke: #095c90;
+}

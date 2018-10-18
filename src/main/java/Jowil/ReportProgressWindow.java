@@ -1,6 +1,7 @@
 package Jowil;
 
 import Jowil.Reports.*;
+import com.jfoenix.controls.JFXSpinner;
 import com.lowagie.text.DocumentException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -71,10 +72,20 @@ public class ReportProgressWindow {
     Label titleLabel;
 
 
+    static JFXSpinner spinner;
+
+    ReportsHandler reportsHandler;
+
+
     ReportProgressWindow(int reportsCount,ArrayList<Boolean> isGenerateReports,ArrayList<Integer>formatsOut){
+
+        spinner=new JFXSpinner();
 
         reportProgress=new SimpleDoubleProperty();
         progressCount=new SimpleIntegerProperty();
+
+        reportsHandler = new ReportsHandler();
+
 
         this.reportsCount=reportsCount;
         this.formatsOut=formatsOut;
@@ -123,6 +134,12 @@ public class ReportProgressWindow {
         mainHBox.setLayoutY((int)(rootHeight*0.25));
         mainHBox.setSpacing((int)(1280/20));
 
+        spinner.setLayoutX(rootWidth*0.9);
+        spinner.setLayoutY(rootHeight*0.075);
+        spinner.setPrefSize(30,30);
+        spinner.setVisible(true);
+        spinner.getStyleClass().add("blueSpinner");
+
         counterIndicator=new RingProgressIndicator(reportsCount);
 
         counterIndicator.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT); //override translation behaviour
@@ -135,8 +152,10 @@ public class ReportProgressWindow {
 
         stage.setOnCloseRequest(event->{
             boolean isQuit=Controller.showConfirmationDialog("Quit Reports Generation","Are you sure you want to quit reports generation?",stage.getOwner());
-            if(isQuit)
+            if(isQuit) {//interrupt is used for stopping when pdf is included and the boolean is used when no boolean is used
                 th.interrupt();
+                reportsHandler.setIsStopReportsGeneration(true);
+            }
             else
                 event.consume();
         });
@@ -155,6 +174,8 @@ public class ReportProgressWindow {
             root= loader.load();
             if(isTranslationMode)
                 root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+
+            //root.getChildren().add(spinner);
             scene = new Scene(root,rootWidth,rootHeight);
             String windowTitle="Reports Generation Progress";
             stage.setTitle(Controller.isTranslationMode &&translations.containsKey(windowTitle)?translations.get(windowTitle):windowTitle);
@@ -193,6 +214,10 @@ public class ReportProgressWindow {
         ReportProgressWindow.reportProgress.set(reportProgress);
     }
 
+    public static void removeSpinner(){
+        spinner.setVisible(false);
+    }
+
 
     private void generateReports(){
 
@@ -210,13 +235,14 @@ public class ReportProgressWindow {
             }
 
 
-            ReportsHandler reportsHandler = new ReportsHandler();
+
+            reportsHandler.setIsStopReportsGeneration(false);
 
             try {
                 reportsHandler.generateReports(reportsOut, formatsOut);
             } catch (IOException e) {
-                showReportsErrorMessage(constructMessage(" Make sure that the file"," \""+reportsOut.get(progressCount.get()).getOutputFileName()+".pdf\" ", "is not opened in another application"));
-
+                String fileName=e.getMessage().substring(0,e.getMessage().indexOf("(The"));
+                showReportsErrorMessage(constructMessage(" Make sure that the file"," \""+fileName+"\" ", "is not opened in another application."));
 
             } catch (DocumentException e) {
                 showReportsErrorMessage("");
@@ -326,6 +352,7 @@ public class ReportProgressWindow {
         }
         return null;
     }
+
 
 
 }

@@ -502,7 +502,7 @@ public class WeightsController extends Controller {
 
         if(generalPrefsJson!=null) {
             generalPrefsJson.put(ALLOW_EXCEED_FULL_MARK_JSON_KEY, exceedCheckBox.isSelected());
-            generalPrefsJson.put(ADD_BONUS_TO_ALL_JSON_KEY,bonusCheckBox.isSelected());
+            generalPrefsJson.put(ADD_BONUS_TO_ALL_JSON_KEY,!bonusCheckBox.isSelected());
             saveJsonObj(GENERAL_PREFS_FILE_NAME, generalPrefsJson);
         }
 
@@ -989,7 +989,7 @@ public class WeightsController extends Controller {
         else {
             JSONObject obj=isOpenMode?currentOpenedProjectJson:generalPrefsJson;
             exceedCheckBox.setSelected((Boolean) obj.get(ALLOW_EXCEED_FULL_MARK_JSON_KEY));
-            bonusCheckBox.setSelected((Boolean) obj.get(ADD_BONUS_TO_ALL_JSON_KEY));
+            bonusCheckBox.setSelected(!(Boolean) obj.get(ADD_BONUS_TO_ALL_JSON_KEY));
         }
 
         Statistics.setAllowExceedMaxScore(exceedCheckBox.isSelected());

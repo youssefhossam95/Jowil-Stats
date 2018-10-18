@@ -117,8 +117,8 @@
 
 
 
-  "Reports Generation Progress":"تجهيز الملفات",
-  "Generating reports...this may take a while.":"جاري تجهيز الملفات...قد يستغرق ذلك بعض الوقت.",
+  "Reports Generation Progress":"تجهيز التقارير",
+  "Generating reports...this may take a while.":"جاري تجهيز التقارير...قد يستغرق ذلك بعض الوقت.",
   "Reports Generated":"التقارير الجاهزة",
   "Report In Progress":"التقرير الحالي",
 
@@ -277,7 +277,7 @@
   "Do you want to save your changes as a new grade scale configuration?":"هل تريد حفظ التغييرات كنظام تقديرات جديد؟","Save New Configuration":"حفظ النظام الجديد", "Ignore Changes":"تجاهل التغييرات", "Configuration Name":"اسم نظام التقديرات", "Configuration Name:":"اسم النظام الجديد:",
   "Reset Question Weights":"اعادة تعيين درجات الأسئلة", "Objective questions was just edited. Would you like to reset the existing objective weights?":"تم تعديل الأسئلة الموضوعية. هل ترغب في اعادة تعيين درجة الأسئلة الموضوعية؟", "Yes, Reset Weights" :"نعم, أعد تعيين الدرجات","No, Load Saved Weights":"لا, حمل الدرجات المحفوظة",
   "Number of Objective Questions Changed":"تغير عدد الأسئلة الموضوعية", "The number of objective questions has changed. All the saved objective weights for this project will be lost.":"تم تغيير عدد الأسئلة الموضوعية. سوف يتم اعادة تعيين درجات جميع الأسئلة.",
-  "Reports Generation Error":"خطأ في عملية تجهيز التقارير", "Retry":"اعادة المحاولة", "An error has occurred during report generation.":"حدث خطأ أثناء عملية تجهيز القرارات", " Make sure that the file" :"تأكد من ان الملف","is not opened in another application":"غير مفتوح في برنامج اخر",
+  "Reports Generation Error":"خطأ في عملية تجهيز التقارير", "Retry":"اعادة المحاولة", "An error has occurred during report generation.":"حدث خطأ أثناء عملية تجهيز التقارير.", " Make sure that the file" :" تأكد من ان الملف","is not opened in another application.":"غير مفتوح في برنامج اخر.",
   "No Headers Detected":"صف الرأس غير موجود","No headers were detected in ":"لم يتم العثور على صف الرأس في ","student responses file":"ملف اجابات الطلبة", "answer key file":"ملف الإجابة النموذجية",". Was the detection correct?":". هل كانت عملية البحث عن صف الرأس صحيحة؟","Yes, the detection was correct":"عملية البحث كانت صحيحة","No, the file contains headers":"الملف يحتوي على صف الرأس",
 
   "Settings":"الإعدادات",

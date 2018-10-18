@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,12 +44,22 @@ public class ReportsHandler {
     public final static String [] FORMATS_NAMES={"PDF","WORD","HTML","PRINTABLE PDF","TXT","XLS","CSV","TSV"};
     private final String reportsPath=  ".\\src\\main\\resources\\reports\\";
     public static boolean isTestMode;
+    AtomicBoolean isStopReportsGeneration;
+    static volatile boolean showPDFPagesProgress;
 
     public ReportsHandler(){
         isTestMode=false;
     }
     public ReportsHandler(boolean isTestMode){
         ReportsHandler.isTestMode=isTestMode;
+    }
+
+
+    public  void setIsStopReportsGeneration(boolean isStopReportsGeneration) {
+        this.isStopReportsGeneration=new AtomicBoolean(isStopReportsGeneration);
+    }
+    public static boolean isShowPDFPagesProgress() {
+        return showPDFPagesProgress;
     }
 
 
@@ -92,9 +103,15 @@ public class ReportsHandler {
         boolean isPDFExists= (formats.contains(PDF));
 
         for(Report report:Reports) {
+            if(isStopReportsGeneration.get()) //user cancelled generation
+                return;
 
-            if (formats.contains(PDF))
+            if (formats.contains(PDF)){
+                showPDFPagesProgress=true;
+                ReportProgressWindow.removeSpinner();
                 report.generatePdfReport();
+            }
+
 
             if(formats.contains(HTML))
                 report.generateHtmlReport();
@@ -108,8 +125,11 @@ public class ReportsHandler {
             if(formats.contains(XLS))
                 report.generateXlsReport();
 
-            if(formats.contains(PRINTABLE_PDF))
+            if(formats.contains(PRINTABLE_PDF)){
+                showPDFPagesProgress=false;
                 report.generatePrintablePdfReport();
+            }
+
 
             if(formats.contains(CSV))
                 report.generateCsvReport();
@@ -117,8 +137,11 @@ public class ReportsHandler {
                 report.generateTsvReprot();
 
             System.out.println("Finished Generating " + report.getClass().getSimpleName());
-            if(!isPDFExists)
-                handleNoPDF();
+
+            if(!isPDFExists) {
+                if(!handleNoPDF())
+                    return;
+            }
 
             if(!isTestMode)
                 ReportProgressWindow.incrementProgressCount();
@@ -128,22 +151,24 @@ public class ReportsHandler {
 
     }
 
-    private void handleNoPDF() {
+    private boolean handleNoPDF() {
 
 
         if(isTestMode)
-            return;
+            return true;
 
-        if(Thread.currentThread().isInterrupted())
-            return; //stop report generation if interrupted without pdf
+        if(isStopReportsGeneration.get())
+            return false; //stop report generation if interrupted without pdf
+        ReportProgressWindow.removeSpinner();
         ReportProgressWindow.setReportProgress(1);
         try {
             Thread.sleep(200); //simulating filling effect without pdf
         } catch (InterruptedException e) {
             System.out.println("dkhal el hramy wna nayma");
-            return; //stop report generation if interrupted without pdf
+            return false; //stop report generation if interrupted without pdf
         }
         ReportProgressWindow.setReportProgress(0.0);
+        return true;
     }
 
 
