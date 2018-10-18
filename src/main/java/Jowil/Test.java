@@ -185,16 +185,21 @@ public class Test {
     }
     public static void main(String [] args) throws IOException, DocumentException {
 
+
+
+
+        String s = "D+";
+        System.out.println(s.matches("\\w+"));
 //        allChars.add('x');
 
-        initAllChars();
+//        initAllChars();
 //        System.out.println(allChars.size());
 
-        long baseNumber = Long.valueOf(getSerialNumber()) ;
+//        long baseNumber = Long.valueOf(getSerialNumber()) ;
 //        System.out.println(getSerialNumber("c"));
-        String output = getActivationKey(baseNumber) ;
-        System.out.println("the serial Number: " + baseNumber);
-        System.out.println("the result output: " + output);
+//        String output = getActivationKey(baseNumber) ;
+//        System.out.println("the serial Number: " + baseNumber);
+//        System.out.println("the result output: " + output);
 //        String sn = getVolSerialNumber("C");
 
 //        System.out.println(sn);

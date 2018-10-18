@@ -259,7 +259,8 @@ public class Report1 extends Report{
         ArrayList<ArrayList<String>> tableWithHeaders = getTableWithHeaders() ;
         String txtTitle = TxtUtils.generateTitleLine(reportTitle,
                 TxtUtils.calcTableWidth(tableWithHeaders,cellHorizontalPadding),2) ;
-        boolean arabicText = Utils.checkListContainArabic(Statistics.getGrades()) ;
+        tableWithHeaders = translateTableCol(tableWithHeaders,0);
+        boolean arabicText = Utils.checkListContainArabic(Utils.transposeStringList(tableWithHeaders).get(0)) ;
         String txtTable = TxtUtils.generateTxtTableAlignCenter(tableWithHeaders , "" , cellHorizontalPadding , false,arabicText) ;
 
         String outputTxt =TxtUtils.newLine+txtTitle + txtTable ;
@@ -303,7 +304,7 @@ public class Report1 extends Report{
 
     @Override
     public void generateWordReport() throws IOException, InvalidFormatException {
-        XWPFDocument document = new XWPFDocument();
+        XWPFDocument document = WordUtils.createDocument();
         WordUtils.addTitle(document , reportTitle );
 
 
