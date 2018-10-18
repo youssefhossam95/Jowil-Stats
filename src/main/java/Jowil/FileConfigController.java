@@ -200,7 +200,7 @@ public class FileConfigController extends Controller {
 
 
         if (isOpenMode) {
-            Controller.isQuestMode=(Boolean)currentOpenedProjectJson.get(IS_QUEST_MODE_JSON_KEY);
+
             mainFileTextField.setText((String) currentOpenedProjectJson.get(RESPONSES_FILE_PATH_JSON_KEY));
             answersFileTextField.setText((String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY));
             mainFileTextField.setEditable(false);
@@ -333,7 +333,7 @@ public class FileConfigController extends Controller {
                 int responsesColCount = CSVHandler.getResponsesColsCount();
                 int answersColCount = CSVHandler.getAnswersColsCount();
 
-                if (responsesColCount != answersColCount) { //check if columns count doesn't match -> in open mode both will be zero
+                if (responsesColCount != answersColCount && !isOpenMode) {
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", constructMessage("Student responses file contains ",
                             responsesColCount + "", " columns, while the answer key file contains ", answersColCount + "", " columns."));
                     return;

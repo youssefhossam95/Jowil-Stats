@@ -680,7 +680,7 @@ public class StartController extends Controller{
         int projIndex=projectsNames.indexOf(projName);
         JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
         currentOpenedProjectJson= (JSONObject)projects.get(projIndex);
-
+        Controller.isQuestMode=(Boolean)currentOpenedProjectJson.get(IS_QUEST_MODE_JSON_KEY);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
