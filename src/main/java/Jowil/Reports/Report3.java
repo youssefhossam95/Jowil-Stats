@@ -8,7 +8,6 @@ import Jowil.Statistics;
 import Jowil.Utils;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.ArabicLigaturizer;
-import com.sun.xml.internal.ws.api.databinding.MappingInfo;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jsoup.Jsoup;

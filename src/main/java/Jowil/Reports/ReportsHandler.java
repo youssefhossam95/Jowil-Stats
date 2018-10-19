@@ -23,7 +23,6 @@ import org.jsoup.nodes.Document;
 //import org.jfree.io.FileUtilities;
 
 import org.xhtmlrenderer.pdf.ITextRenderer;
-import sun.plugin.dom.core.Element;
 
 import javax.imageio.ImageIO;
 import java.io.*;
