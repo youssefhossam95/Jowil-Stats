@@ -6,8 +6,11 @@
 *.class
 *.class
 *.class
-target
+
 Jowil Stats.iml
+
+build/
+target/
 
 target/classes/Jowil/Controller$1.class
 target/classes/Jowil/Controller$2.class
