@@ -965,25 +965,6 @@ public class GradeBoundariesController extends Controller {
     }
 
 
-    private boolean makeDir(String dirPath){
-
-        File theDir = new File(dirPath);
-        System.out.println("Dir "+ theDir.getAbsolutePath());
-
-        if (!theDir.exists()) {
-
-            try{
-                return theDir.mkdirs();
-            }
-            catch(SecurityException se){
-                return false;
-            }
-
-        }
-        else
-            return true;
-
-    }
 
     private boolean isCheckBoxesValid(){
 
