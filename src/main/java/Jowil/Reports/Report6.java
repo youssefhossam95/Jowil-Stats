@@ -43,7 +43,7 @@ public class Report6 extends Report {
         workSpacePath = reportsPath + "report6\\" ;
         templatePath = workSpacePath + "report6Template.html";
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
-        imgsDirectoryFullPath = System.getProperty("user.dir") + workSpacePath ;
+        imgsDirectoryFullPath =  workSpacePath ;
         while (!chartsDone) ;
     }
 

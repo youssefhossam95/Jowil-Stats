@@ -32,7 +32,7 @@ public class Report9 extends Report {
         workSpacePath = reportsPath + "report9\\" ;
         templatePath = workSpacePath + "report9Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
-//        imagesFolderFullPath = System.getProperty("user.dir") + workSpacePath  ;
+//        imagesFolderFullPath =  workSpacePath  ;
     }
 
     private Document generatePdfHtml (ArrayList<ArrayList<ArrayList<ArrayList<String>>>> groupsTables) throws IOException {

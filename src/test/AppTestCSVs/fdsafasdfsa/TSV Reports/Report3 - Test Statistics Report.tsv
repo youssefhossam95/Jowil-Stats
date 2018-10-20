@@ -1,0 +1,45 @@
+Test Statistics Report
+
+Test Insights
+"Hardest Question"	"G5-11"
+"Easiest Question"	"G1-2"
+"Hardest Group"	"G5"
+"Easiest Group"	"G1"
+
+
+Test Data
+"Number of Objective Questions"	"60"
+"Number of Subjective Questions"	"0"
+"Maximum Possible Score"	"60"
+
+
+Basic Statistics
+"Mean Score"	"37.7"
+"Mean Percent Score"	"62.9%"
+"Highest Score"	"58"
+"Lowest Score"	"6"
+
+
+Dispersion
+"Standard Deviation"	"10.5"
+"Variance"	"111.2"
+"Range"	"52.0"
+"Median"	"40.0"
+"25th Percentile"	"32.0"
+"75th Percentile"	"46.0"
+"Interquartile Range"	"14.0"
+
+
+Confidence Intervals
+"90"	"37.2 - 38.2"
+"95"	"37.1 - 38.3"
+"99"	"37.0 - 38.5"
+
+
+Test Reliability
+"Kuder-Richardson Formula 20"	"0.91"
+"Kuder-Richardson Formula 21"	"0.89"
+"Cronbach's Alpha"	"0.93"
+
+
+
