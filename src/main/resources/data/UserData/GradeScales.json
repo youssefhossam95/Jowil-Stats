@@ -1,0 +1,43 @@
+{
+
+  "scales":[
+
+    {
+      "Egyptian Scale 1":[ {"Excellent":"85.0"}, {"Very Good":"75.0"}, {"Good":"65.0"}, {"Acceptable":"50.0"}, {"Weak":"30.0"}, {"Very Weak":"0.0"} ]
+    },
+
+
+    {
+      "Egyptian Scale 2":[ {"Excellent":"85.0"}, {"Very Good":"75.0"}, {"Good":"65.0"}, {"Acceptable":"60.0"}, {"Weak":"30.0"}, {"Very Weak":"0.0"} ]
+    },
+
+
+    {
+      "All Letters Scale":[ {"A+":"97.0"}, {"A":"93.0"}, {"A-":"90.0"}, {"B+":"87.0"},{"B":"83.0"}, {"B-":"80.0"}, {"C+":"77.0"}, {"C":"73.0"}, {"C-":"70.0"}, {"D+":"67.0"}, {"D":"63.0"}, {"D-":"60.0"}, {"F":"0.0"}]
+    },
+
+    {
+      "Standard Letters Scale":[ {"A":"90.0"}, {"B":"80.0"}, {"C":"70.0"}, {"D":"60.0"}, {"F":"0.0"}]
+    }
+  ],
+
+  "lastSelectedScale":"Egyptian Scale 1"
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

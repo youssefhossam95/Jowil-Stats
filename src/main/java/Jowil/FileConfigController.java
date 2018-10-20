@@ -316,7 +316,7 @@ public class FileConfigController extends Controller {
             int formsCount = isOpenMode ? ((JSONArray) currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size() : CSVHandler.getFormsCount();
 
 
-            if (formsCount > 1 && formComboSelectedIndex == 0 && !isManualMode) {
+            if (formsCount > 1 && formComboSelectedIndex == 0 && !isManualMode && !isQuestMode) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error",
                         constructMessage(formsCount + "", " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue."));
                 return;

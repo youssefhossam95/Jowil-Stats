@@ -61,7 +61,7 @@ abstract public class Report {
 
     Report() {
         try {
-            resourcesPath= ".\\src\\main\\resources\\" ;
+            resourcesPath= Controller.getDataDirPath() ;
 //                    URLDecoder.decode(Report.class.getResource("../../").getPath(),"utf-8");
 //            resourcesPath= resourcesPath.substring(0 , resourcesPath.length()-8) ;
 //            System.out.println("fuck this fucken shit"+resourcesPath);

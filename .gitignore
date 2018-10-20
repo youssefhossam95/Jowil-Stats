@@ -6,10 +6,17 @@
 *.class
 *.class
 *.class
+*.jar
 
 Jowil Stats.iml
 
-build/
+
+
+build/*
+
+!build/build.xml
+!build/package
+!build/dist
 target/
 
 target/classes/Jowil/Controller$1.class

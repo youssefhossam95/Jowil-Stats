@@ -35,6 +35,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -126,7 +128,7 @@ public class StartController extends Controller{
 
     StartController() {
         super("Start.fxml", "Jowil Stats", 1.25,1.25 , true, null,false,true,0,0);
-
+        initDataDirPath();
         generalPrefsJson=loadJsonObj(GENERAL_PREFS_FILE_NAME);
         if(generalPrefsJson==null){ //failed to load general prefs
             isTranslationMode=false;
@@ -247,6 +249,8 @@ public class StartController extends Controller{
     @Override
     public void startWindow(){
         super.startWindow();
+
+
         loadProjectsJson();
         onString=isTranslationMode&& translations.containsKey(onString)?translations.get(onString):onString;
         offString=isTranslationMode&& translations.containsKey(offString)?translations.get(offString):offString;
@@ -256,6 +260,17 @@ public class StartController extends Controller{
 
 
 
+    }
+
+    private void initDataDirPath() {
+        String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        try {
+            String decodedPath = URLDecoder.decode(path.endsWith("classes/")?path:new File(path).getParentFile().getPath(), "UTF-8"); //the classes check identifies wither the function was called in a deployed jar or normal development classes
+            path=decodedPath+"/data/";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        dataDirPath=path;
     }
 
     private void loadTranslationsJson() {

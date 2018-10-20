@@ -1,0 +1,196 @@
+<html>
+ <head> 
+  <meta charset="UTF-8" /> 
+  <style type="text/css">
+    @page {
+
+      margin: 50px 25px 40px 25px;
+      /* margin:0px ;  */
+      /* size: A4 landscape; */
+      @bottom-left {
+        content: element(footerLeft);
+      }
+      @bottom-right {
+        content: element(footerRight);
+      }
+      @bottom-center {
+        content: element(footerCenter);
+      }
+    }
+
+
+
+    #pagenumber:before {
+      content: counter(page);
+    }
+
+    #pagecount:before {
+      content: counter(pages);
+    }
+
+    #footerCenter {
+      position: running(footerCenter);
+      text-align: center;
+      border-top: 1px solid #095c90;
+      padding-top: 5px;
+
+    }
+
+    #footerLeft {
+      position: running(footerLeft);
+      border-top: 1px solid #095c90;
+      padding-top: 5px;
+      text-align: left;
+    }
+
+    #footerRight {
+      position: running(footerRight);
+      border-top: 1px solid #095c90;
+      padding-top: 5px;
+      text-align: right;
+      /* padding-right: 50px ;   */
+    }
+
+    .divTitle {
+      top: 28px;
+      margin-left: 5%;
+      margin-right: 5%;
+      height: 30px;
+      background-color: #095c90;
+      margin-bottom: 100px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    tr {
+      line-height: 35px
+    }
+
+    .tg {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-left: 5%;
+      width: 90%;
+      margin-bottom: 100px
+    }
+
+    .tg td {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      ;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black;
+    }
+
+    .tg th {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black
+    }
+
+    .tg .tg-l711 {
+      border-width: 0px;
+      text-align: center
+    }
+
+    .tg .tg-i13m {
+      font-weight: bold;
+      background-color: #efefef;
+      border-width: 0;
+      border-top-width: 3px;
+      border-top-color: #095c90;
+      text-align: center
+    }
+
+    .grade-dist-img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .new-page-img {
+      page-break-before: always;
+      margin-top: 200px;
+    }
+
+    .grayRow {
+      background-color: #efefef;
+    }
+    .text-img{
+      height: 16px;
+      width: auto;
+    }
+  </style> 
+ </head> 
+ <body>  
+  <div class="divTitle">
+    Grades Distribution Report 
+  </div> 
+  <table class="tg"> 
+   <tbody>
+    <tr class="headerRow"> 
+     <th class="tg-i13m">Grade</th> 
+     <th class="tg-i13m">Percent Score</th> 
+     <th class="tg-i13m">Raw Score</th> 
+     <th class="tg-i13m">Frequency</th> 
+     <th class="tg-i13m">Percentage</th> 
+    </tr>
+    <tr class=" "> 
+     <td class="tg-l711 ">Excellent</td> 
+     <td class="tg-l711 ">85 - 100</td> 
+     <td class="tg-l711 ">14.4 - 17.0</td> 
+     <td class="tg-l711 ">0</td> 
+     <td class="tg-l711 ">0.0%</td> 
+    </tr>
+    <tr class=" grayRow "> 
+     <td class="tg-l711 ">Very Good</td> 
+     <td class="tg-l711 ">75 - 85</td> 
+     <td class="tg-l711 ">12.8 - 14.4</td> 
+     <td class="tg-l711 ">0</td> 
+     <td class="tg-l711 ">0.0%</td> 
+    </tr>
+    <tr class=" "> 
+     <td class="tg-l711 ">Good</td> 
+     <td class="tg-l711 ">65 - 75</td> 
+     <td class="tg-l711 ">11.1 - 12.8</td> 
+     <td class="tg-l711 ">1</td> 
+     <td class="tg-l711 ">5.0%</td> 
+    </tr>
+    <tr class=" grayRow "> 
+     <td class="tg-l711 ">Acceptable</td> 
+     <td class="tg-l711 ">50 - 65</td> 
+     <td class="tg-l711 ">8.5 - 11.1</td> 
+     <td class="tg-l711 ">5</td> 
+     <td class="tg-l711 ">25.0%</td> 
+    </tr>
+    <tr class=" "> 
+     <td class="tg-l711 ">Weak</td> 
+     <td class="tg-l711 ">30 - 50</td> 
+     <td class="tg-l711 ">5.1 - 8.5</td> 
+     <td class="tg-l711 ">14</td> 
+     <td class="tg-l711 ">70.0%</td> 
+    </tr>
+    <tr class=" grayRow "> 
+     <td class="tg-l711 ">Very Weak</td> 
+     <td class="tg-l711 ">0 - 30</td> 
+     <td class="tg-l711 ">0.0 - 5.1</td> 
+     <td class="tg-l711 ">0</td> 
+     <td class="tg-l711 ">0.0%</td> 
+    </tr> 
+   </tbody>
+  </table> 
+  <img class="grade-dist-img" src="file://C:\Users\Youssef Hossam\eclipse-workspace\Jowil Stats/C:/Users/Youssef Hossam/eclipse-workspace/Jowil Stats/target/classes//data/reports\report1\GradesDistributionHistogram.png" width="60%" height="auto" />   
+ </body>
+</html>

@@ -241,7 +241,8 @@ public class ReportProgressWindow {
             try {
                 reportsHandler.generateReports(reportsOut, formatsOut);
             } catch (IOException e) {
-                String fileName=e.getMessage().substring(0,e.getMessage().indexOf("(The"));
+                int cropIndex=e.getMessage().indexOf("(The");
+                String fileName=e.getMessage().substring(0,cropIndex==-1?1:cropIndex);
                 showReportsErrorMessage(constructMessage(" Make sure that the file"," \""+fileName+"\" ", "is not opened in another application."));
 
             } catch (DocumentException e) {

@@ -1,0 +1,295 @@
+{
+
+  "Files Configuration":"اعداد الملفات",
+  "Test Overview":"نظرة عامة على الإمتحان",
+  "Questionnaire Overview":"نظرة عامة على الاستطلاع",
+  "Questions Weights":"توزيع الدرجات",
+  "Grading Scale & Reports":"التقديرات والتقارير",
+  "Step ":"خطوة ",
+  " of 4: ":" من 4: ",
+  " of 2: ":" من 2: ",
+
+
+
+  "New Project":"امتحان جديد",
+  "Open Existing Project":"فتح امتحان سابق",
+  "Language":"اللغة",
+  "Relative resolution scaling":"تناسب الأحجام مع دقة الشاشة",
+  "On":"تشغيل",
+  "Off":"إيقاف",
+  "Next":"التالي",
+  "Back":"السابق",
+  "Finish":"انهاء",
+  "Save Changes":"حفظ التغييرات",
+  "OK":"موافق",
+  "Cancel":"إلغاء",
+  "Close":"اغلق",
+  "Yes":"نعم",
+  "No":"لا",
+
+  
+
+  "Students Responses File Path":"مسار ملف اجابات الطلبة",
+  "Answer Key File Path":"مسار ملف الإجابة النموذجية",
+  "Identifier Column":"عمود التعريف",
+  "Form Column":"عمود رقم النموذج",
+  "Manual Configuration":"الضبط اليدوي",
+
+
+
+  "Groups Overview": "مجموعات الأسئلة",
+  "Group":"المجموعة",
+  "Questions Count":"عدد الأسئلة",
+  "Groups Choices":"الاختيارات لكل مجموعة",
+  "Test Info":"نبذة عن الإمتحان",
+  "Questionnaire Info":"نبذة عن الاستطلاع",
+  "Number of Objective Questions":"عدد الأسئلة الموضوعية",
+  "Number of Objective Groups":"عدد مجموعات الأسئلة الموضوعية",
+  "Number of Subjective Questions":"عدد الأسئلة المقالية",
+  "Number of Students":"عدد الطلبة",
+  "Number of Forms":"عدد النماذج",
+
+
+  "Objective Questions":"الأسئلة الموضوعية",
+  "Subjective Questions":"الأسئلة المقالية",
+  "Question":"السؤال",
+  "Weight":"الدرجة",
+  "Correct%":"النجاح%",
+  "Update Selection":"تحديث الاختيارات",
+  "Grade":"التقدير",
+  "Relative Freq.":"نسبة الطلبة",
+  "Bonus Marks:":"درجات الإضافية:",
+  "Full Mark:":"الدرجة النهائية:",
+  "Allow exceeding full mark":"السماح بتخطي الدرجة النهائية",
+  "Add bonus to failing only":"الدرجات الإضافية للراسبين فقط",
+  "Form ":"نموذج ",
+  "New Weight":"الدرجة الجديدة",
+  "No Subjective Questions Detected":"لا يوجد أسئلة مقالية",
+  "Subjective Question ":"السؤال المقالي ",
+
+
+
+  "Grading Scale":"اعدادات نظام التقديرات",
+  "Grading Scale Configuration":"نظام التقديرات",
+  "Name":"الإسم",
+  "Score":"الدرجة",
+  "Score %":"النسبة %",
+  "Reports Directory Path":"مسار مجلد التقارير",
+  "Reports Preferences":"اعدادات التقارير",
+  "Reports":"التقارير",
+  "File Formats":"صيغ الملفات",
+  "Egyptian Scale 1":"النظام المصري 1",
+  "Egyptian Scale 2":"النظام المصري 2",
+  "All Letters Scale":"النظام الامريكي",
+  "Standard Letters Scale":"النظام الإنجليزي",
+  "Excellent":"امتياز",
+  "Very Good":"جيد جدا",
+  "Good":"جيد",
+  "Acceptable":"مقبول",
+  "Weak":"ضعيف",
+  "Very Weak":"ضعيف جدا",
+
+
+
+
+
+
+  "Student Responses File Overview":"نبذة من ملف اجابات الطلبة",
+  "Column Set Name":"اسم مجموعة العواميد",
+  "Column Set Type":"نوع مجموعة العواميد",
+  "Add Selection":"إضافة الاختيارات",
+  "Reset Column Sets":"حذف كل المجموعات",
+  "Column Sets":"مجموعات العواميد",
+  "Type":"النوع",
+  "Range":"المدى",
+  "Color":"اللون",
+  "No Column Sets Added":"لا يوجد أي مجموعة عواميد",
+  "Objective Questions Group":"مجموعة أسئلة موضوعية",
+  "Subjective Questions Group":"مجموعة أسئلة مقالية",
+  "Student ID":"ID",
+  "Form Number":"رقم النموذج",
+  "Objective":"موضوعي",
+  "Subjective":"مقالي",
+  "ID":"ID",
+  " Form ":"رقم النموذج",
+
+
+
+
+
+  "Reports Generation Progress":"تجهيز التقارير",
+  "Generating reports...this may take a while.":"جاري تجهيز التقارير...قد يستغرق ذلك بعض الوقت.",
+  "Reports Generated":"التقارير الجاهزة",
+  "Report In Progress":"التقرير الحالي",
+
+
+
+
+  "Students Responses File Error":" خطأ في ملف اجابات الطلبة",
+  "Answer Key File Error":"خطأ في ملف الإجابة النموذجية",
+  "Columns Count Mismatch":"عدد العواميد غير متطابق",
+  "Headers Mismatch Error":"خطأ في صف الرأس",
+  "Output Directory Error":"خطأ في مجلد التقارير",
+  "CheckBoxes Selection Error":"خطأ في عدد التقارير",
+  "Grade Scale Error":"خطأ في نظام التقديرات",
+  "Directory Error":"خطأ في المجلد",
+  "Invalid Weight Value":"قيمة غير صالحة",
+  "Loading Preferences Error":"خطأ في قراءة الاعدادات",
+  "Configuration Name Error":"خطأ في اسم نظام التقديرات",
+  "Column Set Error":"خطأ في مجموعة العواميد",
+  "CSV Reloading Error":"خطأ في قراءة الملف",
+  "Project Name Error":"خطأ في اسم الامتحان",
+  "Invalid Form Weights":"خطأ في درجات النماذج",
+  "Invalid Full Mark Value":"قيمة الدرجة النهاية غير صالحة",
+  "Invalid Bonus Marks Value":"قيمة الدرجة الاضافية غير صحيحة",
+  "Grade Configurations Error":"خطأ في نظام التقديرات",
+  "Groups Choices Error":"خطأ في الاختيارات",
+  "Objective Question Groups Error":"خطأ في مجموعات الأسئلة",
+  "Form Number Column Set Error":"خطأ في مجموعة العواميد",
+  "Column Set Addition Error":"خطأ في إضافة المجموعة",
+  "Invalid Selection":"العواميد المختارة غير صالحة",
+  "Answer Key Error":"خطأ في ملف الإجابة النموذجية",
+  "Objective Questions Error":"خطأ في الأسئلة الموضوعية",
+  "Grade Scale Value Error":"خطأ في نظام التقدير",
+
+
+
+  "Change Language":"تغيير اللغة",
+  "Relative Resolution Scaling":"تناسب الأحجام مع دقة الشاشة",
+  "Confirm Column Set Deletion":"تأكيد إلغاء مجموعة العواميد",
+  "Cancel Project":"إلغاء الامتحان",
+  "Close Project":"غلق الإمتحان",
+  "Delete Grade Scale Configuration":"حذف نظام التقديرات",
+  "Confirm Column Set Addition":"تأكيد إضافة مجموعة العواميد",
+  "Quit Reports Generation":"إلغاء تجهيز التقارير",
+  "Delete Project":"حذف الامتحان",
+
+
+
+
+  "File parsed successfully":"تم قراءة الملف بنجاح",
+  "Empty CSV file.":"الملف فارغ",
+  "File doesn't exist.":"الملف غير موجود",
+  "Required field.":"ادخل مسار الملف",
+  "File must have a \".csv\" extension.":"يجب ان يكون امتداد الملف \".csv\"",
+  "Error in reading file.":"خطأ في قراءة الملف",
+  "No headers detected.":"صف الرأس غير موجود",
+  "Blank answers positions are inconsistent.":"أماكن الاجابات الخالية غير متوافقة",
+  "Invalid number of columns at row %d.":"عدد العواميد غير صحيح في الصف رقم d%",
+  "File contains headers only.":"الملف يحتوي على صف الرأس فقط",
+  " Make sure that the CSV headers have no commas.":" تأكد من ان الخانات في صف الراس لا تحتوي على فاصلة",
+
+
+
+
+  "Invalid form number at row ":"رقم نموذج غير صالح في الصف رقم ",
+  "Invalid subjective question score":"درجة سؤال مقالي غير صالحة", "at row ":"في الصف ",
+
+
+
+
+  "Error in students responses file: ":"خطأ في ملف إجابة الطلبة: ",
+  "Error in answer key file: ":"خطأ في ملف الإجابة النموذجية: ",
+  "No students responses file provided.":"مسار ملف اجابات الطلبة لم يتم ادخاله.",
+  "No answer key file provided.":"مسار ملف الإجابة النموذجية لم يتم ادخاله.",
+  " answer keys detected. Form column cannot have a \"None\" value. Select a valid form column to continue.":" اجابات نموذجية تم العثور عليها. عمود رقم النموذج لا يمكن اعطاؤه القيمة None.",
+  "Answer key file must contain the answers for at least one form.":"ملف الإجابة النموذجية يجب ان يحتوي على الاجابات لنموذج واحد على الأقَل.",
+  "Student responses file contains ":"ملف اجابات الطلبة يحتوي على "," columns, while the answer key file contains ":" عمود, بينما يحتوي ملف الإجابة النموذجية على ", " columns.":" عمود.",
+  ". Make sure that you have selected the form column correctly.":". من فضلك تأكد من اختيارك عمود رقم النموذج الصحيح.",
+  "Error in reloading files.":"خطأ في قراءة الملفات.",
+  "Headers of answers and student responses files are not identical.":"صفوف الرأس في ملف اجابات الطلبة وملف الإجابة النموذجية غير متطابقين.",
+  "Error in reloading responses file.":"خطأ في اعادة تحميل ملف إجابة الطلبة.",
+  "Error in students responses file at row ":"خطأ في ملف اجابات الطالبة في الصف ",". File must contain the same number of columns in all rows.":". يجب ان يحتوي الملف على نفس عدد العواميد في جميع الصفوف.",
+  "Error in reading students responses file.":"خطأ في قراءة ملف إجابة الطلبة.",
+
+
+
+
+  "Reports Directory Path is required.":"ادخل مسار مجلد التقارير.",
+  "Reports Directory":"مجلد التقارير", "doesn't exist.":"غير موجود.",
+  "Path":"مسار الغلاف","is not a valid directory path.":"غير صالح.",
+  "You must select at least one report and one output format.":"يجب اختيار تقرير واحد وصيغة ملف واحدة على الأقَل.",
+  "Cannot write to the specified reports directory. Make sure that you are permitted to edit in this directory":"لا يمكن إضافة التقارير في المجلد الذي تم اختياره. من فضلك تأكد من أنه مسموح لك بالكتابة في هذا المجلد, أو قم بإختيار مجلد اخر.",
+  "Configuration name cannot be empty":"اسم نظام التقديرات لا يمكن ان يكون فارغا.",
+  "already exists.":"موجود من قبل.",
+  "already exists. ":"موجودة من قبل.",
+  "Error in Grade number ":"خطأ في التقدر رقم ", "Grade name cannot be empty.":"اسم التقدير لا يمكن ان يكون فارغا.",
+  "Grade scale value":"قيمة درجة التقدير", "is invalid.":"غير صالحة.",
+
+
+
+  "Removing choice":"إلغاء الاختيار", "in group":"في المجموعة", "is not allowed.":"غير مسموح به.","is set as the correct answer for one or more of the questions in this group.":"هي الإجابة الصحيحة لواحد أو اكثر من الأسئلة في هذه المجموعة.",
+
+
+
+  "You must add at least one objective questions group column set.":"يجب إضافة مجموعة أسئلة موضوعية واحدة على الأقَل.",
+  "Objective questions groups must be consecutive. A gap exists at":"مجموعات الأسئلة الموضوعية يجب ان تكون متتالية. يوجد فراغ عند العمود",
+  "Objective questions groups must be consecutive. Column set":"مجموعات الأسئلة الموضوعية يجب ان تكون متتالية. مجموعة العواميد", "of type":"من نوع", "cannot be placed between objective column sets.":"غير مسموح بوضعها بين مجموعات الأسئلة الموضوعية.",
+  " forms were detected. A form number column must be added.":" نماذج تم العثور عليها. يجب إضافة عمود رقم النماذج.",
+  "Column Set Name cannot be empty.":"اسم مجموعة العواميد لا يمكن ان يكون خاليا.",
+  "No columns selected.":" لا يوجد عواميد مختارة. من فضلك قم باختيار عمود واحد على الأقَل.",
+  "Error in reloading student responses file.":"خطأ في اعادة تحمل ملف إجابة الطلبة.",
+  "A column set of type":"مجموعة العواميد من نوع", "cannot have more than one column.":"لا يمكن ان تحتوي على أكثر من عمود واحد.",
+  "A column set with the name" :"مجموعة العواميد",
+  "Selected range must not overlap with an existing column set.":"غير مسموح للعواميد المختارة أن تتقاطع مع أي من مجموعات العواميد الموجودة من قبل.",
+  "Error in reloading answer key file.":"خطأ في اعادة تحمل ملف إجابة الطلبة.",
+  ". Make sure that you have selected a valid form column.":". من فضلك تأكد من أنك قمت باختيار عمود رقم النموذج بشكل صحيح.",
+  "Invalid objective column set":"مجموعة عواميد أسئلة موضوعية غير صالحة", "Choices in an objective column set must be of the same type.":"يجب الا تحتوي مجموعة الأسئلة الموضوعية على اختيارات من اكثر من نوع (حروف وأرقام) في نفس الوقت.",
+  "Invalid responses at objective column set":"يوجد إجابة غير صالحة في مجموعة الأسئلة الموضوعية", "A valid response must be either a number in the range (0-99) or an English letter.":"يجب ان تكون الإجابة مكونة إما من حرف إنجليزي أو رقم في المدى (0-99).",
+
+
+
+  "Cannot open reports directory.":"فشل فتح مجلد التقارير.",
+
+
+  "Project name cannot be empty.":"لا يمكن ترك اسم الامتحان خاليا.",
+  "A project with the name":"الامتحان",
+  "Invalid project name. Project Name cannot contain any of the following characters: \n< > : \" / \\ | ? *":"اسم الامتحان غير صالح. اسم الامتحان لا يمكن ان يحتوي على ايا من هذه الحروف: \n< > : \" / \\ | ? *",
+
+
+
+
+  "All forms must have the same max score.":"يجب ان يكون مجموع الدرجات موحد بين جميع النماذج.",
+  "Cannot update objective weights: weight value":"فشل تحديث درجات الأسئلة الموضوعية. قيمة الدرجة",
+  "Cannot update subjective weights: weight value":"فشل تحديث درجات الأسئلة المقالية. قيمة الدرجة",
+  "Full mark value":"قيمة الدرجة النهائية",
+  "Bonus marks value":"قيمة الدرجة الاضافية",
+  "Error in loading Grade Scale Configurations.":"خطأ في تحميل اعدادات نظام التقديرات.",
+
+
+  "Are you sure you want to change the program language to Arabic?":"هل أنت متأكد من رغبتك في تغيير لغة البرنامج إلى اللغة الانجليزية؟",
+  "Are you sure you want to enable relative resolution scaling?":"هل أنت متأكد من رغبتك في تشغيل خاصية تناسب الأحجام مع دقة الشاشة؟",
+  "Are you sure you want to disable relative resolution scaling?":"هل أنت متأكد من رغبتك في إيقاف خاصية تناسب الأحجام مع دقة الشاشة؟"
+  "Changes you made will not be saved. ":"لن يتم حفظ التغييرات التي قمت بها. ", "Are you sure you want to ":"هل أنت متأكد من رغبتك في ","close":"غلق", "cancel":"إلغاء", " this project?":" هذا الامتحان؟",
+  "Are you sure you want to delete":"هل أنت متأكد من رغبتك في حذف نظام التقديرات", "grade scale configuration?":"؟",
+  "Resetting will delete all existing column sets. Are you sure you want to reset column sets?":"هل أنت متأكد من رغبتك في حذف جميع مجموعات الأسئلة؟",
+  " column set already exists. Do you want to replace the existing column set?":" موجودة من قبل. هل ترغب في استبدال المجموعة الموجودة بهذه المجموعة؟ ",
+  "Resetting the full mark will set its value to the sum of all question weights. Are you sure you want to reset?":"ستكون الدرجة النهائية هي مجموع درجات الاسئلة إذا قمت بإعادة التعيين. هل مازلت ترغب في إعادة تعيين الدرجة النهائية؟",
+  "Are you sure you want to quit reports generation?":"هل أنت متأكد من رغبتك في إلغاء عملية تجهيز التقارير؟",
+  "Are you sure you want to delete project":"هل أنت متأكد من رغبتك في حذف الامتحان", "?":"؟",
+  "Are you sure you want to delete this column set?":"هل أنت متأكد من رغبتك في حذف هذه المجموعة؟",
+
+
+  "Projects Loading Error" :"خطأ في تحميل الامتحانات السابقة","Cannot load existing projects. Would you like to restart Jowil Stats?":"فشل تحميل الامتحانات السابقة. هل ترغب في اعادة تشغيل البرنامج؟",
+  "Project Name:":"اسم الامتحان:", "Set Project Name":"تحديد اسم الإمتحان","Test":"إختبار","Questionnaire":"استطلاع رأي",
+  "Existing Projects":"الامتحانات السابقة", "Projects":"الامتحانات", "No Projects Exist":"لا يوجد أي امتحانات سابقة",
+  "Continue to File Configuration":"الذهاب إلى اعداد الملفات","Going back to file configuration may reset some of the changes made in manual configuration. Are you sure you want to continue to file configuration?":"الرجوع لإعداد الملفات قد يفقدك بعد التغييرات التي قمت بها في الضبط اليدوي. هل ما زلت ترغب في التكملة لإعداد الملفات؟",
+  "Do you want to save your changes as a new grade scale configuration?":"هل تريد حفظ التغييرات كنظام تقديرات جديد؟","Save New Configuration":"حفظ النظام الجديد", "Ignore Changes":"تجاهل التغييرات", "Configuration Name":"اسم نظام التقديرات", "Configuration Name:":"اسم النظام الجديد:",
+  "Reset Question Weights":"اعادة تعيين درجات الأسئلة", "Objective questions was just edited. Would you like to reset the existing objective weights?":"تم تعديل الأسئلة الموضوعية. هل ترغب في اعادة تعيين درجة الأسئلة الموضوعية؟", "Yes, Reset Weights" :"نعم, أعد تعيين الدرجات","No, Load Saved Weights":"لا, حمل الدرجات المحفوظة",
+  "Number of Objective Questions Changed":"تغير عدد الأسئلة الموضوعية", "The number of objective questions has changed. All the saved objective weights for this project will be lost.":"تم تغيير عدد الأسئلة الموضوعية. سوف يتم اعادة تعيين درجات جميع الأسئلة.",
+  "Reports Generation Error":"خطأ في عملية تجهيز التقارير", "Retry":"اعادة المحاولة", "An error has occurred during report generation.":"حدث خطأ أثناء عملية تجهيز التقارير.", " Make sure that the file" :" تأكد من ان الملف","is not opened in another application.":"غير مفتوح في برنامج اخر.",
+  "No Headers Detected":"صف الرأس غير موجود","No headers were detected in ":"لم يتم العثور على صف الرأس في ","student responses file":"ملف اجابات الطلبة", "answer key file":"ملف الإجابة النموذجية",". Was the detection correct?":". هل كانت عملية البحث عن صف الرأس صحيحة؟","Yes, the detection was correct":"عملية البحث كانت صحيحة","No, the file contains headers":"الملف يحتوي على صف الرأس",
+
+  "Settings":"الإعدادات",
+  "Open CSV file":"فتح الملف",
+  "Choose Output Directory":"اختيار مجلد التقارير",
+  "Add Grade Below":"اضف تقدير",
+  "Delete Grade":"حذف التقدير",
+  "Tweak Grades":"تعديل درجات الطلبة",
+  "Reset Full Mark":"إعادة تعيين الدرجة النهائية",
+  "Delete Column Set":"حذف المجموعة",
+  "Show Project in Explorer":"فتح التقارير في المستكشف"
+
+
+
+}

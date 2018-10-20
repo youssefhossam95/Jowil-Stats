@@ -1,0 +1,342 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <style type="text/css">
+        @page {
+
+            margin: 25px 25px 40px 25px;
+            /* size: letter portrait; */
+            size: A4 landscape;
+            /* @top-left {
+content: element(pageHeader);
+} */
+            @bottom-left {
+                content: element(footerLeft);
+            }
+            @bottom-right {
+                content: element(footerRight);
+            }
+            @bottom-center {
+                content: element(footerCenter);
+            }
+        }
+
+        /* #pageHeader{
+position: running(pageHeader);
+} */
+
+        #pagenumber:before {
+            content: counter(page);
+        }
+
+        #pagecount:before {
+            content: counter(pages);
+        }
+
+        #footerCenter {
+            position: running(footerCenter);
+            text-align: center;
+            border-top: 1px solid #095c90;
+            padding-top: 5px;
+
+        }
+
+        #footerLeft {
+            position: running(footerLeft);
+            border-top: 1px solid #095c90;
+            padding-top: 5px;
+            text-align: left;
+        }
+
+        #footerRight {
+            position: running(footerRight);
+            border-top: 1px solid #095c90;
+            padding-top: 5px;
+            text-align: right;
+            /* padding-right: 50px ;   */
+        }
+
+
+        .divTitle {
+            top: 28px;
+            margin-left: 5%;
+            margin-right: 5%;
+            height: 30px;
+            background-color: #095c90;
+            margin-bottom: 100px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+
+
+        }
+
+        .t {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-left: 5%;
+            width: 90%;
+            margin-bottom: 50px;
+        }
+
+        .t2 {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-left: 5%;
+            width: 90%;
+            margin-bottom: 50px;
+        }
+
+        .t2 tr {
+            line-height: 16px;
+        }
+
+        th {
+            border-width: 1px;
+            border-color: #08436b;
+            border-style: solid;
+            text-align: center;
+        }
+
+        td {
+            border-width: 1px;
+            border-color: #08436b;
+            border-style: solid;
+            text-align: center;
+        }
+
+        .t td {
+            text-align: left;
+        }
+
+        .grayRow {
+            background-color: #efefef;
+        }
+
+        .gold {
+            background-color: #ffe44d;
+        }
+
+
+        .noBorder {
+            border-width: 0px;
+            text-align: left;
+            width: 22%;
+        }
+
+        .tdSpecial {
+            border-width: 0px;
+            text-align: center;
+            width: 8%;
+        }
+
+        .wrapper {
+            width: 500px;
+            margin-left: 5%;
+            overflow: hidden;
+            /* will contain if #first is longer than #second */
+        }
+
+        .first {
+            width: 12px;
+            height: 12px;
+            float: left;
+            /* add this */
+            margin-right: 8px;
+            margin-top: 2px;
+            /* background-color: #f87878; */
+        }
+
+        .second {
+            width: 300px;
+            overflow: hidden;
+            /* if you don't want #second to wrap below #first */
+            vertical-align: top;
+            font-weight: bold;
+        }
+
+        .firstRow {
+            border-top-width: 2px;
+            border-top-color: #08436b;
+        }
+
+        .green {
+            font-weight: bold;
+            background-color: #71e08d;
+        }
+
+        .red {
+            font-weight: bold;
+            background-color: #f87878;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .second-page-header {
+            margin-top: 20px;
+        }
+
+        /* .under-line {
+            text-decoration: underline;
+            font-weight: bold;
+        } */
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .line {
+            width: 90%;
+            height: 12px;
+            border-bottom: 1px solid #08436b;
+            ;
+            text-align: center;
+            margin: auto;
+            margin-bottom: 50px
+        }
+
+        .group-title {
+            background-color: white;
+            padding: 0 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='footer'>
+        <div id="footerLeft"> 25/7/2018 </div>
+        <div id="footerRight">Page
+            <span id="pagenumber"></span> of
+            <span id="pagecount"></span>
+        </div>
+        <div id="footerCenter">Test Summary Report</div>
+    </div>
+    <div id='template'>
+        <div class="divTitle">
+            Test Summary Report
+        </div>
+        <table class="t">
+            <tr>
+                <th class="noBorder firstRow">
+                    Number of Students
+                </th>
+                <td class="tdSpecial firstRow NumberOfStudents">
+                    47
+                </td>
+                <th class="noBorder firstRow ">
+                    Mean
+
+                </th>
+                <td class="tdSpecial firstRow Mean">
+                    15.4
+                </td>
+                <th class="noBorder firstRow ">
+                    Lowest Score
+                </th>
+                <td class="tdSpecial firstRow LowestScore">
+                    5.2
+                </td>
+            </tr>
+            <tr>
+                <th class="noBorder">
+                    Max Possible Score
+                </th>
+                <td class="tdSpecial MaxPossibleScore">
+                    40
+                </td>
+                <th class="noBorder">
+                    Median
+
+                </th>
+                <td class="tdSpecial Median">
+                    14.7
+                </td>
+                <th class="noBorder ">
+                    Highest Score
+                </th>
+                <td class="tdSpecial HighestScore">
+                    18.9
+                </td>
+
+            </tr>
+            <tr>
+                <th class="noBorder">
+                    Score Range
+                </th>
+                <td class="tdSpecial ScoreRange">
+                    40
+                </td>
+                <th class="noBorder">
+                    Standard Deviation
+
+                </th>
+                <td class="tdSpecial StandardDeviation">
+                    3.2
+                </td>
+                <th class="noBorder">
+                    KR 20
+                </th>
+                <td class="tdSpecial Kuder-RichardsonFormula20">
+                    1.3
+                </td>
+
+            </tr>
+
+
+        </table>
+
+
+        <div class="legend">
+            <div class="wrapper">
+                <span class="first" style="background-color: #f87878;"></span>
+                <span class="second"> Distractor* </span>
+            </div>
+            <div class="wrapper">
+                <span class="first" style="background-color: #ffe44d"></span>
+                <span class="second"> Non Distractor </span>
+            </div>
+            <div class="wrapper" style="margin-bottom: 10px">
+                <span class="first" style="background-color: #71e08d"></span>
+                <span class="second"> Correct Answer</span>
+            </div>
+        </div>
+        <div class="line">
+            <span class="group-title">title</span>
+        </div>
+
+        <table class="t2">
+            <tr>
+                <th rowspan="2">No.</th>
+                <th rowspan="2">Question</th>
+                <th rowspan='2'>Correct
+                    <br> Answer</th>
+                <th colspan="5" class="responseFreq">Response Frequencies</th>
+                <th rowspan='2'>Non
+                    <br> Distractors</th>
+                <th rowspan="2">Point
+                    <br> Biserial</th>
+                <th colspan="3">Correct Group Responses</th>
+
+            </tr>
+            <tr class="bottom-header-row">
+                <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th> -->
+                <th class="total">Overall %</th>
+                <th>Top 25%</th>
+                <th>Bottom 25%</th>
+
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

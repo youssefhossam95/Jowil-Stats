@@ -103,7 +103,7 @@ public abstract class Controller {
 
     static String SAVED_PROJECTS_FILE_NAME="Projects.json",TRANSLATIONS_FILE_NAME="Translations.json";
     static JSONObject savedProjectsJson,currentOpenedProjectJson,generalPrefsJson;;
-
+    static String dataDirPath; //the data directory is generated in deployment build.xml file.
 
     static String selectedIdentifierName;
     static String selectedFormColName;
@@ -608,6 +608,10 @@ public abstract class Controller {
 
 
 
+    public static String getDataDirPath() {
+        return dataDirPath;
+    }
+
     protected void stabalizeTables(){
 
     }
@@ -652,25 +656,17 @@ public abstract class Controller {
 
     protected JSONObject loadJsonObj(String path) {
 
-        String file = "";
+        String file = dataDirPath+"UserData/"+path;
         JSONObject jsonObj = null;
+
         try {
-            file = URLDecoder.decode(getClass().getResource("/UserData/" + path).getFile(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        catch(NullPointerException e){
-            e.printStackTrace();
-        }
-        try {
-            jsonObj = (JSONObject) new JSONParser().parse(new FileReader(file));
+            jsonObj = (JSONObject) new JSONParser().parse(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         } catch (IOException e) {
             e.printStackTrace();
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         return jsonObj;
 
@@ -681,12 +677,7 @@ public abstract class Controller {
             return;
 
         PrintWriter pw = null;
-        String file = "";
-        try {
-            file = URLDecoder.decode(getClass().getResource("/UserData/" + path).getFile(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String file = dataDirPath+"UserData/"+path;
 
         try {
             pw = new PrintWriter(file);

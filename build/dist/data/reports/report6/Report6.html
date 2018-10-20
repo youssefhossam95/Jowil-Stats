@@ -1,0 +1,255 @@
+<html>
+ <head> 
+  <meta charset="UTF-8" /> 
+  <style type="text/css">
+    @page {
+
+      margin: 50px 25px 40px 25px;
+      /* margin:0px ;  */
+      /* size: 29cm 29.7cm; */
+      size: A4 landscape ; 
+
+      @bottom-left {
+        content: element(footerLeft);
+      }
+      @bottom-right {
+        content: element(footerRight);
+      }
+      @bottom-center {
+        content: element(footerCenter);
+      }
+    }
+
+
+
+    #pagenumber:before {
+      content: counter(page);
+    }
+
+    #pagecount:before {
+      content: counter(pages);
+    }
+
+    #footerCenter {
+      position: running(footerCenter);
+      text-align: center;
+      border-top: 1px solid #095c90;
+      padding-top: 5px;
+
+    }
+
+    #footerLeft {
+      position: running(footerLeft);
+      border-top: 1px solid #095c90;
+      padding-top: 5px;
+      text-align: left;
+    }
+
+    #footerRight {
+      position: running(footerRight);
+      border-top: 1px solid #095c90;
+      padding-top: 5px;
+      text-align: right;
+      /* padding-right: 50px ;   */
+    }
+
+    .divTitle {
+      top: 28px;
+      margin-left: 5%;
+      margin-right: 5%;
+      height: 30px;
+      background-color: #095c90;
+      margin-bottom: 100px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    tr {
+      line-height: 35px
+    }
+
+    .tg {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin-left: 5%;
+      width: 90%;
+      margin-bottom: 100px
+    }
+
+    .tg td {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      ;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black;
+    }
+
+    .tg th {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+      overflow: hidden;
+      word-break: normal;
+      border-color: black
+    }
+
+    .tg .tg-l711 {
+      border-width: 0px;
+      text-align: center
+    }
+
+    .tg .tg-i13m {
+      font-weight: bold;
+      background-color: #efefef;
+      border-width: 0;
+      border-top-width: 3px;
+      border-top-color: #095c90;
+      text-align: center
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .new-page-img {
+      page-break-before: always;
+      margin-top: 200px;
+    }
+
+    .grayRow {
+      background-color: #efefef;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .second-page-header {
+      margin-top: 20px;
+    }
+  </style> 
+ </head> 
+ <body> 
+  <div id="footer"> 
+   <div id="footerLeft">
+    16/09/2018
+   </div> 
+   <div id="footerRight">
+    Page 
+    <span id="pagenumber"></span> of 
+    <span id="pagecount"></span> 
+   </div> 
+   <div id="footerCenter">
+    Group Details Report
+   </div> 
+  </div> 
+  <div id="template"> 
+   <div class="divTitle second-page-header" style="background-color: white;
+color: black;
+border: 2px solid #08436b;">
+    Groups Insights Report: Form 1
+   </div> 
+   <table class="tg"> 
+    <tbody>
+     <tr class="headerRow"> 
+      <th class="tg-i13m">Name</th> 
+      <th class="tg-i13m">Hardest Question</th> 
+      <th class="tg-i13m">Easiest Question</th> 
+      <th class="tg-i13m">Correct Response %</th> 
+      <th class="tg-i13m">Questions With Distractors % </th> 
+      <th class="tg-i13m">Point Biserial</th> 
+      <th class="tg-i13m">Difficulty(0-10)</th> 
+     </tr>
+     <tr class=" "> 
+      <td class="tg-l711 ">Q</td> 
+      <td class="tg-l711 ">Q10</td> 
+      <td class="tg-l711 ">Q1</td> 
+      <td class="tg-l711 ">78.0%</td> 
+      <td class="tg-l711 ">0.0%</td> 
+      <td class="tg-l711 ">0.09</td> 
+      <td class="tg-l711 ">2.2</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class="tg-l711 ">TF</td> 
+      <td class="tg-l711 ">TF12</td> 
+      <td class="tg-l711 ">TF1</td> 
+      <td class="tg-l711 ">47.5%</td> 
+      <td class="tg-l711 ">33.3%</td> 
+      <td class="tg-l711 ">0.12</td> 
+      <td class="tg-l711 ">5.3</td> 
+     </tr>
+     <tr class=" "> 
+      <td class="tg-l711 ">Dr.William</td> 
+      <td class="tg-l711 ">Dr.William9</td> 
+      <td class="tg-l711 ">Dr.William2</td> 
+      <td class="tg-l711 ">21.6%</td> 
+      <td class="tg-l711 ">100.0%</td> 
+      <td class="tg-l711 ">0.2</td> 
+      <td class="tg-l711 ">7.8</td> 
+     </tr> 
+    </tbody>
+   </table> 
+   <div class="page-break"></div> 
+   <img src="DifficultyHistogram1.png" width="70%" height="auto" />
+   <div class="page-break"></div>
+   <div class="divTitle second-page-header" style="background-color: white;
+color: black;
+border: 2px solid #08436b;">
+    Groups Insights Report: Form 2
+   </div> 
+   <table class="tg"> 
+    <tbody> 
+     <tr class="headerRow"> 
+      <th class="tg-i13m">Name</th> 
+      <th class="tg-i13m">Hardest Question</th> 
+      <th class="tg-i13m">Easiest Question</th> 
+      <th class="tg-i13m">Correct Response %</th> 
+      <th class="tg-i13m">Questions With Distractors % </th> 
+      <th class="tg-i13m">Point Biserial</th> 
+      <th class="tg-i13m">Difficulty(0-10)</th> 
+     </tr>
+     <tr class=" "> 
+      <td class="tg-l711 ">Q</td> 
+      <td class="tg-l711 ">Q12</td> 
+      <td class="tg-l711 ">Q1</td> 
+      <td class="tg-l711 ">80.3%</td> 
+      <td class="tg-l711 ">0.0%</td> 
+      <td class="tg-l711 ">0.09</td> 
+      <td class="tg-l711 ">2.0</td> 
+     </tr>
+     <tr class=" grayRow "> 
+      <td class="tg-l711 ">TF</td> 
+      <td class="tg-l711 ">TF11</td> 
+      <td class="tg-l711 ">TF2</td> 
+      <td class="tg-l711 ">47.2%</td> 
+      <td class="tg-l711 ">6.7%</td> 
+      <td class="tg-l711 ">0.13</td> 
+      <td class="tg-l711 ">5.3</td> 
+     </tr>
+     <tr class=" "> 
+      <td class="tg-l711 ">Dr.William</td> 
+      <td class="tg-l711 ">Dr.William10</td> 
+      <td class="tg-l711 ">Dr.William3</td> 
+      <td class="tg-l711 ">24.0%</td> 
+      <td class="tg-l711 ">100.0%</td> 
+      <td class="tg-l711 ">0.22</td> 
+      <td class="tg-l711 ">7.6</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <div class="page-break"></div> 
+   <img src="DifficultyHistogram2.png" width="70%" height="auto" />   
+  </div>  
+ </body>
+</html>
