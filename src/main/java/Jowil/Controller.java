@@ -652,25 +652,18 @@ public abstract class Controller {
 
     protected JSONObject loadJsonObj(String path) {
 
-        String file = "";
         JSONObject jsonObj = null;
+
         try {
-            file = URLDecoder.decode(getClass().getResource("/UserData/" + path).getFile(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
+            jsonObj = (JSONObject) new JSONParser().parse(new InputStreamReader(getClass().getResourceAsStream("/UserData/" + path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         catch(NullPointerException e){
             e.printStackTrace();
         }
-        try {
-            jsonObj = (JSONObject) new JSONParser().parse(new FileReader(file));
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
 
         return jsonObj;
 
