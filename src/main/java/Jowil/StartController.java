@@ -248,8 +248,19 @@ public class StartController extends Controller{
 
 
 
-        if(!checkActivationKey())
+        if((Boolean)generalPrefsJson.get(IS_FIRST_LAUNCH_JSON_KEY)){
+            if(!showLanguageFirstTimeDialog(true)) {
+                stage.close();
+                return;
+            }
+        }
+
+
+        if(!checkActivationKey()){
             stage.close();
+            return;
+        }
+
 
 
         loadProjectsJson();
@@ -258,6 +269,72 @@ public class StartController extends Controller{
         stage.setOnCloseRequest(event -> { //override parent behaviour
 
         });
+
+
+
+    }
+
+    private boolean showLanguageFirstTimeDialog(boolean isEnglishSelected) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Select Language");
+        dialog.setHeaderText("Welcome to Jowil Stats!");
+        dialog.setGraphic(null);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
+        double flagsSize=15;
+        VBox radiosHBox=new VBox(10);
+        radiosHBox.setPadding(new Insets(25,0,0,10));
+        ToggleGroup toggGroup= new ToggleGroup();
+        RadioButton engRadio=new JFXRadioButton("English");
+        RadioButton araRadio=new JFXRadioButton("العربية");
+        engRadio.setToggleGroup(toggGroup);
+        ImageView englishImageView=new ImageView("Images/USA.png");
+        englishImageView.setFitWidth(flagsSize);
+        englishImageView.setFitHeight(flagsSize);
+        //engRadio.setGraphic(englishImageView);
+        engRadio.setPadding(new Insets(0,0,0,7));
+        araRadio.setPadding(engRadio.getPadding());
+        araRadio.setToggleGroup(toggGroup);
+        toggGroup.selectToggle(isEnglishSelected?engRadio:araRadio);
+        ImageView arabicImageView=new ImageView("Images/Egypt.png");
+        arabicImageView.setFitWidth(flagsSize);
+        arabicImageView.setFitHeight(flagsSize);
+        //araRadio.setGraphic(arabicImageView);
+        Label label=new Label("Language");
+        label.setFont(new Font("System Bold",13.5));
+        ImageView langImg=new ImageView("Images/Language_50px.png");
+        langImg.setFitWidth(20);
+        langImg.setFitHeight(20);
+        label.setGraphic(langImg);
+        radiosHBox.getChildren().addAll(label,engRadio,araRadio);
+
+        radiosHBox.setMinWidth(300);
+        radiosHBox.setMinHeight(130);
+
+
+        dialog.getDialogPane().setContent(radiosHBox);
+        dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Continue"));
+
+        dialog.setY(resY*0.26);
+        dialog.setX(resX*0.375);
+        Optional<String> result=dialog.showAndWait();
+
+        if(result.isPresent()){
+            isTranslationMode=araRadio.isSelected();
+            generalPrefsJson.put(IS_TRANSLATION_MODE_JSON_KEY,isTranslationMode);
+            saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+            updateControlsText(); //to translate already existing start window
+            generalPrefsJson.put(IS_FIRST_LAUNCH_JSON_KEY,false);
+            return true;
+        }
+        else {
+           boolean exit= showConfirmationDialog("Quit Jowil Stats", "Are you sure you want to exit?", stage.getOwner());
+           if(exit)
+               return false;
+           else
+               return showLanguageFirstTimeDialog(engRadio.isSelected());
+        }
+
 
 
 
@@ -304,15 +381,15 @@ public class StartController extends Controller{
             if((double)newValue!=targetHeight)
                 dialog.setHeight(targetHeight);
         }));
-        dialog.xProperty().addListener(((observable, oldValue, newValue) -> {
-            if((double)newValue!=targetX)
-                dialog.setX(targetX);
-        }));
-
-        dialog.yProperty().addListener(((observable, oldValue, newValue) -> {
-            if((double)newValue!=targetY)
-                dialog.setY(targetY);
-        }));
+//        dialog.xProperty().addListener(((observable, oldValue, newValue) -> {
+//            if((double)newValue!=targetX)
+//                dialog.setX(targetX);
+//        }));
+//
+//        dialog.yProperty().addListener(((observable, oldValue, newValue) -> {
+//            if((double)newValue!=targetY)
+//                dialog.setY(targetY);
+//        }));
 
 
         ButtonType activateType=new ButtonType("Activate");
@@ -396,10 +473,21 @@ public class StartController extends Controller{
         dialog.getDialogPane().setContent(anchorPane);
         processDialog(dialog);
 
+        dialog.setY(resY*0.26);
+        dialog.setX(resX*0.3);
         Optional<String> result=dialog.showAndWait();
 
-        if(!result.isPresent())//close was pressed
-            return false;
+        if(!result.isPresent()) {//close was pressed
+            boolean exit=showConfirmationDialog("Quit Jowil Stats","Are you sure you want to exit?", stage.getOwner());
+
+            if(exit)
+                return false;
+            else
+                return showActivationKeyDialog(correctActKey,activationTextFields.get(0).getText(),
+                        activationTextFields.get(1).getText(),activationTextFields.get(2).getText(),activationTextFields.get(3).getText());
+
+        }
+
 
         StringBuilder submittedKey=new StringBuilder();
         StringBuilder submittedKeyDashed=new StringBuilder();
@@ -445,14 +533,16 @@ public class StartController extends Controller{
 
         ImageView pic=new ImageView();
         pic.setImage(new Image("Images/Checked_50px.png"));
-        pic.setFitWidth(resX*50/1280);
-        pic.setFitHeight(resX*50/1280);
+        pic.setFitWidth(50);
+        pic.setFitHeight(50);
 
         Label mainLabel=new Label("Jowil Stats activated successfully.");
-        mainLabel.setFont(new Font(resX*14/1280));
+        mainLabel.setFont(new Font(14));
 
-        HBox hBox=new HBox(resX*5/1280,pic,mainLabel);
+        HBox hBox=new HBox(5,pic,mainLabel);
         hBox.setAlignment(Pos.CENTER);
+
+        hBox.setMinSize(180,100);
 
 
         dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Start",ButtonBar.ButtonData.OK_DONE));
@@ -460,6 +550,7 @@ public class StartController extends Controller{
 
         processDialog(dialog);
         dialog.showAndWait();
+
 
     }
 

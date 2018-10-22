@@ -155,6 +155,7 @@
 
 
 
+  "Quit Jowil Stats":"غلق البرنامج",
   "Change Language":"تغيير اللغة",
   "Relative Resolution Scaling":"تناسب الأحجام مع دقة الشاشة",
   "Confirm Column Set Deletion":"تأكيد إلغاء مجموعة العواميد",
@@ -260,6 +261,7 @@
   "Error in loading Grade Scale Configurations.":"خطأ في تحميل اعدادات نظام التقديرات.",
 
 
+  "Are you sure you want to exit?":"هل أنت متأكد من رغبتك في الخروج من البرنامج؟",
   "Are you sure you want to change the program language to Arabic?":"هل أنت متأكد من رغبتك في تغيير لغة البرنامج إلى اللغة الانجليزية؟",
   "Are you sure you want to enable relative resolution scaling?":"هل أنت متأكد من رغبتك في تشغيل خاصية تناسب الأحجام مع دقة الشاشة؟",
   "Are you sure you want to disable relative resolution scaling?":"هل أنت متأكد من رغبتك في إيقاف خاصية تناسب الأحجام مع دقة الشاشة؟"
@@ -274,7 +276,8 @@
 
 
 
-  "Software Activation":"تفعيل البرنامج","Jowil Stats needs activation":"هذه النسخة من Jowil Stats تحتاج للتفعيل","Activate":"تفعيل","-The activation key is 16 characters long and is based on your serial number.\n-You can contact any of our software distributors to get the activation key\n required for your Jowil Stats copy.":"-مفتاح التفعيل مكون من 16 حرف ويعتمد على رقمك المسلسل الموجود بالأسفل.\n-يمكنك الحصول على مفتاح التفعيل الخاص بنسختك من خلال أحد موزعينا المعتمدين.","Serial Number:":"رقمك المسلسل:","Activation Key:":"مفتاح التفعيل:",
+
+  "Software Activation":"تفعيل البرنامج","Jowil Stats needs activation":"تفعيل نسختك من Jowil Stats","Activate":"تفعيل","-The activation key is 16 characters long and is based on your serial number.\n-You can contact any of our software distributors to get the activation key\n required for your Jowil Stats copy.":"-مفتاح التفعيل مكون من 16 حرف ويعتمد على رقمك المسلسل الموجود بالأسفل.\n-يمكنك الحصول على مفتاح التفعيل الخاص بنسختك من خلال أحد موزعينا المعتمدين.","Serial Number:":"رقمك المسلسل:","Activation Key:":"مفتاح التفعيل:",
   "Activation Success":"نجاح التفعيل","Jowil Stats activated successfully.":"تم تفعيل Jowil Stats بنجاح.","Start":"ابدأ",
   "Projects Loading Error" :"خطأ في تحميل الامتحانات السابقة","Cannot load existing projects. Would you like to restart Jowil Stats?":"فشل تحميل الامتحانات السابقة. هل ترغب في اعادة تشغيل البرنامج؟",
   "Project Name:":"اسم الامتحان:", "Set Project Name":"تحديد اسم الإمتحان","Test":"إختبار","Questionnaire":"استطلاع رأي",

@@ -27,6 +27,12 @@ JFXTextField{
 
 }
 
+JFXRadioButton{
+    -jfx-selected-color: #095c90;
+    -jfx-unselected-color: #5A5A5A;
+}
+
+
 TableView:focused{
 -fx-border-color:#A9A9A9;
 }
