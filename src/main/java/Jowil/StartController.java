@@ -1,10 +1,7 @@
 package Jowil;
 
 import Jowil.Reports.Report;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXListCell;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,9 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Callback;
 import org.json.simple.JSONArray;
@@ -33,13 +33,9 @@ import org.pdfsam.ui.RingProgressIndicator;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -251,6 +247,11 @@ public class StartController extends Controller{
         super.startWindow();
 
 
+
+        if(!checkActivationKey())
+            stage.close();
+
+
         loadProjectsJson();
         onString=isTranslationMode&& translations.containsKey(onString)?translations.get(onString):onString;
         offString=isTranslationMode&& translations.containsKey(offString)?translations.get(offString):offString;
@@ -261,6 +262,263 @@ public class StartController extends Controller{
 
 
     }
+
+    private boolean checkActivationKey() {
+        String currentActKey=(String)generalPrefsJson.get(ACTIVATION_KEY_JSON_KEY);
+
+        String correctActKey=getActivationKey();
+        System.out.println(correctActKey);
+        if(currentActKey.equals(correctActKey))
+            return true;
+        else{
+            if(showActivationKeyDialog(correctActKey)){
+                generalPrefsJson.put(ACTIVATION_KEY_JSON_KEY,correctActKey);
+                saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
+                showActivationSuccessDialog();
+                return true;
+            }
+            else
+                return false;
+        }
+
+
+    }
+
+
+
+    private boolean showActivationKeyDialog(String correctActKey,String... boxesText) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Software Activation");
+        dialog.setHeaderText("Jowil Stats needs activation");
+        dialog.setGraphic(null);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
+
+        dialog.getDialogPane().getStyleClass().add("projectsDialog");
+        //dialog.getDialogPane().setStyle("-fx-background-color:transparent");
+        dialog.setResizable(false);
+
+        double targetHeight=resY*0.5,targetX=resX*0.3,targetY=resY*0.24;
+
+        dialog.heightProperty().addListener(((observable, oldValue, newValue) -> {
+            if((double)newValue!=targetHeight)
+                dialog.setHeight(targetHeight);
+        }));
+        dialog.xProperty().addListener(((observable, oldValue, newValue) -> {
+            if((double)newValue!=targetX)
+                dialog.setX(targetX);
+        }));
+
+        dialog.yProperty().addListener(((observable, oldValue, newValue) -> {
+            if((double)newValue!=targetY)
+                dialog.setY(targetY);
+        }));
+
+
+        ButtonType activateType=new ButtonType("Activate");
+        dialog.getDialogPane().getButtonTypes().addAll(activateType);
+        Button activateButton=(Button)dialog.getDialogPane().lookupButton(activateType);
+        dialog.getDialogPane().lookup(".header-panel .label").setStyle("-fx-font-size:"+resX*15/1280);
+
+
+        AnchorPane anchorPane=new AnchorPane();
+
+        Label mainLabel=new Label("-The activation key is 16 characters long and is based on your serial number.\n-You can contact any of our software distributors to get the activation key\n required for your Jowil Stats copy.");
+        Label serialKeyLabel=new Label("Serial Number:");
+        Label activationLabel=new Label("Activation Key:");
+
+
+        String volSerial=getVolSerialNumber();
+        volSerial=volSerial.substring(0,4)+"-"+volSerial.substring(4);
+        Label serialValueLabel=new Label(volSerial);
+
+        double fontSize=resX*12/1280;
+        serialValueLabel.setFont(new Font("System Bold",fontSize));
+        serialKeyLabel.setFont(new Font(fontSize));
+        mainLabel.setFont(new Font(fontSize));
+        activationLabel.setFont(new Font(fontSize));
+        activationLabel.setPadding(new Insets(3,0,0,0));
+
+
+        double spacing=resX*4/1280;
+
+        HBox serialHBox=new HBox(serialKeyLabel,serialValueLabel);
+        serialHBox.setSpacing(spacing);
+
+
+        ArrayList<TextField>activationTextFields=new ArrayList<>();
+        HBox activationHBox=new HBox(spacing);
+        ArrayList<Node> actHBoxChildren=new ArrayList<>();
+        actHBoxChildren.add(activationLabel);
+        double textFieldSize=resX*50/1280;
+
+        for(int i=0;i<3;i++) {
+            TextField textField=new TextField();
+            textField.setPrefWidth(textFieldSize);
+            if(boxesText.length>i)
+                textField.setText(boxesText[i]);
+            activationTextFields.add(textField);
+            actHBoxChildren.add(textField);
+            Label label=new Label("-");
+            label.setPadding(activationLabel.getPadding());
+            label.setFont(new Font(fontSize));
+            actHBoxChildren.add(label);
+        }
+
+
+
+        TextField finalTextField=new TextField();
+        finalTextField.setPrefWidth(textFieldSize);
+        if(boxesText.length>3)
+            finalTextField.setText(boxesText[3]);
+        activationTextFields.add(finalTextField);
+        actHBoxChildren.add(finalTextField);
+        activationHBox.getChildren().setAll(actHBoxChildren);
+
+        for(TextField textField:activationTextFields){
+            textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.getCode() == KeyCode.ENTER)
+                    activateButton.fire();
+            });
+        }
+
+
+        mainLabel.setLayoutX(resX*20/1280);
+        mainLabel.setLayoutY(resY*20/1280);
+        serialHBox.setLayoutX(mainLabel.getLayoutX());
+        serialHBox.setLayoutY(resY*155/1280);
+        activationHBox.setLayoutX(mainLabel.getLayoutX());
+        activationHBox.setLayoutY(resY*230/1280);
+
+
+        anchorPane.getChildren().addAll(mainLabel,serialHBox,activationHBox);
+        dialog.getDialogPane().setPadding(new Insets(5,20,0,20));
+        dialog.getDialogPane().setContent(anchorPane);
+        processDialog(dialog);
+
+        Optional<String> result=dialog.showAndWait();
+
+        if(!result.isPresent())//close was pressed
+            return false;
+
+        StringBuilder submittedKey=new StringBuilder();
+        StringBuilder submittedKeyDashed=new StringBuilder();
+
+
+
+        for(TextField textField:activationTextFields){
+            if(isTranslationMode){
+                submittedKey.insert(0,textField.getText());
+                submittedKeyDashed.insert(0,textField.getText());
+                submittedKeyDashed.insert(0,'-');
+            }
+            else {
+                submittedKey.append(textField.getText());
+                submittedKeyDashed.append(textField.getText());
+                submittedKeyDashed.append('-');
+            }
+        }
+
+
+        submittedKeyDashed.deleteCharAt(isTranslationMode?0:submittedKeyDashed.length()-1);
+
+
+        if(submittedKey.toString().toLowerCase().equals(correctActKey))
+            return true;
+        else{
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Wrong Activation Key",
+                    constructMessage("The activation key"," \""+submittedKeyDashed+"\" ","is incorrect."));
+            return showActivationKeyDialog(correctActKey,activationTextFields.get(0).getText(),
+                    activationTextFields.get(1).getText(),activationTextFields.get(2).getText(),activationTextFields.get(3).getText());
+        }
+
+    }
+
+    private void showActivationSuccessDialog() {
+
+
+
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Activation Success");
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
+
+        ImageView pic=new ImageView();
+        pic.setImage(new Image("Images/Checked_50px.png"));
+        pic.setFitWidth(resX*50/1280);
+        pic.setFitHeight(resX*50/1280);
+
+        Label mainLabel=new Label("Jowil Stats activated successfully.");
+        mainLabel.setFont(new Font(resX*14/1280));
+
+        HBox hBox=new HBox(resX*5/1280,pic,mainLabel);
+        hBox.setAlignment(Pos.CENTER);
+
+
+        dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Start",ButtonBar.ButtonData.OK_DONE));
+        dialog.getDialogPane().setContent(hBox);
+
+        processDialog(dialog);
+        dialog.showAndWait();
+
+    }
+
+    private static String getActivationKey(){
+
+
+        long serialNumber;
+
+        serialNumber=Long.parseLong(getVolSerialNumber(),16);
+
+        ArrayList<Character> allChars= new ArrayList<>( );
+
+        for(int i = 48 ; i < 58 ; i++) {
+            allChars.add((char)(i)) ; // add numbers
+        }
+
+
+        for(int i = 65 ; i < 91 ; i++) {
+            allChars.add((char)(i)) ; // add numbers
+        }
+
+
+
+        Random gen = new Random(serialNumber) ;
+
+        ArrayList<Character> shuffledChars = (ArrayList)allChars.clone() ;
+        Collections.shuffle((ArrayList)shuffledChars,gen) ;
+        String output = "";
+        for (int i = 1; i < 17; i++) {
+            output+=allChars.get(Math.abs(gen.nextInt())%36) ;
+        }
+        return output.toLowerCase();
+    }
+
+    private static String getVolSerialNumber() {
+
+        String result = "";
+        try {
+
+            Process p = Runtime.getRuntime().exec("cmd.exe /C vol");
+            BufferedReader input =
+                    new BufferedReader
+                            (new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = input.readLine()) != null) {
+                result += line;
+            }
+            input.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        String  [] words=result.split(" ");
+
+        return words[words.length-1].replace("-","");
+    }
+
+
 
     private void initDataDirPath() {
         String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();

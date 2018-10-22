@@ -125,6 +125,7 @@
 
 
 
+  "Wrong Activation Key":"خطأ في مفتاح التفعيل",
   "Students Responses File Error":" خطأ في ملف اجابات الطلبة",
   "Answer Key File Error":"خطأ في ملف الإجابة النموذجية",
   "Columns Count Mismatch":"عدد العواميد غير متطابق",
@@ -187,8 +188,10 @@
 
 
 
+  "The activation key":"مفتاح التفعيل","is incorrect.":"غير صحيح.",
 
-  "Error in students responses file: ":"خطأ في ملف إجابة الطلبة: ",
+
+  "Error in students responses file: ":"خطأ في ملف اجابات الطلبة: ",
   "Error in answer key file: ":"خطأ في ملف الإجابة النموذجية: ",
   "No students responses file provided.":"مسار ملف اجابات الطلبة لم يتم ادخاله.",
   "No answer key file provided.":"مسار ملف الإجابة النموذجية لم يتم ادخاله.",
@@ -270,6 +273,9 @@
   "Are you sure you want to delete this column set?":"هل أنت متأكد من رغبتك في حذف هذه المجموعة؟",
 
 
+
+  "Software Activation":"تفعيل البرنامج","Jowil Stats needs activation":"هذه النسخة من Jowil Stats تحتاج للتفعيل","Activate":"تفعيل","-The activation key is 16 characters long and is based on your serial number.\n-You can contact any of our software distributors to get the activation key\n required for your Jowil Stats copy.":"-مفتاح التفعيل مكون من 16 حرف ويعتمد على رقمك المسلسل الموجود بالأسفل.\n-يمكنك الحصول على مفتاح التفعيل الخاص بنسختك من خلال أحد موزعينا المعتمدين.","Serial Number:":"رقمك المسلسل:","Activation Key:":"مفتاح التفعيل:",
+  "Activation Success":"نجاح التفعيل","Jowil Stats activated successfully.":"تم تفعيل Jowil Stats بنجاح.","Start":"ابدأ",
   "Projects Loading Error" :"خطأ في تحميل الامتحانات السابقة","Cannot load existing projects. Would you like to restart Jowil Stats?":"فشل تحميل الامتحانات السابقة. هل ترغب في اعادة تشغيل البرنامج؟",
   "Project Name:":"اسم الامتحان:", "Set Project Name":"تحديد اسم الإمتحان","Test":"إختبار","Questionnaire":"استطلاع رأي",
   "Existing Projects":"الامتحانات السابقة", "Projects":"الامتحانات", "No Projects Exist":"لا يوجد أي امتحانات سابقة",

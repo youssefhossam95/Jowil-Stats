@@ -139,20 +139,24 @@ public class Test {
 
         String result = "";
         try {
-        Process p = Runtime.getRuntime().exec("vol C:");
-        BufferedReader input =
-                new BufferedReader
-                        (new InputStreamReader(p.getInputStream()));
-        String line;
-        while ((line = input.readLine()) != null) {
-            result += line;
+
+            Process p = Runtime.getRuntime().exec("cmd.exe /C vol");
+            BufferedReader input =
+                    new BufferedReader
+                            (new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = input.readLine()) != null) {
+                result += line;
+            }
+            input.close();
         }
-        input.close();
-    }
         catch(Exception e){
         e.printStackTrace();
-    }
-        return result.trim();
+        }
+
+        String  [] words=result.split(" ");
+
+        return words[words.length-1].replace("-","");
     }
 
     static ArrayList<Character> allChars;
@@ -188,8 +192,12 @@ public class Test {
 
 
 
-        String s = "D+";
-        System.out.println(s.matches("\\w+"));
+
+        System.out.println(getSerialNumber());
+        System.out.println(getVolSerialNumber(""));
+
+//        String s = "D+";
+//        System.out.println(s.matches("\\w+"));
 //        allChars.add('x');
 
 //        initAllChars();
