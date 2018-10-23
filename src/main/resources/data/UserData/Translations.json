@@ -207,6 +207,7 @@
 
 
 
+  "Cannot open the project in explorer. Make sure that the project folder exists.":"فشل محاولة فتح المجلد في المستكشف. تأكد من أن مجلد التقارير لهذا الامتحان مازال موجودا.",
   "Reports Directory Path is required.":"ادخل مسار مجلد التقارير.",
   "Reports Directory":"مجلد التقارير", "doesn't exist.":"غير موجود.",
   "Path":"مسار الغلاف","is not a valid directory path.":"غير صالح.",
