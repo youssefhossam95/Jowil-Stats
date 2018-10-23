@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import static Jowil.Controller.constructMessage;
 import static Jowil.Controller.isOpenMode;
-
+import static Jowil.Controller.isQuestMode;
 
 
 public class CSVHandler {
@@ -328,9 +328,12 @@ public class CSVHandler {
 
 
 
+        boolean isFakeAnswersGenerated=false;
+        String[] row=null;
+        ArrayList<ArrayList<String>> correctAnswers=null;
         //parse students data
         while ((line = input.readLine()) != null) {
-            String[] row = removeDoubleQuotes(line.split(",",-1));
+            row = removeDoubleQuotes(line.split(",",-1));
             if(row.length==0) //ignore empty lines
                 continue;
 
@@ -339,8 +342,13 @@ public class CSVHandler {
             if(row.length!=responsesColsCount) //equals zero if no headers
                 throw new IllFormedCSVException(rowNumber);
 
-            if(Controller.isQuestMode && rowNumber==2)
-                Statistics.setCorrectAnswers(generateFakeAnswerKey(row));
+            if(Controller.isQuestMode && !isFakeAnswersGenerated){
+
+                Statistics.setCorrectAnswers(correctAnswers=generateFakeAnswerKey(row,true));
+                if(correctAnswers!=null)  //generateFakeAnswerKey success
+                    isFakeAnswersGenerated=true;
+            }
+
 
             Statistics.getStudentAnswers().add(extractStudentsAnswers(row, questionsColStartIndex,questionsColEndIndex));
             updateStudentIdentifier(row,isHeadersExist?rowNumber-1:rowNumber);
@@ -348,6 +356,9 @@ public class CSVHandler {
             updateSubjScores(row,rowNumber);
             rowNumber++;
         }
+
+        if(isQuestMode && correctAnswers==null) //if no student can be used to generate a correct fake answer key then generate using last student
+            Statistics.setCorrectAnswers(generateFakeAnswerKey(row,false));
 
 
     }
@@ -770,7 +781,7 @@ public class CSVHandler {
                         maxString=currentString.compareTo(maxString)>0?currentString:maxString;
 
                 }catch(NumberFormatException e){ //ignore non-integers when isAnswerNumeric=true
-
+                    System.out.println("ahhhhh w adeee hal el donia");
                 }
             }
         }
@@ -893,15 +904,18 @@ public class CSVHandler {
         return s.toUpperCase().equals(s);
     }
 
-    //used in questMode to generate a fakeanswerKey that uses the first student answers so that the logic of everything will flow normally
-    private static ArrayList<ArrayList<String>> generateFakeAnswerKey(String[] row) {
+    //used in questMode to generate a fakeanswerKey that uses the row of the student answers so that the logic of everything using
+    //the answer key will continue normally.
+    private static ArrayList<ArrayList<String>> generateFakeAnswerKey(String[] row,boolean isStudentMustHaveAllGroups) {
 
         ArrayList<ArrayList<String>>correctAns=new ArrayList<>();
         ArrayList<String>correctRow=new ArrayList<>();
         savedAnswerKeyCSV=new ArrayList<>();
         correctAns.add(correctRow);
 
-        String [] cleanedRow=removeQuestionsBlanks(row);
+        String [] cleanedRow=removeQuestionsBlanks(row,isStudentMustHaveAllGroups);
+        if(cleanedRow==null)
+            return null;
         savedAnswerKeyCSV.add(cleanedRow);
 
 
@@ -912,7 +926,7 @@ public class CSVHandler {
 
     }
 
-    private static String[] removeQuestionsBlanks(String[] row) {
+    private static String[] removeQuestionsBlanks(String[] row, boolean isStudentMustHaveAllGroups) {
         String []cleanedRow=new String[row.length];
 
         for(int i=0;i<row.length;i++)
@@ -920,24 +934,25 @@ public class CSVHandler {
 
         int i=questionsColStartIndex;
         for(Group group:detectedGroups){
-            String dummyString=getFirstNonEmptyInGroup(cleanedRow,i,group.getqCount());
-
+            String filler=getFirstNonEmptyInGroup(cleanedRow,i,group.getqCount(),isStudentMustHaveAllGroups);
+            if(filler==null)
+                return null;
             for(int j=0;j<group.getqCount();j++){
                 if(cleanedRow[i].trim().isEmpty())
-                    cleanedRow[i]=dummyString;
+                    cleanedRow[i]=filler;
                 i++;
             }
         }
         return cleanedRow;
     }
 
-    private static String getFirstNonEmptyInGroup(String [] row,int groupStart, Integer qCount) {
+    private static String getFirstNonEmptyInGroup(String[] row, int groupStart, Integer qCount, boolean isStudentMustHaveAllGroups) {
 
-        for(int i=groupStart;i<i+qCount;i++){
+        for(int i=groupStart;i<groupStart+qCount;i++){
             if(!row[i].trim().isEmpty())
                 return row[i];
         }
-        return "1"; // won't happen
+        return isStudentMustHaveAllGroups?null:"1"; //this student doesn't have any answers in that group
     }
 
     //true if csv file contains headers only
