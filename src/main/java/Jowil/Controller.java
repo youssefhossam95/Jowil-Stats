@@ -69,7 +69,7 @@ public abstract class Controller {
     static boolean isNormalScalingMode=true; // normal scaling true-> resX will be set to 1280 and resY to 680 so that all calculations are made in absolute pixels count and not relative to screen resolution (Note that the display used in development had visible resolution of 1280x680)
     static boolean isQuestMode; //Questionnaire
     static boolean isOpenMode;
-
+    static boolean isDevMode; //the program isn't running in deployment environment.
 
 
     BorderPane outerBorderPane=new BorderPane();

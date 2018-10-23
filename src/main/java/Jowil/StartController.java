@@ -322,9 +322,9 @@ public class StartController extends Controller{
         if(result.isPresent()){
             isTranslationMode=araRadio.isSelected();
             generalPrefsJson.put(IS_TRANSLATION_MODE_JSON_KEY,isTranslationMode);
-            saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
             updateControlsText(); //to translate already existing start window
             generalPrefsJson.put(IS_FIRST_LAUNCH_JSON_KEY,false);
+            saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
             return true;
         }
         else {
@@ -344,7 +344,8 @@ public class StartController extends Controller{
         String currentActKey=(String)generalPrefsJson.get(ACTIVATION_KEY_JSON_KEY);
 
         String correctActKey=getActivationKey();
-        System.out.println(correctActKey);
+        if(isDevMode)
+            System.out.println(correctActKey);
         if(currentActKey.equals(correctActKey))
             return true;
         else{
@@ -614,7 +615,8 @@ public class StartController extends Controller{
     private void initDataDirPath() {
         String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
         try {
-            String decodedPath = URLDecoder.decode(path.endsWith("classes/")?path:new File(path).getParentFile().getPath(), "UTF-8"); //the classes check identifies wither the function was called in a deployed jar or normal development classes
+            isDevMode=path.endsWith("classes/");
+            String decodedPath = URLDecoder.decode(isDevMode?path:new File(path).getParentFile().getPath(), "UTF-8"); //the classes check identifies wither the function was called in a deployed jar or normal development classes
             path=decodedPath+"/data/";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -1093,6 +1095,7 @@ public class StartController extends Controller{
             desktop.open(file);
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
+            showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Directory Error","Cannot open the project in explorer. Make sure that the project folder exists.");
         }
 
 
