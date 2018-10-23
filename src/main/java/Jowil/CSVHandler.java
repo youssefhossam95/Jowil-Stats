@@ -952,7 +952,7 @@ public class CSVHandler {
             if(!row[i].trim().isEmpty())
                 return row[i];
         }
-        return isStudentMustHaveAllGroups?null:"1"; //this student doesn't have any answers in that group
+        return isStudentMustHaveAllGroups?null:"*"; //this student doesn't have any answers in that group -> the star has an ascii code that is smaller than all letters and numbers thus it will not affect the group max choice
     }
 
     //true if csv file contains headers only
