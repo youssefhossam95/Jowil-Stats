@@ -303,7 +303,7 @@ public class GradeBoundariesController extends Controller {
         if(!createOutDirs(outPath,projectDirName)){
             showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Output Directory Error",
                     "Cannot write to the specified reports directory. Make sure that you are permitted" +
-                            " to edit in this directory");
+                            " to edit in this directory.");
             return;
 
         }
@@ -890,7 +890,7 @@ public class GradeBoundariesController extends Controller {
             if (configNameTextField.getText().trim().isEmpty()) {
                 event.consume();
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
-                        "Configuration name cannot be empty");
+                        "Configuration name cannot be empty.");
             } else if (isScaleExists(configNameTextField.getText().trim())) {
                 event.consume();
                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
