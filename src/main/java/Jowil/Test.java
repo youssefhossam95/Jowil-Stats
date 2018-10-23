@@ -55,7 +55,7 @@ public class Test {
 //        System.out.println("Slope Std Error: "+regression.getSlopeStdErr());
 //        System.out.println("Sum Sqared Error: "+regression.getSumSquaredErrors());
 
-        return new Pair<Double, Double>(regression.getSlope() , Math.sqrt(regression.getMeanSquareError())) ;
+        return new Pair<Double, Double>(regression.getSlope() , Math.sqrt(regression.getMeanSquareError()) * 1) ;
     }
 
     private static  double calcHarMean (double x , double y ) {
@@ -190,12 +190,15 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
+        initAllChars();
+//        long l = Long.parseLong("10bh"  ,16) ;
+//        System.out.println(l);
+//        System.out.println(getSerialNumber());
+        String volSerial = getVolSerialNumber("") ;
+        System.out.println("Serial Number: "+volSerial);
+        String activation = getActivationKey(Long.parseLong(volSerial , 16) ) ;
 
-
-
-        System.out.println(getSerialNumber());
-        System.out.println(getVolSerialNumber(""));
-
+        System.out.println("Activation Key: " + activation);
 //        String s = "D+";
 //        System.out.println(s.matches("\\w+"));
 //        allChars.add('x');
@@ -247,14 +250,16 @@ public class Test {
 
 
 //        ArrayList<Double> hardness = new ArrayList<>( );
-////        for(double i = 0 ; i < 40 ; i ++) {
-//////            hardness.add(0.0) ;
-////            hardness.add(i/4);
+//        for(double i = 0 ; i < 40 ; i ++) {
+////            hardness.add(0.0) ;
+//            hardness.add(i / 4);
 ////            hardness.add(i-10);
-////        }
-//       hardness.add(0.0);hardness.add(3.0);
-//        hardness.add(0.0); hardness.add(5.0) ;  hardness.add(1.0) ;  hardness.add(10.0) ;
-//        hardness.add(6.0) ; hardness.add(9.0) ; hardness.add(7.0); hardness.add(5.0);
+//        }
+//        for(int i = 0 ; i <10 ; i ++)
+//            hardness.set(i , hardness.get(i) + 1) ;
+////        hardness.add(0.0); hardness.add(3.0);
+////        hardness.add(6.0); hardness.add(4.0); hardness.add(3.0); hardness.add(4.0) ;
+////        hardness.add(2.0); hardness.add(7.0); hardness.add(6.0); hardness.add(10.0);
 //        Pair<Double , Double> pair = getTrendDataSimple(hardness ) ;
 //        double slope = pair.getKey();
 //        double Rss = pair.getValue() ;
@@ -262,7 +267,7 @@ public class Test {
 //        System.out.println("standard Error: " + Rss);
 //
 //        System.out.println("Jowil Param: "+calcJowilParam(slope, Rss)) ;
-
+//
 
 
 //        System.out.println(URLDecoder.decode(Test.class.getResource("/reports").getPath(),"utf-8"));
