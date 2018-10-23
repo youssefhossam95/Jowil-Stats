@@ -230,11 +230,15 @@ public class FileConfigController extends Controller {
                     formCombo.setDisable(true);
             }));
         }
-        else
-            answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloAnswerKeys.csv");
+
+        if(!isOpenMode && isDevMode){
+            mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloStudentAnswers.csv");
+            if(!isQuestMode)
+                answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloAnswerKeys.csv");
+        }
 
 
-        mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloStudentAnswers.csv");
+
 
 
     }

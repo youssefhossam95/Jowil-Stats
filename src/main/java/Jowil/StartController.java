@@ -614,7 +614,8 @@ public class StartController extends Controller{
     private void initDataDirPath() {
         String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
         try {
-            String decodedPath = URLDecoder.decode(path.endsWith("classes/")?path:new File(path).getParentFile().getPath(), "UTF-8"); //the classes check identifies wither the function was called in a deployed jar or normal development classes
+            isDevMode=path.endsWith("classes/");
+            String decodedPath = URLDecoder.decode(isDevMode?path:new File(path).getParentFile().getPath(), "UTF-8"); //the classes check identifies wither the function was called in a deployed jar or normal development classes
             path=decodedPath+"/data/";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
