@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "452067870696",
+    "firebase_url": "https://licenceapp-60a11.firebaseio.com",
+    "project_id": "licenceapp-60a11",
+    "storage_bucket": "licenceapp-60a11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452067870696:android:1d2bde7808ec0685",
+        "android_client_info": {
+          "package_name": "com.example.waleedmousa.licenceapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452067870696-vcl4gj3lk6et5r8cnatffd3mr2r163do.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.waleedmousa.licenceapp",
+            "certificate_hash": "6d0b190ab4ec79a99869d8e2a2ad9ca2256c9802"
+          }
+        },
+        {
+          "client_id": "452067870696-bgdr9eg8pul4gbni55v2moogbanijice.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnVuDPKXFJLgECjA8HowiJZNdlTrU5VcQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452067870696-bgdr9eg8pul4gbni55v2moogbanijice.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

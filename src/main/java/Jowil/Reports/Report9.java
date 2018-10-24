@@ -218,7 +218,7 @@ public class Report9 extends Report {
 //        String color = tableRow.get(4);
 //        color = color.substring(0 , color.length()-3) ;
         percent = percent.substring(0,percent.length()-2) ;
-        String barImgFullPath = resourcesPath+"RectImages\\Report5\\green\\"+percent+".png" ;
+        String barImgFullPath = resourcesPath+"data\\RectImages\\Report5\\green\\"+percent+".png" ;
         String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
         tableRow.set(3,imgEncoding) ;
     }

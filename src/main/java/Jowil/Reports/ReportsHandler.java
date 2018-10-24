@@ -102,12 +102,14 @@ public class ReportsHandler {
         boolean isPDFExists= (formats.contains(PDF));
 
         for(Report report:Reports) {
-            if(isStopReportsGeneration.get()) //user cancelled generation
+            if( !isTestMode && isStopReportsGeneration.get() ) //user cancelled generation
                 return;
 
             if (formats.contains(PDF)){
-                showPDFPagesProgress=true;
-                ReportProgressWindow.removeSpinner();
+                if(!isTestMode) {
+                    showPDFPagesProgress = true;
+                    ReportProgressWindow.removeSpinner();
+                }
                 report.generatePdfReport();
             }
 

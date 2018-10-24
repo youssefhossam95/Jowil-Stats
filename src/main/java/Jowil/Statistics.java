@@ -1348,7 +1348,7 @@ public class Statistics {
         if(slope == 0)
             slopeSign = 1 ;
         else
-         slopeSign = slope/Math.abs(slope) ;
+            slopeSign = slope/Math.abs(slope) ;
         double harMean = calcHarMean(Math.abs(slope) , 1-Math.abs(error)) ;
         return (slopeSign* harMean + 1)*5;
     }

@@ -61,7 +61,8 @@ abstract public class Report {
 
     Report() {
         try {
-            resourcesPath= Controller.getDataDirPath() ;
+//            resourcesPath= Controller.getDataDirPath() ;
+            resourcesPath = "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\";
 //                    URLDecoder.decode(Report.class.getResource("../../").getPath(),"utf-8");
 //            resourcesPath= resourcesPath.substring(0 , resourcesPath.length()-8) ;
 //            System.out.println("fuck this fucken shit"+resourcesPath);
@@ -84,6 +85,7 @@ abstract public class Report {
         defaultGradesTranslation.put("جيد" , "Good") ;
         defaultGradesTranslation.put("جيدجدا" , "Very Good") ;
         defaultGradesTranslation.put("امتياز" , "Excellent") ;
+        defaultGradesTranslation.put("راسب" , "Failed");
     }
 
     public String getOutputFileName() {
@@ -102,9 +104,13 @@ abstract public class Report {
 
     public void updateTemplateFooter(Document doc) {
 
-        String reportTitle = doc.select("div#footerCenter").text() ;
+//        String reportTitle = doc.select("div#footerCenter").text() ;
         String projectName= Controller.getProjectName();
-        String centerFooter = reportTitle + "... " + projectName ;
+        if(projectName == null)
+            projectName = "New Project" ;
+
+        String centerFooter = projectName ;
+
         doc.select("div#footerCenter").last().text(centerFooter) ;
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -128,7 +134,7 @@ abstract public class Report {
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer(ReportsHandler.isTestMode);
 
-        renderer.getFontResolver().addFont(resourcesPath+"font\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+//        renderer.getFontResolver().addFont(resourcesPath+"font\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         renderer.setDocument(url);
         renderer.layout();
         renderer.createPDF(out);
@@ -265,7 +271,7 @@ abstract public class Report {
         System.out.println("handling Arabic Pdf");
         if(Utils.checkListContainArabic(Statistics.getGrades())){ // check if any grade is arabic
             if(!arabicTextReady) {
-                    generateGradesTextImgs();
+                    generateGradesTextImgs(arabicColIndex==0); // if report 1 arabic col index will be 0 so add gray
                     while (!arabicTextReady) ; // wait for the imgs to be created
             }
             for (int i = 0; i < table.size(); i++) {  // replace each grade in the table with it's img
@@ -292,32 +298,46 @@ abstract public class Report {
             return table ;
     }
 
-    protected void generateGradesTextImgs () throws IOException {
+    protected void generateGradesTextImgs (boolean gray) throws IOException {
         ArrayList<String> grades = Statistics.getGrades();
 
+        ArrayList<String> backgroundColors = new ArrayList<>( );
+        backgroundColors.add("#efefef");
+        String grayS = ""  ;
+        if (gray) {
+            backgroundColors.add("#ff0000");
+            grayS = "gray" ;
+        }
+
+        final String addedName = grayS ;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
 
                 Stage stage = new Stage() ;
                 Pane pane = new Pane() ;
-                pane.setStyle("-fx-background-color:white");
-                Scene scene  = new Scene(pane, Color.WHITE);
+                pane.setStyle("-fx-background-color: #ff0000;");
+                Scene scene  = new Scene(pane, Color.RED);
                 stage.setScene(scene);
                 Label label = new Label("man");
+                label.setStyle("-fx-background-color: #ff0000;");
                 pane.getChildren().add(label);
-                for (int i =0 ; i < grades.size(); i ++) {
-                    Label label2 = new Label(grades.get(i));
-                    label2.setStyle("-fx-font-weight: bold");
-                    pane.getChildren().set(0, label2);
+
+                for ( String backgroundColor : backgroundColors) {
+//                    pane.setStyle("-fx-background-color:"+backgroundColor);
+                    for (int i = 0; i < grades.size(); i++) {
+                        Label label2 = new Label(grades.get(i));
+                        label2.setStyle("-fx-font-weight: bold");
+                        pane.getChildren().set(0, label2);
 
 //        scene.getStylesheets().add("reports/report1/style.css");
 
-                    WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
-                    try {
-                        ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i)+".png"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
+                        try {
+                            ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i) + addedName + ".png"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 arabicTextReady = true ;
