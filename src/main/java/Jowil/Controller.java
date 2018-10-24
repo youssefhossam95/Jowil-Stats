@@ -311,6 +311,8 @@ public abstract class Controller {
             });
 
 
+            stage.getIcons().add(new Image("Images/jsIcon.png"));
+
             stage.show();
             updateControlsText();
             stage.setMaximized(isBeginMaximised);
