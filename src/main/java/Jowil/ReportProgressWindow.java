@@ -29,9 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static Jowil.Controller.constructMessage;
-import static Jowil.Controller.isTranslationMode;
-import static Jowil.Controller.translations;
+import static Jowil.Controller.*;
 
 public class ReportProgressWindow {
 
@@ -293,8 +291,8 @@ public class ReportProgressWindow {
         alert.setHeaderText(null);
         alert.setContentText(constructMessage("An error has occurred during report generation.",extraStatement));
         alert.initOwner(stage.getOwner());
+        processDialog(alert);
         Optional<ButtonType> option = alert.showAndWait();
-
         stage.hide();
 
         if(option.get()==ButtonType.OK)

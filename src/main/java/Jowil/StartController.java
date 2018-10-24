@@ -1094,7 +1094,6 @@ public class StartController extends Controller{
         try {
             desktop.open(file);
         } catch (IOException | IllegalArgumentException e) {
-            e.printStackTrace();
             showAlertAndWait(Alert.AlertType.ERROR,stage.getOwner(),"Directory Error","Cannot open the project in explorer. Make sure that the project folder exists.");
         }
 

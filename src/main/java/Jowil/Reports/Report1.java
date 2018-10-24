@@ -215,7 +215,7 @@ public class Report1 extends Report{
         if(pdf){
             handleArabicPdf(tempTable , 0);
         }
-        String tableRowsHtml = createRowsHtml(tempTable , "" , "tg-l711") ;
+        String tableRowsHtml = createRowsHtml(tempTable , ";grayRow" , "tg-l711") ;
 
         doc.select("tr.headerRow").after(tableRowsHtml) ;
 

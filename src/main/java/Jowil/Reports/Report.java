@@ -8,11 +8,14 @@ import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -27,6 +30,7 @@ import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -61,8 +65,8 @@ abstract public class Report {
 
     Report() {
         try {
-//            resourcesPath= Controller.getDataDirPath() ;
-            resourcesPath = "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\";
+           resourcesPath= Controller.getDataDirPath() ;
+//            resourcesPath = "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\";
 //                    URLDecoder.decode(Report.class.getResource("../../").getPath(),"utf-8");
 //            resourcesPath= resourcesPath.substring(0 , resourcesPath.length()-8) ;
 //            System.out.println("fuck this fucken shit"+resourcesPath);
@@ -299,49 +303,31 @@ abstract public class Report {
     }
 
     protected void generateGradesTextImgs (boolean gray) throws IOException {
-        ArrayList<String> grades = Statistics.getGrades();
+        ArrayList<String> grades = new ArrayList<>();
 
-        ArrayList<String> backgroundColors = new ArrayList<>( );
-        backgroundColors.add("#efefef");
-        String grayS = ""  ;
-        if (gray) {
-            backgroundColors.add("#ff0000");
-            grayS = "gray" ;
-        }
+        for(String grade:Statistics.getGrades()) //clone to prevent reverse from reversing original array
+            grades.add(grade);
 
-        final String addedName = grayS ;
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+        Collections.reverse(grades); //reverse grades to be in pdf order
 
-                Stage stage = new Stage() ;
-                Pane pane = new Pane() ;
-                pane.setStyle("-fx-background-color: #ff0000;");
-                Scene scene  = new Scene(pane, Color.RED);
-                stage.setScene(scene);
-                Label label = new Label("man");
-                label.setStyle("-fx-background-color: #ff0000;");
-                pane.getChildren().add(label);
+        Platform.runLater(()->{
+            Stage stage = new Stage() ;
 
-                for ( String backgroundColor : backgroundColors) {
-//                    pane.setStyle("-fx-background-color:"+backgroundColor);
-                    for (int i = 0; i < grades.size(); i++) {
-                        Label label2 = new Label(grades.get(i));
-                        label2.setStyle("-fx-font-weight: bold");
-                        pane.getChildren().set(0, label2);
-
-//        scene.getStylesheets().add("reports/report1/style.css");
-
-                        WritableImage snapShot = label2.snapshot(new SnapshotParameters(), null);
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i) + addedName + ".png"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+            for (int i = 0; i < grades.size(); i++) {
+                Label label = new Label(grades.get(i));
+                HBox hBox= new HBox(label) ;
+                hBox.setAlignment(Pos.CENTER);
+                HBox.setHgrow(label,Priority.ALWAYS);
+                hBox.setStyle("-fx-background-color:"+(gray && i%2==1?"#efefef":"white"));
+                stage.setScene(new Scene(hBox));
+                WritableImage snapShot = hBox.snapshot(new SnapshotParameters(), null);
+                try {
+                    ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + grades.get(i) + ".png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                arabicTextReady = true ;
             }
+            arabicTextReady = true ;
         });
 
 
