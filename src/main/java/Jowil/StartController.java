@@ -85,6 +85,9 @@ public class StartController extends Controller{
     StackPane closeButton;
 
     @FXML
+    ImageView closeImageView;
+
+    @FXML
     StackPane minusButton;
 
     @FXML
@@ -218,6 +221,17 @@ public class StartController extends Controller{
             saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
             Platform.exit();
         });
+        closeButton.setOnMouseEntered(event -> {
+            closeButton.setStyle("-fx-background-color:rgb(240,108,116)");
+            closeImageView.setImage(new Image("Images/whiteClose.png"));
+
+        });
+        closeButton.setOnMouseExited(event -> {
+            closeButton.setStyle("-fx-background-color:transparent");
+            closeImageView.setImage(new Image("Images/blackClose.png"));
+
+        });
+
         minusButton.setOnMouseClicked(event -> stage.setIconified(true));
 
 

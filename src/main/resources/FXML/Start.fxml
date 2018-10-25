@@ -22,8 +22,8 @@
         <AnchorPane fx:id="lowerAncPane" styleClass="lowerAncStart" BorderPane.alignment="CENTER" >
             <children>
 
-                <HBox spacing="0" AnchorPane.rightAnchor="7">
-                    <StackPane fx:id="minusButton" styleClass="toolBarButton" prefWidth="40" prefHeight="40">
+                <HBox spacing="0" AnchorPane.rightAnchor="0">
+                    <StackPane fx:id="minusButton" styleClass="toolBarButton" prefWidth="47" prefHeight="40">
                         <children>
                             <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
                                 <image>
@@ -32,9 +32,9 @@
                             </ImageView>
                         </children>
                     </StackPane>
-                <StackPane fx:id="closeButton" styleClass="toolBarButton" prefWidth="40" prefHeight="40" >
+                <StackPane fx:id="closeButton"  prefWidth="47" prefHeight="40" >
                     <children>
-                        <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
+                        <ImageView fx:id="closeImageView" pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
                             <image>
                                 <Image url="@../Images/blackClose.png" />
                             </image>
