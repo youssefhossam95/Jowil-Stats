@@ -20,6 +20,7 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
     private final double CHECK_BOXES_SIZE=resX*14/1280;
 
+
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -37,9 +38,8 @@ public class TreeViewCustomCell extends TreeCell<String> {
             if (this.getTreeItem().isLeaf()) {
 
 
-
                 //HBox cellBox = new HBox(0);
-                JFXCheckBox checkBox = new JFXCheckBox(item,CHECK_BOXES_SIZE);
+                JFXCheckBox checkBox = new JFXCheckBox(Controller.isTranslateFormContent?Translator.englishToArabic(item):item,CHECK_BOXES_SIZE);
                 this.setStyle("-fx-font-size:"+resX*12/1280);
 //                Label label = new Label(item);
 //                label.setPadding(new Insets(0,0,0,0));
@@ -101,8 +101,8 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 cellBox.setAlignment(Pos.CENTER_LEFT);
                 String min=this.getTreeItem().getChildren().get(GroupsController.getFirstPossible(this.getTreeItem().getParent().getValue())).getValue();
                 String max=this.getTreeItem().getChildren().get(GroupsController.getLastPossible(this.getTreeItem().getParent().getValue())).getValue();
-                Label minLabel=new Label(min);
-                Label maxLabel=new Label(max);
+                Label minLabel=new Label(Controller.isTranslateFormContent?Translator.englishToArabic(min):min);
+                Label maxLabel=new Label(Controller.isTranslateFormContent?Translator.englishToArabic(max):max);
                 minLabel.setPadding(new Insets(0,0,0,0));
                 maxLabel.setPadding(new Insets(0,0,0,0));
                 Node rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(isTranslationMode?FontAwesomeIcon.ARROW_LEFT:FontAwesomeIcon.ARROW_RIGHT).size(Double.toString(resX/111)).styleClass("error").build();

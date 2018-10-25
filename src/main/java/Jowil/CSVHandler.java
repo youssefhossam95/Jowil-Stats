@@ -317,6 +317,7 @@ public class CSVHandler {
         Statistics.setStudentForms(new ArrayList<Integer>());
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
         Statistics.setSubjMaxScores(new ArrayList<Double>());
+        Statistics.setIsIdentifierNumeric(true);
 
         savedResponsesCSV=new ArrayList<>();
 
@@ -380,7 +381,7 @@ public class CSVHandler {
         Statistics.setStudentAnswers(new ArrayList<ArrayList<String>>());
         Statistics.setStudentForms(new ArrayList<Integer>());
         Statistics.setSubjScores(new ArrayList<ArrayList<Double>>());
-
+        Statistics.setIsIdentifierNumeric(true);
 
         boolean isHeadersExist=isResponsesContainsHeaders;
         int rowNumber=1;
@@ -595,7 +596,7 @@ public class CSVHandler {
 
         for(Group group : detectedGroups){
             for(int i=0;i<group.getqCount();i++)
-                Statistics.getQuestionsChoices().add(group.getPossibleAnswers());
+                Statistics.getQuestionsChoices().add((ArrayList<String>)group.getPossibleAnswers().clone());
         }
     }
 
@@ -801,6 +802,7 @@ public class CSVHandler {
             return cleanedStr;
         }
         catch(NumberFormatException e){
+            Statistics.setIsIdentifierNumeric(false);
             return s;
         }
     }

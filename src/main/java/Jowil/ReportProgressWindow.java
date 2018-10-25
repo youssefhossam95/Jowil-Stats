@@ -312,18 +312,15 @@ public class ReportProgressWindow {
 
         int i=0; //try to open 5 times at most -> if failed display error message
 
-        while(i<5) {
+
             try {
                 desktop.open(file);
-                break;
-            } catch (IOException e) {
+
+            } catch (IOException  | IllegalArgumentException e) {
                 Controller.showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Directory Error", "Cannot open reports directory.");
-                i++;
+
             }
-            catch(IllegalArgumentException e){
-                break; //check m3a william
-            }
-        }
+
 
         stage.close();
 

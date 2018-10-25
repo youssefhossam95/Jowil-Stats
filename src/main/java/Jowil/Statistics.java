@@ -36,7 +36,7 @@ public class Statistics {
 //    public static final int IDMODE=0,NAMEMODE=1,AUTOMODE=2;
 //    private static int identifierMode=AUTOMODE;
     private static ArrayList<String> studentNames;
-    private static ArrayList<String> studentIDs;
+
     private static ArrayList<Double> studentScores;
     private static ArrayList<Integer> studentForms; //zero based form number for each student
     private static ArrayList<ArrayList<Double>> questionWeights; //form vs question weights
@@ -58,7 +58,7 @@ public class Statistics {
     private static boolean allowExceedMaxScore = true ;
     private static double epslon = 0.0000001 ;
     private static boolean addBonusToAll;
-
+    private static boolean isIdentifierNumeric;
     private static ArrayList<Double> subjMaxScores;
     private static ArrayList<ArrayList<Double>> formsScors ;
     private static ArrayList<ArrayList<ArrayList<Integer>>> birnaryStudentResponses; // for each form for each question for each student 1 if he got the correct answer else 0
@@ -72,9 +72,6 @@ public class Statistics {
         Statistics.studentNames = studentNames;
     }
 
-    public static void setStudentIDs(ArrayList<String> studentIDs) {
-        Statistics.studentIDs = studentIDs;
-    }
 
     public static void setStudentForms(ArrayList<Integer> studentForms) {
         Statistics.studentForms = studentForms;
@@ -160,9 +157,7 @@ public class Statistics {
         return studentNames;
     }
 
-    public static ArrayList<String> getStudentIDs() {
-        return studentIDs;
-    }
+
 
     public static ArrayList<Integer> getStudentForms() {
         return studentForms;
@@ -218,6 +213,15 @@ public class Statistics {
     public static int getNumberOfStudents (){
         return studentScores.size() ;
     }
+
+    public static boolean isIsIdentifierNumeric() {
+        return isIdentifierNumeric;
+    }
+
+    public static void setIsIdentifierNumeric(boolean isIdentifierNumeric) {
+        Statistics.isIdentifierNumeric = isIdentifierNumeric;
+    }
+
 
     public static Double getPassingPercent() {
         int gradeIndex =1 ;
@@ -1399,6 +1403,8 @@ public class Statistics {
         }
         return formsData ;
     }
+
+
 
 }
 

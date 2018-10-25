@@ -875,9 +875,24 @@ public class StartController extends Controller{
 
         radiosHBox.getChildren().addAll(testRadio,questRadio);
 
+        contentVBox.setAlignment(Pos.BOTTOM_LEFT);
 
+        Pane emptyPane=new Pane();
+        emptyPane.setBackground(Background.EMPTY);
+        emptyPane.setPrefHeight(0);
+        emptyPane.setPrefWidth(10);
+        JFXCheckBox translateFormCheckBox=new JFXCheckBox("محتويات نموذج الإجابة باللغة العربية",15);
+        translateFormCheckBox.setStyle("-jfx-checked-color: #095c90;");
+        translateFormCheckBox.setPadding(new Insets(resX*12/1280,0,0,resX*12/1280));
+        translateFormCheckBox.setSelected((Boolean)generalPrefsJson.get(IS_TRANSLATE_FORM_CONTENT_JSON_KEY));
+        translateFormCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            generalPrefsJson.put(IS_TRANSLATE_FORM_CONTENT_JSON_KEY,newValue);
+        }));
 
         contentVBox.getChildren().addAll(textHBox,radiosHBox);
+
+        if(isTranslationMode)
+            contentVBox.getChildren().addAll(translateFormCheckBox);
 
         dialog.getDialogPane().setContent(contentVBox);
         dialog.getDialogPane().setStyle("-fx-font-size:"+resX*12/1280);
@@ -922,6 +937,7 @@ public class StartController extends Controller{
                 Controller.isOpenMode=false;
                 Controller.currentOpenedProjectJson=null;
                 Controller.isQuestMode=questRadio.isSelected();
+                Controller.isTranslateFormContent=isTranslationMode?translateFormCheckBox.isSelected():false;
                 new FileConfigController().startWindow();
             }
         }
@@ -1047,6 +1063,7 @@ public class StartController extends Controller{
         JSONArray projects=(JSONArray)savedProjectsJson.get("projects");
         currentOpenedProjectJson= (JSONObject)projects.get(projIndex);
         Controller.isQuestMode=(Boolean)currentOpenedProjectJson.get(IS_QUEST_MODE_JSON_KEY);
+        Controller.isTranslateFormContent=(Boolean)currentOpenedProjectJson.get(IS_TRANSLATE_FORM_CONTENT_JSON_KEY);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {

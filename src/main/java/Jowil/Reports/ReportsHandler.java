@@ -1,9 +1,6 @@
 package Jowil.Reports;
 
-import Jowil.GradeBoundariesController;
-import Jowil.ReportProgressWindow;
-import Jowil.Statistics;
-import Jowil.Utils;
+import Jowil.*;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import javafx.embed.swing.SwingFXUtils;
@@ -47,11 +44,13 @@ public class ReportsHandler {
     static volatile boolean showPDFPagesProgress;
 
     public ReportsHandler(){
-        isTestMode=false;
+        this(false);
     }
     public ReportsHandler(boolean isTestMode){
         ReportsHandler.isTestMode=isTestMode;
+        translateFormContentToArabic();
     }
+
 
 
     public  void setIsStopReportsGeneration(boolean isStopReportsGeneration) {
@@ -216,5 +215,30 @@ public class ReportsHandler {
 
    }
 
+    private void translateFormContentToArabic() {
+        if(!Controller.isIsTranslateFormContent())
+            return;
+
+
+        translateArray(Statistics.getQuestionsChoices());
+        translateArray(Statistics.getCorrectAnswers());
+        translateArray(Statistics.getStudentAnswers());
+
+
+        if(Statistics.isIsIdentifierNumeric()){
+            for(int i=0;i<Statistics.getStudentIdentifier().size();i++)
+                Statistics.getStudentIdentifier().set(i,Translator.englishToArabic(Statistics.getStudentIdentifier().get(i)));
+        }
+
+    }
+
+    private void translateArray(ArrayList<ArrayList<String>> array) {
+        for(int i=0;i<array.size();i++){
+            for(int j=0;j<array.get(i).size();j++){
+                String translated=Translator.englishToArabic(array.get(i).get(j));
+                array.get(i).set(j,translated);
+            }
+        }
+    }
 
 }
