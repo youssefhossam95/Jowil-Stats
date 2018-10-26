@@ -68,8 +68,8 @@ public class ReportChartsTest extends Application {
                 formats.add(ReportsHandler.HTML) ;
                 formats.add(ReportsHandler.PDF);
 //                formats.add(ReportsHandler.PRINTABLE_PDF) ;
-//                formats.add(ReportsHandler.TXT) ;
-//                formats.add(ReportsHandler.CSV);
+                formats.add(ReportsHandler.TXT) ;
+                formats.add(ReportsHandler.CSV);
 //                formats.add(ReportsHandler.TSV) ;
 //                formats.add(ReportsHandler.WORD) ;
 //                formats.add(ReportsHandler.XLS) ;

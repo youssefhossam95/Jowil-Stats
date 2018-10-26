@@ -1,5 +1,6 @@
 package Jowil.Reports.Utils;
 
+import Jowil.Translator;
 import Jowil.Utils;
 
 import java.io.FileNotFoundException;
@@ -65,8 +66,10 @@ public class CsvUtils {
 
     public static  String generateTable(ArrayList<ArrayList<String>> table, char separator , String title)  {
 
+        if(table.size()>1&& Utils.checkListContainArabic(table.get(1)) ) {
+            table = Translator.translateTable(table) ;
+        }
         String tableCsv = "";
-
         if(!title.equals(""))
             tableCsv += title+NEW_LINE ;
         for (ArrayList<String> tableRow : table)
