@@ -935,6 +935,7 @@ public class ManualModeController extends Controller{
         Button closeButt=((Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE));
         closeButt.setText("Cancel");
 
+        alert.setGraphic(new ImageView("Images/Error_48px.png"));
 
         processDialog(alert);
         Optional<ButtonType> result = alert.showAndWait();

@@ -27,12 +27,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import org.apache.commons.math3.stat.inference.TestUtils;
 
-import javax.swing.text.html.ImageView;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -137,7 +138,7 @@ public class GroupsController  extends Controller{
         backButton.setOnMouseClicked(event -> {
 
             rootPane.requestFocus();
-            if(ManualModeController.isIsManualModeUsedBefore()){
+            if((Boolean)generalPrefsJson.get(ASK_CONTINUE_FILE_CONFIG_JSON_KEY)){
                 if(!showConfirmBack())
                     return;
             }
@@ -607,24 +608,24 @@ public class GroupsController  extends Controller{
 
     private boolean showConfirmBack() {
 
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Continue to File Configuration");
-        alert.setHeaderText(null);
-        alert.setContentText("Going back to file configuration may reset some of the" +
-                " changes made in manual configuration. Are you sure you want to continue to file configuration?");
+        Dialog dialog= new Dialog();
+        dialog.setTitle("Continue to File Configuration");
+        dialog.setHeaderText(null);
+        dialog.setGraphic(new ImageView("Images/Error_48px.png"));
+        Label label=new Label("Going back to file configuration may reset some of the" +
+                "\nchanges you made to this project. Are you sure you want\nto continue to file configuration?");
 
-        alert.getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
-        Button okButt=(Button)alert.getDialogPane().lookupButton(ButtonType.OK);
-        okButt.setText("Yes");
-        Button cancelButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CANCEL);
-        cancelButt.setText("No");
-
-        alert.initOwner(stage.getOwner());
-        processDialog(alert);
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
-        Optional<ButtonType> option = alert.showAndWait();
-
-        return option.isPresent() && option.get() == ButtonType.OK;
+        JFXCheckBox checkBox=new JFXCheckBox("Don't ask me again",14);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            generalPrefsJson.put(ASK_CONTINUE_FILE_CONFIG_JSON_KEY,!newValue);
+        });
+        checkBox.setStyle("-jfx-checked-color: #095c90;");
+        VBox vbox=new VBox(8,label,checkBox);
+        dialog.getDialogPane().getButtonTypes().setAll(ButtonType.YES,ButtonType.NO);
+        dialog.getDialogPane().setContent(vbox);
+        processDialog(dialog);
+        Optional<ButtonType> option = dialog.showAndWait();
+        return option.isPresent() && option.get() == ButtonType.YES;
     }
 }
 

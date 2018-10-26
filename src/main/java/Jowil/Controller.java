@@ -124,7 +124,8 @@ public abstract class Controller {
             SAVED_INFO_HEADERS_JSON_KEY="infoHeaders",FORMS_COUNT_JSON_KEY="formsCount",PROJECT_NAME_JSON_KEY="name", ALLOW_EXCEED_FULL_MARK_JSON_KEY="allowExceedFullMark",
             BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore",SCALES_JSON_KEY="scales",IS_TRANSLATION_MODE_JSON_KEY="isTranslationMode",
             IS_NORMAL_SCALING_MODE_JSON_KEY="isNormalScalingMode",ADD_BONUS_TO_ALL_JSON_KEY="addBonusToAll",IS_QUEST_MODE_JSON_KEY="isQuestMode",
-            ACTIVATION_KEY_JSON_KEY="activationKey",IS_FIRST_LAUNCH_JSON_KEY="isFirstLaunch",IS_TRANSLATE_FORM_CONTENT_JSON_KEY="isTranslateFormContent";
+            ACTIVATION_KEY_JSON_KEY="activationKey",IS_FIRST_LAUNCH_JSON_KEY="isFirstLaunch",IS_TRANSLATE_FORM_CONTENT_JSON_KEY="isTranslateFormContent",
+            ASK_CONTINUE_FILE_CONFIG_JSON_KEY="askContinueFileConfig";
 
 
     //Main methods

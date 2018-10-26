@@ -975,6 +975,8 @@ public class FileConfigController extends Controller {
         ButtonType close = ButtonType.CLOSE;
 
 
+        alert.setGraphic(new ImageView("Images/Error_48px.png"));
+
 
         alert.getButtonTypes().setAll(yesButton,skipRowButton, close);
 

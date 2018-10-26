@@ -23,7 +23,7 @@
             <children>
 
                 <HBox spacing="0" AnchorPane.rightAnchor="0">
-                    <StackPane fx:id="minusButton" styleClass="toolBarButton" prefWidth="47" prefHeight="40">
+                    <StackPane fx:id="minusButton" styleClass="toolBarButton" prefWidth="50" prefHeight="40">
                         <children>
                             <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
                                 <image>
@@ -32,7 +32,7 @@
                             </ImageView>
                         </children>
                     </StackPane>
-                <StackPane fx:id="closeButton"  prefWidth="47" prefHeight="40" >
+                <StackPane fx:id="closeButton"  prefWidth="50" prefHeight="40" >
                     <children>
                         <ImageView fx:id="closeImageView" pickOnBounds="true" preserveRatio="true" fitWidth="20" fitHeight="20">
                             <image>
@@ -42,7 +42,7 @@
                     </children>
                 </StackPane>
                 </HBox>
-                <StackPane fx:id="settingsButton" style="-fx-background-color:transparent;-fx-border-width:0" prefWidth="40" prefHeight="40" AnchorPane.rightAnchor="27" AnchorPane.topAnchor="53">
+                <StackPane fx:id="settingsButton" style="-fx-background-color:transparent;-fx-border-width:0" prefWidth="40" prefHeight="40" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="53">
                     <children>
                         <ImageView fx:id="settingsImageView" pickOnBounds="true" preserveRatio="true" fitWidth="25" fitHeight="25">
                             <image>
