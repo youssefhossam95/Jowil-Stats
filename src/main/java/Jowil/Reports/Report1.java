@@ -193,7 +193,7 @@ public class Report1 extends Report{
         Scene scene  = new Scene(bc,1000,700);
 
 
-        scene.getStylesheets().add("reports/report1/style.css");
+        scene.getStylesheets().add("data/reports/report1/style.css");
         bc.applyCss();
         bc.layout();
         stage.setScene(scene);

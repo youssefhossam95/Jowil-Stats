@@ -137,7 +137,7 @@ public class Report6 extends Report {
             bc.setAnimated(false);
             Scene scene = new Scene(bc, 800, 600);
 
-            scene.getStylesheets().add("reports/report6/style.css");
+            scene.getStylesheets().add("data/reports/report6/style.css");
             bc.applyCss();
             bc.layout();
             stage.setScene(scene);

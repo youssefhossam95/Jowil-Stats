@@ -166,7 +166,7 @@ public class Report8 extends Report {
                     n.getStyleClass().add("bad");
                 }
                 Scene scene = new Scene(lc);
-                scene.getStylesheets().add("reports/report8/style.css");
+                scene.getStylesheets().add("data/reports/report8/style.css");
                 lc.applyCss();
                 lc.layout();
                 stage.setScene(scene);
