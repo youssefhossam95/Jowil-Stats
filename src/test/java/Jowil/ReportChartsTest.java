@@ -57,8 +57,8 @@ public class ReportChartsTest extends Application {
 //                reports.add(new Report1(rescourcesPath)) ;
                 reports.add(new Report2(rescourcesPath)) ;
 //                reports.add(new Report3(rescourcesPath));
-                reports.add(new Report4(rescourcesPath)) ;
-                reports.add(new Report5(rescourcesPath)) ;
+//                reports.add(new Report4(rescourcesPath)) ;
+//                reports.add(new Report5(rescourcesPath)) ;
 //                reports.add(new Report6(rescourcesPath)) ;
 //                reports.add(new Report7(rescourcesPath)) ;
 //                reports.add(new Report8(rescourcesPath)) ;
@@ -68,8 +68,8 @@ public class ReportChartsTest extends Application {
                 formats.add(ReportsHandler.HTML) ;
                 formats.add(ReportsHandler.PDF);
 //                formats.add(ReportsHandler.PRINTABLE_PDF) ;
-                formats.add(ReportsHandler.TXT) ;
-                formats.add(ReportsHandler.CSV);
+//                formats.add(ReportsHandler.TXT) ;
+//                formats.add(ReportsHandler.CSV);
 //                formats.add(ReportsHandler.TSV) ;
 //                formats.add(ReportsHandler.WORD) ;
 //                formats.add(ReportsHandler.XLS) ;
