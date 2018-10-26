@@ -111,7 +111,7 @@ public class Utils {
     }
 
     public static boolean checkStringEnglish(String s){
-        return s.replaceAll("[ +-]","").matches("\\w+");
+        return s.replaceAll("[ +-\\.%*]","").matches("\\w+");
     }
     public  static boolean checkListContainArabic(ArrayList<String> list) {
         for(String s :list) {

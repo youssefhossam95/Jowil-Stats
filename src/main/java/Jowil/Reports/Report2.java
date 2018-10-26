@@ -40,13 +40,22 @@ public class Report2 extends Report {
 
 
     public Report2(){
+        constructor();
+    }
+
+    public Report2 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 
-        private Document generatePdfHtml(boolean isPrintable) throws IOException {
+
+    private Document generatePdfHtml(boolean isPrintable) throws IOException {
             File file = new File(templatePath);
             Document doc = Jsoup.parse(file, "UTF-8");
 

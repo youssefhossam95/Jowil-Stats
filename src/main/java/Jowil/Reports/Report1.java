@@ -54,6 +54,13 @@ public class Report1 extends Report{
     volatile boolean chartsReady = false ;
     volatile boolean arabicTextReady = false ;
     public Report1(){
+      constructor();
+    }
+    public Report1 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Grades Distribution Report" ;
         workSpacePath = reportsPath + "report1\\" ;
         templatePath = workSpacePath + "report1Template.html";
@@ -61,8 +68,6 @@ public class Report1 extends Report{
         report1ImgFullPath =  workSpacePath.replace("." , "") + "GradesDistributionHistogram.png" ;
         while (!chartsReady);
     }
-
-
     /**
      * this function is called before the constructor
      * get the statistical calculations for statistics calss

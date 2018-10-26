@@ -190,15 +190,15 @@ public class Test {
     public static void main(String [] args) throws IOException, DocumentException {
 
 
-        initAllChars();
-//        long l = Long.parseLong("10bh"  ,16) ;
-//        System.out.println(l);
-//        System.out.println(getSerialNumber());
-        String volSerial = getVolSerialNumber("") ;
-        System.out.println("Serial Number: "+volSerial);
-        String activation = getActivationKey(Long.parseLong(volSerial , 16) ) ;
+//        initAllChars();
+//
+//        String volSerial = getVolSerialNumber("") ;
+//        System.out.println("Serial Number: "+volSerial);
+//        String activation = getActivationKey(Long.parseLong(volSerial , 16) ) ;
+//
+//        System.out.println("Activation Key: " + activation);
 
-        System.out.println("Activation Key: " + activation);
+        System.out.println(Utils.checkStringEnglish("9.9")) ;
 //        String s = "D+";
 //        System.out.println(s.matches("\\w+"));
 //        allChars.add('x');

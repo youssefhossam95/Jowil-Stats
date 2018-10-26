@@ -32,6 +32,15 @@ public class Report7 extends Report {
     String goodJobMsg = "Good job! The test has no bad questions.";
 
     public Report7(){
+       constructor();
+    }
+
+
+    public Report7 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Questions Insights Report" ;
         workSpacePath = reportsPath + "report7\\" ;
         templatePath = workSpacePath + "report7Template.html";

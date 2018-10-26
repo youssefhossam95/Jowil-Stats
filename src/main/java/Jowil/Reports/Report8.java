@@ -45,13 +45,21 @@ public class Report8 extends Report {
     String imgName ="GradualityChart";
 
     public Report8(){
+     constructor();
+    }
+
+
+    public Report8 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         workSpacePath = reportsPath + "report8\\" ;
         templatePath = workSpacePath + "report8Template.html";
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         imagesFullPath =  workSpacePath  ;
         while (!chartsReady) ;
     }
-
 
     public Document generatePdfHtml () throws IOException {
         File file = new File(templatePath);

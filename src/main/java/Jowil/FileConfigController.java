@@ -232,9 +232,9 @@ public class FileConfigController extends Controller {
         }
 
         if(!isOpenMode && isDevMode){
-            mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\Test.csv");
+            mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloStudentAnswers.csv");
             if(!isQuestMode)
-                answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeys.csv");
+                answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloAnswerKeys.csv");
         }
 
 

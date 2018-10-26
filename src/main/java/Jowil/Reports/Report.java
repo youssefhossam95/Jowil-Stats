@@ -59,17 +59,17 @@ abstract public class Report {
 
     public final static int REPORTS_COUNT=8;
 
+    public void setResourcesPath(String resourcesPath) {
+        this.resourcesPath = resourcesPath;
+        reportsPath=  resourcesPath+ "reports\\";
+    }
 
     volatile boolean arabicTextReady = false ;
     protected Map<String,String> defaultGradesTranslation ;
 
-    Report() {
+    private void constructor (String resourcesPath){
         try {
-           resourcesPath= Controller.getDataDirPath() ;
-//            resourcesPath = "E:\\work\\Jowil\\Jowil-Stats\\src\\main\\resources\\";
-//                    URLDecoder.decode(Report.class.getResource("../../").getPath(),"utf-8");
-//            resourcesPath= resourcesPath.substring(0 , resourcesPath.length()-8) ;
-//            System.out.println("fuck this fucken shit"+resourcesPath);
+            this.resourcesPath= resourcesPath ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +80,12 @@ abstract public class Report {
         this.outputFileName=this.getClass().getSimpleName()+" - "+this.reportTitle;
         initTranslationMap();
     }
-
+    Report() {
+        constructor(Controller.getDataDirPath());
+    }
+    Report( String resourcesPath) {
+        constructor(resourcesPath);
+    }
     private void initTranslationMap() {
         defaultGradesTranslation = new HashMap<>();
         defaultGradesTranslation.put("ضعيفجدا" , "Very Weak") ;
@@ -138,7 +143,8 @@ abstract public class Report {
         //Flying Saucer part
         ITextRenderer renderer = new ITextRenderer(ReportsHandler.isTestMode);
 
-//        renderer.getFontResolver().addFont(resourcesPath+"font\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+//        System.out.println(resourcesPath);
+        renderer.getFontResolver().addFont(resourcesPath+"font\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         renderer.setDocument(url);
         renderer.layout();
         renderer.createPDF(out);
@@ -225,12 +231,16 @@ abstract public class Report {
             thisRowClasses += i%2==1?onOffRowClass:""  ;
             thisRowClasses += i==tableData.size()-1? lastRowClass:"" ;
 
+
             tableHtml += "<tr class= '"+ thisRowClasses +"' > \n" ;
             ArrayList<String> tableRow = tableData.get(i);
             for(int cellIndex = 0 ; cellIndex <tableData.get(0).size() ; cellIndex ++ ) {
                 Map<String , String > cellData = parseCellData(tableRow.get(cellIndex));
-                tableHtml += "   <td "+ cellData.get("attributes")+" class='" + commonDataClass + " " +cellData.get("class")+"'>"
-                        +cellData.get("data") + "</td> \n";
+                String arabicClass = "" ;
+                if(!Utils.checkStringEnglish(cellData.get("data")))
+                    arabicClass = " arabic-font" ;
+                tableHtml += "   <td "+ cellData.get("attributes")+" class='" + commonDataClass + " " +cellData.get("class")
+                        + arabicClass + "'>" +cellData.get("data") + "</td> \n";
             }
             tableHtml+= "</tr>" ;
         }
