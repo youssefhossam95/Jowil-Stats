@@ -423,7 +423,7 @@ public class Report5 extends Report {
                     WordUtils.addHeaderLine(document, group.getCleanedName());
                 }else
                 {
-                    if(remainingRows!=0)
+                    if(remainingRows>0)
                         WordUtils.addPageBreak(document);
                     remainingRows = BLANK_PAGE_ROWS ;
                     WordUtils.addHeaderLine(document, group.getCleanedName());

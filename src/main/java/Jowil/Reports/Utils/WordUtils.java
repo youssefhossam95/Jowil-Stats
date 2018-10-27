@@ -277,7 +277,7 @@ public class WordUtils {
         return docTable ;
     }
 
-    public static void parseCellClass( XWPFTableCell cell ,  String cellClassesString) {
+    public static void parseCellClass( XWPFTableCell cell , XWPFRun run ,   String cellClassesString) {
         String [] cellClasses = cellClassesString.split(" ") ;
         ArrayList<String> cellClassesList = new ArrayList<>();
         for(int i =0 ; i < cellClasses.length ; i++)
@@ -289,6 +289,8 @@ public class WordUtils {
             cell.setColor("ffe44d");
         if(cellClassesList.contains("green"))
             cell.setColor("71e08d");
+        if(cellClassesList.contains("bold"))
+            run.setBold(true);
     }
     /**
      * function to take cell data and parse it then it puts the parsed data in the cell
@@ -298,6 +300,7 @@ public class WordUtils {
     public static XWPFRun processCellData (XWPFTableCell cell , XWPFParagraph cellParagraph , String cellData ) throws IOException, InvalidFormatException {
 
         String cellText = cellData ; // the normal case no classes
+        XWPFRun run = cellParagraph.createRun();
         if(cellData.length()>7 && cellData.substring(0 , 5).equals("<<img")){
             String [] parts = cellData.split(">>");
             String imgPath = parts[1] ;
@@ -310,13 +313,10 @@ public class WordUtils {
             String [] parts = cellData.split(";");
             cellText = parts[0] ;
             String cellClass= parts[1] ;
-            parseCellClass(cell , cellClass);
+            parseCellClass(cell , run ,  cellClass);
         }
-
-        XWPFRun run = cellParagraph.createRun();
         run.setText(cellText);
         return run;
-
     }
     public static  void setTableAlign(XWPFTable table,ParagraphAlignment align) {
         CTTblPr tblPr = table.getCTTbl().getTblPr();
