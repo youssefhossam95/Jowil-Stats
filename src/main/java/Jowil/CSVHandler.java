@@ -847,7 +847,7 @@ public class CSVHandler {
 
 
         // question headers and Groups creations
-        int expectedIndex = 1, digitBegin = 0,currentGroupCount=0,qIndex=0;
+        int expectedIndex = 1, digitBegin = 0,currentGroupCount=0,qIndex=0,currentGroupRealCount=0;
         String currentGroup = "";
 
         for (; i < scoresStartIndex; i++) {
@@ -855,8 +855,9 @@ public class CSVHandler {
             if ((digitBegin = headers[i].lastIndexOf(Integer.toString(expectedIndex))) == -1) { //expected not found -> either end of group or weird column
                 if ((digitBegin = headers[i].lastIndexOf("1")) == -1)//a weird column
                     break;
-                detectedGroups.add(new Group(currentGroup, currentGroupCount));
+                detectedGroups.add(new Group(currentGroup, currentGroupCount,currentGroupRealCount));
                 currentGroupCount=0;
+                currentGroupRealCount=0;
                 expectedIndex = 1;
             }
             currentGroup = headers[i].substring(0, digitBegin);
@@ -868,10 +869,11 @@ public class CSVHandler {
                 detectedQHeaders.add(headers[i]);
                 currentGroupCount++;
             }
+            currentGroupRealCount++;
             qIndex++;
         }
 
-        detectedGroups.add(new Group(currentGroup, currentGroupCount)); //add last group
+        detectedGroups.add(new Group(currentGroup, currentGroupCount,currentGroupRealCount)); //add last group
 
 
         //find sub score start and end indices(if exist)
@@ -1006,7 +1008,7 @@ public class CSVHandler {
 
         int qIndex=0;
         for(ColumnSet columnSet:objColSets){
-            int nextQ=1,groupQCount=0;
+            int nextQ=1,groupQCount=0,groupRealQCount=0;
             String groupName=columnSet.getName();
 
             for(int i=0;i<columnSet.getMySize();i++){
@@ -1014,10 +1016,11 @@ public class CSVHandler {
                     detectedQHeaders.add(groupName+nextQ);
                     groupQCount++;
                 }
+                groupRealQCount++;
                 nextQ++;
                 qIndex++;
             }
-            detectedGroups.add(new Group(groupName,groupQCount));
+            detectedGroups.add(new Group(groupName,groupQCount,groupRealQCount));
         }
 
 

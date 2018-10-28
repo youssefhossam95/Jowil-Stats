@@ -371,11 +371,11 @@ public class ManualModeController extends Controller{
         if(CSVHandler.getDetectedGroups()!=null) {
             for (Group group : CSVHandler.getDetectedGroups()) {
                 String nextColor = colorGen.getNextColor();
-                columnSets.add(new ColumnSet(group.getCleanedName(), nextColor, currentGroupStart, group.getqCount(), this, OBJECTIVE_TYPE));
-                for (int i = currentGroupStart; i < currentGroupStart + group.getqCount(); i++)
+                columnSets.add(new ColumnSet(group.getCleanedName(), nextColor, currentGroupStart, group.getRealQCount(), this, OBJECTIVE_TYPE));
+                for (int i = currentGroupStart; i < currentGroupStart + group.getRealQCount(); i++)
                     colColors.get(i).set(nextColor);
 
-                currentGroupStart += group.getqCount();
+                currentGroupStart += group.getRealQCount();
             }
         }
 
