@@ -300,7 +300,7 @@ public abstract class Controller {
                 if(translations.containsKey(stage.getTitle()))
                     stage.setTitle(translations.get(stage.getTitle()));
 
-                progressImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                //progressImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             }
 
             if(this instanceof StartController)
@@ -349,7 +349,7 @@ public abstract class Controller {
             }
         }
 
-        
+
         progressImage.setFitWidth(resX*0.25);
         progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
 
