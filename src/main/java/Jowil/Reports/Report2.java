@@ -169,8 +169,11 @@ public class Report2 extends Report {
     private void fillResponseFreqHeaders(Document doc , int questionIndex) {
         String questionChoicesHtml = "" ;
         ArrayList<String> questionChoices =  Statistics.getSpecificQuestionChoices(questionIndex) ;
+        String addedClass = "" ;
+        if(Utils.checkListContainArabic(questionChoices))
+            addedClass =  "arabic-font";
         for(String qChoice: questionChoices )
-            questionChoicesHtml+= "<th>" +qChoice+ "</th>\n";
+            questionChoicesHtml+= "<th class='"+addedClass+"'>" +qChoice+ "</th>\n";
         doc.select("th.total").last().before(questionChoicesHtml);
         doc.select("th.responseFreq").last().attr("colspan" , String.valueOf(questionChoices.size())) ;
 
