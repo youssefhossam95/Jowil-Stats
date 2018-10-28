@@ -232,9 +232,9 @@ public class FileConfigController extends Controller {
         }
 
         if(!isOpenMode && isDevMode){
-            mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloStudentAnswers.csv");
+            mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
             if(!isQuestMode)
-                answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\WelloAnswerKeys.csv");
+                answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnlyWithEndProgressiveBlanks.csv");
         }
 
 
@@ -517,7 +517,8 @@ public class FileConfigController extends Controller {
         for (Object group : jsonGroups) {
             String name = (String) ((JSONObject) group).get("name");
             String qCount = (String) ((JSONObject) group).get("qCount");
-            groups.add(new Group(name, Integer.parseInt(qCount)));
+            String realQCount= (String) ((JSONObject) group).get("realQCount");
+            groups.add(new Group(name, Integer.parseInt(qCount),Integer.parseInt(realQCount)));
         }
         CSVHandler.setDetectedGroups(groups);
     }
@@ -844,7 +845,7 @@ public class FileConfigController extends Controller {
         if (groupSize > 3 || isComplexIDAdded) { //if a complexID occurred before or consider this a questions group
             if (idGroups.size() == 0) //start of questions groups
                 CSVHandler.setQuestionsColStartIndex(idEnd - groupSize);
-            idGroups.add(new Group(currentGroup, groupSize));
+            idGroups.add(new Group(currentGroup, groupSize,groupSize));
         } else {
             isComplexIDAdded = true;
             complexIdStartIndex = idEnd - groupSize;

@@ -993,6 +993,7 @@ public class GradeBoundariesController extends Controller {
             JSONObject groupObj=new JSONObject();
             groupObj.put("name",group.getName());
             groupObj.put("qCount",Integer.toString(group.getqCount()));
+            groupObj.put("realQCount",Integer.toString(group.getRealQCount()));
             jsonGroups.add(groupObj);
         }
         projObject.put(OBJ_GROUPS_JSON_KEY,jsonGroups);

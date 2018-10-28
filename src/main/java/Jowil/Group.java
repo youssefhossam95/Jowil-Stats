@@ -12,6 +12,7 @@ public class Group extends RecursiveTreeObject<Group> {
     //fields
     final private String name;
     final private Integer qCount;
+    final private Integer realQCount; //number of questions including those blanked in answers keys
     final private SimpleStringProperty nameProp;
     final private SimpleStringProperty qCountProp;
     private ArrayList<String> possibleAnswers;
@@ -20,9 +21,10 @@ public class Group extends RecursiveTreeObject<Group> {
 
 
 
-    Group(String name, int qCount){
+    Group(String name, int qCount,int realQCount){
         this.name=name;
         this.qCount=qCount;
+        this.realQCount=realQCount;
         nameProp=new SimpleStringProperty(name);
         qCountProp=new SimpleStringProperty(Integer.toString(qCount));
         correctAnswers=new HashSet<>();
@@ -31,6 +33,7 @@ public class Group extends RecursiveTreeObject<Group> {
     Group(Group original){
         this.name=original.name;
         this.qCount=original.qCount;
+        this.realQCount=original.realQCount;
         this.nameProp=original.nameProp;
         this.qCountProp=original.qCountProp;
         this.isNumeric=original.isNumeric;
@@ -99,6 +102,9 @@ public class Group extends RecursiveTreeObject<Group> {
         return correctAnswers;
     }
 
+    public Integer getRealQCount() {
+        return realQCount;
+    }
 
     public void setCorrectAnswers(HashSet<String> correctAnswers) {
         this.correctAnswers = correctAnswers;
