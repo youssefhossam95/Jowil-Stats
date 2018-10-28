@@ -53,7 +53,7 @@
                 </StackPane>
                 <ImageView fx:id="logoImageView" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../Images/logojsSmall.png" />
+                        <Image url="@../Images/logoJS.png" />
                     </image>
                 </ImageView>
                 <Label fx:id="jowilLabel" text="Jowil Stats" textFill="black" >

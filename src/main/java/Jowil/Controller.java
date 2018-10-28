@@ -132,6 +132,9 @@ public abstract class Controller {
 
     Controller(String fxmlName, String myTitle, double XSCALE , double YSCALE, boolean isResizable,Controller back,String progressImageName,int stepIndex,String stepName,double minWidth,double minHeight){
         this(fxmlName,myTitle,XSCALE,YSCALE,isResizable,back,true,false,minWidth,minHeight);
+
+        if(isTranslationMode)
+            progressImageName=progressImageName.charAt(0)+"arabic"+".png";
         progressImage=new ImageView(new Image("Images/"+progressImageName));
         this.stepIndex=stepIndex;
         this.stepCounterIndicator.setProgress((int)(stepIndex/4.0*100));
@@ -711,6 +714,7 @@ public abstract class Controller {
     public static void processDialog(Dialog dialog){
 
 
+        ((Stage)(dialog.getDialogPane().getScene().getWindow())).getIcons().add(new Image("Images/jsIcon.png"));
         if(isTranslationMode){
             DialogPane dialogPane=dialog.getDialogPane();
             String title=dialog.getTitle();

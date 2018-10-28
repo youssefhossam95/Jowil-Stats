@@ -127,7 +127,7 @@ public class FileConfigController extends Controller {
     FileConfigController() {
 
 
-        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,(isQuestMode?"quest":"")+"1.png",0,"Files Configuration",resX*700/1280, Integer.MAX_VALUE);
+        super("FileConfig.fxml", "File configuration", 1.6, 1.45, true, null,"1.png",0,"Files Configuration",resX*700/1280, Integer.MAX_VALUE);
 
 
     }
