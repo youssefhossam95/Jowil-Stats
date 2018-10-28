@@ -40,20 +40,29 @@ public class Report2 extends Report {
 
 
     public Report2(){
+        constructor();
+    }
+
+    public Report2 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + "report2Template.html";
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 
-        private Document generatePdfHtml(boolean isPrintable) throws IOException {
+
+    private Document generatePdfHtml(boolean isPrintable) throws IOException {
             File file = new File(templatePath);
             Document doc = Jsoup.parse(file, "UTF-8");
 
             updateTemplateFooter(doc); // updates the date of the footer to the current date
 
-            final int ROWS_IN_BLANK_PAGE = 35 ;
-            final int ROWS_IN_FIRST_PAGE = 14 ;
+            final int ROWS_IN_BLANK_PAGE = 29 ;
+            final int ROWS_IN_FIRST_PAGE = 12 ;
             final int NUMBER_OF_ROWS_FOR_TABLE_HEADER = 4 ;
 
             final int MINIMUM_REMAINING_ROWS = 4 +NUMBER_OF_ROWS_FOR_TABLE_HEADER;
@@ -92,7 +101,7 @@ public class Report2 extends Report {
                     if (questionIndex != 0) {
 
                         //check if page break is needed
-                        if (remainingRows < MINIMUM_REMAINING_ROWS  +  NUMBER_OF_ROWS_FOR_TABLE_HEADER) {
+                        if (remainingRows < MINIMUM_REMAINING_ROWS  +  NUMBER_OF_ROWS_FOR_TABLE_HEADER -1 ) {
                             doc.select("table").last().after(pageBreakHtml);
                             doc.select("div.page-break").last().after(lineHtml) ;
                             doc.select("span.group-title").last().text(groups.get(groupIndex).getCleanedName());
@@ -100,7 +109,7 @@ public class Report2 extends Report {
                             doc.select("div.line").last().after(tableHtml);
 
                         } else {
-                            remainingRows -= NUMBER_OF_ROWS_FOR_TABLE_HEADER *2;
+                            remainingRows -= (NUMBER_OF_ROWS_FOR_TABLE_HEADER *2-1);
                             doc.select("table").last().after(lineHtml) ;
                             doc.select("span.group-title").last().text(groups.get(groupIndex).getCleanedName());
                             doc.select("div.line").last().after(tableHtml);

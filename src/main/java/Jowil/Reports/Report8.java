@@ -45,13 +45,21 @@ public class Report8 extends Report {
     String imgName ="GradualityChart";
 
     public Report8(){
+     constructor();
+    }
+
+
+    public Report8 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         workSpacePath = reportsPath + "report8\\" ;
         templatePath = workSpacePath + "report8Template.html";
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
         imagesFullPath =  workSpacePath  ;
         while (!chartsReady) ;
     }
-
 
     public Document generatePdfHtml () throws IOException {
         File file = new File(templatePath);
@@ -158,7 +166,7 @@ public class Report8 extends Report {
                     n.getStyleClass().add("bad");
                 }
                 Scene scene = new Scene(lc);
-                scene.getStylesheets().add("reports/report8/style.css");
+                scene.getStylesheets().add("data/reports/report8/style.css");
                 lc.applyCss();
                 lc.layout();
                 stage.setScene(scene);

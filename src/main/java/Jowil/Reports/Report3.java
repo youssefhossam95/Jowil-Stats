@@ -28,13 +28,19 @@ public class Report3 extends Report {
     String[] tablesTitles = {"Test Insights", "Test Data", "Basic Statistics", "Dispersion", "Confidence Intervals", "Test Reliability"};
 
     public Report3(){
+        constructor();
+    }
+    public Report3 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle=  "Test Statistics Report" ;
         workSpacePath = reportsPath + "report3\\" ;
         templatePath = workSpacePath + "report3Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
     }
-
-    private void fillHtmlWithMap (Document doc , Map<String , String> statsMap){
+ private void fillHtmlWithMap (Document doc , Map<String , String> statsMap){
 
         doc.select("td.NumberOfObjectiveQuestions").last().text(statsMap.get("Number of Objective Questions")) ;
         doc.select("td.NumberOfSubjectiveQuestions").last().text(statsMap.get("Number of Subjective Questions")) ;

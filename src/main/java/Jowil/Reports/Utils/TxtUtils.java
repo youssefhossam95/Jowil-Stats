@@ -1,5 +1,6 @@
 package Jowil.Reports.Utils;
 
+import Jowil.Translator;
 import Jowil.Utils;
 
 import java.io.FileNotFoundException;
@@ -11,6 +12,7 @@ import static org.apache.commons.math3.stat.StatUtils.sum;
 public class TxtUtils {
 
     public static String newLine = "\r\n" ;
+
 
     public static ArrayList<Integer> calcCellsWidths ( ArrayList<ArrayList<String>>  table , int cellHorizontalPadding ) {
         ArrayList<Integer> cellsWidths = new ArrayList<>();
@@ -58,7 +60,9 @@ public class TxtUtils {
         return generateTxtTableAlignCenter(table, title,cellHorizontalPadding,showLines,false) ;
     }
     public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ,boolean arabic ) {
-
+        if(table.size()>1&& Utils.checkListContainArabic(table.get(1)) ) {
+            table = Translator.translateTable(table) ;
+        }
 //        System.out.println("fuck you");
         String txtTable = "" ;
         ArrayList<Integer> cellsWidths = calcCellsWidths(table , cellHorizontalPadding) ;

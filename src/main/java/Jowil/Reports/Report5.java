@@ -28,13 +28,20 @@ public class Report5 extends Report {
     String imagesFolderFullPath ;
 
     public Report5(){
+     constructor();
+    }
+
+    public Report5 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Questions Analysis Report" ;
         workSpacePath = reportsPath + "report5\\" ;
         templatePath = workSpacePath + "report5Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
         imagesFolderFullPath =  workSpacePath  ;
-    }
-
+        }
     private Document generatePdfHtml (ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsTables) throws IOException {
         File file = new File(templatePath);
         Document doc =  Jsoup.parse(file , "UTF-8") ;
@@ -243,7 +250,7 @@ public class Report5 extends Report {
         String color = tableRow.get(4);
         color = color.substring(0 , color.length()-3) ;
         percent = percent.substring(0,percent.length()-2) ;
-        String barImgFullPath = resourcesPath+"data\\RectImages\\Report5\\"+color+"\\"+percent+".png" ;
+        String barImgFullPath = resourcesPath+"RectImages\\Report5\\"+color+"\\"+percent+".png" ;
         String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
         tableRow.set(4,imgEncoding) ;
     }
@@ -416,7 +423,7 @@ public class Report5 extends Report {
                     WordUtils.addHeaderLine(document, group.getCleanedName());
                 }else
                 {
-                    if(remainingRows!=0)
+                    if(remainingRows>0)
                         WordUtils.addPageBreak(document);
                     remainingRows = BLANK_PAGE_ROWS ;
                     WordUtils.addHeaderLine(document, group.getCleanedName());

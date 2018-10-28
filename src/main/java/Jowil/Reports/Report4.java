@@ -43,6 +43,14 @@ public class Report4 extends Report{
     volatile boolean arabicTextReady = false ;
 
     public Report4(){
+     constructor();
+    }
+
+    public Report4 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Students Grades Report" ;
         workSpacePath = reportsPath + "report4\\" ;
         templatePath = workSpacePath + "report4Template.html";
@@ -258,7 +266,7 @@ public class Report4 extends Report{
             int rectWidth =(int) Math.round(Double.valueOf(tableRow.get(3).replace("%" , ""))) ;
             if(rectWidth>100)
                 rectWidth = 100 ;
-            tableRow.add("<<img,70,10>>"+resourcesPath+"data\\RectImages\\Report4\\"+rectWidth+".png") ;
+            tableRow.add("<<img,70,10>>"+resourcesPath+"RectImages\\Report4\\"+rectWidth+".png") ;
         }
     }
 

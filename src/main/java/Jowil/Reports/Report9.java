@@ -28,11 +28,19 @@ public class Report9 extends Report {
 //    String imagesFolderFullPath ;
 
     public Report9(){
+        constructor();
+    }
+
+    public Report9 (String resoursesPath){
+        super(resoursesPath) ;
+        constructor();
+    }
+    private void constructor() {
         reportTitle = "Questionnaire Report" ;
         workSpacePath = reportsPath + "report9\\" ;
         templatePath = workSpacePath + "report9Template.html";
         pdfHtmlPath = workSpacePath + outputFileName + ".html";
-//        imagesFolderFullPath =  workSpacePath  ;
+
     }
 
     private Document generatePdfHtml (ArrayList<ArrayList<ArrayList<ArrayList<String>>>> groupsTables) throws IOException {
@@ -218,7 +226,7 @@ public class Report9 extends Report {
 //        String color = tableRow.get(4);
 //        color = color.substring(0 , color.length()-3) ;
         percent = percent.substring(0,percent.length()-2) ;
-        String barImgFullPath = resourcesPath+"data\\RectImages\\Report5\\green\\"+percent+".png" ;
+        String barImgFullPath = resourcesPath+"RectImages\\Report5\\green\\"+percent+".png" ;
         String imgEncoding = "<<img,70,10>>" + barImgFullPath ;
         tableRow.set(3,imgEncoding) ;
     }

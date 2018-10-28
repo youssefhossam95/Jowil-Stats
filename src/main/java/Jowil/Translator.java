@@ -1,5 +1,6 @@
 package Jowil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -7,6 +8,8 @@ public abstract class Translator {
 
     final private static String arabicNumbers="٠١٢٣٤٥٦٧٨٩";
     final private static String arabicLetters="أبجدهوزحطيكلمنسعفصقرشتثخذوضظغ";
+    final public static int ARABIC_TO_ENGLISH = 0  ;
+
 
     private static boolean isNumeric(String s){
         try{
@@ -57,6 +60,19 @@ public abstract class Translator {
             output.append(index);
         }
         return output.toString();
+    }
+
+    public static ArrayList<ArrayList<String>> translateTable ( ArrayList<ArrayList<String>> table) {
+        ArrayList<ArrayList<String>> translatedTable = new ArrayList<>();
+        for(int rowIndex = 0 ; rowIndex < table.size() ; rowIndex++) {
+            ArrayList<String> translatedTableRow = new ArrayList<>();
+            ArrayList<String> tableRow = table.get(rowIndex) ;
+            for(int colIndex = 0  ; colIndex < tableRow.size() ; colIndex++) {
+                translatedTableRow.add(arabicToEnglish(tableRow.get(colIndex))) ;
+            }
+            translatedTable.add(translatedTableRow) ;
+        }
+        return translatedTable ;
     }
 
 }
