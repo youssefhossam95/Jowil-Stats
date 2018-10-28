@@ -6,8 +6,11 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +38,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,6 +48,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +80,7 @@ public class LicenceActivity extends AppCompatActivity  {
     private EditText mUserKeyView;
     private View mProgressView;
     private View mLoginFormView;
-
+    private final float LOCAL_VERSION =1.0f ;
     DatabaseReference activationsDatabaseReference ;
 
     private ArrayList<Character> allChars;
@@ -114,26 +121,98 @@ public class LicenceActivity extends AppCompatActivity  {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         activationsDatabaseReference = database.getReference("Activations");
 
+        setVersionListener(database);
         initAllChars(); // for the activation key generation
-
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                createActivationKeyAlert(value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w("hi", "Failed to read value.", error.toException());
-//            }
-//        });
+        checkCorrectVersion();
     }
 
 
+//    public boolean isNetworkAvailable(Context context) {
+//        ConnectivityManager connectivity =(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//        if (connectivity == null) {
+//            return false;
+//        } else {
+//            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+//            if (info != null) {
+//                for (int i = 0; i < info.length; i++) {
+//                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//    public boolean hasActiveInternetConnection(Context context) {
+//
+//        if (isNetworkAvailable(context)) {
+//            try {
+//                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+//                urlc.setRequestProperty("User-Agent", "Test");
+//                urlc.setRequestProperty("Connection", "close");
+//                urlc.setConnectTimeout(1500);
+//                urlc.connect();
+//                return (urlc.getResponseCode() == 200);
+//            } catch (IOException e) {
+//                Log.e("network", "Error checking internet connection", e);
+//            }
+//        } else {
+//            Log.d("network", "No network available!");
+//        }
+//        return false;
+//    }
+    private void checkCorrectVersion() {
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            float globalVersion = sharedPref.getFloat(getString(R.string.global_version_key), LOCAL_VERSION);
+            if (globalVersion > LOCAL_VERSION)
+                createErrorAlert();
+
+    }
+    private void setVersionListener (FirebaseDatabase database){
+        database.getReference("version").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                try {
+                    Float globalVersion  = dataSnapshot.getValue(Float.class);
+                    if(globalVersion != LOCAL_VERSION) {
+                        writeKeyValue( getString(R.string.global_version_key) , globalVersion);
+                        if(globalVersion>LOCAL_VERSION)
+                            createErrorAlert();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                try {
+                    Log.w("hi", "Failed to read value.", error.toException());
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    private void writeKeyValue(final String key ,final float value){
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putFloat(key, value);
+                editor.commit();
+            }
+        });
+
+    }
     public void initAllChars(){
 
         allChars = new ArrayList<>( );
@@ -315,6 +394,33 @@ public class LicenceActivity extends AppCompatActivity  {
     }
 
 
+    public void createErrorAlert () {
+
+        final String errorMsg = "This version of the application is outdated.\n" +
+                "please contact your software provider." ;
+        try {
+            AlertDialog.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(LicenceActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+            } else {
+                builder = new AlertDialog.Builder(LicenceActivity.this);
+            }
+            builder.setTitle("Error")
+                    .setMessage(errorMsg)
+                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                            moveTaskToBack(true);
+                        }
+                    })
+                    .setIcon(android.R.drawable.stat_notify_error)
+                    .setCancelable(false)
+                    .show();
+
+        }catch (Exception e){
+            System.out.print("Hi Mother father: " + e);
+        }
+    }
     public void addActivationToDataBase(String userName , String activationKey) {
         String id = activationsDatabaseReference.push().getKey();
 
