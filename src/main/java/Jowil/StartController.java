@@ -337,6 +337,7 @@ public class StartController extends Controller{
             isTranslationMode=araRadio.isSelected();
             generalPrefsJson.put(IS_TRANSLATION_MODE_JSON_KEY,isTranslationMode);
             updateControlsText(); //to translate already existing start window
+            initSettingsMenu(); //to translate Settings menu
             generalPrefsJson.put(IS_FIRST_LAUNCH_JSON_KEY,false);
             saveJsonObj(GENERAL_PREFS_FILE_NAME,generalPrefsJson);
             return true;
