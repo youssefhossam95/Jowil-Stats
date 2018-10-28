@@ -27,6 +27,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -164,7 +165,8 @@ abstract public class Report {
 
     protected void writeHtmlFile(String filePath  , Document doc) throws IOException {
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-        BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
+        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8);
+        // do stuff
         out.write(doc.outerHtml());
         out.close();
     }

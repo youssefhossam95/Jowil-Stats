@@ -1,0 +1,14 @@
+*The main steps are covered in this tutorial:
+https://code.makery.ch/library/javafx-tutorial/part7/
+
+*Extra info:
+-folder data is the editable part of the 
+application resources so it's added to the dist folder and is referenced in the build.xml file inside the "<fx:resources id="appRes">" tag
+inorder to be shipped externaly with the application. This means that the data folder is placed next to the application jar when deployed.
+The real resources folder cannot be edited so this folder is used in deployement instead. 
+
+-The data folder must not contain any files that have arabic names or otherwise an IO exception will be thrown by innosetup during build.
+
+-The project name must not contain spaces to avoid exceptions in innosetup.
+
+-packages/windows folder contains the icons required by inno setup.
