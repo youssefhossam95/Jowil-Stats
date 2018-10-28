@@ -117,7 +117,7 @@ public class GroupsController  extends Controller{
     //main methods
     GroupsController(Controller back){
 
-        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back,(isQuestMode?"quest":"")+"2.png",1,(isQuestMode?"Questionnaire":"Test")+" Overview",resX*750/1280,0);
+        super("ViewGroupsAndSubjs.fxml","Groups",1.25,1.25,true,back,"2arabicLow.png",1,(isQuestMode?"Questionnaire":"Test")+" Overview",resX*750/1280,0);
         CSVHandler.initQuestionsChoices();
     }
 

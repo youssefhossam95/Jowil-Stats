@@ -349,7 +349,7 @@ public abstract class Controller {
             }
         }
 
-
+        
         progressImage.setFitWidth(resX*0.25);
         progressImage.setFitHeight(progressImage.getFitWidth()*0.12);
 

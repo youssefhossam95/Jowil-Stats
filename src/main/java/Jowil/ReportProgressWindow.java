@@ -194,13 +194,7 @@ public class ReportProgressWindow {
 
     }
 
-    public void setCounterIndicator(RingProgressIndicator counterIndicator) {
-        this.counterIndicator = counterIndicator;
-    }
 
-    public void setReportProgressIndicator(FillProgressIndicator reportProgressIndicator) {
-        this.reportProgressIndicator = reportProgressIndicator;
-    }
 
     public static void incrementProgressCount(){
         progressCount.setValue(progressCount.get()+1);
