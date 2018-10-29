@@ -1268,8 +1268,8 @@ public class Statistics {
 
             SortByPointBiserialAsc pointBiserialSorter = new SortByPointBiserialAsc() ;
             Collections.sort(badQuestionsTable , pointBiserialSorter);
-            if(badQuestionsTable.size()>10) // if more than ten question return the worst 10 questions
-                badQuestionsTable = new ArrayList<>(badQuestionsTable.subList(0,10)) ;
+            if(badQuestionsTable.size()>7) // if more than ten question return the worst 10 questions
+                badQuestionsTable = new ArrayList<>(badQuestionsTable.subList(0,7)) ;
 
 //            SortByCorrectPercentsDesc sorterDesc = new SortByCorrectPercentsDesc();
 //            Collections.sort(questionsTable, sorterDesc);
