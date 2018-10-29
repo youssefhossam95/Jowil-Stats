@@ -1,13 +1,13 @@
 .idea\workspace.xml
 *.class
-*.xml
+.idea
 .idea/workspace.xml
 *.class
 *.class
 *.class
 *.class
 *.jar
-
+jowil_stats.xml
 Jowil Stats.iml
 
 
@@ -17,7 +17,7 @@ build/*
 !build/build.xml
 !build/package
 !build/dist
-!android/LicenceApp
+
 target/
 
 
