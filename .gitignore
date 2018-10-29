@@ -17,7 +17,9 @@ build/*
 !build/build.xml
 !build/package
 !build/dist
+!android/LicenceApp
 target/
+
 
 target/classes/Jowil/Controller$1.class
 target/classes/Jowil/Controller$2.class
