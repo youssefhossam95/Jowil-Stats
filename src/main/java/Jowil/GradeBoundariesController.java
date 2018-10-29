@@ -110,7 +110,7 @@ public class GradeBoundariesController extends Controller {
 
     ScrollPane questReportsScrollPane=new ScrollPane();
 
-    private final static int DEFAULT_GRADE_CONFIGS_COUNT = 4;
+    private final static int DEFAULT_GRADE_CONFIGS_COUNT = 5;
     private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json";
     int gradesConfigComboSelectedIndex;
     private ArrayList<GradeHBox> gradesHBoxes;

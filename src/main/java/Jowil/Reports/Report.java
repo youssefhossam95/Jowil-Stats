@@ -336,6 +336,7 @@ abstract public class Report {
 
             for (int i = 0; i < grades.size(); i++) {
                 Label label = new Label(grades.get(i));
+                label.setStyle("-fx-text-fill:black");
                 HBox hBox= new HBox(label) ;
                 hBox.setAlignment(Pos.CENTER);
                 HBox.setHgrow(label,Priority.ALWAYS);
@@ -359,6 +360,7 @@ abstract public class Report {
         Platform.runLater(()->{
             Stage stage = new Stage() ;
             Label label = new Label(txt);
+            label.setStyle("-fx-text-fill:black");
             HBox hBox= new HBox(label) ;
             hBox.setAlignment(Pos.CENTER);
             HBox.setHgrow(label,Priority.ALWAYS);
