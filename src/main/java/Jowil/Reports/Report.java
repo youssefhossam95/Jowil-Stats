@@ -66,6 +66,8 @@ abstract public class Report {
     }
 
     volatile boolean arabicTextReady = false ;
+    volatile boolean arabicTempTextReady = false ;
+
     protected Map<String,String> defaultGradesTranslation ;
 
     private void constructor (String resourcesPath){
@@ -112,16 +114,23 @@ abstract public class Report {
 
     }
 
-    public void updateTemplateFooter(Document doc) {
+    public void updateTemplateFooter(Document doc) throws IOException {
 
 //        String reportTitle = doc.select("div#footerCenter").text() ;
         String projectName= Controller.getProjectName();
         if(projectName == null)
-            projectName = "New Project" ;
+            projectName = "امتحان جديد" ;
 
         String centerFooter = projectName ;
 
-        doc.select("div#footerCenter").last().text(centerFooter) ;
+        if(Utils.checkStringEnglish(centerFooter))
+            doc.select("div#footerCenter").last().text(centerFooter) ;
+        else{
+            generateTxtImage(centerFooter , "footer");
+            while (!arabicTempTextReady) ;
+            arabicTempTextReady= false ;
+            doc.select("div#footerCenter").last().html("<img height='14px' style='position: relative;  top: 1px' src='footer.png'>");
+        }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDateTime now = LocalDateTime.now();
@@ -340,6 +349,28 @@ abstract public class Report {
                 }
             }
             arabicTextReady = true ;
+        });
+
+
+    }
+
+    protected void generateTxtImage (String txt , String outputFileName) throws IOException {
+
+        Platform.runLater(()->{
+            Stage stage = new Stage() ;
+            Label label = new Label(txt);
+            HBox hBox= new HBox(label) ;
+            hBox.setAlignment(Pos.CENTER);
+            HBox.setHgrow(label,Priority.ALWAYS);
+            hBox.setStyle("-fx-background-color:white");
+            stage.setScene(new Scene(hBox));
+            WritableImage snapShot = hBox.snapshot(new SnapshotParameters(), null);
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(snapShot, null), "png", new File(workSpacePath + outputFileName+ ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            arabicTempTextReady = true ;
         });
 
 
