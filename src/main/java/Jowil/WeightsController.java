@@ -372,7 +372,7 @@ public class WeightsController extends Controller {
         contextMenuExpandButton.setLayoutX((midSeparator.getLayoutX()+(subjTableVbox.getLayoutX()+subjTableVbox.getPrefWidth()))/2-contextMenuIcon.getFitWidth()/2); //mid point between separator and subjVbox
         contextMenuExpandButton.setLayoutY(objTableVbox.getLayoutY()+rootHeight*0.01);
 
-        double ancBaseWidth=132,resetImageSize=18,spacing=10;
+        double ancBaseWidth=140,resetImageSize=18,spacing=10;
 
         fullMarksAnc.setPrefWidth(ancBaseWidth+resetImageSize+spacing);
         fullMarksTextField.setPrefWidth(50);
@@ -655,8 +655,8 @@ public class WeightsController extends Controller {
             buttAbsX=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinX();
             buttAbsY=contextMenuIcon.localToScreen(contextMenuIcon.getBoundsInLocal()).getMinY();
             double buttSize=contextMenuIcon.getFitWidth();
-            contextXPos=buttAbsX-(isTranslationMode?0:resX*154/1280);
-            contextYPos=buttAbsY+buttSize+2;
+            contextXPos=buttAbsX-(isTranslationMode?0:resX*162/1280);
+            contextYPos=buttAbsY+buttSize+3;
             contextMenu.show( contextMenuExpandButton,contextXPos,contextYPos);
 
         });
