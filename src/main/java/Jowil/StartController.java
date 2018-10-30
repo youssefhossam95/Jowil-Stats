@@ -115,7 +115,8 @@ public class StartController extends Controller{
     JFXToggleButton resScalingToggle=new JFXToggleButton();
     CustomMenuItem resScalingMenuItem=new CustomMenuItem(resScalingAnc);
     String onString="On", offString="Off";
-
+    double realResX=Screen.getPrimary().getVisualBounds().getWidth();
+    double realResY=Screen.getPrimary().getVisualBounds().getHeight();
 
 
 
@@ -329,8 +330,8 @@ public class StartController extends Controller{
         dialog.getDialogPane().setContent(radiosHBox);
         dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Continue"));
 
-        dialog.setY(resY*0.26);
-        dialog.setX(resX*0.375);
+        dialog.setY(realResY*0.26);
+        dialog.setX(realResX*0.375);
         Optional<String> result=dialog.showAndWait();
 
         if(result.isPresent()){
@@ -489,8 +490,8 @@ public class StartController extends Controller{
         dialog.getDialogPane().setContent(anchorPane);
         processDialog(dialog);
 
-        dialog.setY(resY*0.26);
-        dialog.setX(resX*0.3);
+        dialog.setY(realResY*0.26);
+        dialog.setX(realResX*0.3);
         Optional<String> result=dialog.showAndWait();
 
         if(!result.isPresent()) {//close was pressed
@@ -925,8 +926,8 @@ public class StartController extends Controller{
 
         processDialog(dialog);
         Platform.runLater(()->projNameTextField.requestFocus());
-        dialog.setX(resX*0.38);
-        dialog.setY(resY*0.28);
+        dialog.setX(realResX*0.38);
+        dialog.setY(realResY*0.28);
         Optional<String> result = dialog.showAndWait();
 
 
