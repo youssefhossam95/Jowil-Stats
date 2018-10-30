@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -37,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,16 +97,9 @@ public class LicenceActivity extends AppCompatActivity  {
 //        populateAutoComplete();
 
         mUserKeyView = (EditText) findViewById(R.id.userKey);
-//        mUserKeyView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-//                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-//                    attemptLogin();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+
+
+        updateButtonPosition();
 
         Button mGetActivationKeyButtom = (Button) findViewById(R.id.activation_key_button);
         mGetActivationKeyButtom.setOnClickListener(new OnClickListener() {
@@ -126,42 +121,19 @@ public class LicenceActivity extends AppCompatActivity  {
         checkCorrectVersion();
     }
 
+    private void updateButtonPosition() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
 
-//    public boolean isNetworkAvailable(Context context) {
-//        ConnectivityManager connectivity =(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//        if (connectivity == null) {
-//            return false;
-//        } else {
-//            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-//            if (info != null) {
-//                for (int i = 0; i < info.length; i++) {
-//                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//    public boolean hasActiveInternetConnection(Context context) {
-//
-//        if (isNetworkAvailable(context)) {
-//            try {
-//                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
-//                urlc.setRequestProperty("User-Agent", "Test");
-//                urlc.setRequestProperty("Connection", "close");
-//                urlc.setConnectTimeout(1500);
-//                urlc.connect();
-//                return (urlc.getResponseCode() == 200);
-//            } catch (IOException e) {
-//                Log.e("network", "Error checking internet connection", e);
-//            }
-//        } else {
-//            Log.d("network", "No network available!");
-//        }
-//        return false;
-//    }
+        Button layout = (Button) findViewById(R.id.activation_key_button);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+        params.setMargins(0, (int)(height * 0.3), 0, 0);
+        layout.setLayoutParams(params);
+
+    }
+
     private void checkCorrectVersion() {
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
             float globalVersion = sharedPref.getFloat(getString(R.string.global_version_key), LOCAL_VERSION);
@@ -319,9 +291,13 @@ public class LicenceActivity extends AppCompatActivity  {
     private boolean isUserKeyValid(String userKey) {
 //       return userKey.matches("\\d+(?:\\.\\d+)?") ; check if its a number
         try {
-            Long.parseLong(userKey , 16) ;
+            String temp = userKey ;
+            Long.parseLong(temp.replace("-" , "") , 16) ;
         }catch (NumberFormatException e) {
             return false;
+        }catch (Exception e){
+            System.out.print("fucken error ; ");
+            e.printStackTrace();
         }
         return true ;
     }
@@ -362,6 +338,41 @@ public class LicenceActivity extends AppCompatActivity  {
         }
     }
 
+    public void createConfirmationAlert (String userKey , final String activationKey) {
+        try {
+            AlertDialog.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(LicenceActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+            } else {
+                builder = new AlertDialog.Builder(LicenceActivity.this);
+            }
+            userKey = userKey.toUpperCase();
+            String  modifiedUserKey = "" ;
+            for (int i = 0 ; i < userKey.length() ; i ++) {
+                if (i == 4)
+                    modifiedUserKey += "-";
+                modifiedUserKey += userKey.charAt(i);
+            }
+            builder.setTitle("Confirmation")
+                    .setMessage("Are you sure that user key is:\n " + modifiedUserKey )
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String userName = mUserNameView.getText().toString();
+                            createActivationKeyAlert(activationKey);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
+
+        }catch (Exception e){
+            System.out.print("Hi Mother father: " + e);
+        }
+    }
 
     public void createActivationKeyAlert (final String activationKey) {
         try {
@@ -380,12 +391,8 @@ public class LicenceActivity extends AppCompatActivity  {
                             // continue with delete
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
                     .setIcon(android.R.drawable.ic_dialog_info)
+                    .setCancelable(false)
                     .show();
 
         }catch (Exception e){
@@ -450,8 +457,7 @@ public class LicenceActivity extends AppCompatActivity  {
         private final String mUserKey;
 
         UserLoginTask(String userKey) {
-//            mUserName = userName;
-            mUserKey = userKey;
+            mUserKey = userKey.replace("-" , "");
         }
 
         @Override
@@ -465,7 +471,7 @@ public class LicenceActivity extends AppCompatActivity  {
             showProgress(false);
 
             if(activationKey != null) {
-                createActivationKeyAlert(activationKey);
+                createConfirmationAlert(mUserKey , activationKey);
             }
 
 //            if (success) {

@@ -84,8 +84,10 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="200dp"
+                android:layout_marginTop="100dp"
+                android:background="@color/colorPrimary"
                 android:text="Get Activation Key"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
 
