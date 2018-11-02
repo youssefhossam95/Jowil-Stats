@@ -357,8 +357,12 @@ public class LicenceActivity extends AppCompatActivity  {
                     .setMessage("Are you sure that user key is:\n " + modifiedUserKey )
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+
                             String userName = mUserNameView.getText().toString();
+                            addActivationToDataBase(userName , activationKey);
+
                             createActivationKeyAlert(activationKey);
+
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -386,9 +390,8 @@ public class LicenceActivity extends AppCompatActivity  {
                     .setMessage(activationKey)
                     .setPositiveButton("Add Key", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            String userName = mUserNameView.getText().toString();
-                            addActivationToDataBase(userName , activationKey);
-                            // continue with delete
+
+                            // do nothing
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_info)

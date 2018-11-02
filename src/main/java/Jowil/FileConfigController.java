@@ -415,7 +415,7 @@ public class FileConfigController extends Controller {
 
                 if (mainTextFieldResult == CSVFileValidator.WARNING) {
 
-                    int selectedAction = showHeadersWarningDialog("students responses");
+                    int selectedAction = showHeadersWarningDialog("Students Responses");
                     if (selectedAction == CANCEL)
                         return;
                     CSVHandler.setIsResponsesContainsHeaders(selectedAction == SKIPROW);
