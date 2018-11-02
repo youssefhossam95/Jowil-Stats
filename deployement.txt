@@ -12,3 +12,12 @@ The real resources folder cannot be edited so this folder is used in deployement
 -The project name must not contain spaces to avoid exceptions in innosetup.
 
 -packages/windows folder contains the icons required by inno setup.
+
+-After changing any file in the data folder inside resources you must copy the changed files to the data folder inside
+the dist folder before deployement.
+
+-The jdk of the eclipse project must be a 32 bit jdk inorder to generate a 32 exe file when the build.xml file is built
+
+-If you generated a new build.xml file you must add the two tags:
+<fx:fileset dir="dist" includes="data/**"/> and <file name="${basedir}"/>
+

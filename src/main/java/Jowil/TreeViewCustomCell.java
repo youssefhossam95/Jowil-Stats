@@ -20,13 +20,12 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
     private final double CHECK_BOXES_SIZE=resX*14/1280;
 
-
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
 
         this.selectedProperty().addListener((observable,oldValue,newValue)->{if(newValue) this.updateSelected(false);});
-        this.focusedProperty().addListener((observable,oldValue,newValue)->{if(newValue) this.setFocused(false);});
+        this.focusedProperty().addListener((observable,oldValue,newValue)->this.setFocused(false));
 
 
 
@@ -52,12 +51,14 @@ public class TreeViewCustomCell extends TreeCell<String> {
                     if(newValue) {
                         GroupsController.restoreToGroup(groupName, this.getTreeItem().getValue());
                         this.getTreeView().refresh();
+                        this.getTreeView().requestFocus();
                     }
                     else if(GroupsController.getLastPossible(groupName)==GroupsController.getFirstPossible(groupName))
                         checkBox.setSelected(true);
                     else{
                         GroupsController.deleteFromGroup(groupName, this.getTreeItem().getValue());
                         this.getTreeView().refresh();
+                        this.getTreeView().requestFocus();
                     }
 
                 });

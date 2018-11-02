@@ -299,7 +299,6 @@ public class GroupsController  extends Controller{
 
     }
 
-
     /////static utility methods
 
     public static void addToGroup(String groupName){
