@@ -129,17 +129,17 @@
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="C:\Users\Youssef Hossam\eclipse-workspace\Jowil Stats">
-				<include name="src\main\java/**" />
-			</fileset>
-		</copy>
-		<copy todir="project">
-			<fileset dir="C:\Users\Youssef Hossam\eclipse-workspace\Jowil Stats">
 				<include name="src\test\java/**" />
 			</fileset>
 		</copy>
 		<copy todir="project">
 			<fileset dir="C:\Users\Youssef Hossam\eclipse-workspace\Jowil Stats">
 				<include name="src\main\resources/**" />
+			</fileset>
+		</copy>
+		<copy todir="project">
+			<fileset dir="C:\Users\Youssef Hossam\eclipse-workspace\Jowil Stats">
+				<include name="src\main\java/**" />
 			</fileset>
 		</copy>
 	
