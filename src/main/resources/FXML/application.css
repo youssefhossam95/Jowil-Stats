@@ -101,10 +101,18 @@ JFXComboBox{
 }
 
 DialogPane Button{
--fx-background-color:white;
+-fx-background-color:transparent;
 -fx-border-width: 1;
 -fx-border-color:#A9A9A9;
 }
+
+DialogPane Button:focused{
+-fx-background-color:transparent;
+-fx-border-width: 1;
+-fx-border-color: #095c90;
+-fx-text-fill:#095c90;
+}
+
 
 DialogPane Button:hover{
 -fx-background-color: 	#87CEEB;

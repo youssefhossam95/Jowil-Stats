@@ -843,6 +843,7 @@ public class StartController extends Controller{
         String defaultText=isTranslationMode&& translations.containsKey("New Project")?translations.get("New Project"):"New Project";
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Set Project Name");
+        dialog.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         ImageView pic=new ImageView();
         pic.setImage(new Image("Images/Add Folder_96px.png"));
@@ -913,6 +914,7 @@ public class StartController extends Controller{
 
         dialog.getDialogPane().getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
 
+        dialog.getDialogPane().lookupButton(ButtonType.OK).setStyle("-fx-border-color: #095c90;-fx-text-fill:#095c90;");
 
         dialog.setResultConverter(dialogButton -> {
 
