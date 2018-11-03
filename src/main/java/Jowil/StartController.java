@@ -327,7 +327,10 @@ public class StartController extends Controller{
 
 
         dialog.getDialogPane().setContent(radiosHBox);
-        dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Continue"));
+        ButtonType continueButt=new ButtonType("Continue");
+        dialog.getDialogPane().getButtonTypes().setAll(continueButt);
+        dialog.getDialogPane().lookupButton(continueButt).setStyle("-fx-border-color: #095c90;-fx-text-fill:#095c90;");
+
 
         dialog.setY(realResY*0.26);
         dialog.setX(realResX*0.375);
@@ -491,6 +494,7 @@ public class StartController extends Controller{
 
         dialog.setY(realResY*0.26);
         dialog.setX(realResX*0.3);
+        dialog.getDialogPane().lookupButton(activateType).setStyle("-fx-border-color: #095c90;-fx-text-fill:#095c90;");
         Optional<String> result=dialog.showAndWait();
 
         if(!result.isPresent()) {//close was pressed

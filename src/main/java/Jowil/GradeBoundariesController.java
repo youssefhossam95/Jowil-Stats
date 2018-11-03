@@ -111,6 +111,9 @@ public class GradeBoundariesController extends Controller {
 
     ScrollPane questReportsScrollPane=new ScrollPane();
 
+    JFXCheckBox reportsMasterCheckBox = new JFXCheckBox("Reports",CHECK_BOXES_SIZE*1.08);
+    JFXCheckBox formatsMasterCheckBox = new JFXCheckBox("File Formats",CHECK_BOXES_SIZE*1.08);
+
     private final static int DEFAULT_GRADE_CONFIGS_COUNT = 5;
     private final static String REPORTS_PREFS_FILE_NAME = "ReportsPrefs.json";
     int gradesConfigComboSelectedIndex;
@@ -122,7 +125,7 @@ public class GradeBoundariesController extends Controller {
 
 
     Font gradesLabelsFonts = new Font("Arial", resX / 100);
-
+    double reportsConfigLabelsFontSize=resX*13.2/1280;
 
     JSONObject prefsJsonObj;
     
@@ -167,6 +170,15 @@ public class GradeBoundariesController extends Controller {
             stage.close();
         });
 
+        reportsMasterCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            for(CheckBox checkBox:reportsCheckBoxes)
+                checkBox.setSelected(newValue);
+        });
+
+        formatsMasterCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            for(CheckBox checkBox:formatsCheckBoxes)
+                checkBox.setSelected(newValue);
+        });
 
 
     }
@@ -244,13 +256,20 @@ public class GradeBoundariesController extends Controller {
         formatsLabel.setFont(gradesLabelsFonts);
         formatsLabel.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, reportsConfigAnc.getPrefHeight() * 0.02, 0));
         reportsVBox.setSpacing(resYToPixels(0.02));
-        reportsVBox.setPadding(new Insets(0, 0, 0, reportsConfigAnc.getPrefWidth() * 0.02));
+        reportsVBox.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, 0, reportsConfigAnc.getPrefWidth() * 0.02));
+        formatsVBox.setPadding(new Insets(reportsConfigAnc.getPrefHeight()*0.05));
         formatsVBox.setSpacing(resYToPixels(0.02));
 
+        reportsMasterCheckBox.setPadding(new Insets(0,0,reportsConfigAnc.getPrefHeight() * 0.02,0));
+        formatsMasterCheckBox.setPadding(new Insets(0,0,reportsConfigAnc.getPrefHeight() * 0.02,0));
 
 
         for (GradeHBox hbox : gradesHBoxes)
             hbox.updateSizes(scrollPaneWidth, scrollPaneHeight);
+
+        reportsMasterCheckBox.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;-fx-font-size:"+reportsConfigLabelsFontSize+";");
+        formatsMasterCheckBox.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;-fx-font-size:"+reportsConfigLabelsFontSize+";");
+
 
 
     }
@@ -458,6 +477,8 @@ public class GradeBoundariesController extends Controller {
     }
 
 
+
+
     public void addNextGrade(int callingIndex) {
         int newIndex = callingIndex + 1;
         isContentEdited=true;
@@ -649,8 +670,9 @@ public class GradeBoundariesController extends Controller {
 
     private void initReportsVBox() {
 
-        reportsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
-        reportsVBox.getChildren().add(reportsLabel);
+        reportsVBox.getChildren().add(reportsMasterCheckBox);
+
+
 
 
         //add checkboxes
@@ -684,8 +706,8 @@ public class GradeBoundariesController extends Controller {
 
     private void initFormatsVbox() {
 
-        formatsLabel.setStyle("-fx-text-fill:" + labelsColor + ";-fx-font-weight: bold;");
-        formatsVBox.getChildren().add(formatsLabel);
+        formatsVBox.getChildren().add(formatsMasterCheckBox);
+
 
 
         for(int i=0;i<ReportsHandler.FORMATS_NAMES.length;i++)
