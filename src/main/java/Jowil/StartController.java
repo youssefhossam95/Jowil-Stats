@@ -294,7 +294,6 @@ public class StartController extends Controller{
         dialog.setTitle("Select Language");
         dialog.setHeaderText("Welcome to Jowil Stats!");
         dialog.setGraphic(null);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 
         double flagsSize=15;
         VBox radiosHBox=new VBox(10);
@@ -332,6 +331,7 @@ public class StartController extends Controller{
 
         dialog.setY(realResY*0.26);
         dialog.setX(realResX*0.375);
+        processDialog(dialog);
         Optional<String> result=dialog.showAndWait();
 
         if(result.isPresent()){
@@ -385,7 +385,6 @@ public class StartController extends Controller{
         dialog.setTitle("Software Activation");
         dialog.setHeaderText("Jowil Stats needs activation");
         dialog.setGraphic(null);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 
 
         dialog.getDialogPane().getStyleClass().add("projectsDialog");
@@ -545,7 +544,6 @@ public class StartController extends Controller{
 
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Activation Success");
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 
 
         ImageView pic=new ImageView();
@@ -913,6 +911,7 @@ public class StartController extends Controller{
 
         dialog.getDialogPane().getButtonTypes().setAll(ButtonType.OK,ButtonType.CANCEL);
 
+        dialog.getDialogPane().lookupButton(ButtonType.OK).setStyle("-fx-border-color: #095c90;-fx-text-fill:#095c90;");
 
         dialog.setResultConverter(dialogButton -> {
 
@@ -984,12 +983,12 @@ public class StartController extends Controller{
 
     private boolean showJsonError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
         alert.setTitle("Projects Loading Error");
         alert.getButtonTypes().add(ButtonType.CANCEL);
         alert.setHeaderText(null);
         alert.setContentText("Cannot load existing projects. Would you like to restart Jowil Stats?");
+        processDialog(alert);
         Optional<ButtonType> result=alert.showAndWait();
 
         return result.isPresent() && result.get()==ButtonType.OK;
@@ -1000,7 +999,6 @@ public class StartController extends Controller{
         dialog.setTitle("Existing Projects");
         dialog.setHeaderText("Projects");
         dialog.setGraphic(null);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
         dialog.getDialogPane().setMinWidth(resX*300/1280);
 
         dialog.getDialogPane().getStyleClass().add("projectsDialog");

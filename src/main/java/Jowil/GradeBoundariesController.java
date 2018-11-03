@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -857,8 +858,7 @@ public class GradeBoundariesController extends Controller {
         ButtonType saveButton = new ButtonType("Save New Configuration", ButtonBar.ButtonData.OK_DONE);
         ButtonType continueButton = new ButtonType("Ignore Changes", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButton, continueButton);
-        //dialog.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
-
+        dialog.getDialogPane().lookupButton(saveButton).setStyle("-fx-border-color: #095c90;-fx-text-fill:#095c90;");
 
         TextField configNameTextField = new TextField();
         String text="Configuration Name";
@@ -901,6 +901,7 @@ public class GradeBoundariesController extends Controller {
         });
 
         processDialog(dialog);
+        Platform.runLater(()->configNameTextField.requestFocus());
         Optional<String> result = dialog.showAndWait();
 
         if (result == null || !result.isPresent())

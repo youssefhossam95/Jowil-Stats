@@ -437,7 +437,6 @@ public abstract class Controller {
 
     private static Alert constructAlert(Alert.AlertType alertType, javafx.stage.Window owner, String title, String message){
         Alert alert = new Alert(alertType);
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         alert.getButtonTypes().setAll(ButtonType.CLOSE);
         Button closeButt=(Button)alert.getDialogPane().lookupButton(ButtonType.CLOSE);
         closeButt.setText("OK");
@@ -657,7 +656,6 @@ public abstract class Controller {
         alert.initOwner(owner);
 
         processDialog(alert);
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
 
         return option.get() == ButtonType.OK;
@@ -715,6 +713,8 @@ public abstract class Controller {
 
 
         ((Stage)(dialog.getDialogPane().getScene().getWindow())).getIcons().add(new Image("Images/jsIcon.png"));
+        dialog.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
+
         if(isTranslationMode){
             DialogPane dialogPane=dialog.getDialogPane();
             String title=dialog.getTitle();
