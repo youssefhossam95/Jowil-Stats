@@ -271,7 +271,6 @@ public class ReportProgressWindow {
         Platform.runLater(()->{
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
 
 
         alert.getButtonTypes().add(ButtonType.CLOSE);

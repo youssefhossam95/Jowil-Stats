@@ -966,7 +966,7 @@ public class FileConfigController extends Controller {
     private int showHeadersWarningDialog(String fileName) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        //alert.getDialogPane().getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
+
         alert.setTitle("No Headers Detected");
         alert.setHeaderText(null);
         alert.setContentText(constructMessage("No headers were detected in ",fileName+" file",". Was the detection correct?"));

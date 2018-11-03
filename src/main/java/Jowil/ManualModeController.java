@@ -959,7 +959,6 @@ public class ManualModeController extends Controller{
 
         processDialog(alert);
         alert.initOwner(stage.getOwner());
-        //alert.getDialogPane().getStylesheets().add(Controller.class.getResource("/FXML/application.css").toExternalForm());
         Optional<ButtonType> option = alert.showAndWait();
 
         ;

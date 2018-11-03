@@ -116,9 +116,6 @@ DialogPane Button:focused{
 
 DialogPane Button:hover{
 -fx-background-color: 	#87CEEB;
--fx-text-fill:#095c90;
--fx-border-color: #095c90;
-
 }
 
 DialogPane{

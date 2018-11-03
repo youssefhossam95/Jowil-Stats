@@ -621,6 +621,7 @@ public class GroupsController  extends Controller{
         checkBox.setStyle("-jfx-checked-color: #095c90;");
         VBox vbox=new VBox(8,label,checkBox);
         dialog.getDialogPane().getButtonTypes().setAll(ButtonType.YES,ButtonType.NO);
+        dialog.getDialogPane().lookupButton(ButtonType.YES).setStyle("-fx-border-color: #095c90;-fx-text-fill:#095c90;");
         dialog.getDialogPane().setContent(vbox);
         processDialog(dialog);
         Optional<ButtonType> option = dialog.showAndWait();
