@@ -34,7 +34,7 @@ public class QuestionnaireReportsController extends GradeBoundariesController{
         rootPane.getChildren().remove(reportsConfigAnc);
         rootPane.getChildren().add(questReportsScrollPane);
         questReportsScrollPane.setContent(formatsVBox);
-        formatsVBox.getChildren().remove(formatsLabel);
+        formatsVBox.getChildren().remove(formatsMasterCheckBox);
 
         buttonsHbox.setStyle("-fx-border-width: 0 0 0 0;-fx-border-color:#A9A9A9");
         backButton.setVisible(false);

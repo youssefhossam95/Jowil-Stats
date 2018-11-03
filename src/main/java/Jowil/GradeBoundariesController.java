@@ -106,8 +106,7 @@ public class GradeBoundariesController extends Controller {
     Label gradeName = new Label("Name");
     Label gradePercent = new Label(PERCENT_TEXT);
     Label gradeRaw = new Label("Score");
-    Label reportsLabel = new Label("Reports");
-    Label formatsLabel = new Label("File Formats");
+    
 
     ScrollPane questReportsScrollPane=new ScrollPane();
 
@@ -251,13 +250,10 @@ public class GradeBoundariesController extends Controller {
 
         AnchorPane.setRightAnchor(formatsVBox,rootWidth*0.02);
 
-        reportsLabel.setFont(gradesLabelsFonts);
-        reportsLabel.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, reportsConfigAnc.getPrefHeight() * 0.02, 0));
-        formatsLabel.setFont(gradesLabelsFonts);
-        formatsLabel.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, reportsConfigAnc.getPrefHeight() * 0.02, 0));
+
         reportsVBox.setSpacing(resYToPixels(0.02));
         reportsVBox.setPadding(new Insets(reportsConfigAnc.getPrefHeight() * 0.05, 0, 0, reportsConfigAnc.getPrefWidth() * 0.02));
-        formatsVBox.setPadding(new Insets(reportsConfigAnc.getPrefHeight()*0.05));
+        formatsVBox.setPadding(new Insets(reportsConfigAnc.getPrefHeight()*0.05,0,0,0));
         formatsVBox.setSpacing(resYToPixels(0.02));
 
         reportsMasterCheckBox.setPadding(new Insets(0,0,reportsConfigAnc.getPrefHeight() * 0.02,0));
