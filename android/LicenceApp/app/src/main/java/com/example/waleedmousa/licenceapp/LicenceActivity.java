@@ -358,6 +358,7 @@ public class LicenceActivity extends AppCompatActivity  {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             String userName = mUserNameView.getText().toString();
+                            addActivationToDataBase(userName , activationKey);
                             createActivationKeyAlert(activationKey);
                         }
                     })
@@ -386,8 +387,6 @@ public class LicenceActivity extends AppCompatActivity  {
                     .setMessage(activationKey)
                     .setPositiveButton("Add Key", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            String userName = mUserNameView.getText().toString();
-                            addActivationToDataBase(userName , activationKey);
                             // continue with delete
                         }
                     })
