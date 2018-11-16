@@ -114,6 +114,12 @@ public class Group extends RecursiveTreeObject<Group> {
         this.possibleAnswers = possibleAnswers;
     }
 
+    public boolean isBinaryResponse() {
+        return possibleAnswers.get(0).toLowerCase().equals("t");
+    }
+
+
+
     public void generatePossibleAnswers(String groupMaxChoice){
 
         isNumeric=true;

@@ -38,7 +38,17 @@ public class TreeViewCustomCell extends TreeCell<String> {
 
 
                 //HBox cellBox = new HBox(0);
-                JFXCheckBox checkBox = new JFXCheckBox(Controller.isTranslateFormContent?Translator.englishToArabic(item):item,CHECK_BOXES_SIZE);
+                boolean isBinaryGroup=this.getTreeItem().getParent().getChildren().size()==2 &&
+                        (item.toLowerCase().equals("t") || item.toLowerCase().equals("f"));
+
+                String checkBoxText="";
+
+                if(Controller.isTranslateFormContent)
+                    checkBoxText=isBinaryGroup?Translator.englishToArabicBinary(item):Translator.englishToArabic(item);
+                else
+                    checkBoxText=item;
+
+                JFXCheckBox checkBox = new JFXCheckBox(checkBoxText,CHECK_BOXES_SIZE);
                 this.setStyle("-fx-font-size:"+resX*12/1280);
 //                Label label = new Label(item);
 //                label.setPadding(new Insets(0,0,0,0));
@@ -102,8 +112,22 @@ public class TreeViewCustomCell extends TreeCell<String> {
                 cellBox.setAlignment(Pos.CENTER_LEFT);
                 String min=this.getTreeItem().getChildren().get(GroupsController.getFirstPossible(this.getTreeItem().getParent().getValue())).getValue();
                 String max=this.getTreeItem().getChildren().get(GroupsController.getLastPossible(this.getTreeItem().getParent().getValue())).getValue();
-                Label minLabel=new Label(Controller.isTranslateFormContent?Translator.englishToArabic(min):min);
-                Label maxLabel=new Label(Controller.isTranslateFormContent?Translator.englishToArabic(max):max);
+
+                boolean isBinaryGroup=this.getTreeItem().getChildren().size()==2;
+                String minLabelText="";
+                String maxLabelText="";
+
+                if(Controller.isTranslateFormContent) {
+                    minLabelText = isBinaryGroup ? Translator.englishToArabicBinary(min) : Translator.englishToArabic(min);
+                    maxLabelText = isBinaryGroup ? Translator.englishToArabicBinary(max) : Translator.englishToArabic(max);
+                }
+                else{
+                    minLabelText=min;
+                    maxLabelText=max;
+                }
+
+                Label minLabel=new Label(minLabelText);
+                Label maxLabel=new Label(maxLabelText);
                 minLabel.setPadding(new Insets(0,0,0,0));
                 maxLabel.setPadding(new Insets(0,0,0,0));
                 Node rightArrowIcon=GlyphsBuilder.create(FontAwesomeIconView.class).glyph(isTranslationMode?FontAwesomeIcon.ARROW_LEFT:FontAwesomeIcon.ARROW_RIGHT).size(Double.toString(resX/111)).styleClass("error").build();

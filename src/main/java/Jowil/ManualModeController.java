@@ -396,7 +396,7 @@ public class ManualModeController extends Controller{
 
         ArrayList<ColumnSet> objColSets=new ArrayList<>();
 
-        String identifierName="None",formColName="None";
+        String identifierName="ID",formColName="None";
 
         int index=0;
         for(ColumnSet columnSet:columnSets){
