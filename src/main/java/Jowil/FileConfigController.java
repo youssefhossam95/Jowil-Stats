@@ -2,7 +2,6 @@ package Jowil;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.base.ValidatorBase;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,8 +16,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -291,10 +289,12 @@ public class FileConfigController extends Controller {
 
             rootPane.requestFocus();
 
+
             if (!isMainTextFieldValidated)
                 validateMainTextField();
 
             boolean isManualMode = manualModeToggle.isSelected();
+
 
             validateAnswersTextField();
 
@@ -400,7 +400,7 @@ public class FileConfigController extends Controller {
 
             if(answersTextFieldResult==CSVFileValidator.WARNING){
 
-                int selectedAction = showHeadersWarningDialog("answer key");
+                int selectedAction = isAnswerKeyInFirstRow?CONTINUE:showHeadersWarningDialog("answer key");
                 if (selectedAction == CANCEL)
                     return;
 
@@ -507,6 +507,49 @@ public class FileConfigController extends Controller {
 
     }
 
+    private void generateAnswerKeyCSVFromFirstLine(boolean isHeadersExist) {
+
+        if(!isAnswerKeyInFirstRow)
+            return;
+
+        BufferedReader input=null;
+        try {
+             input= new BufferedReader(new FileReader(mainFileTextField.getText()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        BufferedWriter pw = null;
+
+        String answerKeyFilePath=mainFileTextField.getText().replace(".csv","")+"_Answer Key.csv";
+
+        try {
+            pw =  new BufferedWriter(new FileWriter(answerKeyFilePath));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        for(int i=0;i<(isHeadersExist?2:1);i++){
+            try {
+                if(i==1)
+                    pw.newLine();
+                pw.write(input.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        answersFileTextField.setText(answerKeyFilePath);
+
+    }
 
 
     private void loadSavedProjectJson() {
@@ -1029,9 +1072,13 @@ public class FileConfigController extends Controller {
             manualModeToggle.setSelected(false);
             formCombo.setDisable(false);
             identifierCombo.setDisable(false);
+            generateAnswerKeyCSVFromFirstLine(true);
         } else {
-            if (validator.getMessageType() == ValidatorBase.WARNING)
+            if (validator.getMessageType() == ValidatorBase.WARNING){
                 manualModeToggle.setSelected(true);
+                generateAnswerKeyCSVFromFirstLine(false);
+            }
+
             formCombo.setDisable(true);
             identifierCombo.setDisable(true);
         }

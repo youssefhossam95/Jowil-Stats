@@ -8,9 +8,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Jowil.Controller.constructMessage;
-import static Jowil.Controller.isOpenMode;
-import static Jowil.Controller.isQuestMode;
+import static Jowil.Controller.*;
 
 
 public class CSVHandler {
@@ -326,6 +324,8 @@ public class CSVHandler {
             rowNumber=2;
         }
 
+        if(isAnswerKeyInFirstRow)
+            input.readLine();
 
 
 
@@ -360,6 +360,7 @@ public class CSVHandler {
 
         if(isQuestMode && correctAnswers==null) //if no student can be used to generate a correct fake answer key then generate using last student
             Statistics.setCorrectAnswers(generateFakeAnswerKey(row,false));
+
 
 
     }
