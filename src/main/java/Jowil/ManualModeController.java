@@ -483,7 +483,7 @@ public class ManualModeController extends Controller{
 
 
         Statistics.setIdentifierName(identifierName);
-        Controller.selectedIdentifierName=identifierName.equals("None")?"None":identifierName+MANUAL_MODE_INDICATOR;
+        Controller.selectedIdentifierName=IDStartIndex==NOT_AVAILABLE?"None":identifierName+MANUAL_MODE_INDICATOR;
         Controller.selectedFormColName=formColName.equals("None")?"None":formColName+MANUAL_MODE_INDICATOR;
         return true;
     }
