@@ -7,10 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -444,8 +442,10 @@ public class StartController extends Controller{
 
         ArrayList<TextField>activationTextFields=new ArrayList<>();
         HBox activationHBox=new HBox(spacing);
+        activationHBox.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         ArrayList<Node> actHBoxChildren=new ArrayList<>();
-        actHBoxChildren.add(activationLabel);
+        if(!isTranslationMode)
+            actHBoxChildren.add(activationLabel);
         double textFieldSize=resX*50/1280;
 
         for(int i=0;i<3;i++) {
@@ -462,20 +462,40 @@ public class StartController extends Controller{
         }
 
 
-
         TextField finalTextField=new TextField();
         finalTextField.setPrefWidth(textFieldSize);
         if(boxesText.length>3)
             finalTextField.setText(boxesText[3]);
         activationTextFields.add(finalTextField);
         actHBoxChildren.add(finalTextField);
+
+        if(isTranslationMode)
+            actHBoxChildren.add(activationLabel);
+
+
         activationHBox.getChildren().setAll(actHBoxChildren);
+
+        Platform.runLater(()->activationTextFields.get(0).requestFocus());
 
         for(TextField textField:activationTextFields){
             textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                 if (event.getCode() == KeyCode.ENTER)
                     activateButton.fire();
             });
+
+            textField.setOnKeyTyped(event -> {
+                if(event.getCharacter().charAt(0)==' ')
+                    event.consume();
+            });
+
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if(newValue.length()==4) {
+                    int nextIndex = activationTextFields.indexOf(textField) + 1;
+
+                    if(nextIndex!=4)
+                        activationTextFields.get(nextIndex).requestFocus();
+                }
+            }));
         }
 
 
@@ -514,21 +534,16 @@ public class StartController extends Controller{
 
 
 
+
         for(TextField textField:activationTextFields){
-            if(isTranslationMode){
-                submittedKey.insert(0,textField.getText());
-                submittedKeyDashed.insert(0,textField.getText());
-                submittedKeyDashed.insert(0,'-');
-            }
-            else {
                 submittedKey.append(textField.getText());
                 submittedKeyDashed.append(textField.getText());
                 submittedKeyDashed.append('-');
-            }
+
         }
 
 
-        submittedKeyDashed.deleteCharAt(isTranslationMode?0:submittedKeyDashed.length()-1);
+        submittedKeyDashed.deleteCharAt(submittedKeyDashed.length()-1);
 
 
         if(submittedKey.toString().toLowerCase().equals(correctActKey))
