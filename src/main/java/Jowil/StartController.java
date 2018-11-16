@@ -915,14 +915,24 @@ public class StartController extends Controller{
         emptyPane.setPrefHeight(0);
         emptyPane.setPrefWidth(10);
         JFXCheckBox translateFormCheckBox=new JFXCheckBox("Translate form content to arabic",resX*15/1280);
-        translateFormCheckBox.setStyle("-jfx-checked-color: #095c90;");
         translateFormCheckBox.setPadding(new Insets(resX*12/1280,0,0,resX*12/1280));
         translateFormCheckBox.setSelected((Boolean)generalPrefsJson.get(IS_TRANSLATE_FORM_CONTENT_JSON_KEY));
         translateFormCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             generalPrefsJson.put(IS_TRANSLATE_FORM_CONTENT_JSON_KEY,newValue);
         }));
 
-        contentVBox.getChildren().addAll(textHBox,radiosHBox,translateFormCheckBox);
+        //"Answer key in first row of students responses"
+        JFXCheckBox firstRowAnswerKeyCheckBox=new JFXCheckBox("Use a separate file for answer key",resX*15/1280);
+        firstRowAnswerKeyCheckBox.setPadding(translateFormCheckBox.getPadding());
+        firstRowAnswerKeyCheckBox.setSelected(!(Boolean)generalPrefsJson.get(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY));
+        firstRowAnswerKeyCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            generalPrefsJson.put(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY,!newValue);
+        }));
+
+
+        VBox checkBoxesVBox=new VBox(resY*5/1280,translateFormCheckBox,firstRowAnswerKeyCheckBox);
+
+        contentVBox.getChildren().addAll(textHBox,radiosHBox,checkBoxesVBox);
 
 
         dialog.getDialogPane().setContent(contentVBox);
@@ -972,6 +982,7 @@ public class StartController extends Controller{
                 Controller.currentOpenedProjectJson=null;
                 Controller.isQuestMode=questRadio.isSelected();
                 Controller.isTranslateFormContent=translateFormCheckBox.isSelected();
+                Controller.isAnswerKeyInFirstRow=!firstRowAnswerKeyCheckBox.isSelected();
                 new FileConfigController().startWindow();
             }
         }
@@ -1097,6 +1108,7 @@ public class StartController extends Controller{
         currentOpenedProjectJson= (JSONObject)projects.get(projIndex);
         Controller.isQuestMode=(Boolean)currentOpenedProjectJson.get(IS_QUEST_MODE_JSON_KEY);
         Controller.isTranslateFormContent=(Boolean)currentOpenedProjectJson.get(IS_TRANSLATE_FORM_CONTENT_JSON_KEY);
+        Controller.isAnswerKeyInFirstRow=(Boolean)currentOpenedProjectJson.get(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {

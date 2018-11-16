@@ -71,6 +71,7 @@ public abstract class Controller {
     static boolean isOpenMode;
     static boolean isDevMode; //the program isn't running in deployment environment.
     static boolean isTranslateFormContent; //choices and id is translated to arabic
+    static boolean isAnswerKeyInFirstRow;
 
 
     BorderPane outerBorderPane=new BorderPane();
@@ -125,7 +126,7 @@ public abstract class Controller {
             BONUS_MARKS_JSON_KEY="bonusMarks",USER_MAX_SCORE_JSON_KEY="userMaxScore",SCALES_JSON_KEY="scales",IS_TRANSLATION_MODE_JSON_KEY="isTranslationMode",
             IS_NORMAL_SCALING_MODE_JSON_KEY="isNormalScalingMode",ADD_BONUS_TO_ALL_JSON_KEY="addBonusToAll",IS_QUEST_MODE_JSON_KEY="isQuestMode",
             ACTIVATION_KEY_JSON_KEY="activationKey",IS_FIRST_LAUNCH_JSON_KEY="isFirstLaunch",IS_TRANSLATE_FORM_CONTENT_JSON_KEY="isTranslateFormContent",
-            ASK_CONTINUE_FILE_CONFIG_JSON_KEY="askContinueFileConfig";
+            ASK_CONTINUE_FILE_CONFIG_JSON_KEY="askContinueFileConfig",IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY="isAnswerKeyInFirstRow";
 
 
     //Main methods

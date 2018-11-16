@@ -231,6 +231,13 @@ public class FileConfigController extends Controller {
             }));
         }
 
+        if(isAnswerKeyInFirstRow) {
+            answersFileTextField.setDisable(true);
+            answersFileChooser.setOpacity(0.3);
+            answersFileChooser.addEventFilter(MouseEvent.ANY,event -> event.consume());
+        }
+
+
         if(!isOpenMode && isDevMode){
             mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
             if(!isQuestMode)

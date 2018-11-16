@@ -405,6 +405,7 @@ public class GradeBoundariesController extends Controller {
         projObject.put(IS_MANUAL_MODE_JSON_KEY,ManualModeController.isIsManualModeUsedBefore());
         projObject.put(IS_QUEST_MODE_JSON_KEY,isQuestMode);
         projObject.put(IS_TRANSLATE_FORM_CONTENT_JSON_KEY,Controller.isTranslateFormContent);
+        projObject.put(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY,Controller.isAnswerKeyInFirstRow);
 
 
 
