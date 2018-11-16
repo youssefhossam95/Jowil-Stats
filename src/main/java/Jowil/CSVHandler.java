@@ -564,14 +564,20 @@ public class CSVHandler {
             String groupMax=getGroupMax(qCount,i);
             group.setCorrectAnswers(getGroupCorrectAnswers(qCount,i));
 
-            if(isOpenMode && !isObjColSetsChanged) {
+            try {
+                Integer.parseInt(groupMax);
+                group.setNumeric(true);
+            }catch(NumberFormatException e) {
+                group.setNumeric(false);
+            }
+
+            if(isOpenMode && !isObjColSetsChanged)
                 group.setPossibleAnswers(Statistics.getQuestionsChoices().get(i));
-                try {
-                    Integer.parseInt(groupMax);
-                    group.setNumeric(true);
-                }catch(NumberFormatException e) {
-                    group.setNumeric(false);
-                }
+            else if(isBinaryResponseGroup(group.getCorrectAnswers(),groupMax)){
+                ArrayList<String> groupPossibleAnswers=new ArrayList<>();
+                groupPossibleAnswers.add(groupMax); //the T character
+                groupPossibleAnswers.add(Character.isUpperCase(groupMax.charAt(0))?"F":"f");
+                group.setPossibleAnswers(groupPossibleAnswers);
             }
             else
                 group.generatePossibleAnswers(groupMax);
@@ -587,6 +593,18 @@ public class CSVHandler {
         if(!isOpenMode || isObjColSetsChanged)
             Statistics.setQuestionsChoices(qChoices);
 
+    }
+
+    private static boolean isBinaryResponseGroup(HashSet<String> correctAnswers, String groupMax) {
+        if(!groupMax.toLowerCase().equals("t"))
+            return false;
+
+        for(String answer: correctAnswers) {
+            if (!answer.toLowerCase().equals("t") && !answer.toLowerCase().equals("f"))
+                return false;
+        }
+
+        return true;
     }
 
 

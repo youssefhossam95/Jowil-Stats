@@ -749,6 +749,8 @@ public class ManualModeController extends Controller{
         if(colSetType.equals(OBJECTIVE_TYPE))
             isObjColSetsChanged=true;
 
+        columnSetTextField.clear();
+
     }
 
     private boolean isRangeInValid(int minIndex, int maxIndex) {
