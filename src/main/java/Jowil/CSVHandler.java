@@ -600,7 +600,7 @@ public class CSVHandler {
             return false;
 
         for(String answer: correctAnswers) {
-            if (!answer.toLowerCase().equals("t") && !answer.toLowerCase().equals("f"))
+            if (!answer.toLowerCase().equals("t") && !answer.toLowerCase().equals("f") && !answer.toLowerCase().equals("*"))
                 return false;
         }
 
