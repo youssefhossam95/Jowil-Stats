@@ -306,6 +306,8 @@ public class GroupsController  extends Controller{
         int i=0;
         for(Group group: treeViewGroups){  //group names are unique
             if(group.getCleanedName().equals(groupName)) {
+                if(group.isBinaryResponse())
+                    return;
                 group.addAnswerToEnd();
                 isPossible.get(i).add(true);
                 TreeItem groupItem=(TreeItem)(choicesTreeView.getRoot().getChildren().get(i));

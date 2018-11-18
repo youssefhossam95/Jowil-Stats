@@ -219,10 +219,10 @@ public class ReportsHandler {
         if(!Controller.isIsTranslateFormContent())
             return;
 
+        translateQuestionsChoices();
 
-        translateArray(Statistics.getQuestionsChoices());
-        translateArray(Statistics.getCorrectAnswers());
-        translateArray(Statistics.getStudentAnswers());
+        translateAnswersArray(Statistics.getCorrectAnswers());
+        translateAnswersArray(Statistics.getStudentAnswers());
 
 
         if(Statistics.isIsIdentifierNumeric()){
@@ -232,11 +232,31 @@ public class ReportsHandler {
 
     }
 
-    private void translateArray(ArrayList<ArrayList<String>> array) {
-        for(int i=0;i<array.size();i++){
-            for(int j=0;j<array.get(i).size();j++){
-                String translated=Translator.englishToArabic(array.get(i).get(j));
-                array.get(i).set(j,translated);
+    private void translateQuestionsChoices() {
+        int qIndex=0;
+        for(Group group :CSVHandler.getDetectedGroups()){
+            for(int i=0;i<group.getqCount();i++){
+                for(int j=0;j<Statistics.getQuestionsChoices().get(qIndex).size();j++){
+                    String choice=Statistics.getQuestionsChoices().get(qIndex).get(j);
+                    String translated=group.isBinaryResponse()?Translator.englishToArabicBinary(choice):Translator.englishToArabic(choice);
+                    Statistics.getQuestionsChoices().get(qIndex).set(j,translated);
+                }
+                qIndex++;
+            }
+        }
+    }
+
+    private void translateAnswersArray(ArrayList<ArrayList<String>> array) {
+
+        for(int i=0;i<array.size();i++) {
+            int qIndex=0;
+            for (Group group : CSVHandler.getDetectedGroups()) {
+                for (int j = 0; j < group.getqCount(); j++) {
+                    String answer=array.get(i).get(qIndex);
+                    String translated=group.isBinaryResponse()?Translator.englishToArabicBinary(answer):Translator.englishToArabic(answer);
+                    array.get(i).set(qIndex,translated);
+                    qIndex++;
+                }
             }
         }
     }

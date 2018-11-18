@@ -7,7 +7,7 @@ import java.util.Arrays;
 public abstract class Translator {
 
     final private static String arabicNumbers="٠١٢٣٤٥٦٧٨٩";
-    final private static String arabicLetters="أبجدهوزحطيكلمنسعفصقرشتثخذوضظغ";
+    final private static String arabicLetters="أبجدهوزحطيكلمنسعفصقرشتثخذضظغ";
     final public static int ARABIC_TO_ENGLISH = 0  ;
 
 
@@ -44,6 +44,16 @@ public abstract class Translator {
 
         return output.toString();
     }
+
+    public static String englishToArabicBinary(String input){
+        if(input.toLowerCase().equals("t"))
+            return "ص";
+        else if(input.toLowerCase().equals("f"))
+            return "غ";
+        else
+            return input;
+    }
+
 
     public static String arabicToEnglish(String input){
         if(input.length()==0)

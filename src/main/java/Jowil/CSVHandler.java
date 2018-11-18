@@ -8,9 +8,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Jowil.Controller.constructMessage;
-import static Jowil.Controller.isOpenMode;
-import static Jowil.Controller.isQuestMode;
+import static Jowil.Controller.*;
 
 
 public class CSVHandler {
@@ -326,6 +324,8 @@ public class CSVHandler {
             rowNumber=2;
         }
 
+        if(isAnswerKeyInFirstRow)
+            input.readLine();
 
 
 
@@ -360,6 +360,7 @@ public class CSVHandler {
 
         if(isQuestMode && correctAnswers==null) //if no student can be used to generate a correct fake answer key then generate using last student
             Statistics.setCorrectAnswers(generateFakeAnswerKey(row,false));
+
 
 
     }
@@ -564,14 +565,20 @@ public class CSVHandler {
             String groupMax=getGroupMax(qCount,i);
             group.setCorrectAnswers(getGroupCorrectAnswers(qCount,i));
 
-            if(isOpenMode && !isObjColSetsChanged) {
+            try {
+                Integer.parseInt(groupMax);
+                group.setNumeric(true);
+            }catch(NumberFormatException e) {
+                group.setNumeric(false);
+            }
+
+            if(isOpenMode && !isObjColSetsChanged)
                 group.setPossibleAnswers(Statistics.getQuestionsChoices().get(i));
-                try {
-                    Integer.parseInt(groupMax);
-                    group.setNumeric(true);
-                }catch(NumberFormatException e) {
-                    group.setNumeric(false);
-                }
+            else if(isBinaryResponseGroup(group.getCorrectAnswers(),groupMax)){
+                ArrayList<String> groupPossibleAnswers=new ArrayList<>();
+                groupPossibleAnswers.add(groupMax); //the T character
+                groupPossibleAnswers.add(Character.isUpperCase(groupMax.charAt(0))?"F":"f");
+                group.setPossibleAnswers(groupPossibleAnswers);
             }
             else
                 group.generatePossibleAnswers(groupMax);
@@ -587,6 +594,18 @@ public class CSVHandler {
         if(!isOpenMode || isObjColSetsChanged)
             Statistics.setQuestionsChoices(qChoices);
 
+    }
+
+    private static boolean isBinaryResponseGroup(HashSet<String> correctAnswers, String groupMax) {
+        if(!groupMax.toLowerCase().equals("t"))
+            return false;
+
+        for(String answer: correctAnswers) {
+            if (!answer.toLowerCase().equals("t") && !answer.toLowerCase().equals("f") && !answer.toLowerCase().equals("*"))
+                return false;
+        }
+
+        return true;
     }
 
 

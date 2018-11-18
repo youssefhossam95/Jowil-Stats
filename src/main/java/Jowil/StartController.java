@@ -7,10 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -444,8 +442,10 @@ public class StartController extends Controller{
 
         ArrayList<TextField>activationTextFields=new ArrayList<>();
         HBox activationHBox=new HBox(spacing);
+        activationHBox.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         ArrayList<Node> actHBoxChildren=new ArrayList<>();
-        actHBoxChildren.add(activationLabel);
+        if(!isTranslationMode)
+            actHBoxChildren.add(activationLabel);
         double textFieldSize=resX*50/1280;
 
         for(int i=0;i<3;i++) {
@@ -462,20 +462,40 @@ public class StartController extends Controller{
         }
 
 
-
         TextField finalTextField=new TextField();
         finalTextField.setPrefWidth(textFieldSize);
         if(boxesText.length>3)
             finalTextField.setText(boxesText[3]);
         activationTextFields.add(finalTextField);
         actHBoxChildren.add(finalTextField);
+
+        if(isTranslationMode)
+            actHBoxChildren.add(activationLabel);
+
+
         activationHBox.getChildren().setAll(actHBoxChildren);
+
+        Platform.runLater(()->activationTextFields.get(0).requestFocus());
 
         for(TextField textField:activationTextFields){
             textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                 if (event.getCode() == KeyCode.ENTER)
                     activateButton.fire();
             });
+
+            textField.setOnKeyTyped(event -> {
+                if(event.getCharacter().charAt(0)==' ')
+                    event.consume();
+            });
+
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if(newValue.length()==4) {
+                    int nextIndex = activationTextFields.indexOf(textField) + 1;
+
+                    if(nextIndex!=4)
+                        activationTextFields.get(nextIndex).requestFocus();
+                }
+            }));
         }
 
 
@@ -514,21 +534,16 @@ public class StartController extends Controller{
 
 
 
+
         for(TextField textField:activationTextFields){
-            if(isTranslationMode){
-                submittedKey.insert(0,textField.getText());
-                submittedKeyDashed.insert(0,textField.getText());
-                submittedKeyDashed.insert(0,'-');
-            }
-            else {
                 submittedKey.append(textField.getText());
                 submittedKeyDashed.append(textField.getText());
                 submittedKeyDashed.append('-');
-            }
+
         }
 
 
-        submittedKeyDashed.deleteCharAt(isTranslationMode?0:submittedKeyDashed.length()-1);
+        submittedKeyDashed.deleteCharAt(submittedKeyDashed.length()-1);
 
 
         if(submittedKey.toString().toLowerCase().equals(correctActKey))
@@ -900,14 +915,24 @@ public class StartController extends Controller{
         emptyPane.setPrefHeight(0);
         emptyPane.setPrefWidth(10);
         JFXCheckBox translateFormCheckBox=new JFXCheckBox("Translate form content to arabic",resX*15/1280);
-        translateFormCheckBox.setStyle("-jfx-checked-color: #095c90;");
         translateFormCheckBox.setPadding(new Insets(resX*12/1280,0,0,resX*12/1280));
         translateFormCheckBox.setSelected((Boolean)generalPrefsJson.get(IS_TRANSLATE_FORM_CONTENT_JSON_KEY));
         translateFormCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             generalPrefsJson.put(IS_TRANSLATE_FORM_CONTENT_JSON_KEY,newValue);
         }));
 
-        contentVBox.getChildren().addAll(textHBox,radiosHBox,translateFormCheckBox);
+        //"Answer key in first row of students responses"
+        JFXCheckBox firstRowAnswerKeyCheckBox=new JFXCheckBox("Use a separate file for answer key",resX*15/1280);
+        firstRowAnswerKeyCheckBox.setPadding(translateFormCheckBox.getPadding());
+        firstRowAnswerKeyCheckBox.setSelected(!(Boolean)generalPrefsJson.get(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY));
+        firstRowAnswerKeyCheckBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            generalPrefsJson.put(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY,!newValue);
+        }));
+
+
+        VBox checkBoxesVBox=new VBox(resY*5/1280,translateFormCheckBox,firstRowAnswerKeyCheckBox);
+
+        contentVBox.getChildren().addAll(textHBox,radiosHBox,checkBoxesVBox);
 
 
         dialog.getDialogPane().setContent(contentVBox);
@@ -957,6 +982,7 @@ public class StartController extends Controller{
                 Controller.currentOpenedProjectJson=null;
                 Controller.isQuestMode=questRadio.isSelected();
                 Controller.isTranslateFormContent=translateFormCheckBox.isSelected();
+                Controller.isAnswerKeyInFirstRow=!firstRowAnswerKeyCheckBox.isSelected();
                 new FileConfigController().startWindow();
             }
         }
@@ -1082,6 +1108,7 @@ public class StartController extends Controller{
         currentOpenedProjectJson= (JSONObject)projects.get(projIndex);
         Controller.isQuestMode=(Boolean)currentOpenedProjectJson.get(IS_QUEST_MODE_JSON_KEY);
         Controller.isTranslateFormContent=(Boolean)currentOpenedProjectJson.get(IS_TRANSLATE_FORM_CONTENT_JSON_KEY);
+        Controller.isAnswerKeyInFirstRow=(Boolean)currentOpenedProjectJson.get(IS_ANSWER_KEY_IN_FIRST_ROW_JSON_KEY);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
