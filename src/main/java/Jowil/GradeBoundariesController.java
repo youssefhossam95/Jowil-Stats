@@ -908,7 +908,7 @@ public class GradeBoundariesController extends Controller {
 
             if (configNameTextField.getText().trim().isEmpty()) {
                 event.consume();
-                showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
+                 showAlertAndWait(Alert.AlertType.ERROR, stage.getOwner(), "Configuration Name Error",
                         "Configuration name cannot be empty.");
             } else if (isScaleExists(configNameTextField.getText().trim())) {
                 event.consume();
