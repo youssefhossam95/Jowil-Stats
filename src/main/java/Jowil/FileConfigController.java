@@ -308,7 +308,7 @@ public class FileConfigController extends Controller {
                 return;
             }
 
-            if (answersFileTextField.getText().length() == 0 && !isQuestMode) {
+            if (answersFileTextField.getText().length() == 0 && !isQuestMode && !isAnswerKeyInFirstRow) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", "No answer key file provided.");
                 return;
             }
@@ -318,11 +318,17 @@ public class FileConfigController extends Controller {
                 return;
             }
 
-            if (answersTextFieldResult == CSVFileValidator.ERROR && !isQuestMode) {
+            if (answersTextFieldResult == CSVFileValidator.ERROR && !isQuestMode && !isAnswerKeyInFirstRow) {
                 showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Answer Key File Error", constructMessage("Error in answer key file: ", answersTextFieldMessage));
                 return;
             }
 
+
+
+            if(isAnswerKeyInFirstRow) {
+                CSVHandler.setFormsCount(1);
+                CSVHandler.setAnswerKeyFilePath(answersFileTextField.getText());
+            }
 
             int formsCount = isOpenMode ? ((JSONArray) currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size() : CSVHandler.getFormsCount();
 
@@ -341,10 +347,11 @@ public class FileConfigController extends Controller {
                 }
 
 
+
                 int responsesColCount = CSVHandler.getResponsesColsCount();
                 int answersColCount = CSVHandler.getAnswersColsCount();
 
-                if (responsesColCount != answersColCount && !isOpenMode) {
+                if (responsesColCount != answersColCount && !isOpenMode && !isAnswerKeyInFirstRow) {
                     showAlert(Alert.AlertType.ERROR, stage.getOwner(), "Columns Count Mismatch", constructMessage("Student responses file contains ",
                             responsesColCount + "", " columns, while the answer key file contains ", answersColCount + "", " columns."));
                     return;
@@ -400,7 +407,7 @@ public class FileConfigController extends Controller {
 
             if(answersTextFieldResult==CSVFileValidator.WARNING){
 
-                int selectedAction = isAnswerKeyInFirstRow?CONTINUE:showHeadersWarningDialog("answer key");
+                int selectedAction = showHeadersWarningDialog("answer key");
                 if (selectedAction == CANCEL)
                     return;
 
@@ -438,7 +445,7 @@ public class FileConfigController extends Controller {
             CSVHandler.setIsResponsesContainsHeaders(true);
 
 
-            if (answersTextFieldResult == CSVFileValidator.SUCCESS) { //both files contain headers -> check for headers mismatch
+            if (answersTextFieldResult == CSVFileValidator.SUCCESS && !isAnswerKeyInFirstRow) { //both files contain headers -> check for headers mismatch
                 boolean isMismatched;
                 try {
                     isMismatched = CSVHandler.isFilesHeadersMismatched(new File(mainFileTextField.getText()), new File(answersFileTextField.getText()));
@@ -1085,7 +1092,7 @@ public class FileConfigController extends Controller {
     }
 
     private void validateAnswersTextField() {
-        if(isQuestMode)
+        if(isQuestMode || isAnswerKeyInFirstRow)
             return;
 
         CSVFileValidator validator = new CSVFileValidator(answersFileTextField, CSVFileValidator.ANSWERSFILETEXTFIELD);

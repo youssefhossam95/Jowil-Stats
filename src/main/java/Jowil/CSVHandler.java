@@ -271,6 +271,12 @@ public class CSVHandler {
 
     }
 
+    public static void setAnswersColsCount(int answersColsCount) {
+        CSVHandler.answersColsCount = answersColsCount;
+    }
+
+
+
     public static ArrayList<String[]> getSavedAnswerKeyCSV() {
         return savedAnswerKeyCSV;
     }
@@ -410,6 +416,9 @@ public class CSVHandler {
         ArrayList<ArrayList<String>> correctAnswers=new ArrayList<ArrayList<String>>();
         ArrayList<ArrayList<String>> cleanedCorrectAnswers=new ArrayList<>(); //without ignored questions
         savedAnswerKeyCSV=new ArrayList<>();
+
+        if(Controller.isAnswerKeyInFirstRow)
+            isAnswerKeyContainsHeaders=isResponsesContainsHeaders;
 
         if(Controller.isQuestMode){
             int qCount=questionsColEndIndex-questionsColStartIndex+1;
