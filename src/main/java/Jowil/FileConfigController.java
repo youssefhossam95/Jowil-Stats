@@ -238,7 +238,7 @@ public class FileConfigController extends Controller {
 
         if(!isOpenMode && isDevMode){
             mainFileTextField.setText(".\\src\\test\\AppTestCSVs\\TestGOnly.csv");
-            if(!isQuestMode)
+            if(!isQuestMode && !isAnswerKeyInFirstRow)
                 answersFileTextField.setText(".\\src\\test\\AppTestCSVs\\alexAnswerKeysGOnlyWithEndProgressiveBlanks.csv");
         }
 
@@ -325,10 +325,9 @@ public class FileConfigController extends Controller {
 
 
 
-            if(isAnswerKeyInFirstRow) {
+            if(isAnswerKeyInFirstRow)
                 CSVHandler.setFormsCount(1);
-                CSVHandler.setAnswerKeyFilePath(answersFileTextField.getText());
-            }
+
 
             int formsCount = isOpenMode ? ((JSONArray) currentOpenedProjectJson.get(OBJ_WEIGHTS_JSON_KEY)).size() : CSVHandler.getFormsCount();
 
@@ -463,7 +462,7 @@ public class FileConfigController extends Controller {
 
 
             try {
-                CSVHandler.loadAnswerKeys(answersFileTextField.getText(), true);
+                CSVHandler.loadAnswerKeys(isAnswerKeyInFirstRow?CSVHandler.getAnswerKeyFilePath():answersFileTextField.getText(), true);
             } catch (IOException e) {
 
             } catch (CSVHandler.IllFormedCSVException e) {
@@ -554,7 +553,9 @@ public class FileConfigController extends Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        answersFileTextField.setText(answerKeyFilePath);
+
+        CSVHandler.setAnswerKeyFilePath(answerKeyFilePath);
+
 
     }
 
