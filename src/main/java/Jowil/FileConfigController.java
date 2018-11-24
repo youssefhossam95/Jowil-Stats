@@ -200,11 +200,12 @@ public class FileConfigController extends Controller {
         if (isOpenMode) {
 
             mainFileTextField.setText((String) currentOpenedProjectJson.get(RESPONSES_FILE_PATH_JSON_KEY));
-            answersFileTextField.setText((String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY));
+            String answersFilePath=(String) currentOpenedProjectJson.get(ANSWERS_FILE_PATH_JSON_KEY);
+            answersFileTextField.setText(isAnswerKeyInFirstRow?"":answersFilePath);
             mainFileTextField.setEditable(false);
             answersFileTextField.setEditable(false);
             CSVHandler.setResponsesFilePath(mainFileTextField.getText()); //because the csv loading functions are not called in openMode so these strings will be equal to null.
-            CSVHandler.setAnswerKeyFilePath(answersFileTextField.getText()); //same as above
+            CSVHandler.setAnswerKeyFilePath(answersFilePath); //same as above
             validateMainTextField();
             validateAnswersTextField();
             answersFileChooser.setOpacity(0.3);
@@ -527,7 +528,7 @@ public class FileConfigController extends Controller {
 
         BufferedWriter pw = null;
 
-        String answerKeyFilePath=mainFileTextField.getText().replace(".csv","")+"_Answer Key.csv";
+        String answerKeyFilePath=dataDirPath+"GeneratedAnswerKey.csv";
 
         try {
             pw =  new BufferedWriter(new FileWriter(answerKeyFilePath));
