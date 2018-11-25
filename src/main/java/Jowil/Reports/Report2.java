@@ -30,6 +30,9 @@ public class Report2 extends Report {
 
     private ArrayList<Map<String , String>> formsStatsMaps ;
     private ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsTables ;
+    public static final int MAX_ACCEPTABLE_CHOICES = 10 ;
+    public static final int MAX_NON_DESTRACOTRS = 6 ;
+    private String templateName  ;
     ArrayList<ArrayList<ArrayList<ArrayList<String>>>> formsStatsPrintableTables ;
 
     final String lineHtml = "<div class=\"line\">\n" +
@@ -50,7 +53,8 @@ public class Report2 extends Report {
     private void constructor() {
         reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
-        templatePath = workSpacePath + "report2Template.html";
+        templatePath = workSpacePath + templateName ;
+        System.out.println("The fucken Template Name" + templateName);
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 
@@ -618,5 +622,12 @@ public class Report2 extends Report {
             formsStatsTables.add(Statistics.report2TableStats(formIndex)) ;
             formsStatsPrintableTables.add(Statistics.report2PrintableStats(formsStatsTables.get(formIndex) , formIndex)) ;
         }
+
+//        System.out.println("Iam in report 2 init man ");
+        templateName = "report2Template.html" ;
+        if(Statistics.getMaxNumOfChoices() >MAX_ACCEPTABLE_CHOICES)
+            templateName = "report2LongTemplate.html" ;
+
+        System.out.println("template name in init" + templateName);
     }
 }
