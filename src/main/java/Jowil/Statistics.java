@@ -1,5 +1,7 @@
 package Jowil;
 
+import Jowil.Reports.Report;
+import Jowil.Reports.Report2;
 import javafx.util.Pair;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -415,6 +417,15 @@ public class Statistics {
 
     //helper functions
 
+    public static int getMaxNumOfChoices(){
+        int max = 0  ;
+        for (ArrayList<String> choices: questionsChoices) {
+            int lenght = choices.size() ;
+            if(lenght > max)
+                max = lenght ;
+        }
+        return max ;
+    }
     private static double calcStudentScore(int studentIndex){
         double studentScore =0;
         ArrayList<String> studentAnswer = studentAnswers.get(studentIndex) ;
@@ -933,11 +944,13 @@ public class Statistics {
                     addedClass=";green bold";
                 else if(questionStats.get(answerIndex)> correctAnswerPrecentage) {
                     addedClass = ";red bold";
-                    percentOfSolvers+= "*" ;
+                    if(getMaxNumOfChoices() < Report2.MAX_ACCEPTABLE_CHOICES)
+                        percentOfSolvers+= "*" ;
                 }
                 else if(questionStats.get(answerIndex) ==0 ) {
                     addedClass = ";gold";
-                    nonDistractors += questionChoices.get(answerIndex)+" " ;
+                    if(nonDistractors.length() < Report2.MAX_NON_DESTRACOTRS *2 )
+                        nonDistractors += questionChoices.get(answerIndex)+" " ;
 //                    percentOfSolvers = "(0)";
                 }
                 tableRow.add(percentOfSolvers+addedClass) ; //Response Frequences
@@ -945,6 +958,8 @@ public class Statistics {
 
             if(nonDistractors.equals(""))
                 nonDistractors= "-" ;
+            else if(nonDistractors.length()>= Report2.MAX_NON_DESTRACOTRS * 2)
+                nonDistractors+= "..." ;
             tableRow.add(nonDistractors);
             tableRow.add(Utils.formatNumber(calcPointBiserial(formIndex, questionIndex) , 1)) ; // Point Biserial
             tableRow.add(Utils.formatNumber(correctAnswerPrecentage * 100 ,1 )+"%") ; // Total
