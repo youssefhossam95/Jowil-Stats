@@ -94,6 +94,7 @@ public class CSVHandler {
     private static boolean isResponsesContainsHeaders;
     private static boolean isAnswerKeyContainsHeaders;
     public final static int NOT_AVAILABLE=-1;
+    private static boolean isIgnoreDetectedSubjCols;
 
 
 
@@ -336,6 +337,7 @@ public class CSVHandler {
 
 
         boolean isFakeAnswersGenerated=false;
+        isIgnoreDetectedSubjCols=true;
         String[] row=null;
         ArrayList<ArrayList<String>> correctAnswers=null;
         //parse students data
@@ -367,6 +369,13 @@ public class CSVHandler {
         if(isQuestMode && correctAnswers==null) //if no student can be used to generate a correct fake answer key then generate using last student
             Statistics.setCorrectAnswers(generateFakeAnswerKey(row,false));
 
+
+        if(isIgnoreDetectedSubjCols){
+            Statistics.setSubjScores(new ArrayList<>());
+            CSVHandler.setSubjQuestionsCount(0);
+            CSVHandler.setSubjStartIndex(NOT_AVAILABLE);
+            CSVHandler.setSubjEndIndex(NOT_AVAILABLE);
+        }
 
 
     }
@@ -678,8 +687,12 @@ public class CSVHandler {
         for(int i=subjStartIndex;i<subjEndIndex;i++){
             try{
                 studentSubScores.add(Double.parseDouble(row[i]));
+                isIgnoreDetectedSubjCols=false;
             }catch(NumberFormatException e){
-                throw new InvalidSubjColumnException(rowNumber,row[i]);
+                if(row[i].isEmpty())
+                    studentSubScores.add(0.0);
+                else
+                    throw new InvalidSubjColumnException(rowNumber,row[i]);
             }
         }
 
