@@ -95,7 +95,7 @@ public class CSVHandler {
     private static boolean isAnswerKeyContainsHeaders;
     public final static int NOT_AVAILABLE=-1;
     private static boolean isIgnoreDetectedSubjCols;
-
+    private static int lastDetectedSubjCol;
 
 
 
@@ -337,7 +337,7 @@ public class CSVHandler {
 
 
         boolean isFakeAnswersGenerated=false;
-        isIgnoreDetectedSubjCols=true;
+        lastDetectedSubjCol=NOT_AVAILABLE;
         String[] row=null;
         ArrayList<ArrayList<String>> correctAnswers=null;
         //parse students data
@@ -370,11 +370,33 @@ public class CSVHandler {
             Statistics.setCorrectAnswers(generateFakeAnswerKey(row,false));
 
 
-        if(isIgnoreDetectedSubjCols){
-            Statistics.setSubjScores(new ArrayList<>());
-            CSVHandler.setSubjQuestionsCount(0);
-            CSVHandler.setSubjStartIndex(NOT_AVAILABLE);
-            CSVHandler.setSubjEndIndex(NOT_AVAILABLE);
+        if(subjStartIndex!=NOT_AVAILABLE) {
+            if (lastDetectedSubjCol + 1 != subjEndIndex) { //in case that some of the subj columns were empty
+                if (lastDetectedSubjCol == NOT_AVAILABLE) {
+                    subjStartIndex = NOT_AVAILABLE;
+                    subjEndIndex=NOT_AVAILABLE;
+                    subjQuestionsCount = 0;
+                }
+                else {
+                    subjEndIndex = lastDetectedSubjCol + 1;
+                    subjQuestionsCount = subjEndIndex - subjStartIndex;
+                }
+
+
+
+
+                ArrayList<ArrayList<Double>> subjScores = Statistics.getSubjScores();
+                ArrayList<ArrayList<Double>> croppedSubjScores = new ArrayList<>();
+
+                for (ArrayList<Double> list : subjScores) {
+                    ArrayList<Double> croppedList = new ArrayList<>();
+                    for (int i = 0; i < subjQuestionsCount; i++)
+                        croppedList.add(list.get(i));
+                    croppedSubjScores.add(croppedList);
+                }
+                Statistics.setSubjScores(subjStartIndex==NOT_AVAILABLE?new ArrayList<>():croppedSubjScores);
+            }
+
         }
 
 
@@ -687,7 +709,7 @@ public class CSVHandler {
         for(int i=subjStartIndex;i<subjEndIndex;i++){
             try{
                 studentSubScores.add(Double.parseDouble(row[i]));
-                isIgnoreDetectedSubjCols=false;
+                lastDetectedSubjCol=Math.max(lastDetectedSubjCol,i);
             }catch(NumberFormatException e){
                 if(row[i].isEmpty())
                     studentSubScores.add(0.0);
