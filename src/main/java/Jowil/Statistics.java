@@ -1040,10 +1040,15 @@ public class Statistics {
         for(int studentIndex  = 0 ; studentIndex < studentScores.size() ; studentIndex++ ) {
             ArrayList<String> tableRow = new ArrayList<String>() ;
             double scorePrecentage = studentScores.get(studentIndex)/ maxScore ;
-            tableRow.add(studentIdentifier.get(studentIndex)) ; // identifier
+            String studentId  = studentIdentifier.get(studentIndex) ;
+            if(studentId.length()==0)
+                tableRow.add("-") ;
+            else
+                tableRow.add(studentId) ; // identifier
             tableRow.add(getGrade(scorePrecentage)) ; // Grade
             tableRow.add(Utils.formatNumber(studentScores.get(studentIndex) , 0)+"/"+ Utils.formatNumber(maxScore , 0 )) ; // score
             tableRow.add(Utils.formatNumber(scorePrecentage*100 , 1)+"%") ; // percnetage
+
 
             statsTable.add(tableRow);
         }
