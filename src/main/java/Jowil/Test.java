@@ -240,10 +240,8 @@ public class Test {
 //        builder.append(" ") ;
 //        builder.append("10");
 //
-//        String h = "hi man " + "fuck"  +"10";
 //
 //        System.out.println(h);
-//        h.replace("fuck" , "كيفك");
 //        System.out .println(h);
 //        System.out.println( builder.toString());
 //        TxtUtils.writeTxtToFile(builder.toString() , "test.txt");

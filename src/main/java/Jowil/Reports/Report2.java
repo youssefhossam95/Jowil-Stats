@@ -54,7 +54,6 @@ public class Report2 extends Report {
         reportTitle = "Test Summary Report" ;
         workSpacePath = reportsPath + "report2\\" ;
         templatePath = workSpacePath + templateName ;
-        System.out.println("The fucken Template Name" + templateName);
         pdfHtmlPath = workSpacePath+outputFileName+".html" ;
     }
 

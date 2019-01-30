@@ -13,7 +13,12 @@ public class TxtUtils {
 
     public static String newLine = "\r\n" ;
 
-
+    /**
+     * calculate max number of characters in table for each line
+     * @param table table data as matrix
+     * @param cellHorizontalPadding number of empty spaces in table cell
+     * @return list of max number of characters needed for each line
+     */
     public static ArrayList<Integer> calcCellsWidths ( ArrayList<ArrayList<String>>  table , int cellHorizontalPadding ) {
         ArrayList<Integer> cellsWidths = new ArrayList<>();
         for (int colIndex = 0; colIndex < table.get(0).size(); colIndex++) {
@@ -42,6 +47,13 @@ public class TxtUtils {
         }
         return pageWidth ;
     }
+
+    /**
+     * calculates max number of characters in a single line in all page tables
+     * @param pageTables list of tables data
+     * @param CHP cell horizontal padding
+     * @return the max number of characters
+     */
     public static int calcPageWidth (ArrayList<ArrayList<ArrayList<String>>> pageTables , int CHP) {
       ArrayList<Integer> CHPs = new ArrayList<>();
         for(int i = 0 ; i < pageTables.size() ; i++){
@@ -59,11 +71,20 @@ public class TxtUtils {
     public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ) {
         return generateTxtTableAlignCenter(table, title,cellHorizontalPadding,showLines,false) ;
     }
+
+    /**
+     * generates String representing a table with data aligned center in each cell
+     * @param table table data as matrix
+     * @param title title to be written above table
+     * @param cellHorizontalPadding number of empty spaces in table cell
+     * @param showLines boolean to show lines between rows of tables
+     * @param arabic boolean if text contains arabic text
+     * @return String representing table
+     */
     public static String generateTxtTableAlignCenter (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding , boolean showLines ,boolean arabic ) {
         if(table.size()>1&& Utils.checkListContainArabic(table.get(1)) ) {
             table = Translator.translateTable(table) ;
         }
-//        System.out.println("fuck you");
         String txtTable = "" ;
         ArrayList<Integer> cellsWidths = calcCellsWidths(table , cellHorizontalPadding) ;
         int tableWidth = calcTableWidth( table ,  cellHorizontalPadding) ;
@@ -123,6 +144,13 @@ public class TxtUtils {
         return txtTable ;
     }
 
+    /**
+     * generates String representing a table with data aligned left for even cell index and right for odd cell index
+     * @param table table data as matrix
+     * @param title title to be written above table
+     * @param cellHorizontalPadding number of empty spaces in table cell
+     * @return
+     */
     public static String generateTxtTableAlignLR (ArrayList<ArrayList<String>> table , String title , int cellHorizontalPadding ) {
         String txtTable = "" ;
         int paddingBetweenTables = 5 ;
@@ -156,6 +184,12 @@ public class TxtUtils {
         return txtTable ;
     }
 
+    /**
+     * Stack Tables after bing converted to txt string Vertically
+     * @param tables List of  strings representing tables
+     * @param paddingBetweenTables number of lines that will separate between tables
+     * @return String representing the stacked tables
+     */
     public static String stackTablesV (ArrayList<String> tables , int paddingBetweenTables ) {
         String outputTable = "";
         for(String table : tables) {
