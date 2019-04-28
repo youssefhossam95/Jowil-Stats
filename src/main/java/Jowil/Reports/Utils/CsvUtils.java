@@ -34,6 +34,13 @@ public class CsvUtils {
 
     }
 
+    /**
+     * Generate one line (row) of csv String
+     * @param values list of values in the line
+     * @param separators separator used in csv
+     * @param customQuote optional char that wrapp values
+     * @return String representing Csv line
+     */
     public static String generateLine(ArrayList<String> values, char separators, char customQuote) {
 
         boolean first = true;
@@ -63,6 +70,13 @@ public class CsvUtils {
     }
 
 
+    /**
+     * Function that generate CSV String That Represent a table
+     * @param table table data as Matrix
+     * @param separator separator used in CSV
+     * @param title Tilte that will be written above the table  DEFAULT ""
+     * @return
+     */
 
     public static  String generateTable(ArrayList<ArrayList<String>> table, char separator , String title)  {
 
@@ -79,9 +93,10 @@ public class CsvUtils {
     public static  String generateTable(ArrayList<ArrayList<String>> table, char separator)  {
         return generateTable(table , separator , "");
     }
+
+
     public static String generateTitleLine (String title , char separator , int pageWidth ,int paddingBelow){
         int numberOfTitleWords = title.split(" ").length;
-
        return Utils.generatePattern(String.valueOf(separator), pageWidth/2-numberOfTitleWords/2)+title+Utils.generatePattern(NEW_LINE , paddingBelow);
     }
 
@@ -89,6 +104,11 @@ public class CsvUtils {
         return table.get(0).size() ;
     }
 
+    /**
+     * calculates number of cells (horizontally) needed by tables
+     * @param tables tables in the page
+     * @return number of cells needed
+     */
     public static int calcPageWidth(ArrayList<ArrayList<ArrayList<String>>> tables) {
         int maxWidth = 0 ;
         for (ArrayList<ArrayList<String>> table :tables){
@@ -99,6 +119,12 @@ public class CsvUtils {
         return maxWidth ;
     }
 
+    /**
+     * Stack Tables after bing converted to csv string Vertically
+     * @param tables List of CSV strings representing tables
+     * @param paddingBetweenTables number of lines that will separate between tables
+     * @return String representing the stacked tables
+     */
     public static String stackTablesV (ArrayList<String> tables , int paddingBetweenTables ) {
         String outputTable = "";
         for(String table : tables) {

@@ -1,3 +1,2 @@
-ID,Name,dummy,Form,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,TF1,TF2,TF3,TF4,TF5,TF6,TF7,TF8,TF9,TF10,TF11,TF12,TF13,TF14,TF15,Dr.William1,Dr.William2,Dr.William3,Dr.William4,Dr.William5,Dr.William6,Dr.William7,Dr.William8,Dr.William9,Dr.William10,Dr.William11,Dr.William12,Dr.William13,Dr.William14,Dr.William15,Dr.William16,Dr.William17,Dr.William18,Dr.William19,Dr.William20,Dr.William21,Dr.William22,Dr.William23,Dr.William24,Dr.William25,Dr.William26,Dr.William27,Dr.William28,Dr.William29,Dr.William30,Dr.William31,Dr.William32,Dr.William33,Dr.William34,Dr.William35
-,,,,C,D,D,,D,,,,,,1,1,,2,2,2,1,2,2,2,1,2,1,1,1,C,A,B,A,B,C,B,A,B,A,A,B,B,B,A,A,C,C,C,B,,,,,,,,,,,,,,,
-,,,,A,D,D,,A,,,,,,2,1,,1,2,2,1,2,1,2,2,1,1,2,2,B,A,C,C,C,B,A,C,A,A,A,A,A,A,A,B,A,C,A,A,,,,,,,,,,,,,,,
+ID,Name,dummy,Form,TF1,TF2,TF3,TF4,TF5,subj1,subj2
+,,,,T,T,F,T,F,,

@@ -296,7 +296,6 @@ public class LicenceActivity extends AppCompatActivity  {
         }catch (NumberFormatException e) {
             return false;
         }catch (Exception e){
-            System.out.print("fucken error ; ");
             e.printStackTrace();
         }
         return true ;

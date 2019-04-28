@@ -66,6 +66,14 @@ public class WordUtils {
         pageSize.setW(BigInteger.valueOf(width));
         pageSize.setH(BigInteger.valueOf(height));
     }
+
+    /**
+     * creates the word document with some parameters
+     * @param width page width in inches
+     * @param height page height in inches
+     * @param LRPageMargins left/right margin of the page
+     * @return document object
+     */
     public static XWPFDocument createDocument (int width , int height , int LRPageMargins ){
         XWPFDocument document = new XWPFDocument();
 
@@ -94,6 +102,7 @@ public class WordUtils {
         width.setW(BigInteger.valueOf(tableWidth));
     }
 
+
     public static void addPageBreak (XWPFDocument document) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setPageBreak(true);
@@ -105,7 +114,12 @@ public class WordUtils {
         removeBorders(docTable, true);
     }
 
-        public static void removeBorders (XWPFTable docTable , boolean addTopBorder ) {
+    /**
+     * remove borders form table
+     * @param docTable table object
+     * @param addTopBorder boolean whether or not to add border top
+     */
+    public static void removeBorders (XWPFTable docTable , boolean addTopBorder ) {
         docTable.setInsideHBorder(XWPFTable.XWPFBorderType.NONE,0 , 0 , "FFFFFF");
         docTable.setInsideVBorder(XWPFTable.XWPFBorderType.NONE , 0 , 0 , "FFFFFF");
 
@@ -138,6 +152,19 @@ public class WordUtils {
     }
 
 
+    /**
+     * add table to document
+     * @param document document object
+     * @param dataTable table to be inserted
+     * @param alignment alignment of table data
+     * @param title title of the table
+     * @param titleFontSize font size of the title
+     * @param hasBorders boolean whether of not add borders
+     * @param firstRowHeader boolean whether or not the first row is header row
+     * @return table object
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static XWPFTable addTable(XWPFDocument document , ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean hasBorders , boolean firstRowHeader) throws IOException, InvalidFormatException {
 
         if(title != "") {
@@ -205,6 +232,19 @@ public class WordUtils {
     }
 
 
+    /**
+     * Creates table inside table cell
+     * @param wrapperCell cell object that the table will be inserted in
+     * @param dataTable table to be inserted
+     * @param alignment alignment of table data
+     * @param title title of the table
+     * @param titleFontSize font size of the tilte
+     * @param addHeaderRow boolean if table contains Header
+     * @param tableWidth table width in inchs
+     * @return table object
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static XWPFTable createTableInCell (XWPFTableCell wrapperCell, ArrayList<ArrayList<String>> dataTable , int alignment , String title , int titleFontSize , boolean addHeaderRow , double tableWidth ) throws IOException, InvalidFormatException {
 
 
@@ -318,6 +358,12 @@ public class WordUtils {
         run.setText(cellText);
         return run;
     }
+
+    /**
+     * changes table alignment
+     * @param table table object
+     * @param align alignment
+     */
     public static  void setTableAlign(XWPFTable table,ParagraphAlignment align) {
         CTTblPr tblPr = table.getCTTbl().getTblPr();
         CTJc jc = (tblPr.isSetJc() ? tblPr.getJc() : tblPr.addNewJc());
@@ -373,7 +419,19 @@ public class WordUtils {
     }
 
 
-
+    /**
+     * add Image to word document
+     * @param document document object
+     * @param p paragraph object that the image should be inserted in
+     * @param imgPath path to image to be inserted
+     * @param alignment alignment of the image
+     * @param width width of image in pixels
+     * @param height height of image in pixels
+     * @param addBreak boolean to add line after the image or not
+     * @return the paragraph containing the image for further processing
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static XWPFParagraph addImage (XWPFDocument document, XWPFParagraph p , String imgPath , ParagraphAlignment alignment , int width , int height , boolean addBreak ) throws IOException, InvalidFormatException {
 
         if(p == null)
@@ -389,6 +447,13 @@ public class WordUtils {
 
     }
 
+    /**
+     * adds legend to word document
+     * @param document document object
+     * @param legends table with first column containing legend image path and second column containing legend text
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static void addLegend (XWPFDocument document , ArrayList<ArrayList<String>> legends) throws IOException, InvalidFormatException {
         for ( int i = 0  ; i < legends.size() ; i++) {
             String imgPath = legends.get(i).get(0) ;
@@ -406,7 +471,11 @@ public class WordUtils {
 
     }
 
-
+    /**
+     * add header above table
+     * @param document document object
+     * @param header string of the header
+     */
     public static void addHeaderLine(XWPFDocument document , String header) {
         XWPFTable lineTable = document.createTable(2 , 3) ;
 
@@ -477,6 +546,10 @@ public class WordUtils {
         oTabStop.setPos(oPos);
     }
 
+    /**
+     * add footer to document with page number and project name and date
+     * @param document the word document object
+     */
     public static void createWordFooter(XWPFDocument document) {
 
         CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
