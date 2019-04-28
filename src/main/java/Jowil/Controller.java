@@ -30,6 +30,7 @@ import org.pdfsam.ui.RingProgressIndicator;
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
@@ -689,12 +690,14 @@ public abstract class Controller {
         String file = dataDirPath+"UserData/"+path;
 
         try {
-            pw = new PrintWriter(file);
+            pw = new PrintWriter(file,"UTF-8");
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        pw.write(jsonObj.toJSONString());
+        pw.print(jsonObj.toJSONString());
         pw.flush();
         pw.close();
     }

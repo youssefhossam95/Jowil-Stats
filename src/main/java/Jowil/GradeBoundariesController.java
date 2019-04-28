@@ -25,6 +25,8 @@ import org.json.simple.JSONObject;
 
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static Jowil.CSVHandler.NOT_AVAILABLE;
@@ -387,7 +389,11 @@ public class GradeBoundariesController extends Controller {
             projObject=currentOpenedProjectJson;
         }
         else {
-            ((JSONArray) savedProjectsJson.get("projects")).add(projObject);
+            JSONArray projects=((JSONArray) savedProjectsJson.get("projects"));
+            if(projects.size()>=10) //10 projects saved -> delete oldest project
+                projects.remove(0);
+            projects.add(projObject);
+
             projObject.put(PROJECT_NAME_JSON_KEY, Controller.projectName);
         }
 
@@ -625,7 +631,7 @@ public class GradeBoundariesController extends Controller {
                 String lastDir = (String) prefsJsonObj.get("reportsOutputDir");
 
                 if (isJsonSuccess) {
-                    lastDir = lastDir.isEmpty() ? System.getProperty("user.home") : lastDir;
+                    lastDir = Files.exists(Paths.get(lastDir)) && !lastDir.isEmpty()? lastDir: System.getProperty("user.home") ;
                     dirChooser.setInitialDirectory(new File((lastDir)));
                 }
 

@@ -17,6 +17,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -613,7 +615,15 @@ public class FileConfigController extends Controller {
                 mainFileChooser.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
-                fileChooser.setInitialDirectory(new File((lastDir == null ? System.getProperty("user.home") : lastDir)));
+
+                String dir;
+                if(lastDir==null || !Files.exists(Paths.get(lastDir)))
+                    dir=System.getProperty("user.home");
+                else
+                    dir=lastDir;
+
+                fileChooser.setInitialDirectory(new File(dir));
+
                 fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
                 csvFile = fileChooser.showOpenDialog(stage);
                 if (csvFile != null) {
@@ -642,7 +652,15 @@ public class FileConfigController extends Controller {
                 //answersFileChooser.setStyle("-fx-background-color:transparent;");
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Open CSV file");
-                fileChooser.setInitialDirectory(new File((lastDir == null ? System.getProperty("user.home") : lastDir)));
+
+                String dir;
+                if(lastDir==null || !Files.exists(Paths.get(lastDir)))
+                    dir=System.getProperty("user.home");
+                else
+                    dir=lastDir;
+
+                fileChooser.setInitialDirectory(new File(dir));
+
                 fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
                 csvFile = fileChooser.showOpenDialog(stage);
                 if (csvFile != null) {
