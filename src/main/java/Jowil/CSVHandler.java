@@ -795,6 +795,7 @@ public class CSVHandler {
         boolean isAnswersNumeric=false;
         boolean isUpperCase=false;
 
+
         String firstAnswer=Statistics.getCorrectAnswers().get(0).get(groupStartCol).trim();
 
         try{
