@@ -272,8 +272,8 @@ public class Report2 extends Report {
         for(String qChoice: questionChoices )
             tableHeaders.add(qChoice) ;
         tableHeaders.add("Non Distractors") ;
-        tableHeaders.add("Point Biserial") ; tableHeaders.add("Overall %") ; tableHeaders.add("Bottom 25%");
-        tableHeaders.add("Top 25%") ;
+        tableHeaders.add("Point Biserial") ; tableHeaders.add("Overall %") ; tableHeaders.add("Bottom 27%");
+        tableHeaders.add("Top 27%") ;
 
         return tableHeaders ;
     }

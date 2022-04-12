@@ -716,6 +716,8 @@ public class Statistics {
         statsMap.put("Median" , Utils.formatNumber(median , 1));
         statsMap.put("25th Percentile" , Utils.formatNumber( firstQ , 1 )) ;
         statsMap.put("75th Percentile" , Utils.formatNumber( thirtQ  ,1 )) ;
+        statsMap.put("90th Percentile" , Utils.formatNumber( ds.getPercentile(90) , 1 )) ;
+        statsMap.put("95th Percentile" , Utils.formatNumber( ds.getPercentile(95)  ,1 )) ;
         statsMap.put("Interquartile Range" , Utils.formatNumber( thirtQ-firstQ , 1 )) ;
 
         statsMap.put("90" , Utils.formatNumber( CI90Lower , 1 ) + " - " + Utils.formatNumber( CI90Higher , 1 )) ;
@@ -846,7 +848,7 @@ public class Statistics {
         }
         int numberOfStudents  = studentEndIndex - studentStartIndex ;
 
-        return Utils.formatNumber( (double)count/(double)numberOfStudents *100 , 1 )+"%" ;
+        return Utils.formatNumber( (double)count/(double)numberOfStudents *100 , 2 )+"%" ;
     }
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
@@ -939,7 +941,7 @@ public class Statistics {
             String nonDistractors ="" ;
             for(int answerIndex = 0 ; answerIndex < questionStats.size() ; answerIndex ++ ) {
                 String addedClass = "" ;
-                String percentOfSolvers = Utils.formatNumber(questionStats.get(answerIndex) * 100 , 1) ;
+                String percentOfSolvers = Utils.formatNumber(questionStats.get(answerIndex) * 100 , 2) ;
                 if(answerIndex== correctAnswerIndex)
                     addedClass=";green bold";
                 else if(questionStats.get(answerIndex)> correctAnswerPrecentage) {
@@ -960,11 +962,12 @@ public class Statistics {
                 nonDistractors= "-" ;
             else if(nonDistractors.length()>= Report2.MAX_NON_DESTRACOTRS * 2)
                 nonDistractors+= "..." ;
+            DecimalFormat formatter = new DecimalFormat("#0.000");
             tableRow.add(nonDistractors);
-            tableRow.add(Utils.formatNumber(calcPointBiserial(formIndex, questionIndex) , 1)) ; // Point Biserial
-            tableRow.add(Utils.formatNumber(correctAnswerPrecentage * 100 ,1 )+"%") ; // Total
-            tableRow.add(calcPrecentOfSolvers(.75 , 1.0,formIndex , questionIndex)); //upper 27
-            tableRow.add(calcPrecentOfSolvers(0 , .25,formIndex , questionIndex)); // lower 27
+            tableRow.add(formatter.format(calcPointBiserial(formIndex, questionIndex))) ; // Point Biserial
+            tableRow.add(Utils.formatNumber(correctAnswerPrecentage * 100 ,2 )+"%") ; // Total
+            tableRow.add(calcPrecentOfSolvers(.73 , 1.0,formIndex , questionIndex)); //upper 27
+            tableRow.add(calcPrecentOfSolvers(0 , .27,formIndex , questionIndex)); // lower 27
             table.add(tableRow);
         }
         tables.add(table) ;

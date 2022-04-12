@@ -64,8 +64,8 @@ public class Report3 extends Report {
         doc.select("td.Variance").last().text(statsMap.get("Variance")) ;
         doc.select("td.Range").last().text(statsMap.get("Range")) ;
         doc.select("td.Median").last().text(statsMap.get("Median")) ;
-        doc.select("td.25thPercentile").last().text(statsMap.get("25th Percentile")) ;
-        doc.select("td.75thPercentile").last().text(statsMap.get("75th Percentile")) ;
+        doc.select("td.25thPercentile").last().text(statsMap.get("90th Percentile")) ;
+        doc.select("td.75thPercentile").last().text(statsMap.get("95th Percentile")) ;
         doc.select("td.InterquartileRange").last().text(statsMap.get("Interquartile Range")) ;
 
         //Confidence Intervals
