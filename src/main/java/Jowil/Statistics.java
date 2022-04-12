@@ -714,8 +714,6 @@ public class Statistics {
         statsMap.put("Variance" , Utils.formatNumber( variance,1)) ;
         statsMap.put("Range" , Utils.formatNumber( HightestScore - LowestScore , 1))  ;
         statsMap.put("Median" , Utils.formatNumber(median , 1));
-        statsMap.put("25th Percentile" , Utils.formatNumber( firstQ , 1 )) ;
-        statsMap.put("75th Percentile" , Utils.formatNumber( thirtQ  ,1 )) ;
         statsMap.put("90th Percentile" , Utils.formatNumber( ds.getPercentile(90) , 1 )) ;
         statsMap.put("95th Percentile" , Utils.formatNumber( ds.getPercentile(95)  ,1 )) ;
         statsMap.put("Interquartile Range" , Utils.formatNumber( thirtQ-firstQ , 1 )) ;
