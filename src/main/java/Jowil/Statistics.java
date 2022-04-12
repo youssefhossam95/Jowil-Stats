@@ -845,8 +845,8 @@ public class Statistics {
                count++;
         }
         int numberOfStudents  = studentEndIndex - studentStartIndex ;
-
-        return Utils.formatNumber( (double)count/(double)numberOfStudents *100 , 2 )+"%" ;
+        DecimalFormat formatter2 = new DecimalFormat("#0.00");
+        return formatter2.format( (double)count/(double)numberOfStudents *100 )+"%" ;
     }
 
     public static Map<String , String> report2GeneralStats(int formIndex) {
@@ -935,11 +935,12 @@ public class Statistics {
             int correctAnswerIndex = questionsChoices.get(questionIndex).indexOf(correctAnswer);
 
             double correctAnswerPrecentage = questionStats.get(correctAnswerIndex);
+            DecimalFormat formatter2 = new DecimalFormat("#0.00");
 
             String nonDistractors ="" ;
             for(int answerIndex = 0 ; answerIndex < questionStats.size() ; answerIndex ++ ) {
                 String addedClass = "" ;
-                String percentOfSolvers = Utils.formatNumber(questionStats.get(answerIndex) * 100 , 2) ;
+                String percentOfSolvers = formatter2.format(questionStats.get(answerIndex) * 100 ) ;
                 if(answerIndex== correctAnswerIndex)
                     addedClass=";green bold";
                 else if(questionStats.get(answerIndex)> correctAnswerPrecentage) {
@@ -960,10 +961,10 @@ public class Statistics {
                 nonDistractors= "-" ;
             else if(nonDistractors.length()>= Report2.MAX_NON_DESTRACOTRS * 2)
                 nonDistractors+= "..." ;
-            DecimalFormat formatter = new DecimalFormat("#0.000");
+            DecimalFormat formatter3 = new DecimalFormat("#0.000");
             tableRow.add(nonDistractors);
-            tableRow.add(formatter.format(calcPointBiserial(formIndex, questionIndex))) ; // Point Biserial
-            tableRow.add(Utils.formatNumber(correctAnswerPrecentage * 100 ,2 )+"%") ; // Total
+            tableRow.add(formatter3.format(calcPointBiserial(formIndex, questionIndex))) ; // Point Biserial
+            tableRow.add(formatter2.format(correctAnswerPrecentage * 100 )+"%") ; // Total
             tableRow.add(calcPrecentOfSolvers(.73 , 1.0,formIndex , questionIndex)); //upper 27
             tableRow.add(calcPrecentOfSolvers(0 , .27,formIndex , questionIndex)); // lower 27
             table.add(tableRow);
