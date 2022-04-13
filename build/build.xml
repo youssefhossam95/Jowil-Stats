@@ -258,7 +258,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Jowil"/>
 				<attribute name="Implementation-Title" value="Jowil Stats"/>
-				<attribute name="Implementation-Version" value="1.1"/>
+				<attribute name="Implementation-Version" value="1.99"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
